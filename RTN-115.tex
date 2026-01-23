@@ -1,6 +1,24 @@
 \documentclass[ twocolumn,twocolappendix, linenumbers ,trackchanges]{aastex7}
-
 % Package imports go here.
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{gensymb}
+\usepackage{graphicx}
+\usepackage{mathtools, nccmath}
+\usepackage{hyperref}
+\usepackage[htt]{hyphenat} % Hyphenate texttt blocks
+\usepackage{xspace} % grids of plots
+\usepackage{subcaption}
+\captionsetup{compatibility=false}
+
+% TODO notes 
+\usepackage[colorinlistoftodos]{todonotes}
+\let\Oldtodo\todo
+\renewcommand{\todo}[1]{\Oldtodo[inline]{#1}}
+\newcommand{\james}[2][]{\Oldtodo[inline,color=cyan, #1]{James: #2}}
+\newcommand{\leanne}[2][]{\Oldtodo[inline,color=teal, #1]{Leanne: #2}}
+\newcommand{\TODO}[1]{\textcolor{red}{\textbf{TODO:} #1}}
+
 \usepackage{amsmath}
 \usepackage{textcomp}
 \usepackage{gensymb}
