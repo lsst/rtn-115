@@ -30,6 +30,9 @@
 \usepackage{subcaption}
 \captionsetup{compatibility=false}
 
+% Rubin glossaries 
+\usepackage{glossaries}  
+
 % TODO notes 
 \usepackage[colorinlistoftodos]{todonotes}
 \let\Oldtodo\todo
@@ -41,7 +44,6 @@
 % Local commands go here.
 \newcommand{\docRef}{RTN-115}
 \newcommand{\docUpstreamLocation}{\url{https://github.com/lsst/rtn-115}}
-\newcommand{\degsq}{$\rm deg^{2}$}
 
 %\providecommand{\secref}[1]{\hyperref[#1]{\autoref{#1}}}
 \providecommand{\secref}[1]{\hyperref[#1]{\S\ref{#1}}}
@@ -51,6 +53,7 @@
 \providecommand{\eqnref}[1]{\hyperref[#1]{Eq.~\ref{#1}}}
 \providecommand{\recref}[1]{\hyperref[#1]{REC-\ref{#1}}}
 
+\newcommand{\degsq}{$\rm deg^{2}$}
 
 % All graphics paths here 
 \graphicspath{./}
@@ -65,8 +68,8 @@
 %\submitjournal{PSJ}
 
 % Input the premade glossary to work around issues with makeglossaries in twocolumn mode
-%\input{aglossary.tex}
-%\makeglossaries
+\input{aglossary.tex}
+\makeglossaries
 
 % Include the parameters file with the data
 \input{parameters.tex}
@@ -74,11 +77,12 @@
 % Document
 \begin{document}
 
-% Ruubin DOI
+% Rubin DOI
 %\doi{10.71929/rubin/XXXXXXX}
 
 \date{\today}
 \title{The Vera C. Rubin Observatory Data Preview 2}
+\shorttitle{Rubin DP2}
 
 % This can write metadata into the PDF.
 % Update keywords and author information as necessary.
@@ -97,27 +101,17 @@
 %% Keywords should appear after the \end{abstract} command.
 %% The AAS Journals now uses Unified Astronomy Thesaurus concepts:
 %% https://astrothesaurus.org
-%% You will be asked to selected these concepts during the submission process
-%% but this old "keyword" functionality is maintained in case authors want
-%% to include these concepts in their preprints.
 \keywords{Rubin Observatory -- LSST}
 
-%% From the front matter, we move on to the body of the paper.
-%% Sections are demarcated by \section and \subsection, respectively.
-%% Observe the use of the LaTeX \label
-%% command after the \subsection to give a symbolic KEY to the
-%% subsection for cross-referencing in a \ref command.
-%% You can use LaTeX's \ref and \label commands to keep track of
-%% cross-references to sections, equations, tables, and figures.
-%% That way, if you change the order of any elements, LaTeX will
-%% automatically renumber them.
-%%
-%% We recommend that authors also use the natbib \citep
-%% and \citet commands to identify citations.  The citations are
-%% tied to the reference list via symbolic KEYs. The KEY corresponds
-%% to the KEY in the \bibitem in the reference list below.
-
-\input{body}
+\input{abstract}
+\input{introduction}
+\input{commissioning}
+\input{data_products}
+\input{drp}
+\input{performance}
+\input{data_services}
+\input{community_science}
+\input{summary}
 
 
 %% Modify acknowledgements as needed.
@@ -146,12 +140,11 @@ This work has been supported by STFC funding for UK participation in LSST, throu
           }
 
 \appendix
-
-%\printglossaries
+\printglossaries
 
 % Include all the relevant bib files so that references can be found from
 % lsst-texmf.
 % https://lsst-texmf.lsst.io/lsstdoc.html#bibliographies
 \bibliographystyle{aasjournal}
-\bibliography{local,lsst,lsst-dm,refs_ads,refs,books}
+\bibliography{local,lsst,ivoa,lsst-dm,refs_ads,refs,books}
 \end{document}
