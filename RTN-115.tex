@@ -1,4 +1,5 @@
 \documentclass[ twocolumn,twocolappendix, linenumbers ,trackchanges]{aastex7}
+
 % Package imports go here.
 \usepackage{amsmath}
 \usepackage{textcomp}
@@ -19,27 +20,8 @@
 \newcommand{\leanne}[2][]{\Oldtodo[inline,color=teal, #1]{Leanne: #2}}
 \newcommand{\TODO}[1]{\textcolor{red}{\textbf{TODO:} #1}}
 
-\usepackage{amsmath}
-\usepackage{textcomp}
-\usepackage{gensymb}
-\usepackage{graphicx}
-\usepackage{mathtools, nccmath}
-\usepackage{hyperref}
-\usepackage[htt]{hyphenat} % Hyphenate texttt blocks
-\usepackage{xspace} % grids of plots
-\usepackage{subcaption}
-\captionsetup{compatibility=false}
-
 % Rubin glossaries 
 \usepackage{glossaries}  
-
-% TODO notes 
-\usepackage[colorinlistoftodos]{todonotes}
-\let\Oldtodo\todo
-\renewcommand{\todo}[1]{\Oldtodo[inline]{#1}}
-\newcommand{\james}[2][]{\Oldtodo[inline,color=cyan, #1]{James: #2}}
-\newcommand{\leanne}[2][]{\Oldtodo[inline,color=teal, #1]{Leanne: #2}}
-\newcommand{\TODO}[1]{\textcolor{red}{\textbf{TODO:} #1}}
 
 % Local commands go here.
 \newcommand{\docRef}{RTN-115}
@@ -56,7 +38,7 @@
 \newcommand{\degsq}{$\rm deg^{2}$}
 
 % All graphics paths here 
-\graphicspath{./}
+\graphicspath{./, ./figures}
 
 %% Reintroduced the \received and \accepted commands from AASTeX v5.2
 %\received{March 1, 2021}
@@ -72,7 +54,7 @@
 \makeglossaries
 
 % Include the parameters file with the data
-\input{parameters.tex}
+\input{sections/parameters.tex}
 
 % Document
 \begin{document}
@@ -96,22 +78,21 @@
 \correspondingauthor{Leanne P. Guy}
 
 
-\input{abstract}
+\input{sections/abstract}
 
 %% Keywords should appear after the \end{abstract} command.
 %% The AAS Journals now uses Unified Astronomy Thesaurus concepts:
 %% https://astrothesaurus.org
-\keywords{Rubin Observatory -- LSST}
+\keywords{Rubin Observatory - LSST}
 
-\input{abstract}
-\input{introduction}
-\input{commissioning}
-\input{data_products}
-\input{drp}
-\input{performance}
-\input{data_services}
-\input{community_science}
-\input{summary}
+\input{sections/introduction}
+\input{sections/commissioning}
+\input{sections/data_products}
+\input{sections/drp}
+\input{sections/performance}
+\input{sections/data_services}
+\input{sections/community_science}
+\input{sections/summary}
 
 
 %% Modify acknowledgements as needed.
