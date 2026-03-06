@@ -43,4 +43,4 @@ jobs:
           LTD_PASSWORD: ${{ secrets.LTD_PASSWORD }}
           LTD_USERNAME: ${{ secrets.LTD_USERNAME }}
         run: |
-          lander --upload --pdf RTN-115.pdf --ltd-product rtn-115 --title "The Vera C. Rubin Observatory Data Preview 1" --handle "RTN-115" --lsstdoc "RTN-115.tex"
+          lander --upload --pdf RTN-115.pdf --ltd-product rtn-115 --title "The Vera C. Rubin Observatory Data Preview 2" --handle "RTN-115" --lsstdoc "RTN-115.tex"
