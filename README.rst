@@ -4,7 +4,7 @@
    :target: https://github.com/lsst/rtn-115/actions/
 
 ############################################
-The Vera C. Rubin Observatory Data Preview 1
+The Vera C. Rubin Observatory Data Preview 2
 ############################################
 
 RTN-115
