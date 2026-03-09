@@ -14,7 +14,9 @@ endif
 
 export TEXMFHOME ?= lsst-texmf/texmf
 
-$(DOCNAME).pdf: $(tex) local.bib authors.tex
+$(DOCNAME).pdf: $(tex) local.bib authors.tex aglossary.tex
+	latexmk -bibtex -xelatex -f $(DOCNAME)
+	makeglossaries $(DOCNAME)
 	latexmk -bibtex -xelatex -f $(DOCNAME)
 
 authors.tex:  authors.yaml
