@@ -16,10 +16,10 @@
 % TODO notes 
 \usepackage[colorinlistoftodos]{todonotes}
 \let\Oldtodo\todo
-\renewcommand{\todo}[1]{\Oldtodo[inline]{#1}}
+\renewcommand{\todo}[1]{\Oldtodo[inline, color=red]{#1}}
 \newcommand{\james}[2][]{\Oldtodo[inline,color=cyan, #1]{James: #2}}
 \newcommand{\leanne}[2][]{\Oldtodo[inline,color=teal, #1]{Leanne: #2}}
-\newcommand{\TODO}[1]{\textcolor{red}{\textbf{TODO:} #1}}
+\newcommand{\alex}[2][]{\Oldtodo[inline,color=orange, #1]{Alex: #2}}
 
 % Rubin glossaries 
 \usepackage{glossaries}  
@@ -39,7 +39,7 @@
 \newcommand{\degsq}{$\rm deg^{2}$}
 
 % All graphics paths here 
-\graphicspath{./, ./figures}
+\graphicspath{{./figures}, {./figures/*}}
 
 %% Reintroduced the \received and \accepted commands from AASTeX v5.2
 %\received{March 1, 2021}
