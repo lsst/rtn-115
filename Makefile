@@ -1,6 +1,7 @@
 DOCTYPE = RTN
 DOCNUMBER = 115
 DOCNAME = $(DOCTYPE)-$(DOCNUMBER)
+FLATNAME = $(DOCNAME)-flat
 
 tex = $(filter-out $(wildcard *aglossary.tex) , $(wildcard *.tex))
 
@@ -21,6 +22,11 @@ $(DOCNAME).pdf: $(tex) local.bib authors.tex aglossary.tex
 
 authors.tex:  authors.yaml
 	python3 $(TEXMFHOME)/../bin/db2authors.py > authors.tex
+
+flat:
+	latexpand --keep-comments -o $(FLATNAME).tex $(DOCNAME).tex
+	latexmk -bibtex -xelatex -f $(FLATNAME)
+
 
 .PHONY: clean
 clean:
