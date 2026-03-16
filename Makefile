@@ -26,6 +26,8 @@ authors.tex:  authors.yaml
 flat:
 	latexpand --keep-comments -o $(FLATNAME).tex $(DOCNAME).tex
 	latexmk -bibtex -xelatex -f $(FLATNAME)
+	makeglossaries $(FLATNAME)
+	latexmk -bibtex -xelatex -f $(FLATNAME)
 
 
 .PHONY: clean
