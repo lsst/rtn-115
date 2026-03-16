@@ -14,7 +14,9 @@ endif
 
 export TEXMFHOME ?= lsst-texmf/texmf
 
-$(DOCNAME).pdf: $(tex) local.bib authors.tex
+$(DOCNAME).pdf: $(tex) local.bib authors.tex aglossary.tex
+	latexmk -bibtex -xelatex -f $(DOCNAME)
+	makeglossaries $(DOCNAME)
 	latexmk -bibtex -xelatex -f $(DOCNAME)
 
 authors.tex:  authors.yaml
@@ -35,8 +37,11 @@ clean:
 SCRIPTS_DIR=scripts
 PYTHON_SCRIPTS=$(wildcard $(SCRIPTS_DIR)/*.py)
 
-authors.txt:  authors.txt
+authors.txt:  authors.yaml
 	python3 $(TEXMFHOME)/../bin/db2authors.py -m arxiv > authors.txt
+
+authors.csv: authors.yaml
+	python3 $(TEXMFHOME)/../bin/db2authors.py -m aascsv > authors.csv
 
 aglossary.tex :$(tex) myacronyms.txt
 	python3 $(TEXMFHOME)/../bin/generateAcronyms.py -t"Sci DM Gen" -g $(tex)
