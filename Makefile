@@ -24,6 +24,9 @@ authors.tex:  authors.yaml
 	python3 $(TEXMFHOME)/../bin/db2authors.py > authors.tex
 
 flat:
+	if [ ! -d $(FLATDIR) ]; then \
+		mkdir $(FLATDIR) ; \
+	fi
 	latexpand --keep-comments -o $(FLATDIR)/$(DOCNAME).tex $(DOCNAME).tex
 	if [ -d "figures" ]; then \
 		cp figures/* $(FLATDIR) ;\
