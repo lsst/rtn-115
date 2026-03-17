@@ -12,6 +12,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history for metadata
+          submodules: true
+
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -50,7 +54,8 @@ jobs:
 
       - name: Commit new authors.yaml
         if: env.CHANGED == 'true'
-        run: |
+        run: | # cpr adds all files - these shoudl not be added
+          rm client_secret.json token.pickle
           git config user.name github-actions
           git config user.email github-actions@github.com
           git commit -m " Author updates from google form " authors.yaml skip.count
