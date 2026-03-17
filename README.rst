@@ -34,6 +34,11 @@ Clean built files::
 
     make clean
 
+AAS ::
+
+    make flat
+This will populate forAAS directory with a ingle tex file and all images.
+
 Updating acronyms
 -----------------
 
