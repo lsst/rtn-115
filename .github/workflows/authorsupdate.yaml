@@ -12,11 +12,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: tickets/DM-54342
+          fetch-depth: 0 # full history for metadata
+          submodules: true
+
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          ref: tickets/DM-54342
           python-version: 3.13
 
       - name: Install Python dependencies
@@ -31,7 +35,7 @@ jobs:
           TOKEN_PASSPHRASE: ${{ secrets.TOKEN_PASSPHRASE }}
         run: |
           echo $CLIENT >> client_secret.json
-          ./bin/decrypt_secret.sh $TOKEN_PASSPHRASE
+          ./lsst-texmf/bin/decrypt_secret.sh $TOKEN_PASSPHRASE
           make skip
           if [ "$SKIP2" -gt "$SKIP" ]; then
               echo "Got new author $SKIP2 , had $SKIP"
@@ -50,7 +54,8 @@ jobs:
 
       - name: Commit new authors.yaml
         if: env.CHANGED == 'true'
-        run: |
+        run: | # cpr adds all files - these shoudl not be added
+          rm client_secret.json token.pickle
           git config user.name github-actions
           git config user.email github-actions@github.com
           git commit -m " Author updates from google form " authors.yaml skip.count
