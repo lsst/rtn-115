@@ -1,0 +1,67 @@
+name: Process Author signup  form
+
+on:
+  workflow_dispatch:
+  schedule:
+    #  UTC min hour day month dayOfWeek
+    - cron: '40 6 * * *'
+
+jobs:
+  adb:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install uv
+          python -m uv pip install --system -r requirements.txt
+
+      - name: process form
+        env:
+          CLIENT: ${{ secrets.FORM_ACCESS_CLIENT }}
+          TOKEN_PASSPHRASE: ${{ secrets.TOKEN_PASSPHRASE }}
+        run: |
+          echo $CLIENT >> client_secret.json
+          ./bin/decrypt_secret.sh $TOKEN_PASSPHRASE
+          make skip
+          if [ "$SKIP2" -gt "$SKIP" ]; then
+              echo "Got new author $SKIP2 , had $SKIP"
+          fi
+
+      - name: Check diff
+        run: | #  set an environment variable
+           if git diff --exit-code; then
+              echo "CHANGED=false" >> ${GITHUB_ENV}
+              echo "No changes - no PR"
+           else
+              echo "CHANGED=true" >> ${GITHUB_ENV}
+              echo "Git changes - should make PR"
+              cat authors.yaml
+           fi
+
+      - name: Commit new authors.yaml
+        if: env.CHANGED == 'true'
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit -m " Author updates from google form " authors.yaml skip.count
+
+      - name: Create Pull Request
+        id: cpr
+        if: env.CHANGED == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.WOM_RTN_115_PAT }}
+          branch: update-authors-from-form
+          branch-suffix: short-commit-hash
+          title: Automatic authors  update
+          commit-message: authors update from google form
+          body: Update authors.yaml from new entries in the google form
