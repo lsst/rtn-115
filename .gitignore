@@ -10,4 +10,7 @@
 *.pdf
 authors.tex
 *.glo
+*.glg
+*.gls
 *.ist
+aglossary.tex

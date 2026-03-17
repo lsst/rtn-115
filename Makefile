@@ -1,7 +1,7 @@
 DOCTYPE = RTN
 DOCNUMBER = 115
 DOCNAME = $(DOCTYPE)-$(DOCNUMBER)
-FLATNAME = $(DOCNAME)-flat
+FLATDIR = forAAS
 
 tex = $(filter-out $(wildcard *aglossary.tex) , $(wildcard *.tex))
 
@@ -24,10 +24,23 @@ authors.tex:  authors.yaml
 	python3 $(TEXMFHOME)/../bin/db2authors.py > authors.tex
 
 flat:
-	latexpand --keep-comments -o $(FLATNAME).tex $(DOCNAME).tex
-	latexmk -bibtex -xelatex -f $(FLATNAME)
-	makeglossaries $(FLATNAME)
-	latexmk -bibtex -xelatex -f $(FLATNAME)
+	if [ ! -d $(FLATDIR) ]; then \
+		mkdir $(FLATDIR) ; \
+	fi
+	latexpand --keep-comments -o $(FLATDIR)/$(DOCNAME).tex $(DOCNAME).tex
+	if [ -d "figures" ]; then \
+		cp figures/* $(FLATDIR) ;\
+	fi
+	cp aas*.* $(FLATDIR)
+	cp *.bib $(FLATDIR)
+	cd $(FLATDIR) &&\
+	latexmk -bibtex -xelatex -f $(DOCNAME) &&\
+	makeglossaries $(DOCNAME) &&\
+	latexmk -bibtex -xelatex -f $(DOCNAME) &&\
+	latexmk -c &&\
+	rm -f *.gls *.xdv *.glg *.glo *.ist *.bib &&\
+	rm README.txt
+	echo "Flat files  in $(FLATDIR)."
 
 
 .PHONY: clean
@@ -37,6 +50,7 @@ clean:
 	rm -f $(DOCNAME).pdf
 	rm -f meta.tex
 	rm -f authors.tex
+	rm -f $(FLATDIR)/*
 
 .FORCE:
 
