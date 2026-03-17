@@ -2,6 +2,7 @@ DOCTYPE = RTN
 DOCNUMBER = 115
 DOCNAME = $(DOCTYPE)-$(DOCNUMBER)
 FLATDIR = forAAS
+SUBDIRS = figures tables sections
 
 tex = $(filter-out $(wildcard *aglossary.tex) , $(wildcard sections/*.tex) $(wildcard *.tex) )
 
@@ -32,9 +33,12 @@ flat:
 		mkdir $(FLATDIR) ; \
 	fi
 	latexpand --keep-comments -o $(FLATDIR)/$(DOCNAME).tex $(DOCNAME).tex
-	if [ -d "figures" ]; then \
-		cp figures/* $(FLATDIR) ;\
-	fi
+	@for dir in $(SUBDIRS); do \
+		if [ -d "$$dir" ] && [ -n "$$(ls -A $$dir 2>/dev/null)" ]; then \
+			cp $$dir/* $(FLATDIR); \
+			echo "  ✓ Copied $$dir"; \
+		fi; \
+	done
 	cp aas*.* $(FLATDIR)
 	cp *.bib $(FLATDIR)
 	cd $(FLATDIR) &&\
@@ -43,7 +47,7 @@ flat:
 	latexmk -bibtex -xelatex -f $(DOCNAME) &&\
 	latexmk -c &&\
 	rm -f *.gls *.xdv *.glg *.glo *.ist *.bib &&\
-	rm README.txt
+	if [ -f README.rst ]; then rm README.txt; fi && \
 	echo "Flat files in $(FLATDIR)."
 
 .PHONY: clean
