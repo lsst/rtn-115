@@ -34,6 +34,9 @@ flat:
 	latexmk -bibtex -xelatex -f $(DOCNAME) &&\
 	makeglossaries $(DOCNAME) &&\
 	latexmk -bibtex -xelatex -f $(DOCNAME) &&\
+	latexmk -c &&\
+	rm -f *.gls *.xdv *.glg *.glo *.ist *.bib &&\
+	rm README.txt
 	echo "Flat files  in $(FLATDIR)."
 
 
