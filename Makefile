@@ -42,7 +42,7 @@ flat:
 	latexmk -bibtex -xelatex -f $(DOCNAME) &&\
 	latexmk -c &&\
 	rm -f *.gls *.xdv *.glg *.glo *.ist *.bib &&\
-	if [ -f README.rst ]; then rm README.txt; fi && \
+	if [ -f README.txt ]; then rm README.txt; fi && \
 	echo "Flat files in $(FLATDIR)."
 
 .PHONY: clean
