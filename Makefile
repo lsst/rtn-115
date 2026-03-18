@@ -2,7 +2,7 @@ DOCTYPE = RTN
 DOCNUMBER = 115
 DOCNAME = $(DOCTYPE)-$(DOCNUMBER)
 FLATDIR = forAAS
-SUBDIRS = figures tables sections
+SUBDIRS = figures
 
 tex = $(filter-out $(wildcard *aglossary.tex) , $(wildcard *.tex))
 
@@ -55,8 +55,6 @@ clean:
 	rm -f $(FLATDIR)/*
 
 .FORCE:
-
-
 
 SCRIPTS_DIR=scripts
 PYTHON_SCRIPTS=$(wildcard $(SCRIPTS_DIR)/*.py)
