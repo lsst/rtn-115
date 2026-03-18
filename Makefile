@@ -2,9 +2,9 @@ DOCTYPE = RTN
 DOCNUMBER = 115
 DOCNAME = $(DOCTYPE)-$(DOCNUMBER)
 FLATDIR = forAAS
+SUBDIRS = figures
 
 tex = $(filter-out $(wildcard *aglossary.tex) , $(wildcard *.tex))
-
 
 GITVERSION := $(shell git log -1 --date=short --pretty=%h)
 GITDATE := $(shell git log -1 --date=short --pretty=%ad)
@@ -28,9 +28,12 @@ flat:
 		mkdir $(FLATDIR) ; \
 	fi
 	latexpand --keep-comments -o $(FLATDIR)/$(DOCNAME).tex $(DOCNAME).tex
-	if [ -d "figures" ]; then \
-		cp figures/* $(FLATDIR) ;\
-	fi
+	@for dir in $(SUBDIRS); do \
+		if [ -d "$$dir" ] && [ -n "$$(ls -A $$dir 2>/dev/null)" ]; then \
+			cp $$dir/* $(FLATDIR); \
+			echo "  ✓ Copied $$dir"; \
+		fi; \
+	done
 	cp aas*.* $(FLATDIR)
 	cp *.bib $(FLATDIR)
 	cd $(FLATDIR) &&\
@@ -39,9 +42,8 @@ flat:
 	latexmk -bibtex -xelatex -f $(DOCNAME) &&\
 	latexmk -c &&\
 	rm -f *.gls *.xdv *.glg *.glo *.ist *.bib &&\
-	rm README.txt
-	echo "Flat files  in $(FLATDIR)."
-
+	if [ -f README.txt ]; then rm README.txt; fi && \
+	echo "Flat files in $(FLATDIR)."
 
 .PHONY: clean
 clean:
@@ -53,8 +55,6 @@ clean:
 	rm -f $(FLATDIR)/*
 
 .FORCE:
-
-
 
 SCRIPTS_DIR=scripts
 PYTHON_SCRIPTS=$(wildcard $(SCRIPTS_DIR)/*.py)
