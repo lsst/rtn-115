@@ -42,7 +42,7 @@
 
 % ---- Input paths for sections and tables
 \makeatletter
-\def\input@path{{sections/}{tables/}}
+\def\input@path{{sections}{tables}}
 \makeatother
 
 % All graphics paths here 
@@ -58,11 +58,11 @@
 %\submitjournal{PSJ}
 
 % Input the premade glossary to work around issues with makeglossaries in twocolumn mode
-\input{aglossary.tex}
+\input{aglossary}
 \makeglossaries
 
 % Include the parameters file with the data
-\input{parameters.tex}
+\input{sections/parameters}
 
 % Document
 \begin{document}
@@ -87,21 +87,21 @@
 \correspondingauthor{Leanne P. Guy}
 
 
-\input{abstract}
+\input{sections/abstract}
 
 %% Keywords should appear after the \end{abstract} command.
 %% The AAS Journals now uses Unified Astronomy Thesaurus concepts:
 %% https://astrothesaurus.org
 \keywords{Rubin Observatory - LSST}
 
-\input{introduction}
-\input{commissioning}
-\input{data_products}
-\input{drp}
-\input{performance}
-\input{data_services}
-\input{community_science}
-\input{summary}
+\input{sections/introduction}
+\input{sections/commissioning}
+\input{sections/data_products}
+\input{sections/drp}
+\input{sections/performance}
+\input{sections/data_services}
+\input{sections/community_science}
+\input{sections/summary}
 
 
 %% Modify acknowledgements as needed.
