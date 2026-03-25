@@ -22,6 +22,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install "lander<2.0.0" setuptools
           python -m pip install pyyaml
+          python -m pip install latexpand
 
       - name: Compile author list
         run: |
@@ -43,4 +44,13 @@ jobs:
           LTD_PASSWORD: ${{ secrets.LTD_PASSWORD }}
           LTD_USERNAME: ${{ secrets.LTD_USERNAME }}
         run: |
+          # Temporarily flatten the .tex file
+          FLATTENED="RTN-115-flat.tex"
+          latexpand --keep-comments -o "$FLATTENED" RTN-115.tex
+          
           lander --upload --pdf RTN-115.pdf --ltd-product rtn-115 --title "The Vera C. Rubin Observatory Data Preview 2" --handle "RTN-115" --lsstdoc "RTN-115.tex"
+          
+          echo "Removing temporary flat file..."
+          rm -f "$FLATTENED"
+
+          echo "Lander upload step completed."

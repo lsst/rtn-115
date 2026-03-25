@@ -26,7 +26,6 @@
 %\setglossarystyle{long} #(or this but tis very odd format)
 
 
-
 % Local commands go here.
 \newcommand{\docRef}{RTN-115}
 \newcommand{\docUpstreamLocation}{\url{https://github.com/lsst/rtn-115}}
@@ -41,8 +40,13 @@
 
 \newcommand{\degsq}{$\rm deg^{2}$}
 
+% ---- Input paths for sections and tables
+\makeatletter
+\def\input@path{{sections/}{tables/}}
+\makeatother
+
 % All graphics paths here 
-\graphicspath{{./}, {./figures}, {./figures/*}}
+\graphicspath{{figures}}
 
 %% Reintroduced the \received and \accepted commands from AASTeX v5.2
 %\received{March 1, 2021}
@@ -58,7 +62,7 @@
 \makeglossaries
 
 % Include the parameters file with the data
-\input{sections/parameters.tex}
+\input{parameters.tex}
 
 % Document
 \begin{document}
@@ -83,21 +87,21 @@
 \correspondingauthor{Leanne P. Guy}
 
 
-\input{sections/abstract}
+\input{abstract}
 
 %% Keywords should appear after the \end{abstract} command.
 %% The AAS Journals now uses Unified Astronomy Thesaurus concepts:
 %% https://astrothesaurus.org
 \keywords{Rubin Observatory - LSST}
 
-\input{sections/introduction}
-\input{sections/commissioning}
-\input{sections/data_products}
-\input{sections/drp}
-\input{sections/performance}
-\input{sections/data_services}
-\input{sections/community_science}
-\input{sections/summary}
+\input{introduction}
+\input{commissioning}
+\input{data_products}
+\input{drp}
+\input{performance}
+\input{data_services}
+\input{community_science}
+\input{summary}
 
 
 %% Modify acknowledgements as needed.
