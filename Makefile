@@ -42,6 +42,8 @@ flat:
 	cp aas*.* $(FLATDIR)
 	cp *.bib $(FLATDIR)
 	cd $(FLATDIR) &&\
+	python3 $(TEXMFHOME)/../bin/extract_citations.py $(DOCNAME).tex &&\
+	sed -i '' 's|\\bibliography{local,lsst,ivoa,lsst-dm,refs_ads,refs,books}|\\bibliography{local,allcitations}|g' $(DOCNAME).tex &&\
 	latexmk -bibtex -xelatex -f $(DOCNAME) &&\
 	makeglossaries $(DOCNAME) &&\
 	latexmk -bibtex -xelatex -f $(DOCNAME) &&\
