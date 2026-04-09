@@ -6,13 +6,26 @@ For programmatic reasons, the precise names of the data product can differ sligh
 For this reason, we use descriptive names throughout this section and provide their equivalent names used in the data services in Table \tabref{tab:product_names} in \secref{sec:data_services}.
 We note that some data products are not available in all data services; we indicate in the following descriptions when this is the case. 
 
-As with DP1, all the data products described in this section fall under one of five categories 
+As with DP1, all the data products described in this section fall under one of five categories:
+\begin{itemize}
+\item Science Images, including pre-processed raw images, processed visit images, a variety of different types of coadded images, and difference images;
+\item Catalogs of astrophysical Sources and Objects detected and measured in the aforementioned science images. We also provide the reference catalog that was constucted to astrometrically and photometrically calibrate the data during processing;
+\item Maps, which provide non-science-level visualisations of the data;
+\item Ancillary Data Products, such as the values of the configuration parameters that were used during data processing, processing logs, and calibration data products;
+\item Metadata, in the form of tables containing information about each visit and processed visit image, such as visit pointing coordinates, exposure times, and data quality summary statistics.
+\end{itemize} 
 
-\subsection{Images}
+We expect that the Science Images and Catalogs will be the most heavily used categories. That said, the Maps, Ancillary Data Products and Metada are important to help facilitate science expoitation and for transparency. While the categories of data products in DP2 are the same as in DP1, this second Data Preview contains a wider range of data product types compared to DP1.  This is principally due to the data processing pipeline being in a more mature state compared to the first data preview. In the following sections we clearly indicate those data product types wihch are new to DP2. 
+
+\subsection{Science Images}
+In this section we describe the science images included in DP2. These are images of the night sky, as opposed to calibration images (e.g., bias, darks, flats; see \secref{sssec:calibration_images}). Since we provide the raw, unprocessed science images and the calibration images and used during processing it is possible, in principle, for a user to generate their own calibrated processed images. We strongly recommend, however, that users start with the processed visit images and only do their own processing if there is a clear scientific need to do so. 
+
 \subsubsection{Raws}
 \subsubsection{Processed Visit Images}
 \subsubsection{Deep Coadd}
 \subsubsection{Template Coadd}
+\subsubsection{Pretty Coadd?}
+The name ``Pretty Coadds'' is a placeholder.
 \subsubsection{Difference Image}
 
 \subsection{Catalogs}
@@ -28,19 +41,19 @@ As with DP1, all the data products described in this section fall under one of f
 \subsubsection{Solar System Source}
 \subsubsection{Solar System Object}
 \subsubsection{MPCORB}
-
-\subsection{Tables}
-\subsubsection{Visit Table}
-\subsubsection{Visit Detector Table}
+\subsubsection{Calibration Reference Catalog}
 
 \subsection{Maps}
 \subsubsection{Survey Property Maps}
 \subsubsection{HiPS Maps}
 \subsubsection{Multi-order Coverage Maps}
 
-\subsection{Metadata}
-
 \subsection{Ancillary Data Products}
 \subsubsection{Calibration images}
+\label{sssec:calibration_images}
 \subsubsection{Diagnostic Data Products}
 \subsubsection{Standard Data Products}
+
+\subsection{Metadata}
+\subsubsection{Visit Table}
+\subsubsection{Visit Detector Table}
