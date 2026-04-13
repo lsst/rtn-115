@@ -23,7 +23,9 @@ In this section we describe the science images included in DP2. These are images
 Talk about fits file format?
 
 \subsubsection{Raws}
-Raw images are those that have yet to undergo any processing by the science processing pipeline; rather, they are the initial input science images to the pipelines. 
+Raw images are those that are produced by the camera following an exposure. They are the initial input science images to the pipelines and have not undergone any processing. Each active detector in LSSTCam produces one raw image per exposure. Each exposure therefore results in up to {\bf \color{red}nactivedetectors} raw images, although some exposures taken during {\bf \color{red} XXX; official name for campaign} resulted in fewer than {\bf \color{red} nactivedetectors} raw images due to the problematic detectors described in \secref{sec:commissioning} and {\bf \color{red} occasiional readout failures??}.
+
+Since LSSTCam uses the same sized detectors as LSSTComCam, the raw images in DP2 have the same dimensions as those released in DP1: {\bf \color{red} nrawpixx $\times$ nrawpixy}. Each DP2 detector is made up of 16 {\bf \color{red} namppixx $\times$ namppixy} pixel amps, laid out in two rows of eight. As such, each raw image consists of {\bf \color{red} nexposedpixx $\times$ nexposedpixy} exposed pixels. In addition to the exposused pixels, there are {\bf \color{red} DESCRIBE THE OVERSCAN ETC}. Again, the amp size, layout and overscan are the same as the raw images released in DP1.
 
 Explain where data product types are the same and where they differ from DP1.
 
