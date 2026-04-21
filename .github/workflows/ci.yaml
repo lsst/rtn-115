@@ -3,11 +3,12 @@ name: CI
 "on": [push, pull_request]
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0 # full history for metadata
           submodules: true
@@ -22,6 +23,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install "lander<2.0.0" setuptools
           python -m pip install pyyaml
+          python -m pip install tox
+
+      - name: Run tox for tests
+        run: |
+          tox
 
       - name: Compile author list
         run: |
