@@ -10,7 +10,7 @@
 import unittest
 from pathlib import Path
 
-from lsst.dptwo.parameters import DP2Parameters, addParameter, formatParameter
+from lsst.texmf.parameters import DP2Parameters, addParameter, formatParameter
 
 OUTPUT_DIR = Path("tests/outputs")
 OUTPUT_FILE = OUTPUT_DIR / "test_parameters_output.tex"
@@ -89,7 +89,7 @@ class ParameterWriterTestCase(unittest.TestCase):
         self.assertTrue(OUTPUT_FILE.exists())
         content = OUTPUT_FILE.read_text()
         self.assertIn("automatically generated", content)
-        self.assertIn("python/lsst/dptwo/parameters.py", content)
+        self.assertIn("python/lsst/texmf/parameters.py", content)
         self.assertIn("\\newcommand{\\campaignstartdate}{2024-10-24\\xspace}", content)
         self.assertIn("\\newcommand{\\nvisits}{1792\\xspace}", content)
         self.assertIn("\\newcommand{\\bestimagequality}{0\\farcs58\\xspace}", content)
