@@ -1,0 +1,51 @@
+\texttt{CalibrateImageTask} is the pipeline task responsible for PSF characterization, astrometric and photometric calibration, and source detection on individual exposures.
+As part of this processing, it models and removes the large-scale sky background prior to source measurement and downstream multi-visit data processing.
+Applied after ISR has removed instrumental signatures, this step is designed to preserve astrophysical structure on source scales while suppressing broad background structure that would otherwise bias detection thresholds, photometry, and deblending.
+
+An initial background model (\texttt{psf\_subtract\_background}) is subtracted prior to PSF characterization and preliminary source detection.
+The background is estimated by dividing the image into $128 \times 128$\,pixel superpixels and computing the iterative $3\sigma$-clipped mean of unmasked pixels in each bin.
+Pixels flagged as \texttt{BAD}, \texttt{EDGE}, \texttt{DETECTED}, \texttt{DETECTED\_NEGATIVE}, or \texttt{NO\_DATA} are excluded.
+The resulting coarse map is modeled with a sixth-order two-dimensional Chebyshev polynomial, which is evaluated at native pixel resolution via Akima spline interpolation.
+
+After PSF fitting, aperture correction, and astrometric calibration, this first-pass model is discarded and the background is restored onto the image to allow for the second estimate to be fit on the full sky signal.
+By this stage the \texttt{DETECTED} mask plane has been updated by PSF-stage source detection, providing a more complete and accurate source mask than was available for the initial estimate.
+Before fitting the second background model, these mask planes are further dilated by up to 10\,pixels to suppress source-wing flux from leaking into the background bins.\footnote{When fewer than 50\% of pixels are detected, an additional 2-pixel dilation is applied to the \texttt{DETECTED} mask before the pedestal fit, to further suppress source contamination in sparsely detected regions.}
+The dilation is iteratively reduced by 1\,pixel at a time if it would mask more than 93\% of unmasked pixels.
+The dilated mask planes are used only for the background estimation and are cleared before the final source-detection pass.
+
+A second background estimate (\texttt{star\_background}) is then computed on the updated source-masked image and subtracted before the final source-detection pass.
+The algorithm configuration is identical to \texttt{psf\_subtract\_background}: $128 \times 128$\,pixel superpixels, MEANCLIP statistics, a sixth-order Chebyshev polynomial, and Akima spline interpolation.
+
+Finally, following the \texttt{star\_background} fit, a zeroth-order pedestal correction is applied to account for any large-scale oversubtraction introduced by the higher-order model.
+This can occur particularly in crowded fields where many pixels are covered by source flux.\footnote{During pedestal fitting, pixels flagged as \texttt{SAT}, \texttt{SUSPECT}, or \texttt{SPIKE} are additionally excluded, beyond the standard \texttt{SubtractBackgroundTask} ignored pixel mask.}
+The pedestal is a constant offset measured from the \texttt{star\_background}-subtracted image.
+It is measured iteratively over increasing bin sizes, starting at $32 \times 32$\,pixels for a full LSSTCam detector and doubling each iteration.
+At each step a new constant offset is fit and subtracted.
+Iteration continues until the cumulative pedestal level changes by less than 5\% relative to the previous step, or by less than 0.5\,counts in absolute terms, indicating that the estimate has stabilized across spatial scales.
+The \texttt{star\_background} model and all pedestal corrections together constitute the output background model (\texttt{preliminary\_visit\_image\_background}; see \autoref{fig:background-example}).
+
+\begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{figures/background_visit2025110500300_det025}
+    \caption{
+        Background subtraction for LSSTCam visit~2025110500300, detector~25.
+        \textit{Left:} Post-ISR image (\texttt{post\_isr\_image}), before any background removal.
+        \textit{Center:} Preliminary visit image (\texttt{preliminary\_visit\_image}), after background subtraction by \texttt{CalibrateImageTask}.
+        \textit{Right:} The subtracted background model (\texttt{preliminary\_visit\_image\_background}), illustrating the large-scale structure removed.
+        All three panels use a linear stretch clipped to the central 95th percentile of pixel values.
+    }
+    \label{fig:background-example}
+\end{figure*}
+
+Compared to DP1~\citep{dp1}, several changes were made to the background subtraction for DP2\@.
+The inline background re-estimation that DP1 performed after each detection pass (\texttt{reEstimateBackground = True}) has been replaced by the dedicated \texttt{star\_background} subtask, which re-estimates the full background model from scratch with a more complete source mask.
+This change is enabled by the introduction of adaptive threshold detection (\texttt{do\_adaptive\_threshold\_detection = True}), which iteratively adjusts the detection threshold to ensure the source mask used for \texttt{star\_background} is neither too sparse nor too aggressive.
+The mask dilation and pedestal correction described above are also new in DP2, as is diffraction spike masking (\texttt{doMaskDiffractionSpikes = True}), which adds a \texttt{SPIKE} mask plane prior to background estimation.
+Finally, the per-step illumination correction that DP1 applied during background estimation (\texttt{doApplyFlatBackgroundRatio = True}, \texttt{do\_illumination\_correction = True}) has been disabled.
+These corrections are now handled upstream in ISR rather than within the background model itself.
+
+Following background subtraction, \texttt{CalibrateImageTask} computes several statistics on the residual image and stores them in the task metadata.
+The median and standard deviation of all unmasked pixels are recorded, as are the median and standard deviation of fluxes measured on \textit{sky sources}, which are empty apertures placed in source-free regions of the image.
+The sky source statistics are a particularly direct probe of background subtraction quality, as any residual signal in these apertures is attributable to background model error rather than astrophysical flux.
+
+% crowded fields? LAM
