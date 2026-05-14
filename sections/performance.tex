@@ -1,2 +1,50 @@
 \section{Performance Characterization and Known Issues}
 \label{sec:performance}
+Look at the science requirements document. \url{ls.st/srd}, \url{ls.st/lsr}, \url{ls.st/oss}, \url{ls.st/dmsr}.
+
+This DP2 paper should give a good indication of what we expect for LSST proper.
+
+The following subsection headers are placeholders.
+
+In the following, groups of three numbers in brackets correspond to (design, minimum, stretch).
+
+\subsection{Visit-level}
+
+\subsubsection{Filter compliment}
+See SRD. 
+
+\subsubsection{PVI Depth}
+Median point source r-band 5sigma depth of D1 mag, where D1$=$(24.7,24.3, 24.8).
+
+No more than DF1 per cent of images will have point source r-band 5sigma depths greater than Z1, where DF$=$(10,20,5) and z$=$(24.4,24,24.6).
+
+D1 for all bands are:
+\begin{itemize}
+\item u: (23.9,23.4,24.0)
+\item g: (25.0,24.6,24.3)
+\item r: (24.7,24.3,24.8)
+\item i: (24.0,23.6,24.1)
+\item z: (23.3,22.9,23.4)
+\item y: (22.1,21.7,22.2)
+\end{itemize}
+
+Put the above compatison in a table (table 1?).
+
+Variation in depth across the FOV:
+
+For a median-depth visit, no more than DF2 per cent of detector-images will have a 5sigma point source depth brighter than Z2, where DF2$=$(15,20,10) and Z2$=$(0.2,0.4,0.2).  This should be in a section, not (necessarily) in a table.
+
+May also want to include an estimate of the saturation limit (in magnitudes) in this subsection.
+
+\subsubsection{Image quality}
+Note that image quality improved over commissioning (DP2). Take a late-stage subset, or perhaps a curated late-stage subset that we can argue would be representative of what we expect going forward.
+
+\subsubsection{Astrometric accuracy}
+
+\subsubsection{Photometric accuracy}
+
+\subsection{Coadd-level}
+
+\subsection{Prediction for 10-year survey}
+Details of calculation should go in a separate paper. This section should probably be just two or three paragraphs, depending on what parameters we want to predict.
+
