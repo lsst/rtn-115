@@ -1,31 +1,205 @@
 \section{Data Release Processing} \label{sec:drp}
 
-Data Release Processing (DRP) is the data pipeline that produces the calibrated images, detection catalogs, and derived data 
-products defined in section \S TBD, using the LSST Science Pipelines (citation). DP2 was processed at the United States Data Facility (USDF) at SLAC, with pilot runs at the National Institute of Nuclear and Particle Physics (IN2P3) computing center. 
+Data Release Processing (DRP) is the data pipeline that produces the calibrated images, detection catalogs, and derived data
+products defined in section \S TBD, using the LSST Science Pipelines (citation). DP2 was processed at the United States Data Facility (USDF) at SLAC, with pilot runs at the National Institute of Nuclear and Particle Physics (IN2P3) computing center.
 
 The processing campaign consists of four major stages: (1) single-frame processing, (2) calibration, (3) multi-visit processing, (4) variable and transient source processing.
 Data quality and key metrics for verification and validation are actively monitored during each stage, and comprehensive verification and validation assessments are completed before processing the next stage.
 
 This section describes the high-level algorithms, configurations, and verification metrics for each stage, including changes and improvements from DP1 (citation).
+Quantitative performance figures appear in \secref{sec:performance}.
+
+\begin{itemize}
+\item What DRP produces and how the four stages connect (single-visit $\rightarrow$ calibration $\rightarrow$ multi-visit $\rightarrow$ variable/transient).
+\item Processing sites and campaign scale---USDF primary, IN2P3 pilot---and how that compares to DP1 (ComCam-only, single site).
+\item Science Pipelines version \dpTwosciencepipelinesversion{} and what is intentionally held back relative to DR1 (cell coadds, full Solar System orbit linking, etc.).
+\item Data freeze and consolidation workflow; how V\&V gates between stages worked in practice.
+\end{itemize}
+
+\todo{Figures: DP1 had no section-level DRP figure. Optional processing-flow schematic for DP2; otherwise prose only.}
 
 \subsection{Single-Visit Processing} \label{sec:drp-singlevisit}
 
+Single-visit processing converts raw per-detector images into calibrated visit images suitable for calibration, coaddition, and difference imaging.
+
+\begin{itemize}
+\item Per-CCD processing path from raw to calibrated visit images (and preliminary Source catalogs).
+\item What changed with LSSTCam: \dpTwoNdetectors{} science detectors, ITL and e2v mix, and a larger defect inventory at full-focal-plane scale.
+\item Which visits and detectors are rejected upstream and how that appears as gaps in coadd coverage (cf.\ visit-coverage maps in \secref{sec:commissioning}).
+\end{itemize}
+
+\todo{Figures: none in DP1 DRP for this subsection; prose only unless a representative visit montage is warranted.}
+
 \subsubsection{Calibration \& Instrument Signature Removal (ISR)} \label{sec:drp-singlevisit-calibrationisr}
+
+\begin{itemize}
+\item ISR purpose and main correction steps; cite technotes rather than reproducing the full stack.
+\item LSSTCam calibration inputs (flats, bias, dark, PTC gains) and use of as-built vs.\ nominal products.
+\item Detector anomalies handled by masking (vampire pixels, phosphorescence, bleed trails, crosstalk residuals)---several carry over from ComCam but appear across many more CCDs in DP2.
+\item How masked regions propagate into visit coverage and coadd depth.
+\end{itemize}
+
+\todo{Figures: reuse or adapt DP1 Fig.~11 (detector/REB signal-chain schematic). Anomaly examples (DP1 Figs.~12--15) belong in \secref{sec:performance}; forward-reference unless a new LSSTCam-specific defect needs a callout here.}
+
 \subsubsection{Background Subtraction} \label{sec:drp-singlevisit-background}
 
+\begin{itemize}
+\item What large-scale structure is removed (airglow, moonlight, zodiacal light, scattered light) and why it matters for photometry.
+\item Superpixel statistics plus Chebyshev polynomial fit---same core algorithm as DP1.
+\item Connection to FGCM compensated apertures and coadd background handling.
+\end{itemize}
+
+\todo{Figures: none in DP1 DRP. No figure needed unless a particularly bad commissioning background motivates a forward reference to \secref{sec:performance}.}
+
 \subsection{Calibration} \label{sec:drp-calibration}
+
+Stars detected across visits are matched to build a consistent calibration sample.
+Initial solutions from the reference catalog and PSFEx are refined iteratively using Piff, gbdes, and FGCM.
+The Monster reference catalog provides astrometric and photometric anchors; commissioning constraints include a short temporal baseline and limited $u$-band depth.
+
+\begin{itemize}
+\item Star matching across visits; iterative refinement after initial PSFEx and reference-catalog solutions.
+\item Monster reference catalog role; commissioning constraints (short baseline, shallow $u$-band).
+\item What improved for DP2: differential chromatic refraction (DCR) in astrometry, as-built throughputs in FGCM, and full focal-plane PSF spatial structure.
+\end{itemize}
+
+\todo{Figures: DP1 DRP had no calibration figures (all in \secref{sec:performance}). Keep it that way.}
+
 \subsubsection{PSF Modeling} \label{sec:drp-calibration-psfmodeling}
+
+\begin{itemize}
+\item Piff PixelGrid model and per-CCD polynomial order; $u$-band order reduction when star counts are thin.
+\item PSF quality cuts that feed into visit selection for coadds.
+\item DP2 expectation: stronger spatial structure across the focal plane and mixed vendors; DCR now part of the picture.
+\end{itemize}
+
+\todo{Figures: DP1 put $\delta T/T$ focal-plane maps and whisker plots in Performance \S V.2 (Figs.~16--18), not in DRP. Describe the model here; show residuals in \secref{sec:performance}.}
+
 \subsubsection{Astrometric Calibration} \label{sec:drp-calibration-astrometry}
+
+\begin{itemize}
+\item gbdes multi-visit fit: per-detector map $\rightarrow$ per-visit map $\rightarrow$ Gaia DR3.
+\item DCR correction enabled for LSSTCam (absent in DP1 processing)---what that improves for source positions.
+\item Single-epoch stability assumption over commissioning vs.\ multi-epoch models in operations.
+\end{itemize}
+
+\todo{Figures: repeatability maps, Gaia offsets, and turbulence examples (DP1 Figs.~19--25) belong in \secref{sec:performance}. DCR visualization (DP1 Fig.~26) is especially relevant to call out for DP2 since it was not corrected in DP1 processing.}
+
 \subsubsection{Photometric Calibration} \label{sec:drp-calibration-photometry}
 
+\begin{itemize}
+\item FGCM forward model (atmosphere plus throughput); nightly parameter fit.
+\item Key DP2 change: as-built LSSTCam throughputs replace DP1 nominal ComCam values---affects absolute zeropoints and color terms across the focal plane.
+\item Reference-star constraints from the Monster catalog; band-to-band consistency checks.
+\end{itemize}
+
+\todo{Figures: stellar loci and repeat-observation scatter (DP1 Fig.~27 and Performance \S V.5) stay in \secref{sec:performance}.}
+
 \subsection{Multi-Visit Processing} \label{sec:drp-multivisit}
+
+Multi-visit processing builds deep and template coadds, Object catalogs, and ForcedSource tables on the skymap (tracts and patches).
+The DP2 footprint is much larger than DP1's seven $\sim$1~deg$^2$ fields; Science Validation Wide, Deep, and Deep Drilling Field structure governs how coadds were built.
+
+\begin{itemize}
+\item Skymap (tracts/patches), deep vs.\ template coadds, Object and ForcedSource outputs.
+\item DP2 footprint scale and SV survey structure vs.\ DP1's uniform seven-field strategy.
+\end{itemize}
+
+\todo{Figures: footprint and visit maps belong in \secref{sec:commissioning} and \secref{sec:data_products}; cross-reference from here rather than duplicating.}
+
 \subsubsection{Input Data Selection} \label{sec:drp-multivisit-inputselection}
+
+\begin{itemize}
+\item Seeing and PSF-model quality cuts for deep coadds (DP1: FWHM $<$ \deepcoaddmaxfwhm{}; DP2 threshold TBD) and tighter cuts for templates.
+\item Footprint policy: only include visits that add depth within the established DP2 area; drop sparse edge regions \citep{RTN-011}.
+\item SV survey tiers (Wide, Deep, DDF) and how visit counts per patch drive coadd depth---new relative to DP1.
+\item Best-effort exclusions in crowded or saturated cores (47~Tuc precedent in DP1).
+\end{itemize}
+
+\todo{Figures: seeing histograms and visit-count or depth maps fit better in \secref{sec:commissioning} or \secref{sec:data_products}; cross-reference from here.}
+
 \subsubsection{Coaddition} \label{sec:drp-multivisit-coaddition}
+
+\begin{itemize}
+\item Warping to skymap WCS, PSF matching, and inverse-variance stacking.
+\item CompareWarps artifact rejection before stacking (satellite trails, ghosts, cosmic rays).
+\item Deep vs.\ template coadd roles; cell-coadd stretch-goal status for DP2 \citep{RTN-011}.
+\item Full focal-plane chip gaps and dither pattern visible at scale (cf.\ visit-coverage maps in \secref{sec:commissioning}).
+\end{itemize}
+
+\todo{Figures: DP1 DRP had no coadd figures. Optional color deep coadd from an SV field; DP1 did not include one in DRP.}
+
 \subsubsection{Detection, Deblending, \& Measurement} \label{sec:drp-multivisit-detection}
+
+\begin{itemize}
+\item $5\sigma$ detection, \emph{irzygu} band merging, Scarlet Lite deblending.
+\item Measurement modes and key catalog columns (CModel, GAaP, extendedness, MultiProFit S\'ersic).
+\item Pipeline fixes since DP1 (e.g., S\'ersic/shapelet PSF configuration)---state what changed for DP2.
+\end{itemize}
+
+\todo{Figures: extendedness color--magnitude diagrams and injection completeness (DP1 Figs.~28--30) belong in \secref{sec:performance}.}
+
 \subsubsection{First Look} \label{sec:drp-multivisit-firstlook}
 
+\begin{itemize}
+\item Rubin First Look small-field data within the broader DP2 reprocessing \citep{RTN-083}.
+\item How RFL visits relate to SV processing---lower visit counts, tract-boundary edge cases, template depth.
+\item Known limitations specific to RFL subsets.
+\end{itemize}
+
+\todo{Figures: no DP1 analogue. Locate RFL fields on the commissioning footprint map elsewhere in the paper; no figure required here.}
+
 \subsection{Variable \& Transient Source Processing} \label{sec:drp-variabletransient}
+
+This stage produces difference images and catalogs, multi-epoch forced photometry, and solar system tables.
+Templates are drawn from template coadds; difference imaging runs at full focal-plane scale.
+DRP prioritizes data quality over the latency constraints of Prompt Processing and the operational pixel embargo \citep{RTN-011}.
+
+\begin{itemize}
+\item DIA, forced photometry, and solar system tables---how they fit together.
+\item Templates from template coadds; difference imaging at full focal-plane scale.
+\item DRP vs.\ Prompt Processing: quality/latency trade-off and embargo context.
+\end{itemize}
+
+\todo{Figures: none in DP1 DRP for this subsection block.}
+
 \subsubsection{Light Curves} \label{sec:drp-variabletransient-lightcurves}
+
+\begin{itemize}
+\item Multi-epoch forced photometry on direct visit images and difference images.
+\item Recommend \texttt{psfDiffFlux} on difference-image ForcedSources for variability analysis.
+\item Centroids from coadd Objects or DIAObjects; limitations when visit sequences are sparse.
+\end{itemize}
+
+\todo{Figures: DP1 had no light-curve figure in DRP or Performance. Same for DP2 unless \secref{sec:community_science} shows an example.}
+
 \subsubsection{Solar System Processing} \label{sec:drp-variabletransient-solar}
+
+\begin{itemize}
+\item DP2 scope: cross-match DiaSources to MPCORB ephemerides only---not a Rubin-only orbit catalog \citep{RTN-011}.
+\item Contrast with production Solar System Processing and with DP1's heliolinx discovery pilot.
+\item MPCORB snapshot date; near-ecliptic SV fields drive most of the yield.
+\end{itemize}
+
+\todo{Figures: association residuals (DP1 Fig.~40) belong in \secref{sec:performance}.}
+
 \subsubsection{Difference Image Analysis (DIA)} \label{sec:drp-variabletransient-dia}
+
+\begin{itemize}
+\item Decorrelated Alard--Lupton differencing; $5\sigma$ detections; dipole fitting; DIAObject association.
+\item Template depth and noise set the floor for transient sensitivity.
+\item Basic pixel-flag filtering before ML reliability scoring.
+\end{itemize}
+
+\todo{Figures: injection completeness and centroid residuals (DP1 Figs.~37--39) belong in \secref{sec:performance}.}
+
 \subsubsection{Artifact Rejection} \label{sec:drp-variabletransient-artifact}
+
+\begin{itemize}
+\item ML reliability score on DiaSources (CNN on template, science, and difference cutouts).
+\item Retrained or fine-tuned on LSSTCam data for DP2.
+\item How this complements CompareWarps at the coadd stage---different artifacts, different stage.
+\item Known blind spots (variable stars, comets, odd morphologies)---set expectations for the \texttt{reliability} column.
+\end{itemize}
+
+\todo{Figures: DP1 described the model in DRP prose with validation in \secref{sec:performance}. Optional cutout panel (real vs.\ bogus) if space allows; DP1 did not include one.}
