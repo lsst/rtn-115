@@ -31,7 +31,8 @@ Raw images are those that are produced by the camera following an exposure. They
 
 Since LSSTCam uses the same sized detectors as LSSTComCam, the raw images in DP2 have the same dimensions as those released in DP1: {\bf \color{red} nrawpixx $\times$ nrawpixy}. Each DP2 detector is made up of 16 {\bf \color{red} namppixx $\times$ namppixy} pixel amps, laid out in two rows of eight. As such, each raw image consists of {\bf \color{red} nexposedpixx $\times$ nexposedpixy} exposed pixels. In addition to the exposused pixels, there are {\bf \color{red} DESCRIBE THE OVERSCAN ETC}. Again, the amp size, layout and overscan are the same as the raw images released in DP1. {\bf \color{red} What metadata do raws contain? Do they have any other planes?}. In terms of on-disk size, a single raw image file is typically around {\bf \color{red} rawhddsize}.
 
-\subsubsection{Processed Visit Images}
+\subsubsection{Processed Visit Images (or Visit Images?)}
+\label{ssec:pvi}
 Processed Visit Images (PVIs) are the first scientifically useful images to be produced by the science processing pipeline. They are the result of removing instrument signatures from the raw input images, followed by multiple rounds of background subtraction and photometric and astrometric calibration (see \secref{sec:drp}). There is one PVI for every raw input image that successfully passed through the first stage of the science processing pipelines. As such, there are up to {\bf \color{red} nactivedetectors} PVIs for each of the {\bf \color{red} nexposures} exposure taken during {\bf \color{red} XXX}. In total, {\bf \color{red} npvifails} raws failed processing for various reasons; {\bf \color{red} the most common failure mode was (nfails), followed by (nfails)}. There are thus {\bf \color{red} npvi} PVIs in DP2.
 
 During instrument signature removal (ISR), the science processing pipeline removes the overscan regions from the input raw images. The PVIs therefore only contain the {\bf \color{red} npvipixx $\times$ npvipixy} pixels that were exposed during the observation. Unlike raw images, PVIs consist of three images: a science image, a variance image, and a mask image. The science image is the processed exposed image, whereas the variance image persists the uncertainty associated with the value of the corresponding pixel in the science image. The mask image indicates pixels that are flagged for various different reasons, such as saturated pixels, pixels associated with detected sources, bad pixels, etc. All three images contain the same number of pixels in each dimension. In terms of on-disk size, a single PVI file is typically around {\bf \color{red} pvihddsize}.
@@ -58,6 +59,7 @@ Template Coadds are created, principally, to act as reference images in the proc
 In total, there are {\bf \color{red} ntemplatecoadd} Template Coadds in DP2.
 
 \paragraph{Pretty Coadds}
+Are these only going to be accessible via the HiPS viewer?
 
 \subsubsection{Difference Image}
 
@@ -67,6 +69,11 @@ In total, there are {\bf \color{red} ntemplatecoadd} Template Coadds in DP2.
 Catalogs contain the measured properties of sources and objects detected in the science images described above. The Vera C. Rubin project adopts a naming convention in which objects refer to an astrophysical object, whereas sources refers to a single-epoch detection of that object. As such, sources are typically associated with detections in single-epoch PVI and difference images, wherease objects are typically associated with detections in multi-epoch coadds. In this subsection, we describe the various catalogs released in DP2. All of the catalog types that were released as part of DP1 have been retained in DP2, but there are also a number of additional catalogs that do not have DP1 equivalents. Throughout this section, we provide high-level overviews of the contents of each catalog, rather than listing and describing each column. Instead, full searchable catalogue schemas, including column descriptions, are provided at \url{https://sdm-schemas.lsst.io/}.    
 
 \subsubsection{Source}
+The Source catalog contains the measured properties of all sources that are, prior to deblending, detected at a $>5\sigma$ significance in each of the Processed Visit Images (\secref{ssec:pvi}). The detections in the Source catalogue have all undergone deblending; in the case of blended sources, only the post-deblended sources are included in the Source catalog. It is therefore possible for the Source catalog to contain entries in which none of different types of photometric measurements (e.g., aperture, PSF, gaussian) have flux-to-error ratios greater than five
+
+Each entry in the source catalog has a unique identification number (\texttt{sourceId}), positional information, various photometric measurements (aperture, PSF, gaussian), shape and extendedness information, and a series of flags. Because each entry in the source catalog is derived from a detection in a single epoch observation taken with a single filter, each entry also has an associated band.
+
+The Source catalog contains data for {\bf \color{red} nsources} sources in DP2.
 
 \subsubsection{Object}
 \subsubsection{Object Parent}
