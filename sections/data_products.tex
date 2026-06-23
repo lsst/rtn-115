@@ -47,22 +47,24 @@ The number of PVIs that contribute to a coadd varies across the patch. This is t
 
 As highlighted at the start of this section, the DP2 coadds are cell-based whereas the DP1 Deep Coadds were not ({\bf \color{red} Is this definitely the case for all three types of coadd? I know it is for Deep Coadds, but what about the other two types?}).
 
-\subsubsubsection{Deep Coadds}
+\paragraph{Deep Coadds}
 As the name suggests, Deep Coadds go down to the faintest magnitudes of the three types of coadd. All PVIs with {\bf \color{red} circular} PSFs with FWHM$<${\bf \color{red} deepcoaddselectionfwhm} are selected for inclusion in Deep Coadds. This selection is the most inclusive of all coadd productions and aims to maximise the depth of the coadd while still ensuring good image quality. Of the {\bf \color{red} npvi} PVIs in DP2, {\bf \color{red} ndeepcoaddpvi} satisfy the quality criteria and were therefore used in the creation of the Deep Coadds.
 
 There are a total of {\bf \color{red} ndeepcoadd} Deep Coadds in DP2.
 
-\subsubsection{Template Coadd}
+\paragraph{Template Coadds}
 Template Coadds are created, principally, to act as reference images in the process of image subtraction to produce Difference Images (see \secref{sssec:difference_image}). When performing image subtraction, the point spread function (PSF) of the reference image is degraded to match that of the science image. For this reason, it is beneficial for the reference image to have as small a PSF as possible whilst also ensuring they are deep enough so as to ensure they do not introduce substantial noise during subtraction (i.e., the noise budget is dominated by the single visit image, as opposed to the template coadd). For Template Coadds, the {\bf \color{red} templateCoaddFrac} of PVIs that cover a given cell in a given band with the smallest PSF are selected for coaddition. If one {\bf \color{red} templateCoaddFrac} corresponds to fewer than {\bf \color{red} minTemplateCoaddPVIs} PVIs (i.e., there are fewer than {\bf \color{red} minMultipleTemplateCoaddPVIs} PVIs that cover the cell in a given band), then the {\bf \color{red} minTemplateCoaddPVIs} PVIs with the smallest PSFs are selected. If there are fewer than {\bf \color{red} minTemplateCoaddPVIs} PVIs covering a cell with a given band, then all PVIs are selected. This strategy optimizes for image quality in regions that are well-covered by PVIs, while also ensuring good Template Coadd coverage in regions that are poorly-covered by PVIs. Of the {\bf \color{red} npvi} in DP2, {\bf \color{red} ntemplatecoaddpvi} are selected to be used to create Template Coadds.
 
 In total, there are {\bf \color{red} ntemplatecoadd} Template Coadds in DP2.
 
-\subsubsection{Pretty Coadd?}
-The name ``Pretty Coadds'' is a placeholder.
+\paragraph{Pretty Coadds}
+
 \subsubsection{Difference Image}
+
 \label{sssec:difference_image}
 
 \subsection{Catalogs}
+
 \subsubsection{Source}
 \subsubsection{Object}
 \subsubsection{Object Parent}
