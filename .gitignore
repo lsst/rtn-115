@@ -16,6 +16,7 @@ authors.tex
 aglossary.tex
 
 __pycache__
+*.egg-info/
 
 # Development tooling
 .idea/
