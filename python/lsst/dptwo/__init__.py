@@ -10,6 +10,6 @@
 # license that can be found in the LICENSE file.
 """ DP2 paper utilities. """
 
-from lsst.dptwo.render.tables import *
-from lsst.dptwo.render.parameters import *
+from lsst.dptwo.utils.tables import *
+from lsst.dptwo.utils.parameters import *
 from .utils import *
