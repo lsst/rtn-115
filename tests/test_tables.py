@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from lsst.dptwo.render.tables import (
+from lsst.dptwo.utils.tables import (
     make_simple_table, make_per_band_summary_table,
 )
 

@@ -10,7 +10,7 @@
 import unittest
 from pathlib import Path
 
-from lsst.dptwo.render.parameters import DP2Parameters, addParameter, formatParameter
+from lsst.dptwo.utils.parameters import DP2Parameters, addParameter, formatParameter
 
 OUTPUT_DIR = Path("tests/outputs")
 OUTPUT_FILE = OUTPUT_DIR / "test_parameters_output.tex"
