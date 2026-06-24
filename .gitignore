@@ -15,5 +15,12 @@ authors.tex
 *.ist
 aglossary.tex
 
-
 __pycache__
+
+# Development tooling
+.idea/
+pyproject.toml
+uv.lock
+
+# Test outputs
+tests/outputs
