@@ -1,0 +1,35 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml
+        args:
+          - "--unsafe"
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-toml
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.13.0
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/numpy/numpydoc
+    rev: "v1.8.0"
+    hooks:
+      - id: numpydoc-validation
+
+  - repo: local
+    hooks:
+      - id: copyedit
+        name: Apply journal copy-edit rules
+        description: Rewrites .tex files according to .copyedit-rules.yaml.
+        entry: copyedit
+        language: python
+        files: '\.tex$'
+        # Skip the lsst-texmf submodule and the structured glossary file
+        # (which contains identifiers like {arcsec} that must not be rewritten).
+        exclude: '^(lsst-texmf/|aglossary\.tex$)'
