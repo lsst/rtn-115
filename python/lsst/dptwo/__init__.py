@@ -1,4 +1,4 @@
-# This file is part of utils.
+## This file is part of dptwo.
 #
 # Developed for the LSST Data Management System.
 # This product includes software developed by the LSST Project
@@ -8,8 +8,8 @@
 #
 # Use of this source code is governed by a 3-clause BSD-style
 # license that can be found in the LICENSE file.
-"""DPTWO  Utilities."""
+""" DP2 paper utilities. """
 
-from .tables import *
-from .parameters import *
+from lsst.dptwo.render.tables import *
+from lsst.dptwo.render.parameters import *
 from .utils import *
