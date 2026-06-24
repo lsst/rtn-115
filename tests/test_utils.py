@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import unittest
 
-from lsst.texmf.utils import num2word, round_sf
+from lsst.dptwo.utils import num2word, round_sf
 
 
 class UtilsTestCase(unittest.TestCase):
