@@ -20,7 +20,6 @@ __pycache__
 
 # Development tooling
 .idea/
-pyproject.toml
 uv.lock
 
 # Test outputs
