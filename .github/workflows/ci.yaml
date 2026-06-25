@@ -21,7 +21,7 @@ jobs:
       - name: Python install
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.tx
+          pip install -r requirements.txt
 
       - name: Run tox for tests
         run: |
