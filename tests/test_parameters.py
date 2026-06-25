@@ -101,5 +101,6 @@ class ParameterWriterTestCase(unittest.TestCase):
         self.assertEqual(written, OUTPUT_FILE.resolve())
         self.assertTrue(written.exists())
 
+
 if __name__ == "__main__":
     unittest.main()

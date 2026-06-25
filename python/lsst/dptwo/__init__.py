@@ -8,8 +8,4 @@
 #
 # Use of this source code is governed by a 3-clause BSD-style
 # license that can be found in the LICENSE file.
-""" DP2 paper utilities. """
-
-from lsst.dptwo.utils.tables import *
-from lsst.dptwo.utils.parameters import *
-from .utils import *
+"""DP2 paper utilities."""

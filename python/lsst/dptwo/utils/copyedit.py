@@ -1,4 +1,5 @@
 """Library functions for applying journal copy-edit rules to LaTeX files."""
+
 from __future__ import annotations
 
 import re
@@ -60,7 +61,8 @@ def find_matches(text: str, rule: dict) -> list[re.Match]:
     """All matches of ``rule['pattern']`` outside any skip range."""
     skip_ranges = _skip_ranges(text, rule["skip_lines_matching"])
     return [
-        m for m in rule["pattern"].finditer(text)
+        m
+        for m in rule["pattern"].finditer(text)
         if not _in_skip(m.start(), skip_ranges)
     ]
 
@@ -139,4 +141,3 @@ def process_file(
             print(report_match(str(path), running, rule, m))
 
     return any_fixes, any_audits
-

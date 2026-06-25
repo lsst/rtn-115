@@ -9,13 +9,3 @@
 # Use of this source code is governed by a 3-clause BSD-style
 # license that can be found in the LICENSE file.
 """Utilities for DP2 paper production."""
-
-from __future__ import annotations
-
-from .formatting import custom_float, num2word, round_sf
-
-__all__ = [
-    "custom_float",
-    "num2word",
-    "round_sf",
-]

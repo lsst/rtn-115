@@ -17,14 +17,14 @@ __all__ = [
     "make_per_band_summary_table",
 ]
 
-import numpy as np
 import pandas as pd
-from typing import Any, Optional
+from typing import Optional
 
 
 TABLE_LABEL_PREFIX = "tab"
 DP_RELEASE = "DP2"
 AUTOGEN_STR = "%%%%% This table is auto generated from data, DO NOT EDIT"
+
 
 def get_table_label(df_name: str) -> str:
     """
@@ -99,7 +99,9 @@ def make_simple_table(
     table_lines.append(f"\\label{{{label}}}")
 
     # Table header
-    header_cols = " & ".join([f"\\colhead{{\\textbf{{{col}}}}}" for col in df.columns]) + r"\\"
+    header_cols = (
+        " & ".join([f"\\colhead{{\\textbf{{{col}}}}}" for col in df.columns]) + r"\\"
+    )
     table_lines.append(r"\tablehead{")
     table_lines.append("  " + header_cols)
     table_lines.append(r"}")
@@ -107,10 +109,12 @@ def make_simple_table(
 
     # Table rows
     for _, row in df.iterrows():
-        row_vals = " & ".join([
-            str(val).replace("_", r"\_") if i == 0 else str(val)
-            for i, val in enumerate(row)
-        ])
+        row_vals = " & ".join(
+            [
+                str(val).replace("_", r"\_") if i == 0 else str(val)
+                for i, val in enumerate(row)
+            ]
+        )
         table_lines.append(f"{row_vals} \\\\")
 
     table_lines.append(r"\enddata")
@@ -125,7 +129,7 @@ def make_per_band_summary_table(
     label: str,
     include_all_col: bool = True,
     include_all_row: bool = True,
-    column_spec: Optional[str] = None
+    column_spec: Optional[str] = None,
 ) -> str:
     """
     Create a LaTeX AAS deluxetable for per-band summary statistics.

@@ -16,7 +16,6 @@ OUTPUT_FILE = OUTPUT_DIR / "copyedit_corrected.tex"
 
 
 class CopyeditIntegrationTestCase(unittest.TestCase):
-
     def test_produces_corrected_output(self) -> None:
         OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
