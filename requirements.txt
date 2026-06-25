@@ -1,0 +1,9 @@
+lander<2.0.0
+setuptools
+pyyaml
+tox
+numpy
+astropy
+haversine
+tqdm
+lsst-daf-butler
