@@ -21,13 +21,13 @@ $(DOCNAME).pdf: $(tex) local.bib authors.tex aglossary.tex parameters
 	latexmk -bibtex -xelatex -f $(DOCNAME)
 
 parameters:
-	uv run python bin/dp2_parameters.py --static-only
+	python3 bin/dp2_parameters.py --static-only
 	if [ ! -f sections/parameters_data.tex ]; then \
 		touch sections/parameters_data.tex ; \
 	fi
 
 authors.tex:  authors.yaml
-	uv run $(TEXMFHOME)/../bin/db2authors.py > authors.tex
+	python3 $(TEXMFHOME)/../bin/db2authors.py > authors.tex
 
 flat:
 	if [ ! -d $(FLATDIR) ]; then \
