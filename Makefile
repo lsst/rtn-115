@@ -2,9 +2,9 @@ DOCTYPE = RTN
 DOCNUMBER = 115
 DOCNAME = $(DOCTYPE)-$(DOCNUMBER)
 FLATDIR = forAAS
-SUBDIRS = figures
 
 tex = $(filter-out $(wildcard *aglossary.tex) , $(wildcard *.tex))
+
 
 GITVERSION := $(shell git log -1 --date=short --pretty=%h)
 GITDATE := $(shell git log -1 --date=short --pretty=%ad)
@@ -15,45 +15,38 @@ endif
 
 export TEXMFHOME ?= lsst-texmf/texmf
 
-$(DOCNAME).pdf: $(tex) local.bib authors.tex aglossary.tex parameters
+$(DOCNAME).pdf: $(tex) local.bib authors.tex aglossary.tex parameters_static.tex
 	latexmk -bibtex -xelatex -f $(DOCNAME)
 	makeglossaries $(DOCNAME)
 	latexmk -bibtex -xelatex -f $(DOCNAME)
 
-parameters:
-	python3 bin/dp2_parameters.py --static-only
-	if [ ! -f sections/parameters_data.tex ]; then \
-		touch sections/parameters_data.tex ; \
-	fi
-
 authors.tex:  authors.yaml
 	python3 $(TEXMFHOME)/../bin/db2authors.py > authors.tex
+
+parameters_static.tex: data/static_parameters.yaml
+	python3 bin/dp2_parameters.py --static-only --output-dir sections
 
 flat:
 	if [ ! -d $(FLATDIR) ]; then \
 		mkdir $(FLATDIR) ; \
 	fi
 	latexpand --keep-comments -o $(FLATDIR)/$(DOCNAME).tex $(DOCNAME).tex
-	@for dir in $(SUBDIRS); do \
-		if [ -d "$$dir" ] && [ -n "$$(ls -A $$dir 2>/dev/null)" ]; then \
-			cp $$dir/* $(FLATDIR); \
-			echo "  ✓ Copied $$dir"; \
-		fi; \
-	done
+	if [ -d "figures" ]; then \
+		cp figures/* $(FLATDIR) ;\
+	fi
 	cp aas*.* $(FLATDIR)
 	cp *.bib $(FLATDIR)
 	cd $(FLATDIR) &&\
-	python3 $(TEXMFHOME)/../bin/extract_citations.py $(DOCNAME).tex &&\
-	sed -i '' 's|\\bibliography{local,lsst,ivoa,lsst-dm,refs_ads,refs,books}|\\bibliography{local,allcitations}|g' $(DOCNAME).tex &&\
 	latexmk -bibtex -xelatex -f $(DOCNAME) &&\
 	makeglossaries $(DOCNAME) &&\
 	latexmk -bibtex -xelatex -f $(DOCNAME) &&\
 	latexmk -c &&\
-	rm -f *.gls *.xdv *.glg *.glo *.ist &&\
-	if [ -f README.txt ]; then rm README.txt; fi && \
-	echo "Flat files in $(FLATDIR)."
+	rm -f *.gls *.xdv *.glg *.glo *.ist *.bib &&\
+	rm README.txt
+	echo "Flat files  in $(FLATDIR)."
 
-.PHONY: clean
+
+.PHONY: clean parameters_static
 clean:
 	latexmk -c
 	rm -f $(DOCNAME).bbl
@@ -61,9 +54,10 @@ clean:
 	rm -f meta.tex
 	rm -f authors.tex
 	rm -f $(FLATDIR)/*
-	rm -f *.log
 
 .FORCE:
+
+
 
 SCRIPTS_DIR=scripts
 PYTHON_SCRIPTS=$(wildcard $(SCRIPTS_DIR)/*.py)
