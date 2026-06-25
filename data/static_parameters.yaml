@@ -45,4 +45,3 @@ dptwo:
       value: "v30.0.8"
     - name: sciencepipelinesurl
       value: '\url{https://pipelines.lsst.io/v/v30\_0\_8}'
-

@@ -1,3 +1,5 @@
+exclude: '^aas'
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
@@ -17,18 +19,13 @@ repos:
         args: [--fix]
       - id: ruff-format
 
-  - repo: https://github.com/numpy/numpydoc
-    rev: "v1.8.0"
-    hooks:
-      - id: numpydoc-validation
-
   - repo: local
     hooks:
       - id: copyedit
         name: Apply journal copy-edit rules
         description: Rewrites .tex files according to .copyedit-rules.yaml.
         entry: python bin/copyedit.py
-        language: python
+        language: system
         files: '\.tex$'
         # Skip the lsst-texmf submodule and the structured glossary file
         # (which contains identifiers like {arcsec} that must not be rewritten).
