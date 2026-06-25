@@ -24,7 +24,7 @@ authors.tex:  authors.yaml
 	python3 $(TEXMFHOME)/../bin/db2authors.py > authors.tex
 
 parameters_static.tex: data/static_parameters.yaml
-	python3 bin/dp2_parameters.py --static-only --output-dir sections
+	python3 bin/dp2_parameters.py --static-only
 
 flat:
 	if [ ! -d $(FLATDIR) ]; then \
