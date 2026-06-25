@@ -1,0 +1,50 @@
+[project]
+name = "rtn-115"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "astropy",
+    "pydantic<2.0.0",
+    "lander<2.0.0",
+    "setuptools",
+    "pyyaml",
+    "haversine",
+    "tqdm",
+    "numpy",
+    "pandas",
+    "lsst-daf-butler",
+    "lsst-utils",
+    "pyarrow",
+    "tox>=4.56.0",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["python"]
+
+[dependency-groups]
+dev = [
+    "pre-commit",
+    "pytest",
+    "lsst-sphgeom",
+    "tox",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["python"]
+testpaths = ["tests"]
+
+[tool.tox]
+envlist = ["py"]
+
+[tool.tox.env_run_base]
+skip_install = true
+deps = [
+    "pytest",
+    "lsst-sphgeom",
+]
+set_env = { PYTHONPATH = "{toxinidir}/src:{toxinidir}/python" }
+commands = [["pytest", "{posargs:tests}"]]
