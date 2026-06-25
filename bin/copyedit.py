@@ -16,6 +16,7 @@ Examples
     # Full audit including audit-only rules (e.g. 5-digit number candidates).
     bin/copyedit.py --check --audit $(git ls-files '*.tex')
 """
+
 from __future__ import annotations
 
 import argparse
