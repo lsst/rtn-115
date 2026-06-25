@@ -70,7 +70,8 @@ aglossary.tex :$(tex) myacronyms.txt
 	python3 $(TEXMFHOME)/../bin/generateAcronyms.py -t"Sci DM Gen" -g $(tex)
 
 deps:
-	pip install -r lsst-texmf/requirements.txt 
+	pip install -r lsst-texmf/requirements.txt
+	pip install -r requirements.txt
 
 authors.yaml:
 	python3 $(TEXMFHOME)/../bin/makeAuthorListsFromGoogle.py --builder --signup 4 -p 1CGxjpPuyNJ_gXRHTvkEF0qeI0XedQ-GQgbmyzWFLSUE "RTN-115!A2:E1000"
