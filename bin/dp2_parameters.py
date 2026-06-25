@@ -855,8 +855,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--output-dir",
-        default="sections",
-        help="Directory to write output files (default: sections)",
+        default=".",
+        help="Directory to write output files (default: current directory)",
     )
     parser.add_argument(
         "--static-only",
