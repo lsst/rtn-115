@@ -36,7 +36,6 @@ from astropy import units as u
 from haversine import haversine, Unit
 from tqdm import tqdm
 
-from lsst.daf.butler import Butler
 from lsst.dptwo.utils.parameters import DP2Parameters, addParameter
 
 STATIC_PARAMETERS_FILE = (
@@ -874,6 +873,8 @@ if __name__ == "__main__":
 
     # Update to get from lsst.utils
     if not args.static_only:
+        from lsst.daf.butler import Butler
+
         bands = ["u", "g", "r", "i", "z", "y"]
 
         instrument = "LSSTComCam"
