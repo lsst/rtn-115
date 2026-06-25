@@ -46,7 +46,7 @@ flat:
 	echo "Flat files  in $(FLATDIR)."
 
 
-.PHONY: clean parameters_static
+.PHONY: clean
 clean:
 	latexmk -c
 	rm -f $(DOCNAME).bbl
@@ -56,8 +56,6 @@ clean:
 	rm -f $(FLATDIR)/*
 
 .FORCE:
-
-
 
 SCRIPTS_DIR=scripts
 PYTHON_SCRIPTS=$(wildcard $(SCRIPTS_DIR)/*.py)
