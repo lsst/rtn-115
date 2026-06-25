@@ -66,16 +66,56 @@ Are these only going to be accessible via the HiPS viewer?
 \label{sssec:difference_image}
 
 \subsection{Catalogs}
-Catalogs contain the measured properties of sources and objects detected in the science images described above. The Vera C. Rubin project adopts a naming convention in which objects refer to an astrophysical object, whereas sources refers to a single-epoch detection of that object. As such, sources are typically associated with detections in single-epoch PVI and difference images, wherease objects are typically associated with detections in multi-epoch coadds. In this subsection, we describe the various catalogs released in DP2. All of the catalog types that were released as part of DP1 have been retained in DP2, but there are also a number of additional catalogs that do not have DP1 equivalents. Throughout this section, we provide high-level overviews of the contents of each catalog, rather than listing and describing each column. Instead, full searchable catalogue schemas, including column descriptions, are provided at \url{https://sdm-schemas.lsst.io/}.    
+Catalogs contain data for detections in the images described in \secref{ssec:science_images}, except the \texttt{Calibration} catalog, which contains reference data obtained from previous surveys.
+Observatory-produced metadata tables are described in \secref{ssec:metadata}.
+The Vera C. Rubin project adopts a naming convention in which objects refer to an astrophysical object, whereas sources refers to a single-epoch detection of that object.
+As such, sources are typically associated with detections in single-epoch PVI and difference images, wherease objects are typically associated with detections in multi-epoch coadds.
+All catalogs store fluxes rather than magnitudes, with fluxes measured in nanojanskies (1\xspace nJy = $10^{-35}\xspace$ W$\xspace$m$^{-2}$Hz$^{-1}$ ).
+Fluxes are preferred for multiepoch observations, as they can be averaged across epochs, unlike magnitudes.
+Additionally, flux measurements on difference images (\secref{ssec:science_images}) are computed against a template, representing a flux difference.
+As a result, flux measurements on difference images can be negative, particularly for faint sources in the presence of noise.
+
+The catalogs described below each vary in terms of their specific columns but most contain: one or more unique identification numbers, positional information, multiple types of flux measurements (e.g., aperture fluxes, PSF fluxes, Gaussian fluxes, etc.), and a series of Boolean flags indicating characteristics such as saturation or cosmic-ray contamination for each source or object.
+The solar system catalogs SSObject and SSSource deviate from this general structure in that they instead contain orbital parameters for all known asteroids.
+
+Where applicable, quantities are prefixed with the band in which they were measured, and all measured properties are reported with their associated 1$\sigma$ uncertainties.
+For example, \texttt{g\_ra} and \texttt{g\_raErr} in the Object catalog refer to R.A. and its uncertainty, measured in the $g$ band.
+Fluxes for various apertures are provided together with an uncertainty and a flag, and named in the format \texttt{[band\_]ap[size]Flux}, where \texttt{[size]} is the aperture diameter in pixels, and \texttt{[band\_]} is used where applicable (e.g., in the object catalog, but not in the source catalog; see \secref{sssec:source} and \secref{sssec:object}).
+For example, \texttt{g\_ap03Flux}, \texttt{g\_ap03FluxErr}, \texttt{g\_ap03Flux\_flag} provide the flux, uncertainty and a flag measured within a 3.0 pixel aperture in the $g$ band.
+Similarly for flux measurements using difference algorithms, e.g. \texttt{g\_psfFlux} provides the flux derived using the PSF model as a weight function, forced on $g$ band.
+
+All of the catalog types that were released as part of DP1 have been retained in DP2, although in some cases additional columns have been added for DP2; we highlight prominent additional columns in the subsections below.
+There are also a number of additional catalogs in DP2 that do not have DP1 equivalents. Throughout this section, we provide high-level overviews of the contents of each catalog, rather than listing and describing each column.
+Instead, full searchable catalogue schemas, including column descriptions, are provided at \url{https://sdm-schemas.lsst.io/}.    
+
+Catalog data are stored in the Qserv database (\secref{sssec:qserv}) and are accessible via TAP, and an online DP1 catalog schema is available at \url{https://sdm-schemas.lsst.io/dp2.html}.
+Catalog data are also accessible via the Data Butler (see \secref{sssec:data_butler}).
 
 \subsubsection{Source}
-The Source catalog contains the measured properties of all sources that are, prior to deblending, detected at a $>5\sigma$ significance in each of the Processed Visit Images (\secref{ssec:pvi}). The detections in the Source catalogue have all undergone deblending; in the case of blended sources, only the post-deblended sources are included in the Source catalog. It is therefore possible for the Source catalog to contain entries in which none of different types of photometric measurements (e.g., aperture, PSF, gaussian) have flux-to-error ratios greater than five
+\label{sssec:source}
+The Source catalog contains the measured properties of all sources that are, prior to deblending, detected at a $>5\sigma$ significance in each of the Processed Visit Images (\secref{ssec:pvi}).
+The detections in the Source catalogue have all undergone deblending; in the case of blended sources, only the post-deblended sources are included in the Source catalog.
+It is therefore possible for the Source catalog to contain entries in which none of different types of photometric measurements (e.g., aperture, PSF, gaussian) have flux-to-error ratios greater than five.
 
 Each entry in the source catalog has a unique identification number (\texttt{sourceId}), positional information, various photometric measurements (aperture, PSF, gaussian), shape and extendedness information, and a series of flags. Because each entry in the source catalog is derived from a detection in a single epoch observation taken with a single filter, each entry also has an associated band.
 
 The Source catalog contains data for {\bf \color{red} nsources} sources in DP2.
 
 \subsubsection{Object}
+\label{sssec:object}
+The Object catalog contains data on all objects detected with a greater than $5\sigma$ significance in the Deep Coadds.
+With coadd images produced on a per-band basis, a $>5\sigma$ detection in one or more of the bands will result in an object being included in the \texttt{Object} catalog.
+For cases where an object is detected at $>5\sigma$ in more than one band, a crossmatching has been performed between bands to associate an object in one band with its counterpart(s) in the other bands.
+As such, each entry in the Object catalog contains data from multiple bands.
+The objects reported in the Object catalog have also undergone deblending; in the case of blended detections, only the deblended child objects are included in the catalog.
+As with the Source catalog, the criterion for inclusion in the Object catalog is a $>5\sigma$ detection in one of the Deep Coadds prior to deblending, yet the positions and fluxes of objects are reported postdeblending.
+Hence, it is possible for the Object catalog to contain objects whose flux-to-error ratios are less than five in all bands.
+
+In addition to the general information mentioned above (i.e., IDs, positions, fluxes, and flags), the \texttt{Object} catalog also includes basic shape and extendedness information.
+While they may be included in future Data Releases, no photometric redshifts, Petrosian magnitudes \citep[][]{1976ApJ...209L...1P}, proper motions or periodicity information are included in the DP2 object catalogs.
+
+The \texttt{Object} catalog contains data for \nobjects objects in DP2.
+
 \subsubsection{Object Parent}
 \subsubsection{Object Shear}
 \subsubsection{DIA Source}
