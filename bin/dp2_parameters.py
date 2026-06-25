@@ -1,0 +1,834 @@
+#!/usr/bin/env python
+# This file is part of dptwo.
+#
+# Developed for the LSST Data Management System.
+# This product includes software developed by the LSST Project
+# (https://www.lsst.org).
+# See the COPYRIGHT file at the top-level directory of this distribution
+# for details of code ownership.
+#
+# Use of this source code is governed by a 3-clause BSD-style
+# license that can be found in the LICENSE file.
+#
+# Contact Authors: James Mullaney, Leanne Guy
+"""Generate LaTeX parameter files for the RTN-115 DP2 paper.
+
+Writes two output files to the sections/ directory:
+
+- ``parameters_static.tex`` -- values from ``data/static_parameters.yaml``;
+  no Butler connection required, suitable for CI.
+- ``parameters_data.tex`` -- values derived from the DP2 Butler repository;
+  requires a pre-existing Butler and must be committed manually.
+
+Run with ``--static-only``  to produce only ``parameters_static.tex``.
+"""
+from __future__ import annotations
+
+import argparse
+import logging
+import os
+import warnings
+from pathlib import Path
+
+import numpy as np
+import yaml
+from astropy import units as u
+from haversine import haversine, Unit
+from tqdm import tqdm
+
+from lsst.daf.butler import Butler
+from lsst.dptwo.utils.parameters import DP2Parameters, addParameter
+
+log = logging.getLogger(__name__)
+
+STATIC_PARAMETERS_FILE = Path(__file__).parent.parent / "data" / "static_parameters.yaml"
+
+warnings.filterwarnings("ignore")
+
+
+def staticParameters(params: DP2Parameters) -> DP2Parameters:
+    """Populate ``params`` with values from ``data/static_parameters.yaml``.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    with open(STATIC_PARAMETERS_FILE) as f:
+        data = yaml.safe_load(f)
+    for section, content in data.items():
+        for entry in content['parameters']:
+            params = addParameter(params, entry['name'], entry['value'],
+                                  unit=entry.get('unit'))
+    return params
+
+
+def observingCampaign(params: DP2Parameters) -> DP2Parameters:
+    """Add visit counts, date range, and median exposure times per band.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    visitRecords = registry.queryDimensionRecords('visit')
+    params = addParameter(params, 'nvisits', len(list(visitRecords)))
+
+    exposureRecords = registry.queryDimensionRecords('exposure')
+    params = addParameter(params, 'nexposures', len(list(visitRecords)))
+
+    fields = set([
+        record.target_name
+        for record in exposureRecords if record.target_name != 'slew_icrs'
+        ])
+    params = addParameter(params, 'nfields',
+                          params.values['nfields'] if 'nfields' in params.values
+                          else str(len(fields)))
+
+    visit_table = butler.get('visit_table')
+    firstVisitTime = min(visit_table['obsStart'])
+    lastVisitTime = max(visit_table['obsStart'])
+    lastVisitNight = lastVisitTime - np.timedelta64(1, 'D')
+    params = addParameter(params, 'dptwostartdate',
+                          np.datetime_as_string(firstVisitTime, unit='D'))
+    params = addParameter(params, 'dptwoenddate',
+                          np.datetime_as_string(lastVisitNight, unit='D'))
+
+    u_selection = visit_table['band'] == 'u'
+    params = addParameter(params, 'exposuretime',
+                          f'{np.median(visit_table["expTime"][~u_selection]):.0f}',
+                          unit='s')
+    params = addParameter(params, 'exposuretimeuband',
+                          f'{np.median(visit_table["expTime"][u_selection]):.0f}',
+                          unit='s')
+    return params
+
+
+def observingQuality(params: DP2Parameters) -> DP2Parameters:
+    """Add PSF FWHM statistics (best, median overall, median per band).
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding observing quality parameters...')
+
+    visit_detector_table = butler.get('visit_detector_table')
+    visit_detector_table["psfFwhm"] = visit_detector_table["psfSigma"] * 2.355 * 0.2
+
+    minSeeing = np.min(
+        visit_detector_table['psfFwhm'][visit_detector_table['nPsfStar'] > 100]
+        )
+    params = addParameter(params, 'bestimagequality',
+                          minSeeing.item(), unit='\\arcsec', sig=2)
+
+    medSeeing = np.median(
+        visit_detector_table['psfFwhm'][visit_detector_table['nPsfStar'] > 100]
+        )
+    params = addParameter(params, 'medianimagequalityallbands',
+                          medSeeing.item(), unit='\\arcsec', sig=3)
+
+    df = visit_detector_table[visit_detector_table['nPsfStar'] > 100].to_pandas()
+    bandSeeing = df.groupby('band')['psfFwhm'].median()
+    bandSeeing = bandSeeing.reindex(bands)
+    for band in bandSeeing.index:
+        params = addParameter(params, f'{band}medianimagequality',
+                              float(bandSeeing[band]), unit='\\arcsec', sig=3)
+    return params
+
+
+def imageStats(params: DP2Parameters, imageId: tuple) -> DP2Parameters:
+    """Add count, file size, pixel dimensions, plate scale, and FOV for one dataset type.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+    imageId : `tuple`
+        ``(dataset_type, data_id)`` pair identifying the image to characterise.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    imageType = imageId[0]
+    imageDataId = imageId[1]
+    imageName = imageType.replace('_', '')
+
+    refs = list(registry.queryDatasets(imageType))
+    params = addParameter(params, f'n{imageName}s', len(list(refs)))
+
+    filepath = butler.getURI(imageType, dataId=imageDataId)
+    roughFileSize = round(os.path.getsize(filepath.path) / 1e6, 2)
+    params = addParameter(params, f'{imageName}hdd',
+                          f'{roughFileSize:.0f}', unit='MB')
+
+    image = butler.get(imageType, dataId=imageDataId)
+    params = addParameter(params, f'n{imageName}pixx', image.getDimensions().x)
+    params = addParameter(params, f'n{imageName}pixy', image.getDimensions().y)
+
+    platescale = image.getWcs().getPixelScale().asArcseconds()
+    params = addParameter(params, f'{imageName}platescale',
+                          f'{platescale:.1f}', unit='\\arcsec per pixel')
+
+    fovx = image.getDimensions().x * image.getWcs().getPixelScale().asDegrees()
+    fovy = image.getDimensions().y * image.getWcs().getPixelScale().asDegrees()
+    params = addParameter(params, f'{imageName}fovx', f'{fovx:.2f}', unit='\\degree')
+    params = addParameter(params, f'{imageName}fovy', f'{fovy:.2f}', unit='\\degree')
+    area = fovx * fovy
+    params = addParameter(params, f'{imageName}fov',
+                          f'{area:.3f}', unit='deg$^{\\rm 2}$')
+    return params
+
+
+def imageDatasets(params: DP2Parameters) -> DP2Parameters:
+    """Add image stats for raw, visit_image, deep_coadd, template_coadd, and difference_image.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding image dataset stats...')
+
+    datasets = {
+        'raw': {'instrument': 'LSSTComCam', 'detector': 0,
+                'exposure': 2024110800245, 'band': 'i'},
+        'visit_image': {'instrument': 'LSSTComCam', 'detector': 0,
+                        'visit': 2024110800245, 'band': 'i'},
+        'deep_coadd': {'band': 'g', 'skymap': 'lsst_cells_v1',
+                       'tract': 5063, 'patch': 14},
+        'template_coadd': {'band': 'g', 'skymap': 'lsst_cells_v1',
+                           'tract': 5063, 'patch': 14},
+        'difference_image': {'instrument': 'LSSTComCam', 'detector': 0,
+                             'visit': 2024110800245, 'band': 'i'},
+    }
+    for dataset in datasets.items():
+        params = imageStats(params, dataset)
+
+    params = addParameter(
+        params, 'ndeepcoaddpixtotal',
+        params.values['ndeepcoaddpixx'] * params.values['ndeepcoaddpixy'] / 1e6,
+        sig=3, unit='million')
+    return params
+
+
+def skymapData(params: DP2Parameters) -> DP2Parameters:
+    """Add tract/patch geometry and area parameters from the skymap.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding skymap parameters...')
+
+    params = addParameter(params, 'ntotaltracts', len(skymap))
+
+    tractRecords = list(registry.queryDimensionRecords('tract', where='visit > 0'))
+    tractIds = set([record.id for record in tractRecords])
+    params = addParameter(params, 'ntracts', len(tractIds))
+    params = addParameter(params, 'ncoveredtracts', len(tractIds))
+
+    tract = skymap.generateTract(9000)
+    verticesInDegrees = [
+        (vertex[0].asDegrees() % 360 - 180, vertex[1].asDegrees())
+        for vertex in tract.getVertexList()
+        ]
+    tractArea = (
+        haversine(verticesInDegrees[0][::-1], verticesInDegrees[1][::-1],
+                  unit=Unit.DEGREES) *
+        haversine(verticesInDegrees[1][::-1], verticesInDegrees[2][::-1],
+                  unit=Unit.DEGREES)
+    )
+    params = addParameter(params, 'tractarea',
+                          f'{tractArea:.1f}', unit='deg$^{\\rm 2}$')
+
+    tractOverlap = skymap.config.tractOverlap * 60.
+    params = addParameter(params, 'tractoverlap',
+                          f'{tractOverlap:.1f}', unit='\\arcmin')
+
+    numXPatches, numYPatches = skymap[0].getNumPatches()
+    numPatches = numXPatches * numYPatches
+    params = addParameter(params, 'npatchx', numXPatches)
+    params = addParameter(params, 'npatchy', numYPatches)
+    params = addParameter(params, 'npatch', numPatches)
+
+    patchArea = tractArea / numPatches
+    params = addParameter(params, 'innerpatcharea',
+                          f'{patchArea:.3f}', unit='deg$^{\\rm 2}$')
+
+    refs = list(registry.queryDatasets('deep_coadd'))
+    coadd = butler.get(refs[0])
+    fovx = coadd.getDimensions().x * coadd.getWcs().getPixelScale().asDegrees()
+    fovy = coadd.getDimensions().y * coadd.getWcs().getPixelScale().asDegrees()
+    params = addParameter(params, 'outerpatcharea',
+                          f'{fovx * fovy:.3f}', unit='deg$^{\\rm 2}$')
+
+    wcs = tract.getWcs()
+    patchInfo = tract.getPatchInfo((5, 5))
+    patchOverlap = (
+        (patchInfo.getOuterBBox().getWidth() - patchInfo.getInnerBBox().getWidth())
+        * wcs.getPixelScale().asArcseconds()
+    )
+    params = addParameter(params, 'patchoverlap',
+                          f'{patchOverlap:.1f}', unit='\\arcsec')
+    return params
+
+
+def coaddSelectionCriteria(params: DP2Parameters) -> DP2Parameters:
+    """Add the maximum PSF FWHM threshold used to select visits for deep coadds.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding coadd selection criteria...')
+    refs = list(registry.queryDatasets('selectDeepCoaddVisits_config'))
+    config = butler.get(refs[0])
+    return addParameter(params, 'deepcoaddmaxfwhm',
+                        config.maxPsfFwhm, sig=2, unit='\\arcsec')
+
+
+def surveyPropertyMaps(params: DP2Parameters) -> DP2Parameters:
+    """Add the count of HealSparse survey property maps.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding numbers of survey maps...')
+    allSurveyPropMaps = []
+    for datasetType in butler.registry.queryDatasetTypes():
+        if registry.queryDatasets(datasetType).any(execute=False, exact=False):
+            if datasetType.storageClass.name == "HealSparseMap":
+                allSurveyPropMaps.append(datasetType.name)
+    return addParameter(params, 'nsurveypropertymaps', len(allSurveyPropMaps))
+
+
+def nCatalogDatasets(params: DP2Parameters) -> DP2Parameters:
+    """Add the number of datasets (as words) for each catalog type.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding catalog dataset stats...')
+    from lsst.dptwo.utils.formatting import num2word
+
+    for name, dataset in [
+        ('nsourcecatalogs', 'source'),
+        ('nobjectcatalogs', 'object'),
+        ('ndiaobjectcatalogs', 'dia_object'),
+        ('ndiasourcecatalogs', 'dia_source'),
+        ('nsolarsystemsourcecatalogs', 'ss_source'),
+        ('nvisitsummarytables', 'visit_table'),
+        ('nvisitdetectorsummarytables', 'visit_detector_table'),
+        ('nobjectforcedcatalogs', 'object_forced_source'),
+        ('ndiaobjectforcedcatalogs', 'dia_object_forced_source'),
+    ]:
+        refs = list(registry.queryDatasets(dataset))
+        params = addParameter(params, name, num2word(len(refs)).lower())
+    return params
+
+
+def tableLengths(params: DP2Parameters) -> DP2Parameters:
+    """Add row counts for visit summary, visit-detector summary, and SS catalog tables.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding table lengths...')
+    refs = list(registry.queryDatasets('visit_table'))
+    table = butler.get(refs[0])
+    params = addParameter(params, 'nvisitsummaries', len(table))
+
+    refs = list(registry.queryDatasets('visit_detector_table'))
+    table = butler.get(refs[0])
+    params = addParameter(params, 'nvisitdetectorsummaries', len(table))
+
+    refs = list(registry.queryDatasets('ss_source'))
+    catalog = butler.get(refs[0])
+    params = addParameter(params, 'nsolarsystemsources', len(catalog))
+
+    refs = list(registry.queryDatasets('ss_object'))
+    catalog = butler.get(refs[0])
+    params = addParameter(params, 'nsolarsystemobjects', len(catalog))
+    return params
+
+
+def misc(params: DP2Parameters) -> DP2Parameters:
+    """Add derived parameters computed from previously stored values.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate; must already contain ``nraws`` and
+        ``nvisitimages``.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding misc data...')
+    params = addParameter(params, 'nsfpfails',
+                          params.values['nraws'] - params.values['nvisitimages'])
+    return params
+
+
+def totalDP2Area(params: DP2Parameters) -> DP2Parameters:
+    """Add total survey area by counting non-NO_DATA pixels.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+
+    Notes
+    -----
+    Slow -- iterates all r-band coadds.
+    """
+    log.info('Adding total DP2 area. This is a slow step...')
+    coaddRefs = list(registry.queryDatasets('deep_coadd', where="band = 'r'"))
+    pixcount = 0
+    for coaddRef in tqdm(coaddRefs):
+        im = butler.get('deep_coadd.mask', dataId=coaddRef.dataId)
+        pixcount += im.array.size - np.sum(
+            (im.array & im.getPlaneBitMask('NO_DATA')) > 0
+            )
+    area = pixcount * ((0.2 / 3600) ** 2)
+    params = addParameter(params, 'totalarea',
+                          f'{np.round(area):.0f}', unit='deg$^{\\rm 2}$')
+    return params
+
+
+def nObjects(params: DP2Parameters) -> DP2Parameters:
+    """Add total object count (in millions) across all object catalog patches.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding total number of objects...')
+    runningTotal = 0
+    for ref in tqdm(list(registry.queryDatasets('object'))):
+        catalog = butler.get(ref, parameters={'columns': 'objectId'})
+        runningTotal += len(catalog)
+    params = addParameter(params, 'nobjects',
+                          runningTotal / 1e6, sig=2, unit='million')
+    return params
+
+
+def nSources(params: DP2Parameters) -> DP2Parameters:
+    """Add total source count (in millions) across all source catalog patches.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding total number of sources...')
+    runningTotal = 0
+    for ref in tqdm(list(registry.queryDatasets('source'))):
+        catalog = butler.get(ref, parameters={'columns': 'sourceId'})
+        runningTotal += len(catalog)
+    params = addParameter(params, 'nsources',
+                          runningTotal / 1e6, sig=2, unit='million')
+    return params
+
+
+def nDiaObjects(params: DP2Parameters) -> DP2Parameters:
+    """Add total DIAObject count (in millions) across all dia_object catalog patches.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding total number of diaObjects...')
+    runningTotal = 0
+    for ref in tqdm(list(registry.queryDatasets('dia_object'))):
+        catalog = butler.get(ref, parameters={'columns': 'diaObjectId'})
+        runningTotal += len(catalog)
+    params = addParameter(params, 'ndiaobjects',
+                          runningTotal / 1e6, sig=2, unit='million')
+    return params
+
+
+def nDiaSources(params: DP2Parameters) -> DP2Parameters:
+    """Add total DIASource count (in millions) across all dia_source catalog patches.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding total number of diaSources...')
+    runningTotal = 0
+    for ref in tqdm(list(registry.queryDatasets('dia_source'))):
+        catalog = butler.get(ref, parameters={'columns': 'diaSourceId'})
+        runningTotal += len(catalog)
+    params = addParameter(params, 'ndiasources',
+                          runningTotal / 1e6, sig=2, unit='million')
+    return params
+
+
+def nForced(params: DP2Parameters) -> DP2Parameters:
+    """Add forced-source and unique forced-object counts from object_forced_source.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding total number of forced sources and objects...')
+    runningTotalSrc = 0
+    runningTotalObj = 0
+    for ref in tqdm(list(registry.queryDatasets('object_forced_source'))):
+        catalog = butler.get(ref, parameters={'columns': 'objectId'})
+        runningTotalSrc += len(catalog)
+        runningTotalObj += len(catalog.to_pandas()['objectId'].unique())
+    params = addParameter(params, 'nforcedsources',
+                          runningTotalSrc / 1e6, sig=3, unit='million')
+    params = addParameter(params, 'nforcedobjects',
+                          runningTotalObj / 1e6, sig=2, unit='million')
+    return params
+
+
+def nDiaForced(params: DP2Parameters) -> DP2Parameters:
+    """Add forced-source and unique forced-object counts from dia_object_forced_source.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding total number of DIA forced sources and objects...')
+    runningTotalSrc = 0
+    runningTotalObj = 0
+    for ref in tqdm(list(registry.queryDatasets('dia_object_forced_source'))):
+        catalog = butler.get(ref, parameters={'columns': 'diaObjectId'})
+        runningTotalSrc += len(catalog)
+        runningTotalObj += len(catalog.to_pandas()['diaObjectId'].unique())
+    params = addParameter(params, 'ndiaforcedsources',
+                          runningTotalSrc / 1e6, sig=3, unit='million')
+    params = addParameter(params, 'ndiaforcedobjects',
+                          runningTotalObj / 1e6, sig=2, unit='million')
+    return params
+
+
+def nSSObjects(params: DP2Parameters) -> DP2Parameters:
+    """Add total solar system object count from ss_object.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding total number of SS objects...')
+    runningTotalObj = 0
+    for ref in list(registry.queryDatasets('ss_object')):
+        catalog = butler.get(ref, parameters={'columns': 'ssObjectId'})
+        runningTotalObj += len(catalog)
+    params = addParameter(params, 'nssobjects', runningTotalObj, sig=3)
+    return params
+
+
+def nStarsGals(params: DP2Parameters) -> DP2Parameters:
+    """Add the count of extended (galaxy) objects based on per-band extendedness > 0.5.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding total number of stars and galaxies...')
+    nGals = 0
+    columns = [band + '_extendedness' for band in ['u', 'g', 'r', 'i', 'z', 'y']]
+    for ref in tqdm(list(registry.queryDatasets('object'))):
+        objectTable = butler.get(ref, parameters={'columns': columns})
+        if len(objectTable) > 0:
+            galSelection = (
+                ((objectTable['u_extendedness'] > 0.5) & ~objectTable['u_extendedness'].mask) |
+                ((objectTable['g_extendedness'] > 0.5) & ~objectTable['g_extendedness'].mask) |
+                ((objectTable['r_extendedness'] > 0.5) & ~objectTable['r_extendedness'].mask) |
+                ((objectTable['i_extendedness'] > 0.5) & ~objectTable['i_extendedness'].mask) |
+                ((objectTable['z_extendedness'] > 0.5) & ~objectTable['z_extendedness'].mask) |
+                ((objectTable['y_extendedness'] > 0.5) & ~objectTable['y_extendedness'].mask)
+            )
+            nGals += np.sum(galSelection.data)
+    params = addParameter(params, 'nextendedobjects', nGals / 1e6, sig=2, unit='million')
+    return params
+
+
+def nDeepCoaddInputImages(params: DP2Parameters) -> DP2Parameters:
+    """Add the number of unique visit-detector pairs contributing to deep coadds.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding number of deep coadd input images...')
+    refs = list(mainRegistry.queryDatasets('deep_coadd_input_map'))
+    visitDetectorPairs = set()
+    for ref in tqdm(refs):
+        inputMap = mainButler.get(ref)
+        keyRoots = [
+            key[:5] for key in inputMap.metadata
+            if key.startswith("B") & key.endswith('CCD')
+            ]
+        visitDetectorPairs.update(
+            {(inputMap.metadata[keyRoot + 'VIS'],
+              inputMap.metadata[keyRoot + 'CCD']) for keyRoot in keyRoots}
+        )
+    params = addParameter(params, 'ndeepcoaddvisitimages', len(visitDetectorPairs))
+    return params
+
+
+def nTemplateCoaddInputImages(params: DP2Parameters) -> DP2Parameters:
+    """Add the number of visit images used as template coadd inputs.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding number of template coadd input images...')
+    refs = list(mainRegistry.queryDatasets('template_coadd_visit_selection'))
+    visits = set()
+    for ref in tqdm(refs, desc='Part 1 of 2'):
+        inputVisits = mainButler.get(ref)
+        visits.update({key for (key, value) in inputVisits.items() if value})
+    nTemplateCoaddInputs = 0
+    for visit in tqdm(visits, desc='Part 2 of 2'):
+        nTemplateCoaddInputs += len(
+            list(mainRegistry.queryDatasets('visit_image', visit=visit,
+                                            instrument='LSSTComCam'))
+        )
+    params = addParameter(params, 'ntemplatecoaddvisitimages', nTemplateCoaddInputs)
+    return params
+
+
+def depthEcdfs(params: DP2Parameters) -> DP2Parameters:
+    """Add 5-sigma point-source depth per band for the ECDFS field.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info('Adding ECDFS depths...')
+    tracts = []
+    with butler.query() as base_query:
+        processed_visit_query = (
+            base_query.join_dataset_search("visit_summary")
+            .where("visit.target_name = 'ECDFS'")
+        )
+        for row in processed_visit_query.general(["tract"]):
+            tracts.append(row["tract"])
+
+    for band in tqdm(bands):
+        mags = np.array([])
+        for tract in tracts:
+            columns = [f'{band}_psfFlux', f'{band}_psfFluxErr',
+                       f'{band}_psfFlux_flag', f'{band}_extendedness']
+            table = butler.get('object', tract=tract, skymap='lsst_cells_v1',
+                               parameters={'columns': columns})
+            sn = table[f'{band}_psfFlux'] / table[f'{band}_psfFluxErr']
+            if len(table) > 0:
+                starSelection = (
+                    (~table[f'{band}_psfFlux_flag']) &
+                    (table[f'{band}_extendedness'] <= 0.5) &
+                    ~table[f'{band}_extendedness'].mask &
+                    (sn > 4.9) & (sn < 5.1))
+                flux = table[starSelection][f'{band}_psfFlux'] * u.nJy
+                mags = np.append(mags, flux.to_value(u.ABmag))
+        params = addParameter(params, f'{band}depth', np.median(mags), sig=4)
+    return params
+
+
+if __name__ == "__main__":
+
+    log_file = Path("dp2_parameters.log")
+    logging.basicConfig(level=logging.INFO, format="%(message)s",
+                        handlers=[
+                            logging.FileHandler(log_file, mode="w"),
+                        ])
+
+    print(f"Logging to {log_file}")
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-dir", default="sections",
+                        help="Directory to write output files (default: sections)")
+    parser.add_argument("--static-only", action="store_true",
+                        help="Write only static parameters (no Butler connection required)")
+    args = parser.parse_args()
+    output_dir = Path(args.output_dir)
+
+    # The static parameters from yaml
+    static_params = DP2Parameters()
+    static_params = staticParameters(static_params)
+    static_path = static_params.write(output_dir / "parameters_static.tex")
+    log.info(f"Written static parameters to {static_path}")
+
+    # Update to get from lsst.utils
+    if not args.static_only:
+        bands = ['u', 'g', 'r', 'i', 'z', 'y']
+
+        instrument = 'LSSTComCam'
+        skymapName = 'lsst_cells_v1'
+
+        butler = Butler(
+            "dp2",
+            instrument=instrument,
+            collections=['LSSTCam/DP2', 'skymaps'],
+            skymap=skymapName,
+        )
+        registry = butler.registry
+        skymap = butler.get('skyMap', skymap=skymapName)
+
+        data_params = DP2Parameters()
+        data_params = observingCampaign(data_params)
+        data_params = observingQuality(data_params)
+        data_params = imageDatasets(data_params)
+        data_params = skymapData(data_params)
+        data_params = coaddSelectionCriteria(data_params)
+        data_params = surveyPropertyMaps(data_params)
+        data_params = nCatalogDatasets(data_params)
+        data_params = tableLengths(data_params)
+        data_params = misc(data_params)
+
+        data_params = nObjects(data_params)
+        data_params = nSources(data_params)
+        data_params = nDiaObjects(data_params)
+        data_params = nDiaSources(data_params)
+        data_params = nForced(data_params)
+        data_params = nDiaForced(data_params)
+        data_params = nSSObjects(data_params)
+        data_params = nStarsGals(data_params)
+        data_params = nDeepCoaddInputImages(data_params)
+        data_params = nTemplateCoaddInputImages(data_params)
+        data_params = depthEcdfs(data_params)
+
+        # Calculating area is slow; include in manual parameters if needed.
+        # Needs DP2 update
+        # data_params = totalDP2Area(data_params)
+
+        data_path = data_params.write(output_dir / "parameters_data.tex")
+        log.info(f"Written data parameters to {data_path}")
+
