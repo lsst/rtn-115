@@ -1,0 +1,48 @@
+rubinobservatory:
+  parameters:
+    - name: rubinfov
+      value: 9.6
+      unit: square degrees
+    - name: lsstcampixels
+      value: 3.2
+      unit: gigapixels
+    - name: primarymirrordiameter
+      value: 8.4
+      unit: m
+    - name: effectiveaperture
+      value: 6.5
+      unit: m
+
+lsst:
+  parameters:
+    - name: tenyearcatalogsize
+      value: 15
+      unit: PB
+
+lsstcamsvcampaign:
+  parameters:
+    - name: svcampaignstartdate
+      value: "2025-04-16"
+    - name: svcampaignenddate
+      value: "2025-09-21"
+    - name: sizeinbytes
+      value: X.Y
+      unit: TB
+    - name: totalarea
+      value: 15000
+      unit: square degrees
+    - name: maxdepthshalloweranyband
+      value: X.Y
+      unit: magnitudes
+
+dptwo:
+  parameters:
+    - name: dptwostartdate
+      value: "2025-04-16"
+    - name: dptwoenddate
+      value: "2026-01-06"
+    - name: sciencepipelinesversion
+      value: "v30.0.8"
+    - name: sciencepipelinesurl
+      value: '\url{https://pipelines.lsst.io/v/v30\_0\_8}'
+

@@ -1,21 +1,4 @@
-"""Apply journal copy-edit rules to LaTeX files.
-
-Reads ``.copyedit-rules.yaml`` from the repo root and applies regex
-substitutions to the files passed on the command line. Designed to run as a
-pre-commit hook (auto-fix mode) and as a CI check (``--check``).
-
-Examples
---------
-    # Pre-commit: rewrite files in place; exit non-zero if anything changed so
-    # the developer is prompted to re-stage.
-    python scripts/copyedit.py file1.tex file2.tex
-
-    # CI / one-off audit: report violations without touching files.
-    python scripts/copyedit.py --check $(git ls-files '*.tex')
-
-    # Full audit including audit-only rules (e.g. 5-digit number candidates).
-    python scripts/copyedit.py --check --audit $(git ls-files '*.tex')
-"""
+"""Library functions for applying journal copy-edit rules to LaTeX files."""
 from __future__ import annotations
 
 import re
@@ -107,4 +90,53 @@ def report_match(path_str: str, text: str, rule: dict, m: re.Match) -> str:
     snippet = text[line_start:line_end].strip()
     return f"{path_str}:{line_no}: [{rule['name']}] {snippet}"
 
+
+def process_file(
+    path: Path,
+    fix_rules: list[dict],
+    audit_rules: list[dict],
+    check: bool,
+) -> tuple[bool, bool]:
+    """Apply rules to one file; return ``(any_fixes, any_audits)``.
+
+    In fix mode rewrites the file in place and prints a summary line.
+    In check mode prints each violation without modifying the file.
+    """
+    if not path.is_file():
+        return False, False
+    try:
+        text = path.read_text()
+    except UnicodeDecodeError:
+        return False, False
+
+    running = text
+    per_file_summary: list[tuple[dict, int]] = []
+    check_reports: list[tuple[dict, str, re.Match]] = []
+    for rule in fix_rules:
+        matches = find_matches(running, rule)
+        if not matches:
+            continue
+        per_file_summary.append((rule, len(matches)))
+        if check:
+            for m in matches:
+                check_reports.append((rule, running, m))
+        running, _ = apply_rule(running, rule)
+
+    any_fixes = bool(per_file_summary)
+    if any_fixes:
+        if check:
+            for rule, snapshot, m in check_reports:
+                print(report_match(str(path), snapshot, rule, m))
+        else:
+            path.write_text(running)
+            summary = ", ".join(f"{rule['name']}×{n}" for rule, n in per_file_summary)
+            print(f"copyedit: fixed {path} ({summary})")
+
+    any_audits = False
+    for rule in audit_rules:
+        for m in find_matches(running, rule):
+            any_audits = True
+            print(report_match(str(path), running, rule, m))
+
+    return any_fixes, any_audits
 

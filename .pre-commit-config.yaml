@@ -27,7 +27,7 @@ repos:
       - id: copyedit
         name: Apply journal copy-edit rules
         description: Rewrites .tex files according to .copyedit-rules.yaml.
-        entry: copyedit
+        entry: python bin/copyedit.py
         language: python
         files: '\.tex$'
         # Skip the lsst-texmf submodule and the structured glossary file

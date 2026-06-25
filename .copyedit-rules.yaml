@@ -267,6 +267,20 @@ rules:
     replacement: 'Data Release\1'
     note: 'Capitalize "Data Release(s)" when describing a Rubin Data Release.'
 
+  - name: sq-deg
+    # Matches abbreviated and written-out forms of square degrees.
+    # Covers: "sq deg", "sq. deg", "square degree", "square degrees".
+    pattern: '\b(?:sq\.?\s*deg\.?|square\s+degrees?)\b'
+    replacement: 'deg$^{\\rm 2}$'
+    note: 'AAS style: use deg$^{\rm 2}$ for square degrees.'
+
+  - name: sim-thin-space
+    # Catches $\sim$~ (missing thin space) and replaces with $\sim$\,~.
+    # The \, separates the tilde from the non-breaking space before the value.
+    pattern: '\$\\sim\$~'
+    replacement: '$\\sim$\\,~'
+    note: 'Add thin space after \sim: "$\sim$~27" → "$\sim$\,~27".'
+
   - name: thousands-separator-5digit
     # Flag bare 5-digit numbers like 10000 that should be 10,000 in prose.
     # Audit-only: many 5-digit values in a typical astronomy paper are

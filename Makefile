@@ -15,13 +15,19 @@ endif
 
 export TEXMFHOME ?= lsst-texmf/texmf
 
-$(DOCNAME).pdf: $(tex) local.bib authors.tex aglossary.tex
+$(DOCNAME).pdf: $(tex) local.bib authors.tex aglossary.tex parameters
 	latexmk -bibtex -xelatex -f $(DOCNAME)
 	makeglossaries $(DOCNAME)
 	latexmk -bibtex -xelatex -f $(DOCNAME)
 
+parameters:
+	uv run python bin/dp2_parameters.py --static-only
+	if [ ! -f sections/parameters_data.tex ]; then \
+		touch sections/parameters_data.tex ; \
+	fi
+
 authors.tex:  authors.yaml
-	python3 $(TEXMFHOME)/../bin/db2authors.py > authors.tex
+	uv run $(TEXMFHOME)/../bin/db2authors.py > authors.tex
 
 flat:
 	if [ ! -d $(FLATDIR) ]; then \
@@ -55,6 +61,7 @@ clean:
 	rm -f meta.tex
 	rm -f authors.tex
 	rm -f $(FLATDIR)/*
+	rm -f *.log
 
 .FORCE:
 
