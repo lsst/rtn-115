@@ -54,6 +54,7 @@ clean:
 	rm -f meta.tex
 	rm -f authors.tex
 	rm -f $(FLATDIR)/*
+	rm -f parameters_static.tex
 
 .FORCE:
 
