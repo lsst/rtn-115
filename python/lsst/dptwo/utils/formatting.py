@@ -69,6 +69,8 @@ def num2word(num: int) -> str:
 
 _UNIT_TO_LATEX = {
     "square degrees": "deg$^{\\rm 2}$",
+    "square degrees square meters": "deg$^{\\rm 2}$\\,m$^{\\rm 2}$",
+    "inverse pixels": "pixel$^{-1}$",
 }
 
 

@@ -6,12 +6,18 @@ rubinobservatory:
     - name: lsstcampixels
       value: 3.2
       unit: gigapixels
+    - name: rawplatescale
+      value: 0.2
+      unit: inverse pixels
     - name: primarymirrordiameter
       value: 8.4
       unit: m
     - name: effectiveaperture
       value: 6.5
       unit: m
+    - name: rubinetendue
+      value: 319
+      unit: square degrees square meters
 
 lsst:
   parameters:
@@ -28,12 +34,6 @@ lsstcamsvcampaign:
     - name: sizeinbytes
       value: X.Y
       unit: TB
-    - name: totalarea
-      value: 15000
-      unit: square degrees
-    - name: maxdepthshalloweranyband
-      value: X.Y
-      unit: magnitudes
 
 dptwo:
   parameters:

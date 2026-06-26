@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 import os
 import warnings
+from datetime import datetime
 from pathlib import Path
 
 import numpy as np
@@ -65,6 +66,41 @@ def staticParameters(params: DP2Parameters) -> DP2Parameters:
             params = addParameter(
                 params, entry["name"], entry["value"], unit=entry.get("unit")
             )
+    return params
+
+
+def nightsBetween(start_date: str, end_date: str) -> int:
+    """Return the number of nights between two ISO-format date strings."""
+    start = datetime.strptime(start_date, "%Y-%m-%d")
+    end = datetime.strptime(end_date, "%Y-%m-%d")
+    return (end - start).days
+
+
+def campaignNights(params: DP2Parameters) -> DP2Parameters:
+    """Add night counts for the SV and DP2 campaigns if start and end dates are present.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    if "svcampaignstartdate" in params.values and "svcampaignenddate" in params.values:
+        params = addParameter(
+            params,
+            "svcampaignnnights",
+            nightsBetween(params.values["svcampaignstartdate"], params.values["svcampaignenddate"]),
+        )
+    if "dptwostartdate" in params.values and "dptwoenddate" in params.values:
+        params = addParameter(
+            params,
+            "dptwonnights",
+            nightsBetween(params.values["dptwostartdate"], params.values["dptwoenddate"]),
+        )
     return params
 
 
@@ -869,6 +905,7 @@ if __name__ == "__main__":
     # The static parameters from yaml
     static_params = DP2Parameters()
     static_params = staticParameters(static_params)
+    static_params = campaignNights(static_params)
     static_path = static_params.write(output_dir / "parameters_static.tex")
 
     # Update to get from lsst.utils
