@@ -16,6 +16,7 @@ __all__ = [
     "custom_float",
     "num2word",
     "round_sf",
+    "unit_to_latex",
 ]
 
 import math
@@ -64,6 +65,19 @@ def num2word(num: int) -> str:
         90: "Ninety",
     }
     return num_to_word.get(num, str(num))
+
+
+_UNIT_TO_LATEX = {
+    "square degrees": "deg$^{\\rm 2}$",
+}
+
+
+def unit_to_latex(unit: str) -> str:
+    """Return the LaTeX representation of a plain-text unit string.
+
+    Returns the original string unchanged if no mapping is defined.
+    """
+    return _UNIT_TO_LATEX.get(unit, unit)
 
 
 def round_sf(value: float, sig: int = 3) -> float:
