@@ -3,7 +3,7 @@ DOCNUMBER = 115
 DOCNAME = $(DOCTYPE)-$(DOCNUMBER)
 FLATDIR = forAAS
 
-tex = $(filter-out $(wildcard *aglossary.tex) , $(wildcard *.tex))
+tex = $(filter-out $(wildcard *aglossary.tex) , $(wildcard sections/*.tex) $(wildcard *.tex) )
 
 
 GITVERSION := $(shell git log -1 --date=short --pretty=%h)
