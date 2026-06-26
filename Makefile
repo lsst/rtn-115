@@ -68,7 +68,7 @@ authors.csv: authors.yaml
 	python3 $(TEXMFHOME)/../bin/db2authors.py -m aascsv > authors.csv
 
 aglossary.tex :$(tex) myacronyms.txt
-	python3 $(TEXMFHOME)/../bin/generateAcronyms.py -t"Sci DM Gen" -g $(tex)
+	python3 $(TEXMFHOME)/../bin/generateAcronyms.py -n -t"Sci DM Gen" -g $(tex)
 
 deps:
 	pip install -r lsst-texmf/requirements.txt
