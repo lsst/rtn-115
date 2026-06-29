@@ -46,7 +46,7 @@ class ParameterWriterTestCase(unittest.TestCase):
         self.params.add("exposuretime", 30, unit="s")
         self.assertEqual(
             formatParameter(self.params, "exposuretime"),
-            "\\newcommand{\\exposuretime}{30\\xspace s\\xspace}\n",
+            "\\newcommand{\\exposuretime}{30\\,s\\xspace}\n",
         )
 
     def test_format_parameter_for_angular_unit(self) -> None:
