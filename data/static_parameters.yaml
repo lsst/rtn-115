@@ -212,3 +212,4 @@ surveypropertymaps:
   parameters:
     - name: nsurveypropertymaps
       value: forteen
+      unit: mag

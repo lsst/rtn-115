@@ -444,7 +444,6 @@ def coaddSelectionCriteria(params: DP2Parameters) -> DP2Parameters:
     params : `DP2Parameters`
         Updated parameter store.
     """
-    log.info("Adding coadd selection criteria...")
     refs = list(registry.queryDatasets("selectDeepCoaddVisits_config"))
     config = butler.get(refs[0])
     return addParameter(
@@ -864,6 +863,7 @@ if __name__ == "__main__":
         help="Write only static parameters (no Butler connection required)",
     )
     args = parser.parse_args()
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     output_dir = Path(args.output_dir)
 
     # The static parameters from yaml
