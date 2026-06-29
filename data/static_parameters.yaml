@@ -2,7 +2,7 @@ rubinobservatory:
   parameters:
     - name: rubinfov
       value: 9.6
-      unit: square degrees
+      unit: deg2
     - name: lsstcampixels
       value: 3.2
       unit: gigapixels
@@ -17,16 +17,12 @@ rubinobservatory:
       unit: m
     - name: rubinetendue
       value: 319
-      unit: square degrees square meters
-    - name: startoperations
-      value: 2025-10-25
-    - name: firstalerts
-      value: 2026-02-24
+      unit: deg2m2
+    - name: nbrokers
+      value: seven
 
 lsst:
   parameters:
-    - name: lsststartdate
-      value: "2026-06-29"
     - name: tenyearcatalogsize
       value: 15
       unit: PB
@@ -48,6 +44,7 @@ dpone:
     - name: dponesize
       value: 3.5
       unit: TB
+
 dptwo:
   parameters:
     - name: sciencepipelinesversion
@@ -213,3 +210,5 @@ surveypropertymaps:
     - name: nsurveypropertymaps
       value: forteen
       unit: mag
+    - name: ndrpinputvisits
+      value: 21067
