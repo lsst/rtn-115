@@ -20,6 +20,60 @@ This section describes the high-level algorithms, configurations, and verificati
 \subsection{Single-Visit Processing} \label{sec:drp-singlevisit}
 
 \subsubsection{Calibration \& Instrument Signature Removal (ISR)} \label{sec:drp-singlevisit-calibrationisr}
+
+The first task in data processing begins with a raw image. This image is in integerized analog-to-digital units (ADU, or counts) and contains detector artifacts imprinted by the physics of the detector and readout hardware. 
+This step aims to remove any artifacts that are not of astrophysical origin and produce science-ready, single-visit exposures in floating-point electron units with complete pixel masks.
+
+The process is based on our understanding of the physics of our detectors and where each artifact enters in the photon-transfer chain characterized by a set of pre-computed calibrations from dedicated calibration campaigns conducted during the day or cloudy nights.
+\figref{fig:isr_signal_chain} illustrates the model of detector components and readout electronics and their impact on the signal. The ISR pipeline works backward through the signal chain to undo the effects in reverse-chronological order in which they imprint on the image.
+
+Detectors vary in instrument response and performance. These variations are more heterogeneous in LSSTCam than they were for LSST ComCam for DP1 processing since the full LSSTCam focal plane comprises 189 science charge-coupled devices (CCDs) made by two vendors (Imaging Technologies Laboratories, ITL, and Teledyne e2V, E2V).
+Every detector therefore needs to undergo ISR separately.
+
+A detailed description of the DP2 ISR procedures and the calibration products they consume can be found in (Cite RTN-117 here when DOI becomes available).
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\linewidth]{calibration_boxes_detector_model}
+  \caption{The model of the detector and REB components, labeled with the effects that they impart on signal.}
+  \label{fig:isr_signal_chain}
+\end{figure}
+
+The ISR processing pipeline for DP2 performs, in the following order:
+(1) conversion of the raw integers to floating point,
+(2) ADU dithering to mitigate quantization effects,
+(3) serial overscan subtraction,
+(4) saturated- and suspect-pixel masking,
+(5) gain (electrons/ADU) correction,
+(6) crosstalk correction,
+(7) parallel overscan subtraction,
+(8) non-linearity correction,
+(9) deferred-charge correction,
+(10) vendor-specific masking (E2V edge bleed; the ITL ``dip,'' saturation sag, and edge bleed),
+(11) bias subtraction,
+(12) dark subtraction,
+(13) defect masking,
+(14) saturated pixel footprint widening,
+(15) brighter-fatter correction,
+(16) variance plane estimation,
+(17) flat fielding, and
+(18) interpolation over masked pixels.
+
+Each artifact need to be calibrated under the same conditions as the science image it is taken.
+Several environmental changes can invalidate earlier calibrations, inluding camera power cycles, large temperature shifts, or changes to CCD operating mode (sequencer).
+During the timeframe over which DP2 data was acquired, ISR calibration products are organized into three epochs, each certified for a distinct range of observing conditions and CCD sequencer configurations.
+Epoch~1 (April~24--July~2 2025) covers the initial on-sky commissioning period with the \texttt{2s\_v30} sequencer and defect maps derived from in-lab calibration campaigns before the camera was installed on the telescope.
+Epoch~2 (July~3--September~21 2025) used an updated \texttt{3s\_v1} sequencer that lowered the saturation point, but reduced read noise, crosstalk, and charge persistence from previous exposures.
+In October, we had a maintenance shutdown of the observatory, and following the shutdown, epoch~3 (2025 October~24--2026 January~6) continues under the \texttt{3s\_v1} sequencer with a new set of calibrations.
+A fourth epoch, which is not included in DP2 began January~23,~2026 and uses the \texttt{3s\_v2} sequencer and features reductions in correlated noise and improvements to the readout linearity.
+
+The most notable shift from DP1 calibrations is the shift from using the Coulton et al. Brighter-Fatter Correction to th eAstier et al. brighter fatter caliibration.
+
+
+% Relative to DP1, the DP2 pipeline differs in several respects driven by the move to the full LSSTCam focal plane.
+% The two-vendor focal plane also introduces vendor-specific masking steps absent in DP1: edge-bleed masking for E2V amplifiers, and the ITL ``dip,'' saturation-sag, and edge-bleed masks for ITL sensors.
+% Flat fielding for DP2 follows the calibration strategy described in \citet{RTN-117}, rather than the rotationally dithered twilight flats used for DP1.
+
 \subsubsection{Background Subtraction} \label{sec:drp-singlevisit-background}
 \input{subsubsections/background}
 
