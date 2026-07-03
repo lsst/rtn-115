@@ -4,57 +4,123 @@ In this section we describe the data products that are included in DP2.
 Data rights holders can access all of these data products via one or more of the data services outlined in \secref{sec:data_services}.
 For programmatic reasons, the precise names of the data product can differ slightly depending on which data service is being used to retrieve them.
 For this reason, we use descriptive names throughout this section and provide their equivalent names used in the data services in Table \tabref{tab:product_names} in \secref{sec:data_services}.
-We note that some data products are not available in all data services; we indicate in the following descriptions when this is the case. 
+We note that some data products are not available in all data services; we indicate in the following descriptions when this is the case.
 
 As with DP1, all the data products described in this section fall under one of five categories:
 \begin{itemize}
 \item Science Images, including pre-processed raw images, processed visit images, a variety of different types of coadded images, and difference images;
-\item Catalogs of astrophysical Sources and Objects detected and measured in the aforementioned science images. We also provide the reference catalog that was constucted to astrometrically and photometrically calibrate the data during processing;
+\item Catalogs of astrophysical Sources and Objects detected and measured in the aforementioned science images.
+We also provide the reference catalog that was constucted to astrometrically and photometrically calibrate the data during processing;
 \item Maps, which provide non-science-level visualisations of the data;
 \item Ancillary Data Products, such as the values of the configuration parameters that were used during data processing, processing logs, and calibration data products;
 \item Metadata, in the form of tables containing information about each visit and processed visit image, such as visit pointing coordinates, exposure times, and data quality summary statistics.
-\end{itemize} 
+\end{itemize}
 
-We expect that the Science Images and Catalogs will be the most heavily used categories. That said, the Maps, Ancillary Data Products and Metada are important to help facilitate science expoitation and for transparency. While the categories of data products in DP2 are the same as in DP1, this second Data Preview contains a wider range of data product types compared to DP1.  This is principally due to the science processing pipeline being in a more mature state compared to the first data preview. In the following sections we clearly indicate those data product types wihch are new to DP2.
+We expect that the Science Images and Catalogs will be the most heavily used categories.
+That said, the Maps, Ancillary Data Products and Metada are important to help facilitate science expoitation and for transparency.
+While the categories of data products in DP2 are the same as in DP1, this second Data Preview contains a wider range of data product types compared to DP1.
+This is principally due to the science processing pipeline being in a more mature state compared to the first data preview.
+In the following sections we clearly indicate those data product types wihch are new to DP2.
 
-As with DP1, the science processing pipelines use a skymap to facilitate processing. The skymap divides the sky into a series of equal-area tracts, which are then subdivided into a number of patches. The skymap used for DP2 processing contains {\bf \color{red} ntracts}, each of which covers approximately {\bf \color{red} tractarea}, which is the same as the skymap used to produce DP1. The tracts are arranged in rings of constant declination, starting at the southern pole and having an index number that increases first by increasing right ascension and then by increasing declination. Each DP2 tract contains {\bf \color{red} npatchx$\times$npatchy} patches, again the same number as the DP1 skymap. Since tracts are equal-area, the amount of overlap between tracts differs depending on declination, with tracts near the celestial poles having more overlap than those near the celestial equator. The minimum amount of overlap between tracts is {\bf \color{red} tractoverlap}. Within a tract, the amount of overlap between patches is a constant {\bf \color{red} patchoverlap}. The aerial coverage of each patch is {\bf \color{red} patcharea} which, due to the patch overlap, is somewhat larger than the tract area divided by the number of patches in a tract.
+As with DP1, the science processing pipelines use a skymap to facilitate processing.
+The skymap divides the sky into a series of equal-area tracts, which are then subdivided into a number of patches.
+The skymap used for DP2 processing contains {\bf \color{red} ntracts}, each of which covers approximately {\bf \color{red} tractarea}, which is the same as the skymap used to produce DP1.
+The tracts are arranged in rings of constant decl., starting at the southern pole and having an index number that increases first by increasing R.A. and then by increasing decl..
+Each DP2 tract contains {\bf \color{red} npatchx$\times$npatchy} patches, again the same number as the DP1 skymap.
+Since tracts are equal-area, the amount of overlap between tracts differs depending on decl., with tracts near the celestial poles having more overlap than those near the celestial equator.
+The minimum amount of overlap between tracts is {\bf \color{red} tractoverlap}.
+Within a tract, the amount of overlap between patches is a constant {\bf \color{red} patchoverlap}.
+The aerial coverage of each patch is {\bf \color{red} patcharea} which, due to the patch overlap, is somewhat larger than the tract area divided by the number of patches in a tract.
 
-While the tract and patch configuration is the same between DP1 and DP2, there is a slight difference in their respective skymaps at the cell-level. Cells are subdivisions of patches but, unlike patches, are not exposed to the user: one cannot specify and retrieve an individual ``cell'' from an image. Rather, cells are referred to during the generation of coadds in that a region of an input image is only included in a coadd if, and only if, it covers the entire cell. This results in more consistent coverage across a coadded image. Such cell-based coaddition was not implemented during the production of DP1. In DP2, there are {\bf \color{red} ncellx $\times$ ncelly} cells per patch, including the patch overlap region (the patch overlap region is {\bf \color{red} ncellpatchoverlap} wide). There is no overlap between neighboring cells.
+While the tract and patch configuration is the same between DP1 and DP2, there is a slight difference in their respective skymaps at the cell-level.
+Cells are subdivisions of patches but, unlike patches, are not exposed to the user: one cannot specify and retrieve an individual ``cell'' from an image.
+Rather, cells are referred to during the generation of coadds in that a region of an input image is only included in a coadd if, and only if, it covers the entire cell.
+This results in more consistent coverage across a coadded image.
+Such cell-based coaddition was not implemented during the production of DP1.
+In DP2, there are {\bf \color{red} ncellx $\times$ ncelly} cells per patch, including the patch overlap region (the patch overlap region is {\bf \color{red} ncellpatchoverlap} wide).
+There is no overlap between neighboring cells.
 
 \subsection{Science Images}
-In this section we describe the science images included in DP2. These are images of the night sky, as opposed to calibration images (e.g., bias, darks, flats; see \secref{sssec:calibration_images}). Since we provide the raw, unprocessed science images and the calibration images and used during processing it is possible, in principle, for a user to generate their own calibrated processed images. We strongly recommend, however, that users start with the processed visit images and only do their own processing if there is a strong scientific need to do so.
+In this section we describe the science images included in DP2.
+These are images of the night sky, as opposed to calibration images (e.g., bias, darks, flats; see \secref{sssec:calibration_images}).
+Since we provide the raw, unprocessed science images and the calibration images and used during processing it is possible, in principle, for a user to generate their own calibrated processed images.
+We strongly recommend, however, that users start with the processed visit images and only do their own processing if there is a strong scientific need to do so.
 
 Talk about fits file format?
 
 \subsubsection{Raws}
-Raw images are those that are produced by the camera following an exposure. They are the initial input science images to the pipelines and have not undergone any processing. Each active detector in LSSTCam produces one raw image per exposure. Each exposure therefore results in up to {\bf \color{red}nactivedetectors} raw images, although some exposures taken during {\bf \color{red} XXX; official name for campaign} resulted in fewer than {\bf \color{red} nactivedetectors} raw images due to the problematic detectors described in \secref{sec:commissioning} and {\bf \color{red} occasiional readout failures??}. The {\bf \color{red} nexposures} exposures taken during {\bf \color{red} XXX} resulted in a total of {\bf \color{red} nraws} raw images, all of which are included in DP2. A breakdown of the number of raws per field and per band is given in table \tabref{tab:rawbreakdown}. 
+Raw images are those that are produced by the camera following an exposure.
+They are the initial input science images to the pipelines and have not undergone any processing.
+Each active detector in LSSTCam produces one raw image per exposure.
+Each exposure therefore results in up to {\bf \color{red}nactivedetectors} raw images, although some exposures taken during {\bf \color{red} XXX; official name for campaign} resulted in fewer than {\bf \color{red} nactivedetectors} raw images due to the problematic detectors described in \secref{sec:commissioning} and {\bf \color{red} occasiional readout failures??}.
+The {\bf \color{red} nexposures} exposures taken during {\bf \color{red} XXX} resulted in a total of {\bf \color{red} nraws} raw images, all of which are included in DP2. A breakdown of the number of raw images per field and per band is given in table \tabref{tab:rawbreakdown}.
 
-Since LSSTCam uses the same sized detectors as LSSTComCam, the raw images in DP2 have the same dimensions as those released in DP1: {\bf \color{red} nrawpixx $\times$ nrawpixy}. Each DP2 detector is made up of 16 {\bf \color{red} namppixx $\times$ namppixy} pixel amps, laid out in two rows of eight. As such, each raw image consists of {\bf \color{red} nexposedpixx $\times$ nexposedpixy} exposed pixels. In addition to the exposused pixels, there are {\bf \color{red} DESCRIBE THE OVERSCAN ETC}. Again, the amp size, layout and overscan are the same as the raw images released in DP1. {\bf \color{red} What metadata do raws contain? Do they have any other planes?}. In terms of on-disk size, a single raw image file is typically around {\bf \color{red} rawhddsize}.
+Since LSSTCam uses the same sized detectors as LSSTComCam, the raw images in DP2 have the same dimensions as those released in DP1: {\bf \color{red} nrawpixx $\times$ nrawpixy}.
+Each DP2 detector is made up of 16 {\bf \color{red} namppixx $\times$ namppixy} pixel amps, laid out in two rows of eight.
+As such, each raw image consists of {\bf \color{red} nexposedpixx $\times$ nexposedpixy} exposed pixels.
+In addition to the exposused pixels, there are {\bf \color{red} DESCRIBE THE OVERSCAN ETC}.
+Again, the amp size, layout and overscan are the same as the raw images released in DP1. {\bf \color{red} What metadata do raw images contain? Do they have any other planes?}.
+In terms of on-disk size, a single raw image file is typically around {\bf \color{red} rawhddsize}.
 
 \subsubsection{Processed Visit Images (or Visit Images?)}
 \label{ssec:pvi}
-Processed Visit Images (PVIs) are the first scientifically useful images to be produced by the science processing pipeline. They are the result of removing instrument signatures from the raw input images, followed by multiple rounds of background subtraction and photometric and astrometric calibration (see \secref{sec:drp}). There is one PVI for every raw input image that successfully passed through the first stage of the science processing pipelines. As such, there are up to {\bf \color{red} nactivedetectors} PVIs for each of the {\bf \color{red} nexposures} exposure taken during {\bf \color{red} XXX}. In total, {\bf \color{red} npvifails} raws failed processing for various reasons; {\bf \color{red} the most common failure mode was (nfails), followed by (nfails)}. There are thus {\bf \color{red} npvi} PVIs in DP2.
+Processed Visit Images (PVIs) are the first scientifically useful images to be produced by the science processing pipeline.
+They are the result of removing instrument signatures from the raw input images, followed by multiple rounds of background subtraction and photometric and astrometric calibration (see \secref{sec:drp}).
+There is one PVI for every raw input image that successfully passed through the first stage of the science processing pipelines.
+As such, there are up to {\bf \color{red} nactivedetectors} PVIs for each of the {\bf \color{red} nexposures} exposure taken during {\bf \color{red} XXX}.
+In total, {\bf \color{red} npvifails} raw images failed processing for various reasons; {\bf \color{red} the most common failure mode was (nfails), followed by (nfails)}.
+There are thus {\bf \color{red} npvi} PVIs in DP2.
 
-During instrument signature removal (ISR), the science processing pipeline removes the overscan regions from the input raw images. The PVIs therefore only contain the {\bf \color{red} npvipixx $\times$ npvipixy} pixels that were exposed during the observation. Unlike raw images, PVIs consist of three images: a science image, a variance image, and a mask image. The science image is the processed exposed image, whereas the variance image persists the uncertainty associated with the value of the corresponding pixel in the science image. The mask image indicates pixels that are flagged for various different reasons, such as saturated pixels, pixels associated with detected sources, bad pixels, etc. All three images contain the same number of pixels in each dimension. In terms of on-disk size, a single PVI file is typically around {\bf \color{red} pvihddsize}.
+During instrument signature removal (ISR), the science processing pipeline removes the overscan regions from the input raw images.
+The PVIs therefore only contain the {\bf \color{red} npvipixx $\times$ npvipixy} pixels that were exposed during the observation.
+Unlike raw images, PVIs consist of three images: a science image, a variance image, and a mask image.
+The science image is the processed exposed image, whereas the variance image persists the uncertainty associated with the value of the corresponding pixel in the science image.
+The mask image indicates pixels that are flagged for various different reasons, such as saturated pixels, pixels associated with detected sources, bad pixels, etc.
+All three images contain the same number of pixels in each dimension.
+In terms of on-disk size, a single PVI file is typically around {\bf \color{red} pvihddsize}.
 
 While the science procesing pipelines have undergone a series of improvements between DP1 and DP2 (see \secref{sec:drp}), in terms of their dimensions and format the PVIs in DP2 are the same as those released in DP1.
 
 \subsubsection{Coadds}
-Once produced, individual PVIs covering the same patch of sky (as defined by the skymap) in the same band are coadded to form coadd images. Three different types of coadd images are included in DP2: Deep Coadds, Template Coadds and Pretty Coadds, each of which are described in the following subsections. The production of each type of coadd images follows broadly the same process, which is described in detail in \secref{section:drp-multivisit-coaddition} but, to summarize, it involves the selection of PVIs (in terms of patch coverage and band, and image quality), the warping of those PVIs onto a common pixel grid, and the coaddition of those warped images. The key differences that distinguish each type are the selection of the PVIs and, in the case of the Pretty Coadds, the background subtraction. As a result, the structure of the datasets are the same for each type: each coadd contains three arrays corresponding to the science image plane (i.e., the coadd), the variance plane, and the mask plane, with all three containing the same number of pixels in each dimension. Each coadd also contains a position-dependent PSF model, WCS information, plus various other metadata.
+Once produced, individual PVIs covering the same patch of sky (as defined by the skymap) in the same band are coadded to form coadd images.
+Three different types of coadd images are included in DP2: Deep Coadds, Template Coadds and Pretty Coadds, each of which are described in the following subsections.
+The production of each type of coadd images follows broadly the same process, which is described in detail in \secref{section:drp-multivisit-coaddition} but, to summarize, it involves the selection of PVIs (in terms of patch coverage and band, and image quality), the warping of those PVIs onto a common pixel grid, and the coaddition of those warped images.
+The key differences that distinguish each type are the selection of the PVIs and, in the case of the Pretty Coadds, the background subtraction.
+As a result, the structure of the datasets are the same for each type: each coadd contains three arrays corresponding to the science image plane (i.e., the coadd), the variance plane, and the mask plane, with all three containing the same number of pixels in each dimension.
+Each coadd also contains a position-dependent PSF model, WCS information, plus various other metadata.
 
-The same skymap was used for each type of coadd in DP2, meaning they all cover the same on-sky area, including some overlap with their neighbouring coadds. The DP2 skymap defines a patch as having an on-sky area of {\bf \color{red} patchareanooverlap} excluding overlap, and {\bf \color{red} patcharea} including overlap. A single coadd, irrespective of type, contains {\bf \color{red} npatchpixx$\times$npatchpixy} equal-sized square pixels, including overlap; each pixel is {\bf \color{red} coaddpixsize} on each side. There are up to six coadds of each type per patch - one for each of the six LSSTCam bands. While the sky coverage of coadds are similar between types and bands, they are not exactly the same due to the different PVI selection functions for each type, and modest differences in sky coverages in each band.
+The same skymap was used for each type of coadd in DP2, meaning they all cover the same on-sky area, including some overlap with their neighbouring coadds.
+The DP2 skymap defines a patch as having an on-sky area of {\bf \color{red} patchareanooverlap} excluding overlap, and {\bf \color{red} patcharea} including overlap. A single coadd, irrespective of type, contains {\bf \color{red} npatchpixx$\times$npatchpixy} equal-sized square pixels, including overlap; each pixel is {\bf \color{red} coaddpixsize} on each side.
+There are up to six coadds of each type per patch - one for each of the six LSSTCam bands.
+While the sky coverage of coadds are similar between types and bands, they are not exactly the same due to the different PVI selection functions for each type, and modest differences in sky coverages in each band.
 
-The number of PVIs that contribute to a coadd varies across the patch. This is true even if a patch is fully covered by all the visits that targeted that area because of the presence of chip gaps between neighbouring detectors. The Survey Property Maps (see \secref{sec:propertymaps}) can be consulted to gain an insight into the total exposure time, and thus the number of contributing PVIs, at any point within a coadd. Since each coadd image always covers an entire patch, it is not uncommon for regions of a coadd image to have zero PVI coverage. This is especially the case on the edges of an observed field. Such regions of a coadd may contain seemingly valid values (i.e., not necessarily zeros or NaNs), but will instead be indicated by the {\texttt NO\_DATA} flag in the mask image plane. It is thereforce crucial that the mask image plane is consulted when analysising any type of coadd.
+The number of PVIs that contribute to a coadd varies across the patch.
+This is true even if a patch is fully covered by all the visits that targeted that area because of the presence of chip gaps between neighbouring detectors.
+The Survey Property maps (see \secref{sec:propertymaps}) can be consulted to gain an insight into the total exposure time, and thus the number of contributing PVIs, at any point within a coadd.
+Since each coadd image always covers an entire patch, it is not uncommon for regions of a coadd image to have zero PVI coverage.
+This is especially the case on the edges of an observed field.
+Such regions of a coadd may contain seemingly valid values (i.e., not necessarily zeros or NaNs), but will instead be indicated by the {\texttt NO\_DATA} flag in the mask image plane.
+It is thereforce crucial that the mask image plane is consulted when analysising any type of coadd.
 
 As highlighted at the start of this section, the DP2 coadds are cell-based whereas the DP1 Deep Coadds were not ({\bf \color{red} Is this definitely the case for all three types of coadd? I know it is for Deep Coadds, but what about the other two types?}).
 
 \paragraph{Deep Coadds}
-As the name suggests, Deep Coadds go down to the faintest magnitudes of the three types of coadd. All PVIs with {\bf \color{red} circular} PSFs with FWHM$<${\bf \color{red} deepcoaddselectionfwhm} are selected for inclusion in Deep Coadds. This selection is the most inclusive of all coadd productions and aims to maximise the depth of the coadd while still ensuring good image quality. Of the {\bf \color{red} npvi} PVIs in DP2, {\bf \color{red} ndeepcoaddpvi} satisfy the quality criteria and were therefore used in the creation of the Deep Coadds.
+As the name suggests, Deep Coadds go down to the faintest magnitudes of the three types of coadd.
+All PVIs with {\bf \color{red} circular} PSFs with FWHM$<${\bf \color{red} deepcoaddselectionfwhm} are selected for inclusion in Deep Coadds.
+This selection is the most inclusive of all coadd productions and aims to maximise the depth of the coadd while still ensuring good image quality.
+Of the {\bf \color{red} npvi} PVIs in DP2, {\bf \color{red} ndeepcoaddpvi} satisfy the quality criteria and were therefore used in the creation of the Deep Coadds.
 
 There are a total of {\bf \color{red} ndeepcoadd} Deep Coadds in DP2.
 
 \paragraph{Template Coadds}
-Template Coadds are created, principally, to act as reference images in the process of image subtraction to produce Difference Images (see \secref{sssec:difference_image}). When performing image subtraction, the point spread function (PSF) of the reference image is degraded to match that of the science image. For this reason, it is beneficial for the reference image to have as small a PSF as possible whilst also ensuring they are deep enough so as to ensure they do not introduce substantial noise during subtraction (i.e., the noise budget is dominated by the single visit image, as opposed to the template coadd). For Template Coadds, the {\bf \color{red} templateCoaddFrac} of PVIs that cover a given cell in a given band with the smallest PSF are selected for coaddition. If one {\bf \color{red} templateCoaddFrac} corresponds to fewer than {\bf \color{red} minTemplateCoaddPVIs} PVIs (i.e., there are fewer than {\bf \color{red} minMultipleTemplateCoaddPVIs} PVIs that cover the cell in a given band), then the {\bf \color{red} minTemplateCoaddPVIs} PVIs with the smallest PSFs are selected. If there are fewer than {\bf \color{red} minTemplateCoaddPVIs} PVIs covering a cell with a given band, then all PVIs are selected. This strategy optimizes for image quality in regions that are well-covered by PVIs, while also ensuring good Template Coadd coverage in regions that are poorly-covered by PVIs. Of the {\bf \color{red} npvi} in DP2, {\bf \color{red} ntemplatecoaddpvi} are selected to be used to create Template Coadds.
+Template Coadds are created, principally, to act as reference images in the process of image subtraction to produce Difference Images (see \secref{sssec:difference_image}).
+When performing image subtraction, the point spread function (PSF) of the reference image is degraded to match that of the science image.
+For this reason, it is beneficial for the reference image to have as small a PSF as possible whilst also ensuring they are deep enough so as to ensure they do not introduce substantial noise during subtraction (i.e., the noise budget is dominated by the single visit image, as opposed to the template coadd).
+For Template Coadds, the {\bf \color{red} templateCoaddFrac} of PVIs that cover a given cell in a given band with the smallest PSF are selected for coaddition.
+If one {\bf \color{red} templateCoaddFrac} corresponds to fewer than {\bf \color{red} minTemplateCoaddPVIs} PVIs (i.e., there are fewer than {\bf \color{red} minMultipleTemplateCoaddPVIs} PVIs that cover the cell in a given band), then the {\bf \color{red} minTemplateCoaddPVIs} PVIs with the smallest PSFs are selected.
+If there are fewer than {\bf \color{red} minTemplateCoaddPVIs} PVIs covering a cell with a given band, then all PVIs are selected.
+This strategy optimizes for image quality in regions that are well-covered by PVIs, while also ensuring good Template Coadd coverage in regions that are poorly-covered by PVIs.
+Of the {\bf \color{red} npvi} in DP2, {\bf \color{red} ntemplatecoaddpvi} are selected to be used to create Template Coadds.
 
 In total, there are {\bf \color{red} ntemplatecoadd} Template Coadds in DP2.
 
@@ -68,8 +134,9 @@ Are these only going to be accessible via the HiPS viewer?
 \subsection{Catalogs}
 Catalogs contain data for detections in the images described in \secref{ssec:science_images}, except the \texttt{Calibration} catalog, which contains reference data obtained from previous surveys.
 Observatory-produced metadata tables are described in \secref{ssec:metadata}.
-The Vera C. Rubin project adopts a naming convention in which objects refer to an astrophysical object, whereas sources refers to a single-epoch detection of that object.
-As such, sources are typically associated with detections in single-epoch PVI and difference images, wherease objects are typically associated with detections in multi-epoch coadds.
+The Vera C.
+Rubin project adopts a naming convention in which objects refer to an astrophysical object, whereas sources refers to a single-epoch detection of that object.
+As such, sources are typically associated with detections in single-epoch PVI and difference images, wherease objects are typically associated with detections in multiepoch coadds.
 All catalogs store fluxes rather than magnitudes, with fluxes measured in nanojanskies (1\xspace nJy = $10^{-35}\xspace$ W$\xspace$m$^{-2}$Hz$^{-1}$ ).
 Fluxes are preferred for multiepoch observations, as they can be averaged across epochs, unlike magnitudes.
 Additionally, flux measurements on difference images (\secref{ssec:science_images}) are computed against a template, representing a flux difference.
@@ -85,8 +152,9 @@ For example, \texttt{g\_ap03Flux}, \texttt{g\_ap03FluxErr}, \texttt{g\_ap03Flux\
 Similarly for flux measurements using difference algorithms, e.g. \texttt{g\_psfFlux} provides the flux derived using the PSF model as a weight function, forced on $g$ band.
 
 All of the catalog types that were released as part of DP1 have been retained in DP2, although in some cases additional columns have been added for DP2; we highlight prominent additional columns in the subsections below.
-There are also a number of additional catalogs in DP2 that do not have DP1 equivalents. Throughout this section, we provide high-level overviews of the contents of each catalog, rather than listing and describing each column.
-Instead, full searchable catalogue schemas, including column descriptions, are provided at \url{https://sdm-schemas.lsst.io/}.    
+There are also a number of additional catalogs in DP2 that do not have DP1 equivalents.
+Throughout this section, we provide high-level overviews of the contents of each catalog, rather than listing and describing each column.
+Instead, full searchable catalogue schemas, including column descriptions, are provided at \url{https://sdm-schemas.lsst.io/}.
 
 Catalog data are stored in the Qserv database (\secref{sssec:qserv}) and are accessible via TAP, and an online DP1 catalog schema is available at \url{https://sdm-schemas.lsst.io/dp2.html}.
 Catalog data are also accessible via the Data Butler (see \secref{sssec:data_butler}).
@@ -97,7 +165,8 @@ The Source catalog contains the measured properties of all sources that are, pri
 The detections in the Source catalogue have all undergone deblending; in the case of blended sources, only the post-deblended sources are included in the Source catalog.
 It is therefore possible for the Source catalog to contain entries in which none of different types of photometric measurements (e.g., aperture, PSF, gaussian) have flux-to-error ratios greater than five.
 
-Each entry in the source catalog has a unique identification number (\texttt{sourceId}), positional information, various photometric measurements (aperture, PSF, gaussian), shape and extendedness information, and a series of flags. Because each entry in the source catalog is derived from a detection in a single epoch observation taken with a single filter, each entry also has an associated band.
+Each entry in the source catalog has a unique identification number (\texttt{sourceId}), positional information, various photometric measurements (aperture, PSF, gaussian), shape and extendedness information, and a series of flags.
+Because each entry in the source catalog is derived from a detection in a single epoch observation taken with a single filter, each entry also has an associated band.
 
 The Source catalog contains data for {\bf \color{red} nsources} sources in DP2.
 
