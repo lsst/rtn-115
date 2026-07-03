@@ -72,7 +72,7 @@ aglossary.tex: $(tex) myacronyms.txt
 
 .PHONY: deps
 deps:
-	uv venv
+	pip install uv
 	uv pip install -r lsst-texmf/requirements.txt
 	uv pip install -r requirements.txt
 

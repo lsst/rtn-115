@@ -28,7 +28,7 @@ Clone this repository::
 
 Compile the PDF::
 
-    make
+    make deps; make
 
 Clean built files::
 
