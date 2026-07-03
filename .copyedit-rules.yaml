@@ -291,6 +291,24 @@ rules:
     pattern: '(?<!\{)(\\doi[A-Za-z]+)(?=[^A-Za-z])(?!\{\})(?!\})'
     replacement: '\1{}'
     note: 'DOI parameter macros need {} suffix in prose; omit inside \doi{...}.'
+  
+  - name: sentence-break
+    # Insert a newline after a sentence-ending period so each sentence starts
+    # on its own line (standard LaTeX prose style).
+    # Heuristic: period + spaces + uppercase-then-lowercase is a sentence
+    # boundary. The [A-Z][a-z] lookahead avoids firing on acronyms (NASA,
+    # LSST) that follow a period.
+    # Known false positives: title abbreviations before proper names
+    # ("Dr. Smith", "Prof. Jones"). "Fig.", "Eq.", "Sec." are safe because
+    # they are followed by digits or \ref{}, not [A-Z][a-z].
+    pattern: '\.[ ]+(?=[A-Z][a-z])'
+    replacement: ".\n"
+    audit_only: true
+    note: |
+      Run "bin/copyedit.py --audit $(git ls-files '*.tex')" to list candidates.
+      Review each hit manually: false positives include title abbreviations
+      before names ("Dr. Smith", "Prof. Jones"). Sentence-boundary hits should
+      be applied to keep one sentence per line.
 
   - name: thousands-separator-5digit
     # Flag bare 5-digit numbers like 10000 that should be 10,000 in prose.
@@ -302,7 +320,7 @@ rules:
     replacement: '\1,\2'
     audit_only: true
     note: |
-      Run "python scripts/copyedit.py --audit $(git ls-files '*.tex')" to list
+      Run "bin/copyedit.py --audit $(git ls-files '*.tex')" to list
       candidates. Each match must be reviewed manually: tract identifiers and
       similar IDs should be left alone; counts (e.g. \ntotaltracts) should be
       rewritten to use a comma.
