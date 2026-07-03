@@ -159,16 +159,8 @@ Instead, full searchable catalogue schemas, including column descriptions, are p
 Catalog data are stored in the Qserv database (\secref{sssec:qserv}) and are accessible via TAP, and an online DP1 catalog schema is available at \url{https://sdm-schemas.lsst.io/dp2.html}.
 Catalog data are also accessible via the Data Butler (see \secref{sssec:data_butler}).
 
-\subsubsection{Source}
-\label{sssec:source}
-The Source catalog contains the measured properties of all sources that are, prior to deblending, detected at a $>5\sigma$ significance in each of the Processed Visit Images (\secref{ssec:pvi}).
-The detections in the Source catalogue have all undergone deblending; in the case of blended sources, only the post-deblended sources are included in the Source catalog.
-It is therefore possible for the Source catalog to contain entries in which none of different types of photometric measurements (e.g., aperture, PSF, gaussian) have flux-to-error ratios greater than five.
-
-Each entry in the source catalog has a unique identification number (\texttt{sourceId}), positional information, various photometric measurements (aperture, PSF, gaussian), shape and extendedness information, and a series of flags.
-Because each entry in the source catalog is derived from a detection in a single epoch observation taken with a single filter, each entry also has an associated band.
-
-The Source catalog contains data for {\bf \color{red} nsources} sources in DP2.
+% The following sections need reordering. They are currently in the order that appears on:
+% https://rubinobs.atlassian.net/wiki/spaces/DM/pages/1794637895/Baby+DP2+Butler+data+products
 
 \subsubsection{Object}
 \label{sssec:object}
@@ -185,29 +177,54 @@ While they may be included in future Data Releases, no photometric redshifts, Pe
 
 The \texttt{Object} catalog contains data for \nobjects objects in DP2.
 
-\subsubsection{Object Parent}
+\subsubsection{Isolated Star Stellar Motions}
+
 \subsubsection{Object Shear}
-\subsubsection{DIA Source}
-\subsubsection{DIA Object}
+
+\subsubsection{Source}
+\label{sssec:source}
+The Source catalog contains the measured properties of all sources that are, prior to deblending, detected at a $>5\sigma$ significance in each of the Processed Visit Images (\secref{ssec:pvi}).
+The detections in the Source catalogue have all undergone deblending; in the case of blended sources, only the post-deblended sources are included in the Source catalog.
+It is therefore possible for the Source catalog to contain entries in which none of different types of photometric measurements (e.g., aperture, PSF, gaussian) have flux-to-error ratios greater than five.
+
+Each entry in the source catalog has a unique identification number (\texttt{sourceId}), positional information, various photometric measurements (aperture, PSF, gaussian), shape and extendedness information, and a series of flags.
+Because each entry in the source catalog is derived from a detection in a single epoch observation taken with a single filter, each entry also has an associated band.
+
+The Source catalog contains data for {\bf \color{red} nsources} sources in DP2.
+
 \subsubsection{Forced Source at Object}
 \subsubsection{Forced Source at DIA Object}
-\subsubsection{Isolated Stellar Motions}
-\subsubsection{Solar System Source}
+\subsubsection{DIA Object}
+\subsubsection{DIA Source}
 \subsubsection{Solar System Object}
-\subsubsection{MPCORB}
+\subsubsection{Solar System Source}
 \subsubsection{Calibration Reference Catalog}
+
+\subsubsection{MPCORB}
+This is not listed on the confluence page.
+
+\subsubsection{Object Parent}
+This is not included in QServ for EDP2, but may be included in the butler. Come back to this should it be decided to include.
 
 \subsection{Maps}
 \subsubsection{Survey Property Maps}
 \subsubsection{HiPS Maps}
+This is not listed on the confluence page. I expect that non-listing is an oversight.
 \subsubsection{Multi-order Coverage Maps}
+This is not listed on the confluence page. I expect that non-listing is an oversight.
 
 \subsection{Ancillary Data Products}
+\subsubsection{Skymap}
+\subsubsection{Standard Passbands}
 \subsubsection{Calibration images}
 \label{sssec:calibration_images}
+Not included in EDP2.
 \subsubsection{Diagnostic Data Products}
+Not included in EDP2.
 \subsubsection{Standard Data Products}
+Not included in EDP2.
 
 \subsection{Metadata}
 \subsubsection{Visit Table}
 \subsubsection{Visit Detector Table}
+\subsubsection{Visit Summary}
