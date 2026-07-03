@@ -159,7 +159,7 @@ Instead, full searchable catalogue schemas, including column descriptions, are p
 Catalog data are stored in the Qserv database (\secref{sssec:qserv}) and are accessible via TAP, and an online DP1 catalog schema is available at \url{https://sdm-schemas.lsst.io/dp2.html}.
 Catalog data are also accessible via the Data Butler (see \secref{sssec:data_butler}).
 
-% The following sections need reordering. They are currently in the order that appears on:
+% The following sections need reordering; they are currently in the order that appears on:
 % https://rubinobs.atlassian.net/wiki/spaces/DM/pages/1794637895/Baby+DP2+Butler+data+products
 
 \subsubsection{Object}
@@ -178,6 +178,24 @@ While they may be included in future Data Releases, no photometric redshifts, Pe
 The \texttt{Object} catalog contains data for \nobjects objects in DP2.
 
 \subsubsection{Isolated Star Stellar Motions}
+The Isolated Star Stellar Motions catalog contains the proper motions and parallaxes of isolated stars.
+The Rubin Observatory uses a specific definition for an isolated star.
+Candidate isolated stars must be point-like (i.e., unresolved) detections with a signal-to-noise ratio of between 8 and 1000, and must not be flagged as blended.
+All such candidates within a given tract are spatially matched using a 1\arcsec matching radius across all visits and bands covering said tract.
+Should the average position of a candidate have no other candidate within 2\arcsec , then it is considered to be an isolated star.
+
+The Isolated Star Stellar Motions catalog provides a best-fit position (\texttt{ra, decl.}), proper motion in $\rm mas\,yr^{-1}$ (\texttt{raPM, decPM}), and parallax in mas at a reference epoch; the \texttt{raPM} parameter already includes the $\cos(\rm decl.)$ factor.
+The reference epoch in MJD is included as a column (\texttt{epoch}) in the catalog.
+An isolated star's proper motion and parallax are calculated by fitting its position across all per-visit detections, plus any detection in our calibration reference catalog (\secref{sssec:referenceCatalog}) that is matched to within 0\farcs1 of the star's average position.
+The catalog also contains $1\sigma$ uncertainties for each each of the five aforementioned positional parameters (five columns: \texttt{raErr, decErr, raPMErr, decPMErr, parallaxErr}), plus a further ten columns containing off-diagonal covariance parameters (\texttt{$\ast\_\ast\_$Cov}, e.g, \texttt{ra\_raPM\_Cov}, \texttt{raPM\_parallax\_Cov}).
+
+All isolated stars have an entry in the Isolated Star Stellar Motion catalog, although no attempt is made to fit the time-varying positions of stars that are detected in fewer 3 epochs and which do not have a matched counterpart in the reference catalog.
+In such cases the positional information, including uncertainties, are reported as \texttt{NaN}.
+Every entry in the Isolated Star Stellar Motion catalog has a unique identification number and, in cases where a match to the reference catalog has been identified, the unique identification of the matched reference source.
+
+The Isolated Star Stellar Motions catalog contains \textcolor{red}{\bf nIsolatedStars} entries.
+
+{\bf Does it also contain the objectId?}
 
 \subsubsection{Object Shear}
 
@@ -204,7 +222,8 @@ The Source catalog contains data for {\bf \color{red} nsources} sources in DP2.
 This is not listed on the confluence page.
 
 \subsubsection{Object Parent}
-This is not included in QServ for EDP2, but may be included in the butler. Come back to this should it be decided to include.
+This is not included in QServ for EDP2, but may be included in the butler.
+Come back to this should it be decided to include.
 
 \subsection{Maps}
 \subsubsection{Survey Property Maps}
