@@ -76,11 +76,12 @@ deps:
 	uv pip install -r lsst-texmf/requirements.txt
 	uv pip install -r requirements.txt
 
+# these are called by the github action and it already installs all dependanceies
 authors.yaml:
-	$(UV_RUN) python $(TEXMFHOME)/../bin/makeAuthorListsFromGoogle.py --builder --signup 4 -p 1CGxjpPuyNJ_gXRHTvkEF0qeI0XedQ-GQgbmyzWFLSUE "RTN-115!A2:E1000"
+	python $(TEXMFHOME)/../bin/makeAuthorListsFromGoogle.py --builder --signup 4 -p 1CGxjpPuyNJ_gXRHTvkEF0qeI0XedQ-GQgbmyzWFLSUE "RTN-115!A2:E1000"
 
 skip: .FORCE
-	$(UV_RUN) python $(TEXMFHOME)/../bin/makeAuthorListsFromGoogle.py --skip `cat skip.count` --builder --signup 4 -p 1CGxjpPuyNJ_gXRHTvkEF0qeI0XedQ-GQgbmyzWFLSUE "RTN-115!A2:E1000"
+	python $(TEXMFHOME)/../bin/makeAuthorListsFromGoogle.py --skip `cat skip.count` --builder --signup 4 -p 1CGxjpPuyNJ_gXRHTvkEF0qeI0XedQ-GQgbmyzWFLSUE "RTN-115!A2:E1000"
 
 .PHONY: scripts
 scripts:
