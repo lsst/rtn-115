@@ -50,6 +50,7 @@ flat:
 clean:
 	latexmk -c
 	rm -f $(DOCNAME).bbl
+	rm -f $(DOCNAME).gls
 	rm -f $(DOCNAME).pdf
 	rm -f meta.tex
 	rm -f authors.tex
