@@ -149,17 +149,20 @@ rules:
     note: 'Abbreviate "declination" -> "decl." (case preserved for sentence-initial "Decl.").'
 
   - name: dec-abbrev
-    # Astronomical short-form "dec" or "dec." -> "decl.". Three guards:
+    # Astronomical short-form "dec" or "dec." -> "decl.". Guards:
     #   (?<!\\)              -- skip LaTeX macros like \dec
     #   \b ... \.?           -- standalone word, optional trailing period
     #   (?![a-zA-Z])         -- next char is not a letter, so words like
     #                           decline, decimal, decay, decode etc. are safe.
+    #   (?!\})               -- skip when immediately followed by a closing
+    #                           curly brace, e.g. \texttt{dec} or {dec} as a
+    #                           literal column/field name that must stay "dec".
     # Test corpus contained: decay, decide, decimal, decl, declination,
     # decreasing — none of these match this pattern.
-    pattern: '(?<!\\)\bdec\.?(?![a-zA-Z])'
+    pattern: '(?<!\\)\bdec\.?(?![a-zA-Z])(?!\})'
     replacement: 'decl.'
     skip_lines_matching: '\\(?:section|subsection|subsubsection|paragraph|chapter|title|caption)\*?\{'
-    note: 'Astronomical "dec"/"dec." -> "decl.". Heavily guarded against false positives.'
+    note: 'Astronomical "dec"/"dec." -> "decl.". Heavily guarded against false positives; "dec" immediately inside {} (e.g. \texttt{dec}) is preserved.'
 
   - name: band-filter
     # Italicize the filter letter: "g band" -> "$g$ band", "g-band" -> "$g$-band".
