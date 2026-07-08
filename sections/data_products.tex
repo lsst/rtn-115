@@ -165,7 +165,7 @@ Catalog data are also accessible via the Data Butler (see \secref{sssec:data_but
 \subsubsection{Object}
 \label{sssec:object}
 The Object catalog contains data on all objects detected with a greater than $5\sigma$ significance in the Deep Coadds.
-With coadd images produced on a per-band basis, a $>5\sigma$ detection in one or more of the bands will result in an object being included in the \texttt{Object} catalog.
+With coadd images produced on a per-band basis, a $>5\sigma$ detection in one or more of the bands will result in an object being included in the Object catalog.
 For cases where an object is detected at $>5\sigma$ in more than one band, a crossmatching has been performed between bands to associate an object in one band with its counterpart(s) in the other bands.
 As such, each entry in the Object catalog contains data from multiple bands.
 The objects reported in the Object catalog have also undergone deblending; in the case of blended detections, only the deblended child objects are included in the catalog.
@@ -184,7 +184,7 @@ Candidate isolated stars must be point-like (i.e., unresolved) detections with a
 All such candidates within a given tract are spatially matched using a 1\arcsec matching radius across all visits and bands covering said tract.
 Should the average position of a candidate have no other candidate within 2\arcsec , then it is considered to be an isolated star.
 
-The Isolated Star Stellar Motions catalog provides a best-fit position (\texttt{ra, decl.}), proper motion in $\rm mas\,yr^{-1}$ (\texttt{raPM, decPM}), and parallax in mas at a reference epoch; the \texttt{raPM} parameter already includes the $\cos(\rm decl.)$ factor.
+The Isolated Star Stellar Motions catalog provides a best-fit position (\texttt{ra, dec}), proper motion in $\rm mas\,yr^{-1}$ (\texttt{raPM, decPM}), and parallax in mas at a reference epoch; the \texttt{raPM} parameter already includes the $\cos(\rm decl.)$ factor.
 The reference epoch in MJD is included as a column (\texttt{epoch}) in the catalog.
 An isolated star's proper motion and parallax are calculated by fitting its position across all per-visit detections, plus any detection in our calibration reference catalog (\secref{sssec:referenceCatalog}) that is matched to within 0\farcs1 of the star's average position.
 The catalog also contains $1\sigma$ uncertainties for each each of the five aforementioned positional parameters (five columns: \texttt{raErr, decErr, raPMErr, decPMErr, parallaxErr}), plus a further ten columns containing off-diagonal covariance parameters (\texttt{$\ast\_\ast\_$Cov}, e.g, \texttt{ra\_raPM\_Cov}, \texttt{raPM\_parallax\_Cov}).
@@ -198,16 +198,18 @@ The Isolated Star Stellar Motions catalog contains \textcolor{red}{\bf nIsolated
 	{\bf Does it also contain the objectId?}
 
 \subsubsection{Object Shear}
-The Object Shear catalog contains object shape measurements in five different shear steps or ``counterfactuals'': one in which no shear has been applied (\texttt{no-shear}), and four in which an artificial linear shear has been introduced to the image (\texttt{1p, 1m, 2p, 2m}).
-The artifical shears are in four different directions: 1p along the image x-direction, 1m along the y-direction, 2p along the 45 degree diagonal, 2m along the 135 degree diagonal.
-We use Galsim's \texttt{Shear} class (\citealt{2015A&C....10..121R}) with a ``reduced shear'' \texttt{STEP} value of 0.01 to apply the shear in each of the four directions separately.
+The Object Shear catalog contains object shape measurements in five different shear steps or ``counterfactual'' images: one in which no shear has been applied (\texttt{no-shear}), and four in which an artificial linear shear has been introduced to the image (\texttt{1p, 1m, 2p, 2m}).
+The artifical shears are in four different directions: 1p is along the image x-direction, 1m is along the y-direction, 2p is along the 45 degree diagonal, 2m is along the 135 degree diagonal.
+We use Galsim's \texttt{Shear} class (\citealt[][]{2015A&C....10..121R}) with a ``reduced shear'' \texttt{STEP} value of 0.01 to apply the shear in each of the four directions separately.
 
 Two different approaches are used to measure the object shapes on each of the the five different counterfactuals, with the result of both approaches reported for each detection.
-The first approach is to fit a single 2D gaussian jointly across the r, i, and z-band deep coadd images, with the ellipticity components in the image x-y (\texttt{gauss\_g1}) and diagonal (\texttt{gauss\_g2}) directions reported in the catalog.
-The second approach measures 2D gaussian-weighted moments on single band (r, i, z) images separately, calculates the weighted sum of the raw moments across those three bands (weighted by inverse-variance), then reports the ellipticity components of that weighted sum in the image x-y (\texttt{pgauss\_g1}) and diagonal (\texttt{pgauss\_g2}).
-There is one row per object detected in each counterfactual, meaning a given object could result in up to five rows, depending on how many of the counterfactuals it is detected in at a significance of $>5\sigma$.\footnote{It is feasible for a marginal $5\sigma$ object in one counterfactual to be just below the $5\sigma$ threshold in another counterfactual.}
+The first approach is to fit a single 2D gaussian jointly across the r, i, and $z$-band deep coadd images, with the ellipticity components in the image x-y (\texttt{gauss\_g1}) and diagonal (\texttt{gauss\_g2}) directions reported in the catalog.
+The second approach measures 2D gaussian-weighted moments on single band (r, i, z) images separately, calculates the weighted sum of the raw moments across those three bands (weighted by inverse-variance), then reports the ellipticity components of that weighted sum in the image x-y (\texttt{pgauss\_g1}) and diagonal (\texttt{pgauss\_g2}) directions.
+There is one row per object detected in each counterfactual, meaning a given object could result in up to five rows, depending on how many of the counterfactuals it is detected in at a significance of $>5\sigma$.\footnote{It is feasible for a marginal $5\sigma$ object in one counterfactual to be just below the $5\sigma$ detection threshold in another counterfactual.}
 
-In addition to the gaussian shape measurements and their auto-covariances, the Object Shear table also contains object positional information, fluxes measured from the gaussian fits (r, i and z bands) and gaussian moments (g, r, i and z bands), PSF shapes reported in the same x-y and diagonal directions as objects, a range of different flags. Each entry in the Object Shear catalog also has a unique identification number (\texttt{shearObjectId}), that uniquely identifies a given detection in a given counterfactual. The Object Shear catalog contains \textcolor{red}{\bf nobjectshear} rows.
+In addition to the gaussian shape measurements and their auto-covariances, the Object Shear table also contains object positional information, fluxes measured from the gaussian fits (r, i and z bands) and gaussian moments (g, r, i and z bands), PSF shapes reported in the same x-y and diagonal directions as objects, a range of different flags.
+Each entry in the Object Shear catalog also has a unique identification number (\texttt{shearObjectId}), that uniquely identifies a given detection in a given counterfactual.
+The Object Shear catalog contains \textcolor{red}{\bf nobjectshear} rows.
 
 \subsubsection{Source}
 \label{sssec:source}
@@ -220,11 +222,47 @@ Because each entry in the source catalog is derived from a detection in a single
 
 The Source catalog contains data for {\bf \color{red} nsources} sources in DP2.
 
-\subsubsection{Forced Source at Object}
+\subsubsection{Forced Source}
+The Forced Source catalog contains forced PSF photometry measurements performed on both Difference Images (i.e., the \texttt{psfDiffFlux} column) and Visit Images (i.e., the \texttt{psfFlux} column) at the positions of all the objects in the Object catalog, to allow assessment of the time variability of the fluxes.
+We recommend using the \texttt{psfDiffFlux} column when generating light curves because this quantity is less sensitive to flux from neighboring sources than \texttt{psfFlux}.
+In addition to forced photometry PSF fluxes, a number of Boolean flags are also included in the \texttt{Forced Source catalog}.
+
+The \texttt{ForcedSource} catalog contains a total of \textcolor{red}{\bf nforcedsources} entries across \textcolor{red}{\bf forcedobjects} unique objects.
+
 \subsubsection{Forced Source at DIA Object}
+\label{sssec:ForcedSourceAtDIAObject}
+The Forced Source at Dia Object catalog is equivalent to the Forced Source catalog, but contains forced photometry measurements obtained at the positions of all the DIA objects in the DIA Object catalog.
+
+The Forced Source at DAI Object catalog contains a total of \textcolor{red}{\bf ndiaforcedsources} entries across \textcolor{red}{\bf ndiaforcedobjects} unique DIA objects.
+
 \subsubsection{DIA Object}
+The DIA Object catalog contains the astrophysical objects that DIA sources are associated with (i.e., the DIA objects).
+The DIA Object catalog contains only non-solar-system objects; solar system objects are, instead, recorded in the Solar System Object catalog (\secref{sssec:SSObject}).
+When a DIA source is identified, the DIA Object and Solar System Object catalogs are searched for objects to associate it with.
+If no association is found, a new DIA object is created and the DIA source is associated to it.
+Along similar lines, an attempt has been made to associate DIA objects across multiple bands, meaning the DIA Object catalog, like the Object catalog, contains data from multiple bands.
+By the nature of their detection, DIA objects are typically transient or variable.
+Therefore, the DIA Object catalog contains summary statistics of their fluxes, such as the mean and standard deviation over multiple epochs; users must refer to the Forced Source at DIA Object catalog (\secref{sssec:ForcedSourceAtDIAObject}) or the DIA Source catalog for single-epoch flux measurements of DIA objects.
+
+The DIA Object catalog contains data for \textcolor{red}{\bf ndiaobjects} DIA objects.
+
 \subsubsection{DIA Source}
+The DIA Source catalog contains data on all the sources detected at $>5\sigma$ significance, including those associated with known solar system objects, in the difference images.
+Unlike sources detected in visit images, DIA sources detected in difference images have gone through an association step in which an attempt has been made to associate them into underlying objects called DIA objects.
+The DIA Source catalog consolidates all this information across multiple visits and bands.
+The detections reported in the DIA Source catalog have not undergone deblending.
+
+The DIA Source catalog contains data for \textcolor{red}{\bf ndiasources} DIA sources.
+
 \subsubsection{Solar System Object}
+\label{sssec:SSObject}
+The Solar System Object catalog and the MPC Orbit Database (MPCORB) carry information about solar system objects.
+The MPCORB table provides the MPC-computed orbital elements for all known asteroids, including those that Rubin discovered.
+
+	{\bf Is the following still correct for (E)DP2?}
+The Solar System Object catalog serves primarily to provide the mapping between the IAU designation of an object (listed in the MPCORB), and the internal \texttt{ssObjectId} identifier, which is used as a key to find solar system object observations in the DIA Source and Solar System Source catalogs.
+The Solar System Object catalog contains data for \textcolor{red}{\bf nssobjects} solar system objects.
+
 \subsubsection{Solar System Source}
 \subsubsection{Calibration Reference Catalog}
 
