@@ -264,7 +264,27 @@ The Solar System Object catalog serves primarily to provide the mapping between 
 The Solar System Object catalog contains data for \textcolor{red}{\bf nssobjects} solar system objects.
 
 \subsubsection{Solar System Source}
+The Solar System Source catalog contains data on all DIA sources that are either associated with previously known solar system objects, or have been confirmed as newly discovered solar system objects by confirmation of their orbital properties.
+As entries in the Solar System SSource catalog stem from the DIA Source catalog, they have all been detected at $>5\sigma$ significance in at least one band.
+The Solar System Source Source catalog contains data for \textcolor{red}{\bf nsolarsystemsources} solar system sources.
+
 \subsubsection{Calibration Reference Catalog}
+The Calibration Reference Catalog is used to perform astrometric and photometric calibration.
+It is a whole-sky catalog built specifically for the LSST, as no single prior reference catalog had both the depth and coverage needed to calibrate LSST data.
+It combines data from multiple previous reference catalogs and contains only stellar sources.
+Full details on how the Calibration Reference Catalog was built are provided in \cite{DMTN-277}.\footnote{In \cite{DMTN-277}, the calibration reference catalog is referred to as ``The Monster".}
+We provide a brief summary here.
+
+For the \textit{grizy} bands, the input catalogs were (in order of decreasing priority): \gls{DES} Year 6 Calibration Stars \citep[][]{2023arXiv230501695R}; Gaia \gls{XP} synthetic magnitudes \citep[][]{2023A&A...674A..33G}; the \gls{Pan-STARRS} 3PI survey \citep[][]{2016arXiv161205560C}; Data Release 2 of the Skymapper survey \citep[][]{2019PASA...36...33O}; and Data Release 4 of the \gls{VST} \gls{ATLAS} survey \citep[][]{2015MNRAS.451.4238S}.
+For the \textit{u} band, the input catalogs were (in order of decreasing priority): standard stars from \gls{SDSS} Data Release 16 \citep[][]{2020ApJS..249....3A}; Gaia \gls{XP} Synthetic Magnitudes \citep[][]{2023A&A...674A..33G}; and synthetic magnitudes generated using \gls{SLR}, which estimates the \textit{u}-band flux from the \textit{g}-band flux and \textit{g} - \textit{r} colors.
+These \gls{SLR} estimates were used to boost the number of \textit{u}-band reference sources, as otherwise the source density from the \textit{u}-band input catalogs is too low to be useful for the LSST.
+
+Only stellar sources were selected from each input catalog.
+Throughout, the Calibration Reference Catalog uses the \gls{DES} bandpasses for the \textit{grizy} bands and the \gls{SDSS} bandpass for the \textit{u}-band; color transformations derived from high-quality sources were used to convert fluxes from the various input catalogs (some of which did not use the \gls{DES} or SDSS bandpasses) to the respective bandpasses.
+All sources from the input catalogs are matched to Gaia \gls{DR3} sources for robust astrometric information, selecting only isolated sources (i.e., no neighbors within 1\arcsec).
+
+After collating the input catalogs and transforming the fluxes to the standard DES and SDSS bandpasses, the catalog was used to identify sources within a specific region of the sky.
+This process generated a set of standard columns containing positional and flux information, along with their associated uncertainties.
 
 \subsubsection{MPCORB}
 This is not listed on the confluence page.
