@@ -295,6 +295,20 @@ Come back to this should it be decided to include.
 
 \subsection{Maps}
 \subsubsection{Survey Property Maps}
+Survey Property maps summarize how properties such as observing conditions or exposure time vary across the observed sky.
+Each map provides the spatial distribution of a specific quantity at a defined sky position for each band by aggregating information from the images used to make the Deep Coadds.
+Maps are initially created per tract and then combined to produce a final consolidated map.
+At each sky location, represented by a spatial pixel in the \gls{HEALPix}\citep[][]{2005ApJ...622..759G} grid, values are derived using statistical operations, such as minimum, maximum, mean, weighted mean, or sum, depending on the property.
+
+DP2 contains \nsurveypropertymaps Survey Property maps.
+The available maps describe total exposure times, observation epochs (one each for the earliest, mean, and latest observation epoch), \gls{PSF} size and \gls{shape} (one for each of the $e^1$ and $e^2$ shape parameters; see \secref{ssec:psf_models}), PSF magnitude limits, sky background and noise levels, as well as astrometric shifts (one each for R.A. and decl.) and PSF distortions (one for each of the $e^1$ and $e^2$ shape parameters) due to wavelength-dependent atmospheric \gls{DCR} effects.
+
+They all use the dataset type  format \texttt{deep\_coadd\_<PROPERTY>\_consolidated\_map\_<STATISTIC>}.
+For example, \texttt{deep\_coadd\_exposure\_time\_consolidated\_map\_sum} provides a spatial map of the total exposure time accumulated per
+sky position in units of seconds.
+All maps are stored in \texttt{HealSparse}\footnote{A sparse \gls{HEALPix} representation that efficiently encodes data values on the celestial sphere. \nolinkurl{https://healsparse.readthedocs.io}} format.
+Survey Property maps are only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
+
 \subsubsection{HiPS Maps}
 This is not listed on the confluence page. I expect that non-listing is an oversight.
 \subsubsection{Multi-order Coverage Maps}
