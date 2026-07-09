@@ -26,3 +26,5 @@ uv.lock
 tests/outputs
 token.pickle
 client_secret.json
+parameters_static.tex
+PAT
