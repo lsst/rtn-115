@@ -220,7 +220,7 @@ It is therefore possible for the Source catalog to contain entries in which none
 Each entry in the source catalog has a unique identification number (\texttt{sourceId}), positional information, various photometric measurements (aperture, PSF, gaussian), shape and extendedness information, and a series of flags.
 Because each entry in the source catalog is derived from a detection in a single epoch observation taken with a single filter, each entry also has an associated band.
 
-The Source catalog contains data for {\bf \color{red} nsources} sources in DP2.
+The Source catalog contains data for \textcolor{red}{\bf nsources} sources in DP2.
 
 \subsubsection{Forced Source}
 The Forced Source catalog contains forced PSF photometry measurements performed on both Difference Images (i.e., the \texttt{psfDiffFlux} column) and Visit Images (i.e., the \texttt{psfFlux} column) at the positions of all the objects in the Object catalog, to allow assessment of the time variability of the fluxes.
@@ -300,7 +300,7 @@ Each map provides the spatial distribution of a specific quantity at a defined s
 Maps are initially created per tract and then combined to produce a final consolidated map.
 At each sky location, represented by a spatial pixel in the \gls{HEALPix}\citep[][]{2005ApJ...622..759G} grid, values are derived using statistical operations, such as minimum, maximum, mean, weighted mean, or sum, depending on the property.
 
-DP2 contains \nsurveypropertymaps Survey Property maps.
+DP2 contains \textcolor{red}{\bf nsurveypropertymaps} Survey Property maps.
 The available maps describe total exposure times, observation epochs (one each for the earliest, mean, and latest observation epoch), \gls{PSF} size and \gls{shape} (one for each of the $e^1$ and $e^2$ shape parameters; see \secref{ssec:psf_models}), PSF magnitude limits, sky background and noise levels, as well as astrometric shifts (one each for R.A. and decl.) and PSF distortions (one for each of the $e^1$ and $e^2$ shape parameters) due to wavelength-dependent atmospheric \gls{DCR} effects.
 
 They all use the dataset type  format \texttt{deep\_coadd\_<PROPERTY>\_consolidated\_map\_<STATISTIC>}.
@@ -315,8 +315,18 @@ This is not listed on the confluence page. I expect that non-listing is an overs
 This is not listed on the confluence page. I expect that non-listing is an oversight.
 
 \subsection{Ancillary Data Products}
+In addition to the science images and catalog data products described above, there are are number of ancilliary data products included in DP2. While not science-level data products \textit{per se}, their inclusion in DP2 will help to facilitate science.
+
 \subsubsection{Skymap}
+The skymap used for DP2, which is called \texttt{lsst\_cells\_v2}, is also included as a data product in DP2. The skymap data product can be used to, for example, identify the tract and patch that contains a given sky coordinate, or obtain the coordinates of the corners of a tract or patch.
+
+A description of the \texttt{lsst\_cells\_v2}, in terms of the numbers and sizes of its tracts and patches, is given at the start of this section.
+
 \subsubsection{Standard Passbands}
+%\figref{fig:comcam_standard_bandpasses} shows the full-system throughput of the six \gls{LSSTCam} filters.
+The corresponding transmission curves are provided as a DP2 data product.
+These datasets tabulate the full-system transmission of the six LSSTCam filters as a function of wavelength and were used as a reference for the LSSTCam DP2 photometry. The \texttt{standard\_passband} dataset is keyed by band and is stored in Astropy table format.
+
 \subsubsection{Calibration images}
 \label{sssec:calibration_images}
 Not included in EDP2.
