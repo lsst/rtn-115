@@ -31,6 +31,7 @@ import os
 import warnings
 from datetime import datetime
 from pathlib import Path
+import logging
 
 import numpy as np
 import yaml
@@ -46,8 +47,8 @@ STATIC_PARAMETERS_FILE = (
 
 warnings.filterwarnings("ignore")
 
+logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
-
 
 def staticParameters(params: DP2Parameters) -> DP2Parameters:
     """Populate ``params`` with values from ``data/static_parameters.yaml``.
@@ -553,6 +554,17 @@ def totalDP2Area(params: DP2Parameters) -> DP2Parameters:
     return params
 
 
+def _nEntries(tableName: str) -> int:
+    """Returns the number of entries in a TAP table."""
+
+    query = f"SELECT COUNT(*) AS nEntries FROM {tableName}"
+    job = service.submit_job(query)
+    job.run()
+    job.wait(phases=['COMPLETED', 'ERROR'])
+    results = job.fetch_result()
+
+    return results['nEntries'][0]
+
 def nObjects(params: DP2Parameters) -> DP2Parameters:
     """Add total object count (in millions) across all object catalog patches.
 
@@ -567,11 +579,9 @@ def nObjects(params: DP2Parameters) -> DP2Parameters:
         Updated parameter store.
     """
     log.info("Adding total number of objects...")
-    runningTotal = 0
-    for ref in tqdm(list(registry.queryDatasets("object"))):
-        catalog = butler.get(ref, parameters={"columns": "objectId"})
-        runningTotal += len(catalog)
-    params = addParameter(params, "nobjects", runningTotal / 1e6, sig=2, unit="million")
+    nObjects = _nEntries('dp2.Object')
+    params = addParameter(params, "nobjects", nObjects / 1e6, sig=2, unit="million")
+
     return params
 
 
@@ -589,11 +599,9 @@ def nSources(params: DP2Parameters) -> DP2Parameters:
         Updated parameter store.
     """
     log.info("Adding total number of sources...")
-    runningTotal = 0
-    for ref in tqdm(list(registry.queryDatasets("source"))):
-        catalog = butler.get(ref, parameters={"columns": "sourceId"})
-        runningTotal += len(catalog)
-    params = addParameter(params, "nsources", runningTotal / 1e6, sig=2, unit="million")
+    nSources = _nEntries('dp2.Source')
+    params = addParameter(params, "nsources", nSources / 1e9, sig=2, unit="billion")
+
     return params
 
 
@@ -611,12 +619,9 @@ def nDiaObjects(params: DP2Parameters) -> DP2Parameters:
         Updated parameter store.
     """
     log.info("Adding total number of diaObjects...")
-    runningTotal = 0
-    for ref in tqdm(list(registry.queryDatasets("dia_object"))):
-        catalog = butler.get(ref, parameters={"columns": "diaObjectId"})
-        runningTotal += len(catalog)
+    nDiaObjects = _nEntries('dp2.DiaObject')
     params = addParameter(
-        params, "ndiaobjects", runningTotal / 1e6, sig=2, unit="million"
+        params, "ndiaobjects", nDiaObjects / 1e6, sig=2, unit="million"
     )
     return params
 
@@ -635,12 +640,9 @@ def nDiaSources(params: DP2Parameters) -> DP2Parameters:
         Updated parameter store.
     """
     log.info("Adding total number of diaSources...")
-    runningTotal = 0
-    for ref in tqdm(list(registry.queryDatasets("dia_source"))):
-        catalog = butler.get(ref, parameters={"columns": "diaSourceId"})
-        runningTotal += len(catalog)
+    nDiaSources = _nEntries('dp2.DiaSource')
     params = addParameter(
-        params, "ndiasources", runningTotal / 1e6, sig=2, unit="million"
+        params, "ndiasources", nDiaSources / 1e9, sig=2, unit="billion"
     )
     return params
 
@@ -658,18 +660,10 @@ def nForced(params: DP2Parameters) -> DP2Parameters:
     params : `DP2Parameters`
         Updated parameter store.
     """
-    log.info("Adding total number of forced sources and objects...")
-    runningTotalSrc = 0
-    runningTotalObj = 0
-    for ref in tqdm(list(registry.queryDatasets("object_forced_source"))):
-        catalog = butler.get(ref, parameters={"columns": "objectId"})
-        runningTotalSrc += len(catalog)
-        runningTotalObj += len(catalog.to_pandas()["objectId"].unique())
+    log.info("Adding total number of forced sources")
+    nForcedSources = _nEntries('dp2.ForcedSource')
     params = addParameter(
-        params, "nforcedsources", runningTotalSrc / 1e6, sig=3, unit="million"
-    )
-    params = addParameter(
-        params, "nforcedobjects", runningTotalObj / 1e6, sig=2, unit="million"
+        params, "nforcedsources", nForcedSources / 1e9, sig=2, unit="billion"
     )
     return params
 
@@ -687,18 +681,10 @@ def nDiaForced(params: DP2Parameters) -> DP2Parameters:
     params : `DP2Parameters`
         Updated parameter store.
     """
-    log.info("Adding total number of DIA forced sources and objects...")
-    runningTotalSrc = 0
-    runningTotalObj = 0
-    for ref in tqdm(list(registry.queryDatasets("dia_object_forced_source"))):
-        catalog = butler.get(ref, parameters={"columns": "diaObjectId"})
-        runningTotalSrc += len(catalog)
-        runningTotalObj += len(catalog.to_pandas()["diaObjectId"].unique())
+    log.info("Adding total number of DIA forced sources")
+    nForcedSourcesOnDIA = _nEntries('dp2.ForcedSourceOnDiaObject')
     params = addParameter(
-        params, "ndiaforcedsources", runningTotalSrc / 1e6, sig=3, unit="million"
-    )
-    params = addParameter(
-        params, "ndiaforcedobjects", runningTotalObj / 1e6, sig=2, unit="million"
+        params, "ndiaforcedsources", nForcedSourcesOnDIA / 1e9, sig=2, unit="billion"
     )
     return params
 
@@ -918,31 +904,41 @@ if __name__ == "__main__":
     # Update to get from lsst.utils
     if not args.static_only:
         from lsst.daf.butler import Butler
+        from lsst.rsp import get_tap_service
+        from pyvo.dal.exceptions import DALServiceError
+
+        service = get_tap_service("tap")
+        try:
+            query = "SELECT * FROM tap_schema.tables WHERE tap_schema.tables.schema_name = 'dp2'"
+            dp2_available = len(service.search(query)) > 0
+        except DALServiceError as e:
+            warnings.warn(f"TAP service unavailable, skipping TAP-dependent steps.")
+            dp2_availalable = False
 
         bands = ["u", "g", "r", "i", "z", "y"]
 
-        instrument = "LSSTComCam"
-        skymapName = "lsst_cells_v1"
+        instrument = "LSSTCam"
+        skymapName = "lsst_cells_v2"
 
         butler = Butler(
             "dp2",
             instrument=instrument,
-            collections=["LSSTCam/DP2", "skymaps"],
+            collections=["LSSTCam/runs/DRP/DP2", "skymaps"],
             skymap=skymapName,
         )
         registry = butler.registry
         skymap = butler.get("skyMap", skymap=skymapName)
 
         data_params = DP2Parameters()
-        data_params = observingCampaign(data_params)
-        data_params = observingQuality(data_params)
-        data_params = imageDatasets(data_params)
-        data_params = skymapData(data_params)
-        data_params = coaddSelectionCriteria(data_params)
-        data_params = surveyPropertyMaps(data_params)
-        data_params = nCatalogDatasets(data_params)
-        data_params = tableLengths(data_params)
-        data_params = misc(data_params)
+        # data_params = observingCampaign(data_params)
+        # data_params = observingQuality(data_params)
+        # data_params = imageDatasets(data_params)
+        # data_params = skymapData(data_params)
+        # data_params = coaddSelectionCriteria(data_params)
+        # data_params = surveyPropertyMaps(data_params)
+        # data_params = nCatalogDatasets(data_params)
+        # data_params = tableLengths(data_params)
+        # data_params = misc(data_params)
 
         data_params = nObjects(data_params)
         data_params = nSources(data_params)
@@ -950,11 +946,11 @@ if __name__ == "__main__":
         data_params = nDiaSources(data_params)
         data_params = nForced(data_params)
         data_params = nDiaForced(data_params)
-        data_params = nSSObjects(data_params)
-        data_params = nStarsGals(data_params)
-        data_params = nDeepCoaddInputImages(data_params)
-        data_params = nTemplateCoaddInputImages(data_params)
-        data_params = depthEcdfs(data_params)
+        # data_params = nSSObjects(data_params)
+        # data_params = nStarsGals(data_params)
+        # data_params = nDeepCoaddInputImages(data_params)
+        # data_params = nTemplateCoaddInputImages(data_params)
+        # data_params = depthEcdfs(data_params)
 
         # Calculating area is slow; include in manual parameters if needed.
         # Needs DP2 update
