@@ -1,1 +1,0 @@
-\newacronym{ConsDB} {ConsDB} {Consolidated Database}
