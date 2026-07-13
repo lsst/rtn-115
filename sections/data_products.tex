@@ -193,7 +193,7 @@ All isolated stars have an entry in the Isolated Star Stellar Motion catalog, al
 In such cases the positional information, including uncertainties, are reported as \texttt{NaN}.
 Every entry in the Isolated Star Stellar Motion catalog has a unique identification number and, in cases where a match to the reference catalog has been identified, the unique identification of the matched reference source.
 
-The Isolated Star Stellar Motions catalog contains \textcolor{red}{\bf nIsolatedStars} entries.
+The Isolated Star Stellar Motions catalog contains {\bf \color{red} nIsolatedStars} entries.
 
 	{\bf Does it also contain the objectId?}
 
@@ -209,7 +209,7 @@ There is one row per object detected in each counterfactual, meaning a given obj
 
 In addition to the gaussian shape measurements and their auto-covariances, the Object Shear table also contains object positional information, fluxes measured from the gaussian fits (r, i and z bands) and gaussian moments (g, r, i and z bands), PSF shapes reported in the same x-y and diagonal directions as objects, a range of different flags.
 Each entry in the Object Shear catalog also has a unique identification number (\texttt{shearObjectId}), that uniquely identifies a given detection in a given counterfactual.
-The Object Shear catalog contains \textcolor{red}{\bf nobjectshear} rows.
+The Object Shear catalog contains {\bf \color{red} nobjectshear} rows.
 
 \subsubsection{Source}
 \label{sssec:source}
@@ -220,20 +220,20 @@ It is therefore possible for the Source catalog to contain entries in which none
 Each entry in the source catalog has a unique identification number (\texttt{sourceId}), positional information, various photometric measurements (aperture, PSF, gaussian), shape and extendedness information, and a series of flags.
 Because each entry in the source catalog is derived from a detection in a single epoch observation taken with a single filter, each entry also has an associated band.
 
-The Source catalog contains data for \textcolor{red}{\bf nsources} sources in DP2.
+The Source catalog contains data for \nsources sources in DP2.
 
 \subsubsection{Forced Source}
 The Forced Source catalog contains forced PSF photometry measurements performed on both Difference Images (i.e., the \texttt{psfDiffFlux} column) and Visit Images (i.e., the \texttt{psfFlux} column) at the positions of all the objects in the Object catalog, to allow assessment of the time variability of the fluxes.
 We recommend using the \texttt{psfDiffFlux} column when generating light curves because this quantity is less sensitive to flux from neighboring sources than \texttt{psfFlux}.
 In addition to forced photometry PSF fluxes, a number of Boolean flags are also included in the \texttt{Forced Source catalog}.
 
-The \texttt{ForcedSource} catalog contains a total of \textcolor{red}{\bf nforcedsources} entries across \textcolor{red}{\bf forcedobjects} unique objects.
+The Forced Source catalog contains a total of \nforcedsources entries across the \nobjects unique objects.
 
 \subsubsection{Forced Source at DIA Object}
 \label{sssec:ForcedSourceAtDIAObject}
 The Forced Source at Dia Object catalog is equivalent to the Forced Source catalog, but contains forced photometry measurements obtained at the positions of all the DIA objects in the DIA Object catalog.
 
-The Forced Source at DAI Object catalog contains a total of \textcolor{red}{\bf ndiaforcedsources} entries across \textcolor{red}{\bf ndiaforcedobjects} unique DIA objects.
+The Forced Source at DAI Object catalog contains a total of \ndiaforcedsources entries across the \ndiaobjects unique DIA objects.
 
 \subsubsection{DIA Object}
 The DIA Object catalog contains the astrophysical objects that DIA sources are associated with (i.e., the DIA objects).
@@ -244,7 +244,7 @@ Along similar lines, an attempt has been made to associate DIA objects across mu
 By the nature of their detection, DIA objects are typically transient or variable.
 Therefore, the DIA Object catalog contains summary statistics of their fluxes, such as the mean and standard deviation over multiple epochs; users must refer to the Forced Source at DIA Object catalog (\secref{sssec:ForcedSourceAtDIAObject}) or the DIA Source catalog for single-epoch flux measurements of DIA objects.
 
-The DIA Object catalog contains data for \textcolor{red}{\bf ndiaobjects} DIA objects.
+The DIA Object catalog contains data for \ndiaobjects DIA objects.
 
 \subsubsection{DIA Source}
 The DIA Source catalog contains data on all the sources detected at $>5\sigma$ significance, including those associated with known solar system objects, in the difference images.
@@ -252,7 +252,7 @@ Unlike sources detected in visit images, DIA sources detected in difference imag
 The DIA Source catalog consolidates all this information across multiple visits and bands.
 The detections reported in the DIA Source catalog have not undergone deblending.
 
-The DIA Source catalog contains data for \textcolor{red}{\bf ndiasources} DIA sources.
+The DIA Source catalog contains data for \ndiasources DIA sources.
 
 \subsubsection{Solar System Object}
 \label{sssec:SSObject}
@@ -261,18 +261,18 @@ The MPCORB table provides the MPC-computed orbital elements for all known astero
 
 	{\bf Is the following still correct for (E)DP2?}
 The Solar System Object catalog serves primarily to provide the mapping between the IAU designation of an object (listed in the MPCORB), and the internal \texttt{ssObjectId} identifier, which is used as a key to find solar system object observations in the DIA Source and Solar System Source catalogs.
-The Solar System Object catalog contains data for \textcolor{red}{\bf nssobjects} solar system objects.
+The Solar System Object catalog contains data for {\bf \color{red} nssobjects} solar system objects.
 
 \subsubsection{Solar System Source}
 The Solar System Source catalog contains data on all DIA sources that are either associated with previously known solar system objects, or have been confirmed as newly discovered solar system objects by confirmation of their orbital properties.
-As entries in the Solar System SSource catalog stem from the DIA Source catalog, they have all been detected at $>5\sigma$ significance in at least one band.
-The Solar System Source Source catalog contains data for \textcolor{red}{\bf nsolarsystemsources} solar system sources.
+As entries in the solar system SSource catalog stem from the DIA Source catalog, they have all been detected at $>5\sigma$ significance in at least one band.
+The Solar System Source Source catalog contains data for {\bf \color{red} nsolarsystemsources} solar system sources.
 
 \subsubsection{Calibration Reference Catalog}
 The Calibration Reference Catalog is used to perform astrometric and photometric calibration.
 It is a whole-sky catalog built specifically for the LSST, as no single prior reference catalog had both the depth and coverage needed to calibrate LSST data.
 It combines data from multiple previous reference catalogs and contains only stellar sources.
-Full details on how the Calibration Reference Catalog was built are provided in \cite{DMTN-277}.\footnote{In \cite{DMTN-277}, the calibration reference catalog is referred to as ``The Monster".}
+Full details on how the Calibration Reference Catalog was built are provided in \cite[][]{DMTN-277}.\footnote{In \cite[][]{DMTN-277}, the calibration reference catalog is referred to as ``The Monster".}
 We provide a brief summary here.
 
 For the \textit{grizy} bands, the input catalogs were (in order of decreasing priority): \gls{DES} Year 6 Calibration Stars \citep[][]{2023arXiv230501695R}; Gaia \gls{XP} synthetic magnitudes \citep[][]{2023A&A...674A..33G}; the \gls{Pan-STARRS} 3PI survey \citep[][]{2016arXiv161205560C}; Data Release 2 of the Skymapper survey \citep[][]{2019PASA...36...33O}; and Data Release 4 of the \gls{VST} \gls{ATLAS} survey \citep[][]{2015MNRAS.451.4238S}.
@@ -300,7 +300,7 @@ Each map provides the spatial distribution of a specific quantity at a defined s
 Maps are initially created per tract and then combined to produce a final consolidated map.
 At each sky location, represented by a spatial pixel in the \gls{HEALPix}\citep[][]{2005ApJ...622..759G} grid, values are derived using statistical operations, such as minimum, maximum, mean, weighted mean, or sum, depending on the property.
 
-DP2 contains \textcolor{red}{\bf nsurveypropertymaps} Survey Property maps.
+DP2 contains {\bf \color{red} nsurveypropertymaps} Survey Property maps.
 The available maps describe total exposure times, observation epochs (one each for the earliest, mean, and latest observation epoch), \gls{PSF} size and \gls{shape} (one for each of the $e^1$ and $e^2$ shape parameters; see \secref{ssec:psf_models}), PSF magnitude limits, sky background and noise levels, as well as astrometric shifts (one each for R.A. and decl.) and PSF distortions (one for each of the $e^1$ and $e^2$ shape parameters) due to wavelength-dependent atmospheric \gls{DCR} effects.
 
 They all use the dataset type  format \texttt{deep\_coadd\_<PROPERTY>\_consolidated\_map\_<STATISTIC>}.
@@ -315,17 +315,20 @@ This is not listed on the confluence page. I expect that non-listing is an overs
 This is not listed on the confluence page. I expect that non-listing is an oversight.
 
 \subsection{Ancillary Data Products}
-In addition to the science images and catalog data products described above, there are are number of ancilliary data products included in DP2. While not science-level data products \textit{per se}, their inclusion in DP2 will help to facilitate science.
+In addition to the science images and catalog data products described above, there are are number of ancilliary data products included in DP2.
+While not science-level data products \textit{per se}, their inclusion in DP2 will help to facilitate science.
 
 \subsubsection{Skymap}
-The skymap used for DP2, which is called \texttt{lsst\_cells\_v2}, is also included as a data product in DP2. The skymap data product can be used to, for example, identify the tract and patch that contains a given sky coordinate, or obtain the coordinates of the corners of a tract or patch.
+The skymap used for DP2, which is called \texttt{lsst\_cells\_v2}, is also included as a data product in DP2.
+The skymap data product can be used to, for example, identify the tract and patch that contains a given sky coordinate, or obtain the coordinates of the corners of a tract or patch.
 
 A description of the \texttt{lsst\_cells\_v2}, in terms of the numbers and sizes of its tracts and patches, is given at the start of this section.
 
 \subsubsection{Standard Passbands}
 %\figref{fig:comcam_standard_bandpasses} shows the full-system throughput of the six \gls{LSSTCam} filters.
 The corresponding transmission curves are provided as a DP2 data product.
-These datasets tabulate the full-system transmission of the six LSSTCam filters as a function of wavelength and were used as a reference for the LSSTCam DP2 photometry. The \texttt{standard\_passband} dataset is keyed by band and is stored in Astropy table format.
+These datasets tabulate the full-system transmission of the six LSSTCam filters as a function of wavelength and were used as a reference for the LSSTCam DP2 photometry.
+The \texttt{standard\_passband} dataset is keyed by band and is stored in Astropy table format.
 
 \subsubsection{Calibration images}
 \label{sssec:calibration_images}
