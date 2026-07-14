@@ -323,6 +323,31 @@ def imageDatasets(params: DP2Parameters) -> DP2Parameters:
     return params
 
 
+def nRaws(params: DP2Parameters) -> DP2Parameters:
+    """Add the number of exposures, raw images, and active detectors.
+
+    Note: nraws and nexposures will populated for DP2. They are not
+    included in EPD2.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info("Adding number of exposures and raws...")
+    # params = addParameter(params, "nexposures")
+
+    visit_detector_table = butler.get("visit_detector_table")
+    params = addParameter(params, "nactivedetectors", len(set(visit_detector_table["detector"])))
+    # params = addParameter(params, "nraws", )
+    return params
+
+
 def skymapData(params: DP2Parameters) -> DP2Parameters:
     """Add tract/patch geometry and area parameters from the skymap.
 
@@ -408,7 +433,7 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
     params = addParameter(params, "ncelly", numYCells)
 
     numCellsInPatchBorder = skymap.config.tractBuilder["cells"].numCellsInPatchBorder
-    params = addParameter(params, "ncellpatchoverlap", numCellsInPatchBorder)
+    params = addParameter(params, "ncellpatchoverlap", numCellsInPatchBorder, unit="cell")
     return params
 
 
@@ -971,6 +996,7 @@ if __name__ == "__main__":
         # data_params = observingQuality(data_params)
         # data_params = imageDatasets(data_params)
         data_params = skymapData(data_params)
+        data_params = nRaws(data_params)
         # data_params = coaddSelectionCriteria(data_params)
         # data_params = surveyPropertyMaps(data_params)
         # data_params = nCatalogDatasets(data_params)
