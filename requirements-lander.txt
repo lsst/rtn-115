@@ -1,0 +1,2 @@
+lander<2.0.0
+Setuptools<81

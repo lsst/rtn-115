@@ -89,3 +89,9 @@ scripts:
 	@for script in $(PYTHON_SCRIPTS); do \
 		$(UV_RUN) python $$script; \
 	done
+.PHONY: lander
+lander:
+	uv venv --clear lander
+	. lander/bin/activate
+	uv pip install --python lander/bin/python -r requirements-lander.txt
+	lander/bin/lander --upload --pdf RTN-115.pdf --ltd-product rtn-115 --title "The Vera C. Rubin Observatory Data Preview 2" --handle "RTN-115" --lsstdoc "RTN-115.tex"
