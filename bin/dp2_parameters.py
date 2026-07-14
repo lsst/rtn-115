@@ -338,12 +338,12 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
     """
     log.info("Adding skymap parameters...")
 
-    params = addParameter(params, "ntotaltracts", len(skymap))
+    params = addParameter(params, "ntracts", len(skymap))
 
-    tractRecords = list(registry.queryDimensionRecords("tract", where="visit > 0"))
-    tractIds = set([record.id for record in tractRecords])
-    params = addParameter(params, "ntracts", len(tractIds))
-    params = addParameter(params, "ncoveredtracts", len(tractIds))
+    coveredTractIds = {
+        dataId["tract"] for dataId in registry.queryDataIds(["tract"], datasets="object")
+    }
+    params = addParameter(params, "ncoveredtracts", len(coveredTractIds))
 
     tract = skymap.generateTract(9000)
     verticesInDegrees = [
@@ -372,15 +372,26 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
 
     patchArea = tractArea / numPatches
     params = addParameter(
-        params, "innerpatcharea", f"{patchArea:.3f}", unit="deg$^{\\rm 2}$"
+        params, "patchareanooverlap", f"{patchArea:.3f}", unit="deg$^{\\rm 2}$"
     )
 
-    refs = list(registry.queryDatasets("deep_coadd"))
+    refs = list(butler.query_datasets("deep_coadd",
+        where="tract=9813 AND patch=50 AND band='g' AND skymap='lsst_cells_v2'")
+    )
+
+
     coadd = butler.get(refs[0])
-    fovx = coadd.getDimensions().x * coadd.getWcs().getPixelScale().asDegrees()
-    fovy = coadd.getDimensions().y * coadd.getWcs().getPixelScale().asDegrees()
+    bbox = coadd.bbox
+    sky_projection = coadd.sky_projection
+
+    corner_00 = sky_projection.pixel_to_sky(x=bbox.x.min, y=bbox.y.min)
+    corner_x1 = sky_projection.pixel_to_sky(x=bbox.x.max, y=bbox.y.min)
+    corner_1y = sky_projection.pixel_to_sky(x=bbox.x.min, y=bbox.y.max)
+
+    fovx = corner_00.separation(corner_x1).degree
+    fovy = corner_00.separation(corner_1y).degree
     params = addParameter(
-        params, "outerpatcharea", f"{fovx * fovy:.3f}", unit="deg$^{\\rm 2}$"
+        params, "patcharea", f"{fovx * fovy:.3f}", unit="deg$^{\\rm 2}$"
     )
 
     wcs = tract.getWcs()
@@ -391,6 +402,13 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
     params = addParameter(
         params, "patchoverlap", f"{patchOverlap:.1f}", unit="\\arcsec"
     )
+
+    numXCells, numYCells = patchInfo.getNumCells()
+    params = addParameter(params, "ncellx", numXCells)
+    params = addParameter(params, "ncelly", numYCells)
+
+    numCellsInPatchBorder = skymap.config.tractBuilder["cells"].numCellsInPatchBorder
+    params = addParameter(params, "ncellpatchoverlap", numCellsInPatchBorder)
     return params
 
 
@@ -555,7 +573,26 @@ def totalDP2Area(params: DP2Parameters) -> DP2Parameters:
 
 
 def _nEntries(tableName: str) -> int:
-    """Returns the number of entries in a TAP table."""
+    """Returns the number of entries in a TAP table.
+
+    Parameters
+    ----------
+    tableName : `str`
+        The name of the table to return the number of entries of.
+
+    Returns
+    --------
+    result : `int`
+        The number of entries in table `tableName`.
+
+    Notes
+    -----
+    Uses the TAP service. Throws a warning and returns NaN if the
+    TAP service is unavailable.
+    """
+    if not dp2_available:
+        warnings.warn(f"TAP service unavailable, skipping query of {tableName}.")
+        return np.nan
 
     query = f"SELECT COUNT(*) AS nEntries FROM {tableName}"
     job = service.submit_job(query)
@@ -912,8 +949,8 @@ if __name__ == "__main__":
             query = "SELECT * FROM tap_schema.tables WHERE tap_schema.tables.schema_name = 'dp2'"
             dp2_available = len(service.search(query)) > 0
         except DALServiceError as e:
-            warnings.warn(f"TAP service unavailable, skipping TAP-dependent steps.")
-            dp2_availalable = False
+            warnings.warn("TAP service unavailable, skipping TAP-dependent steps.")
+            dp2_available = False
 
         bands = ["u", "g", "r", "i", "z", "y"]
 
@@ -933,7 +970,7 @@ if __name__ == "__main__":
         # data_params = observingCampaign(data_params)
         # data_params = observingQuality(data_params)
         # data_params = imageDatasets(data_params)
-        # data_params = skymapData(data_params)
+        data_params = skymapData(data_params)
         # data_params = coaddSelectionCriteria(data_params)
         # data_params = surveyPropertyMaps(data_params)
         # data_params = nCatalogDatasets(data_params)
