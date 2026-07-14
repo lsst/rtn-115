@@ -24,20 +24,21 @@ In the following sections we clearly indicate those data product types wihch are
 
 As with DP1, the science processing pipelines use a skymap to facilitate processing.
 The skymap divides the sky into a series of equal-area tracts, which are then subdivided into a number of patches.
-The skymap used for DP2 processing contains {\bf \color{red} ntracts}, each of which covers approximately {\bf \color{red} tractarea}, which is the same as the skymap used to produce DP1.
 The tracts are arranged in rings of constant decl., starting at the southern pole and having an index number that increases first by increasing R.A. and then by increasing decl..
-Each DP2 tract contains {\bf \color{red} npatchx$\times$npatchy} patches, again the same number as the DP1 skymap.
+The skymap that was generated for DP2 processing contains a total of \ntracts spanning the whole sky, \ncoveredtracts of which were covered during the science valudation observing campaign.
+Each tract covers approximately \tractarea, which is the same as the skymap used to produce DP1.
+Each DP2 tract contains \npatchx$\times$\npatchy patches, again the same number as the DP1 skymap.
 Since tracts are equal-area, the amount of overlap between tracts differs depending on decl., with tracts near the celestial poles having more overlap than those near the celestial equator.
-The minimum amount of overlap between tracts is {\bf \color{red} tractoverlap}.
-Within a tract, the amount of overlap between patches is a constant {\bf \color{red} patchoverlap}.
-The aerial coverage of each patch is {\bf \color{red} patcharea} which, due to the patch overlap, is somewhat larger than the tract area divided by the number of patches in a tract.
+The minimum amount of overlap between tracts is \tractoverlap.
+Within a tract, the amount of overlap between patches is a constant \patchoverlap.
+The aerial coverage of each patch is \patcharea which, due to the patch overlap, is somewhat larger than the tract area divided by the number of patches in a tract.
 
 While the tract and patch configuration is the same between DP1 and DP2, there is a slight difference in their respective skymaps at the cell-level.
 Cells are subdivisions of patches but, unlike patches, are not exposed to the user: one cannot specify and retrieve an individual ``cell'' from an image.
 Rather, cells are referred to during the generation of coadds in that a region of an input image is only included in a coadd if, and only if, it covers the entire cell.
 This results in more consistent coverage across a coadded image.
 Such cell-based coaddition was not implemented during the production of DP1.
-In DP2, there are {\bf \color{red} ncellx $\times$ ncelly} cells per patch, including the patch overlap region (the patch overlap region is {\bf \color{red} ncellpatchoverlap} wide).
+In DP2, there are {\ncellx$\times$\ncelly} cells per patch, including the patch overlap region (the patch overlap region is \ncellpatchoverlap wide).
 There is no overlap between neighboring cells.
 
 \subsection{Science Images}
@@ -49,11 +50,13 @@ We strongly recommend, however, that users start with the processed visit images
 Talk about fits file format?
 
 \subsubsection{Raws}
+{\bf Note: Raws are NOT included in EPD2, but we describe them here as it provides useful context for the dataset types that are included in EPD2. Raw images will be included in DP2; the number of raw images in DP2 will be provided at that time.}
+
 Raw images are those that are produced by the camera following an exposure.
 They are the initial input science images to the pipelines and have not undergone any processing.
 Each active detector in LSSTCam produces one raw image per exposure.
-Each exposure therefore results in up to {\bf \color{red}nactivedetectors} raw images, although some exposures taken during {\bf \color{red} XXX; official name for campaign} resulted in fewer than {\bf \color{red} nactivedetectors} raw images due to the problematic detectors described in \secref{sec:commissioning} and {\bf \color{red} occasiional readout failures??}.
-The {\bf \color{red} nexposures} exposures taken during {\bf \color{red} XXX} resulted in a total of {\bf \color{red} nraws} raw images, all of which are included in DP2. A breakdown of the number of raw images per field and per band is given in table \tabref{tab:rawbreakdown}.
+Each exposure therefore results in up to \nactivedetectors raw images, although some exposures taken during {\bf \color{red} campaignname; official name for campaign} resulted in fewer than \nactivedetectors raw images due to the problematic detectors described in \secref{sec:commissioning} and occasiional readout failures.
+%The \nexposures exposures taken during {\bf \color{red} XXX} resulted in a total of \nraws raw images, all of which are included in DP2. A breakdown of the number of raw images per field and per band is given in table \tabref{tab:rawbreakdown}.
 
 Since LSSTCam uses the same sized detectors as LSSTComCam, the raw images in DP2 have the same dimensions as those released in DP1: {\bf \color{red} nrawpixx $\times$ nrawpixy}.
 Each DP2 detector is made up of 16 {\bf \color{red} namppixx $\times$ namppixy} pixel amps, laid out in two rows of eight.
@@ -64,12 +67,14 @@ In terms of on-disk size, a single raw image file is typically around {\bf \colo
 
 \subsubsection{Processed Visit Images (or Visit Images?)}
 \label{ssec:pvi}
+{\bf Note: Processed Visit Images (PVIs) are NOT included in EPD2, but we describe them here as it provides useful context for the dataset types that are included in EPD2. PVIs will be included in DP2; the number of PVIs in DP2 will be provided at that time.}
+
 Processed Visit Images (PVIs) are the first scientifically useful images to be produced by the science processing pipeline.
 They are the result of removing instrument signatures from the raw input images, followed by multiple rounds of background subtraction and photometric and astrometric calibration (see \secref{sec:drp}).
 There is one PVI for every raw input image that successfully passed through the first stage of the science processing pipelines.
-As such, there are up to {\bf \color{red} nactivedetectors} PVIs for each of the {\bf \color{red} nexposures} exposure taken during {\bf \color{red} XXX}.
-In total, {\bf \color{red} npvifails} raw images failed processing for various reasons; {\bf \color{red} the most common failure mode was (nfails), followed by (nfails)}.
-There are thus {\bf \color{red} npvi} PVIs in DP2.
+As such, there are up to \nactivedetectors PVIs for each of the exposures taken during {\bf \color{red} XXX}.
+%In total, {\bf \color{red} npvifails} raw images failed processing for various reasons; {\bf \color{red} the most common failure mode was (nfails), followed by (nfails)}.
+%There are thus {\bf \color{red} npvi} PVIs in DP2.
 
 During instrument signature removal (ISR), the science processing pipeline removes the overscan regions from the input raw images.
 The PVIs therefore only contain the {\bf \color{red} npvipixx $\times$ npvipixy} pixels that were exposed during the observation.
