@@ -5,7 +5,6 @@ requires-python = ">=3.11"
 dependencies = [
     "astropy",
     "pydantic>=2.0.0",
-    "lander<2.0.0",
     "setuptools",
     "pyyaml",
     "httpx",
