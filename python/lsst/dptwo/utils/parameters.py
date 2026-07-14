@@ -18,6 +18,8 @@ __all__ = [
     "formatParameter",
 ]
 
+import math
+import sys
 from collections import OrderedDict
 from collections.abc import Iterable, Mapping
 from pathlib import Path
@@ -104,10 +106,31 @@ class DP2Parameters:
 
     def write(self, output_path: str | Path = DEFAULT_OUTPUT_PATH) -> Path:
         """Write the rendered parameter file to disk."""
+        self._report_nan_parameters(output_path)
         path = Path(output_path).resolve()
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(self.to_latex(), encoding="utf-8")
         return path
+
+    def _report_nan_parameters(self, output_path: str | Path) -> None:
+        """Print a clear, un-filterable report of any NaN-valued parameters.
+
+        Uses stderr rather than the ``warnings`` module because callers
+        (e.g. ``bin/dp2_parameters.py``) may globally suppress warnings.
+        """
+        nan_names = [
+            name
+            for name, value in self._values.items()
+            if isinstance(value, float) and math.isnan(value)
+        ]
+        if nan_names:
+            print(
+                f"WARNING: {output_path}: the following parameters have NaN "
+                f"values and need to be re-generated: {', '.join(nan_names)}. "
+                "This is likely because the TAP service was unavailable on "
+                "this server; try running on the data-int RSP instead.",
+                file=sys.stderr,
+            )
 
     @staticmethod
     def _format_value(value: Any) -> str:
