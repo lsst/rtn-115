@@ -18,6 +18,8 @@ rubinobservatory:
     - name: rubinetendue
       value: 319
       unit: square degrees square meters
+    - name: startoperations
+      value: 2025-10-25
 
 lsst:
   parameters:
@@ -45,3 +47,65 @@ dptwo:
       value: "v30.0.8"
     - name: sciencepipelinesurl
       value: '\url{https://pipelines.lsst.io/v/v30\_0\_8}'
+
+    # Placeholder -- to replace all below  with computation from the data
+    # Formetting needs to be reviewed
+    - name: bestpsfwhm
+      value: 1.05
+      unit: arcsec
+    - name: zmedianpsffwhmwide
+      value: 1.17
+      unit: arcsec
+    - name: grmedianpsffwhmwide
+      value: 1.26
+      unit: arcsec
+    - name: coaddedarea
+      value: 3,000
+      unit: square degrees
+    - name: dptwoarea
+      value: 15,000
+      unit: square degrees
+    - name: nextendedobjects
+      value: X
+    - name: nsolarsystemobjects
+      value: X
+    - name: nnewasteroiddiscoveries
+      value: X
+    - name: udepthwfd
+      value: 00
+      unit: mag
+    - name: gdepthwfd
+      value: 00
+      unit: mag
+    - name: rdepthwfd
+      value: 00
+      unit: mag
+    - name: idepthwfd
+      value: 00
+      unit: mag
+    - name: zdepthwfd
+      value: 00
+      unit: mag
+    - name: ydepthwfd
+      value: 00
+      unit: mag
+    - name: udepthcosmos
+      value: 26.0
+      unit: mag
+    - name: gdepthcosmos
+      value: 26.8
+      unit: mag
+    - name: rdepthcosmos
+      value: 26.3
+      unit: mag
+    - name: idepthcosmos
+      value: 26.1
+      unit: mag
+    - name: zdepthcosmos
+      value: 25.3
+      unit: mag
+    - name: ydepthcosmos
+      value: 23.9
+      unit: mag
+    - name: nsinglevisitsimages
+      value: 4000
