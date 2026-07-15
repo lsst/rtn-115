@@ -72,6 +72,7 @@ drone:
     - name: dronedate
       value: mid-2028
 
+<<<<<<< HEAD
     # Placeholder -- to replace all below  with computation from the data
     # Formetting needs to be reviewed
     - name: bestpsfwhm
@@ -151,3 +152,40 @@ drone:
     - name: cosmosymaglim
       value: 23.9
       unit: mag
+=======
+detectors:
+  parameters:
+    - name: namppixx
+      value: 512
+    - name: namppixy
+      value: 2048
+    - name: nampx
+      value: 8 # Number of amps in the x-dimension
+    - name: nampy
+      value: 2 # Number of amps in the y-dimension
+    - name: sprescan # Serial prescan
+      value: 3
+    - name: soverscan # Serial overscan
+      value: 64
+    - name: poverscan # Parallel overscan
+      value: 48
+
+# TODO: Raw and PVI dimensions to be auto-generated for DP2 version
+raw:
+  parameters:
+    - name: nrawpixx
+      value: 4608
+    - name: nrawpixy
+      value: 4096
+    - name: nexposedpixx
+      value: 4096
+    - name: nexposedpixy
+      value: 4004
+
+pvi:
+  parameters:
+    - name: npvipixx
+      value: 4096
+    - name: npvipixy
+      value: 4004
+>>>>>>> c5fb5fce (Add raw and pvi dimensions)
