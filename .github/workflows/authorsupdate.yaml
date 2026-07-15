@@ -17,11 +17,11 @@ jobs:
           fetch-depth: 0 # full history for metadata
           submodules: true
 
-    # new authos may be in lsst-txmf and its giiod to pull that up anyway
-     - name: Update lsst-texmf submodule to latest remote
+      # new authos may be in lsst-txmf and its giiod to pull that up anyway
+      - name: Update lsst-texmf submodule to latest remote
         run: |
-            git submodule sync --recursive
-            git submodule update --init --recursive --remote lsst-texmf
+          git submodule sync --recursive
+          git submodule update --init --recursive --remote lsst-texmf
 
       - name: Set up Python
         uses: actions/setup-python@v5
