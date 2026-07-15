@@ -26,6 +26,7 @@ Run with ``--static-only``  to produce only ``parameters_static.tex``.
 from __future__ import annotations
 
 import argparse
+import logging
 import os
 import warnings
 from datetime import datetime
@@ -44,6 +45,8 @@ STATIC_PARAMETERS_FILE = (
 )
 
 warnings.filterwarnings("ignore")
+
+log = logging.getLogger(__name__)
 
 
 def staticParameters(params: DP2Parameters) -> DP2Parameters:
@@ -93,13 +96,17 @@ def campaignNights(params: DP2Parameters) -> DP2Parameters:
         params = addParameter(
             params,
             "svcampaignnnights",
-            nightsBetween(params.values["svcampaignstartdate"], params.values["svcampaignenddate"]),
+            nightsBetween(
+                params.values["svcampaignstartdate"], params.values["svcampaignenddate"]
+            ),
         )
     if "dptwostartdate" in params.values and "dptwoenddate" in params.values:
         params = addParameter(
             params,
             "dptwonnights",
-            nightsBetween(params.values["dptwostartdate"], params.values["dptwoenddate"]),
+            nightsBetween(
+                params.values["dptwostartdate"], params.values["dptwoenddate"]
+            ),
         )
     return params
 
