@@ -72,7 +72,6 @@ drone:
     - name: dronedate
       value: mid-2028
 
-<<<<<<< HEAD
     # Placeholder -- to replace all below  with computation from the data
     # Formetting needs to be reviewed
     - name: bestpsfwhm
@@ -152,7 +151,6 @@ drone:
     - name: cosmosymaglim
       value: 23.9
       unit: mag
-=======
 detectors:
   parameters:
     - name: namppixx
@@ -188,4 +186,3 @@ pvi:
       value: 4096
     - name: npvipixy
       value: 4004
->>>>>>> c5fb5fce (Add raw and pvi dimensions)

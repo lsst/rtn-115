@@ -279,35 +279,17 @@ def imageDatasets(params: DP2Parameters) -> DP2Parameters:
     log.info("Adding image dataset stats...")
 
     datasets = {
-        "raw": {
-            "instrument": "LSSTComCam",
-            "detector": 0,
-            "exposure": 2024110800245,
-            "band": "i",
-        },
-        "visit_image": {
-            "instrument": "LSSTComCam",
-            "detector": 0,
-            "visit": 2024110800245,
-            "band": "i",
-        },
         "deep_coadd": {
-            "band": "g",
+            "band": "i",
             "skymap": "lsst_cells_v1",
             "tract": 5063,
             "patch": 14,
         },
         "template_coadd": {
-            "band": "g",
+            "band": "i",
             "skymap": "lsst_cells_v1",
             "tract": 5063,
             "patch": 14,
-        },
-        "difference_image": {
-            "instrument": "LSSTComCam",
-            "detector": 0,
-            "visit": 2024110800245,
-            "band": "i",
         },
     }
     for dataset in datasets.items():
@@ -410,14 +392,22 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
     sky_projection = coadd.sky_projection
 
     corner_00 = sky_projection.pixel_to_sky(x=bbox.x.min, y=bbox.y.min)
-    corner_x1 = sky_projection.pixel_to_sky(x=bbox.x.max, y=bbox.y.min)
-    corner_1y = sky_projection.pixel_to_sky(x=bbox.x.min, y=bbox.y.max)
+    corner_01 = sky_projection.pixel_to_sky(x=bbox.x.min+1, y=bbox.y.min)
+    corner_x1 = sky_projection.pixel_to_sky(x=bbox.x.stop, y=bbox.y.min)
+    corner_y1 = sky_projection.pixel_to_sky(x=bbox.x.min, y=bbox.y.stop)
 
     fovx = corner_00.separation(corner_x1).degree
-    fovy = corner_00.separation(corner_1y).degree
+    fovy = corner_00.separation(corner_y1).degree
     params = addParameter(
-        params, "patcharea", f"{fovx * fovy:.3f}", unit="deg$^{\\rm 2}$"
+        params, "patcharea", f"{fovx.item() * fovy.item():.3f}", unit="deg$^{\\rm 2}$"
     )
+
+    npatchpixx = bbox.x.size
+    npatchpixy = bbox.y.size
+    coaddpixsize = corner_00.separation(corner_01).arcsec
+    params = addParameter(params, "npatchpixx", npatchpixx)
+    params = addParameter(params, "npatchpixy", npatchpixy)
+    params = addParameter(params, "coaddpixsize", coaddpixsize.item(), unit="\\arcsec", sig=2)
 
     wcs = tract.getWcs()
     patchInfo = tract.getPatchInfo((5, 5))
@@ -454,7 +444,7 @@ def coaddSelectionCriteria(params: DP2Parameters) -> DP2Parameters:
     refs = list(registry.queryDatasets("selectDeepCoaddVisits_config"))
     config = butler.get(refs[0])
     return addParameter(
-        params, "deepcoaddmaxfwhm", config.maxPsfFwhm, sig=2, unit="\\arcsec"
+        params, "deepcoaddselectionfwhm", config.maxPsfFwhm, sig=2, unit="\\arcsec"
     )
 
 
