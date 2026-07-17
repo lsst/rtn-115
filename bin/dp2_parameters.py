@@ -722,6 +722,47 @@ def nForced(params: DP2Parameters) -> DP2Parameters:
     )
     return params
 
+def nIsolatedStars(params: DP2Parameters) -> DP2Parameters:
+    """Add forced-source and unique forced-object counts from object_forced_source.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info("Adding total number of isolated stars")
+    nEntries = _nEntries('dp2.IsolatedStarStellarMotions')
+    params = addParameter(
+        params, "nisolatedstars", nEntries / 1e6, sig=2, unit="million"
+    )
+    return params
+
+def nShearObjects(params: DP2Parameters) -> DP2Parameters:
+    """Add forced-source and unique forced-object counts from object_forced_source.
+
+    Parameters
+    ----------
+    params : `DP2Parameters`
+        Parameter store to populate.
+
+    Returns
+    -------
+    params : `DP2Parameters`
+        Updated parameter store.
+    """
+    log.info("Adding total number of shear objects")
+    nEntries = _nEntries('dp2.ShearObject')
+    params = addParameter(
+        params, "nshearobjects", nEntries / 1e9, sig=2, unit="billion"
+    )
+    return params
+
+
 
 def nDiaForced(params: DP2Parameters) -> DP2Parameters:
     """Add forced-source and unique forced-object counts from dia_object_forced_source.
@@ -1002,6 +1043,9 @@ if __name__ == "__main__":
         data_params = nDiaSources(data_params)
         data_params = nForced(data_params)
         data_params = nDiaForced(data_params)
+        data_params = nIsolatedStars(data_params)
+        data_params = nShearObjects(data_params)
+        
         # data_params = nSSObjects(data_params)
         # data_params = nStarsGals(data_params)
         # data_params = nDeepCoaddInputImages(data_params)
