@@ -110,19 +110,20 @@ All Visit Images with circular PSFs with FWHM$<$\deepcoaddselectionfwhm are sele
 This selection is the most inclusive of all coadd productions and aims to maximise the depth of the coadd while still ensuring good image quality.
 As highlighted at the start of this subsection, a key diffence between the Deep Coadds released in DP2 versus those released in DP1 are that the DP2 Deep Coadds are cell-based whereas the DP1 Deep Coadds were not.
 
-There are a total of {\ndeepcoadd Deep Coadds in DP2.
+There are a total of \ndeepcoadds Deep Coadds in DP2.
 
 \paragraph{Template Coadds}
 Template Coadds are created, principally, to act as reference images in the process of image subtraction to produce Difference Images (see \secref{sssec:difference_image}).
 When performing image subtraction, the point spread function (PSF) of the reference image is degraded to match that of the science image.
 For this reason, it is beneficial for the reference image to have as small a PSF as possible whilst also ensuring they are deep enough so as to ensure they do not introduce substantial noise during subtraction (i.e., the noise budget is dominated by the single visit image, as opposed to the template coadd).
-For Template Coadds, the {\bf \color{red} templateCoaddFrac} of PVIs that cover a given cell in a given band with the smallest PSF are selected for coaddition.
-If one {\bf \color{red} templateCoaddFrac} corresponds to fewer than {\bf \color{red} minTemplateCoaddPVIs} PVIs (i.e., there are fewer than {\bf \color{red} minMultipleTemplateCoaddPVIs} PVIs that cover the cell in a given band), then the {\bf \color{red} minTemplateCoaddPVIs} PVIs with the smallest PSFs are selected.
-If there are fewer than {\bf \color{red} minTemplateCoaddPVIs} PVIs covering a cell with a given band, then all PVIs are selected.
-This strategy optimizes for image quality in regions that are well-covered by PVIs, while also ensuring good Template Coadd coverage in regions that are poorly-covered by PVIs.
-Of the {\bf \color{red} npvi} in DP2, {\bf \color{red} ntemplatecoaddpvi} are selected to be used to create Template Coadds.
+When selecting Visit Images for Template Coadds, only images with a PSF FWHM$<$\templatecoaddselectionfwhm are considered.
+Of the Visit Images that meet that PSF FWHM criterion, the \templatecoaddfrac that cover a given region in a given band with the smallest PSF are selected for coaddition.
+If that \templatecoaddfrac corresponds to fewer than \mintemplatecoaddvi Visit Images (i.e., there are fewer than \minmultipletemplatecoaddvi Visit Images that cover the region in a given band), then the \mintemplatecoaddvi Visit Images with the smallest PSFs are selected.
+If there are fewer than \mintemplatecoaddvi Visit Images covering a region with a given band, then all Visit Images (with PSF FWHM$<$\templatecoaddselectionfwhm) are selected.
+This strategy optimizes for image quality in regions that are well-covered by Visit Images, while also ensuring good Template Coadd coverage in regions that are poorly-covered by Visit Images.
+%Of the {\bf \color{red} npvi} in DP2, {\bf \color{red} ntemplatecoaddpvi} are selected to be used to create Template Coadds.
 
-In total, there are {\bf \color{red} ntemplatecoadd} Template Coadds in DP2.
+In total, there are \ntemplatecoadds Template Coadds in DP2.
 
 \paragraph{Pretty Coadds}
 Are these only going to be accessible via the HiPS viewer?

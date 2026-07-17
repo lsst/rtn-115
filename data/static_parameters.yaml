@@ -186,3 +186,25 @@ pvi:
       value: 4096
     - name: npvipixy
       value: 4004
+    - name: nitlpixx
+      value: 4072
+    - name: nitlpixy
+      value: 4000
+
+deepcoadd:
+  parameters:
+    - name: deepcoaddselectionfwhm
+      value: 1.7
+      unit: "\\arcsec"
+
+templatecoadd:
+  parameters:
+    - name: templatecoaddfrac
+      value: third
+    - name: templatecoaddselectionfwhm
+      value: 1.4
+      unit: "\\arcsec"
+    - name: mintemplatecoaddvi
+      value: 12
+    - name: minmultipletemplatecoaddvi
+      value: 36
