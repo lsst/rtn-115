@@ -301,17 +301,25 @@ rules:
     # Heuristic: period + spaces + uppercase-then-lowercase is a sentence
     # boundary. The [A-Z][a-z] lookahead avoids firing on acronyms (NASA,
     # LSST) that follow a period.
+    # (?<!et al) skips "et al. Smith"-style citations, where the period
+    # after "al" is not a sentence boundary.
+    # (?<!\b[A-Z]) skips single-letter initials ("N. B. Lust"), where the
+    # period after a lone capital letter preceded by a word boundary is not
+    # a sentence boundary. Multi-letter acronyms (NASA., LSST.) are
+    # unaffected, since the letter immediately before their period is not
+    # itself preceded by a word boundary.
     # Known false positives: title abbreviations before proper names
     # ("Dr. Smith", "Prof. Jones"). "Fig.", "Eq.", "Sec." are safe because
     # they are followed by digits or \ref{}, not [A-Z][a-z].
-    pattern: '\.[ ]+(?=[A-Z][a-z])'
+    pattern: '(?<!et al)(?<!\b[A-Z])\.[ ]+(?=[A-Z][a-z])'
     replacement: ".\n"
     audit_only: true
     note: |
       Run "bin/copyedit.py --audit $(git ls-files '*.tex')" to list candidates.
       Review each hit manually: false positives include title abbreviations
-      before names ("Dr. Smith", "Prof. Jones"). Sentence-boundary hits should
-      be applied to keep one sentence per line.
+      before names ("Dr. Smith", "Prof. Jones"). "et al." and single-letter
+      initials (e.g. "N. B. Lust") are guarded automatically.
+      Sentence-boundary hits should be applied to keep one sentence per line.
 
   - name: thousands-separator-5digit
     # Flag bare 5-digit numbers like 10000 that should be 10,000 in prose.
