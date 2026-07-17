@@ -620,8 +620,8 @@ def _nEntries(tableName: str) -> int:
 
     return results['nEntries'][0]
 
-def nObjects(params: DP2Parameters) -> DP2Parameters:
-    """Add total object count (in millions) across all object catalog patches.
+def catalogCounts(params: DP2Parameters) -> DP2Parameters:
+    """Add row-count parameters for a set of TAP tables.
 
     Parameters
     ----------
@@ -633,155 +633,21 @@ def nObjects(params: DP2Parameters) -> DP2Parameters:
     params : `DP2Parameters`
         Updated parameter store.
     """
-    log.info("Adding total number of objects...")
-    nObjects = _nEntries('dp2.Object')
-    params = addParameter(params, "nobjects", nObjects / 1e6, sig=2, unit="million")
-
-    return params
-
-
-def nSources(params: DP2Parameters) -> DP2Parameters:
-    """Add total source count (in millions) across all source catalog patches.
-
-    Parameters
-    ----------
-    params : `DP2Parameters`
-        Parameter store to populate.
-
-    Returns
-    -------
-    params : `DP2Parameters`
-        Updated parameter store.
-    """
-    log.info("Adding total number of sources...")
-    nSources = _nEntries('dp2.Source')
-    params = addParameter(params, "nsources", nSources / 1e9, sig=2, unit="billion")
-
-    return params
-
-
-def nDiaObjects(params: DP2Parameters) -> DP2Parameters:
-    """Add total DIAObject count (in millions) across all dia_object catalog patches.
-
-    Parameters
-    ----------
-    params : `DP2Parameters`
-        Parameter store to populate.
-
-    Returns
-    -------
-    params : `DP2Parameters`
-        Updated parameter store.
-    """
-    log.info("Adding total number of diaObjects...")
-    nDiaObjects = _nEntries('dp2.DiaObject')
-    params = addParameter(
-        params, "ndiaobjects", nDiaObjects / 1e6, sig=2, unit="million"
-    )
-    return params
-
-
-def nDiaSources(params: DP2Parameters) -> DP2Parameters:
-    """Add total DIASource count (in millions) across all dia_source catalog patches.
-
-    Parameters
-    ----------
-    params : `DP2Parameters`
-        Parameter store to populate.
-
-    Returns
-    -------
-    params : `DP2Parameters`
-        Updated parameter store.
-    """
-    log.info("Adding total number of diaSources...")
-    nDiaSources = _nEntries('dp2.DiaSource')
-    params = addParameter(
-        params, "ndiasources", nDiaSources / 1e9, sig=2, unit="billion"
-    )
-    return params
-
-
-def nForced(params: DP2Parameters) -> DP2Parameters:
-    """Add forced-source and unique forced-object counts from object_forced_source.
-
-    Parameters
-    ----------
-    params : `DP2Parameters`
-        Parameter store to populate.
-
-    Returns
-    -------
-    params : `DP2Parameters`
-        Updated parameter store.
-    """
-    log.info("Adding total number of forced sources")
-    nForcedSources = _nEntries('dp2.ForcedSource')
-    params = addParameter(
-        params, "nforcedsources", nForcedSources / 1e9, sig=2, unit="billion"
-    )
-    return params
-
-def nIsolatedStars(params: DP2Parameters) -> DP2Parameters:
-    """Add forced-source and unique forced-object counts from object_forced_source.
-
-    Parameters
-    ----------
-    params : `DP2Parameters`
-        Parameter store to populate.
-
-    Returns
-    -------
-    params : `DP2Parameters`
-        Updated parameter store.
-    """
-    log.info("Adding total number of isolated stars")
-    nEntries = _nEntries('dp2.IsolatedStarStellarMotions')
-    params = addParameter(
-        params, "nisolatedstars", nEntries / 1e6, sig=2, unit="million"
-    )
-    return params
-
-def nShearObjects(params: DP2Parameters) -> DP2Parameters:
-    """Add forced-source and unique forced-object counts from object_forced_source.
-
-    Parameters
-    ----------
-    params : `DP2Parameters`
-        Parameter store to populate.
-
-    Returns
-    -------
-    params : `DP2Parameters`
-        Updated parameter store.
-    """
-    log.info("Adding total number of shear objects")
-    nEntries = _nEntries('dp2.ShearObject')
-    params = addParameter(
-        params, "nshearobjects", nEntries / 1e9, sig=2, unit="billion"
-    )
-    return params
-
-
-
-def nDiaForced(params: DP2Parameters) -> DP2Parameters:
-    """Add forced-source and unique forced-object counts from dia_object_forced_source.
-
-    Parameters
-    ----------
-    params : `DP2Parameters`
-        Parameter store to populate.
-
-    Returns
-    -------
-    params : `DP2Parameters`
-        Updated parameter store.
-    """
-    log.info("Adding total number of DIA forced sources")
-    nForcedSourcesOnDIA = _nEntries('dp2.ForcedSourceOnDiaObject')
-    params = addParameter(
-        params, "ndiaforcedsources", nForcedSourcesOnDIA / 1e9, sig=2, unit="billion"
-    )
+    # Maps output parameter name -> (TAP table name, scale divisor, unit).
+    tables = {
+        "nobjects": ("dp2.Object", 1e6, "million"),
+        "nsources": ("dp2.Source", 1e9, "billion"),
+        "ndiaobjects": ("dp2.DiaObject", 1e6, "million"),
+        "ndiasources": ("dp2.DiaSource", 1e9, "billion"),
+        "nforcedsources": ("dp2.ForcedSource", 1e9, "billion"),
+        "ndiaforcedsources": ("dp2.ForcedSourceOnDiaObject", 1e9, "billion"),
+        "nisolatedstars": ("dp2.IsolatedStarStellarMotions", 1e6, "million"),
+        "nshearobjects": ("dp2.ShearObject", 1e9, "billion"),
+    }
+    for paramName, (tableName, scale, unit) in tables.items():
+        log.info("Adding %s from %s...", paramName, tableName)
+        nEntries = _nEntries(tableName)
+        params = addParameter(params, paramName, nEntries / scale, sig=2, unit=unit)
     return params
 
 
@@ -1037,14 +903,7 @@ if __name__ == "__main__":
         # data_params = tableLengths(data_params)
         # data_params = misc(data_params)
 
-        data_params = nObjects(data_params)
-        data_params = nSources(data_params)
-        data_params = nDiaObjects(data_params)
-        data_params = nDiaSources(data_params)
-        data_params = nForced(data_params)
-        data_params = nDiaForced(data_params)
-        data_params = nIsolatedStars(data_params)
-        data_params = nShearObjects(data_params)
+        data_params = catalogCounts(data_params)
         
         # data_params = nSSObjects(data_params)
         # data_params = nStarsGals(data_params)
