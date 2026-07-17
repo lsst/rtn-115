@@ -51,15 +51,17 @@ We strongly recommend, however, that users start with the processed visit images
 
 Talk about fits file format?
 
-\subsubsection{Raws}
-\label{sssec:raws}
-{\bf Note: Raws are NOT included in EPD2, but we describe them here as it provides useful context for the dataset types that are included in EPD2. Raw images will be included in DP2; the number of raw images in DP2 will be provided at that time.}
+\subsubsection{Raw Images}
+\label{sssec:rawimages}
+{\bf Note: Raws are NOT included in EPD2, but we describe them here as it provides useful context for the dataset types that are included in EPD2.
+Raw images will be included in DP2; the number of raw images in DP2 will be provided at that time.}
 
 Raw images are those that are produced by the camera following an exposure.
 They are the initial input science images to the pipelines and have not undergone any processing.
 Each active detector in LSSTCam produces one raw image per exposure.
 Each exposure therefore results in up to \nactivedetectors raw images, although some exposures taken during the observing campaign resulted in fewer than \nactivedetectors raw images due to the problematic detectors described in \secref{sec:commissioning} and occasional readout failures.
-%The \nexposures exposures taken during {\bf \color{red} XXX} resulted in a total of \nraws raw images, all of which are included in DP2. A breakdown of the number of raw images per field and per band is given in table \tabref{tab:rawbreakdown}.
+%The \nexposures exposures taken during {\bf \color{red} XXX} resulted in a total of \nraws raw images, all of which are included in DP2.
+% A breakdown of the number of raw images per field and per band is given in table \tabref{tab:rawbreakdown}.
 
 All LSSTCam detectors are made up of 16 sections, laid out in two rows of eight, with each segment read out by a dedicated amplifier.
 These sections are evident in the raw images.
@@ -70,7 +72,8 @@ This difference is reflected in the dimensions of the visit images (\secref{ssse
 
 \subsubsection{Visit Images}
 \label{ssec:visitimages}
-{\bf Note: Visit Images are NOT included in EPD2, but we describe them here as it provides useful context for the dataset types that are included in EPD2. Visit Images will be included in DP2; the number of Visit Images in DP2 will be provided at that time.}
+{\bf Note: Visit Images are NOT included in EPD2, but we describe them here as it provides useful context for the dataset types that are included in EPD2.
+Visit Images will be included in DP2; the number of Visit Images in DP2 will be provided at that time.}
 
 Visit Images are the first scientifically useful images to be produced by the science processing pipeline.
 They are the result of removing instrument signatures from the raw input images, followed by multiple rounds of background subtraction and photometric and astrometric calibration (see \secref{sec:drp}).
@@ -287,12 +290,19 @@ After collating the input catalogs and transforming the fluxes to the standard D
 This process generated a set of standard columns containing positional and flux information, along with their associated uncertainties.
 
 % \subsubsection{Object Parent}
-%% Not included in (E)DP2. What's below is unverified placeholder.
-% The Object Parent table contains information regarding the detections in the Deep Coadd images (\secref{sssec:coadds}) prior to deblending. As in the case of the Object table, an attempt has been made to match detections across each of the up to six bands. Each entry corresponds to a multi-band matched detection in the Deep Coadd Images, and contains information about the pre-deblended detection in multiple bands.
+%% Not included in (E)DP2.
+%% What's below is unverified placeholder.
+% The Object Parent table contains information regarding the detections in the Deep Coadd images (\secref{sssec:coadds}) prior to deblending.
+%  As in the case of the Object table, an attempt has been made to match detections across each of the up to six bands.
+%  Each entry corresponds to a multiband matched detection in the Deep Coadd Images, and contains information about the pre-deblended detection in multiple bands.
 
-% The Object Parent table contains information about the deblend process for each pre-deblended detection. In particular, it highlights those detections that the deblender failed to deblend and the reason for the failure. Every entry in the Object Parent table has a unique \texttt{objectId}. Entries in the Object catalog (\secref{sssec:object}) reference this value via its own \texttt{parentObjectId} column, which enables each object to be linked back to its parent detection.
+% The Object Parent table contains information about the deblend process for each pre-deblended detection.
+%  In particular, it highlights those detections that the deblender failed to deblend and the reason for the failure.
+%  Every entry in the Object Parent table has a unique \texttt{objectId}.
+%  Entries in the Object catalog (\secref{sssec:object}) reference this value via its own \texttt{parentObjectId} column, which enables each object to be linked back to its parent detection.
 
-% The Object Parent table is only available via the data butler; it is not available via the Table Access Platform. There is one Object Parent table for each tract that has coverage in DP2.
+% The Object Parent table is only available via the data butler; it is not available via the Table Access Platform.
+%  There is one Object Parent table for each tract that has coverage in DP2.
 
 \subsection{Maps}
 \subsubsection{Survey Property Maps}
@@ -312,7 +322,9 @@ Survey Property maps are only available via the Data Butler (\secref{sssec:data_
 
 \subsubsection{HiPS Maps}
 \noindent
-{\bf Placeholder. Taken from DP1. I don't know how much of the following applies to DP2.}
+{\bf Placeholder.
+Taken from DP1.
+I don't know how much of the following applies to DP2.}
 
 \gls{HiPS} maps, offer an interactive way to explore seamless, multiband tiles of the sky regions covered by DP2, allowing for smooth panning and zooming.
 DP2 provides multiband \gls{HiPS} images created by combining data from individual bands of Deep Coadd and {\bf \color{red} Pretty Coadd} images, using an improved version (N. B. Lust et al. in preparation) of the algorithm presented in \cite[][]{2004PASP..116..133L}.
@@ -343,10 +355,15 @@ These datasets tabulate the full-system transmission of the six LSSTCam filters 
 The \texttt{standard\_passband} dataset is keyed by band and is stored in Astropy table format.
 
 \subsubsection{Object Scarlet Models}
-The Object Scarlet Models dataset stores the scarlet models fit to each deblended detection in the Deep Coadd images. Each model captures an object's spatial profile (morphology) together with its per-band flux values, as assigned by the deblender when separating it from its blended neighbours. When combined with the corresponding Object catalog and Deep Coadd image, this dataset enables the reconstruction of the deblend model to see how a specific detection was deblended. There is one Object Scarlet Models dataset per patch that has coverage in DP2, and they are only available via the Data Butler.
+The Object Scarlet Models dataset stores the scarlet models fit to each deblended detection in the Deep Coadd images.
+Each model captures an object's spatial profile (morphology) together with its per-band flux values, as assigned by the deblender when separating it from its blended neighbours.
+When combined with the corresponding Object catalog and Deep Coadd image, this dataset enables the reconstruction of the deblend model to see how a specific detection was deblended.
+There is one Object Scarlet Models dataset per patch that has coverage in DP2, and they are only available via the Data Butler.
 
 \subsubsection{Deep Coadd Input Summary}
-The Deep Coadd Input Summary table contains the visit and detector IDs of all the Visit Images that were selected and coadded to produce a given Deep Coadd image. Also included in the table are the relative weights of each Visit Image (which are inversely proportional to the image variance), and the number of pixels that each Visit Image contributed to the Deep Coadd (since a given Visit Image may only partially cover a patch). There is one Deep Coadd Input Summary per tract that has coverage in DP2, and they are only available via the Data Butler.
+The Deep Coadd Input Summary table contains the visit and detector IDs of all the Visit Images that were selected and coadded to produce a given Deep Coadd image.
+Also included in the table are the relative weights of each Visit Image (which are inversely proportional to the image variance), and the number of pixels that each Visit Image contributed to the Deep Coadd (since a given Visit Image may only partially cover a patch).
+There is one Deep Coadd Input Summary per tract that has coverage in DP2, and they are only available via the Data Butler.
 
 %\subsubsection{Calibration images}
 %\label{sssec:calibration_images}
@@ -364,11 +381,13 @@ Some of the information contained within the \texttt{Visit} catalog is also cont
 The Visit catalog contains {\bf \color{red} nvisitrows} entries.
 
 \subsubsection{Visit Detector}
-The Visit Detector catalog contains summary information for all Visit Images in DP2. In addition to technical information, such as the on-sky coordinates of the central pixel and measured pixel scale, the Visit Detector catalog contains a range of data quality measurements, such as whole-image summary statistics for the PSF size, zero-point and 5$\sigma$ depth, sky background, sky noise, and the quality of astrometric solution.
+The Visit Detector catalog contains summary information for all Visit Images in DP2.
+In addition to technical information, such as the on-sky coordinates of the central pixel and measured pixel scale, the Visit Detector catalog contains a range of data quality measurements, such as whole-image summary statistics for the PSF size, zero-point and 5$\sigma$ depth, sky background, sky noise, and the quality of astrometric solution.
 It provides an efficient method to access the properties of a Visit Image without needing to access the image data.
 When combined with the data contained in the Visit table described above, it provides a full picture of the telescope pointing and sky conditions at the time of observation.
 
 The Visit Detector catalog contains {\bf \color{red} nvisitdetectorrows} entries.
 
 \subsubsection{Visit Summary}
-The Visit Summary table contains the same information as the Visit Detector catalog, but only for a single visit. There is one Visit Summary table per visit (meaning the Visit Detector table is the collation of all the Visit Summary tables), and they are only available via the Data Butler.
+The Visit Summary table contains the same information as the Visit Detector catalog, but only for a single visit.
+There is one Visit Summary table per visit (meaning the Visit Detector table is the collation of all the Visit Summary tables), and they are only available via the Data Butler.
