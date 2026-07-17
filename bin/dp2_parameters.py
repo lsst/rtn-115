@@ -239,27 +239,30 @@ def imageStats(params: DP2Parameters, imageId: tuple) -> DP2Parameters:
     refs = list(registry.queryDatasets(imageType))
     params = addParameter(params, f"n{imageName}s", len(list(refs)))
 
-    filepath = butler.getURI(imageType, dataId=imageDataId)
-    roughFileSize = round(os.path.getsize(filepath.path) / 1e6, 2)
-    params = addParameter(params, f"{imageName}hdd", f"{roughFileSize:.0f}", unit="MB")
+    # ref = list(registry.queryDatasets(imageType, dataId=imageDataId))[0]
+    # filepath = butler.getURI(ref)
+    
+    # Filesize not currently working:
+    #roughFileSize = round(os.path.getsize(filepath.path) / 1e6, 2)
+    #params = addParameter(params, f"{imageName}hdd", f"{roughFileSize:.0f}", unit="MB")
 
-    image = butler.get(imageType, dataId=imageDataId)
-    params = addParameter(params, f"n{imageName}pixx", image.getDimensions().x)
-    params = addParameter(params, f"n{imageName}pixy", image.getDimensions().y)
+    # image = butler.get(ref)
+    # params = addParameter(params, f"n{imageName}pixx", image.bbox.shape.x)
+    # params = addParameter(params, f"n{imageName}pixy", image.bbox.shape.y)
 
-    platescale = image.getWcs().getPixelScale().asArcseconds()
-    params = addParameter(
-        params, f"{imageName}platescale", f"{platescale:.1f}", unit="\\arcsec per pixel"
-    )
+    # platescale = image.getWcs().getPixelScale().asArcseconds()
+    # params = addParameter(
+    #     params, f"{imageName}platescale", f"{platescale:.1f}", unit="\\arcsec per pixel"
+    # )
 
-    fovx = image.getDimensions().x * image.getWcs().getPixelScale().asDegrees()
-    fovy = image.getDimensions().y * image.getWcs().getPixelScale().asDegrees()
-    params = addParameter(params, f"{imageName}fovx", f"{fovx:.2f}", unit="\\degree")
-    params = addParameter(params, f"{imageName}fovy", f"{fovy:.2f}", unit="\\degree")
-    area = fovx * fovy
-    params = addParameter(
-        params, f"{imageName}fov", f"{area:.3f}", unit="deg$^{\\rm 2}$"
-    )
+    # fovx = image.getDimensions().x * image.getWcs().getPixelScale().asDegrees()
+    # fovy = image.getDimensions().y * image.getWcs().getPixelScale().asDegrees()
+    # params = addParameter(params, f"{imageName}fovx", f"{fovx:.2f}", unit="\\degree")
+    # params = addParameter(params, f"{imageName}fovy", f"{fovy:.2f}", unit="\\degree")
+    # area = fovx * fovy
+    # params = addParameter(
+    #     params, f"{imageName}fov", f"{area:.3f}", unit="deg$^{\\rm 2}$"
+    # )
     return params
 
 
@@ -281,27 +284,27 @@ def imageDatasets(params: DP2Parameters) -> DP2Parameters:
     datasets = {
         "deep_coadd": {
             "band": "i",
-            "skymap": "lsst_cells_v1",
-            "tract": 5063,
-            "patch": 14,
+            "skymap": "lsst_cells_v2",
+            "tract": 9813,
+            "patch": 50,
         },
         "template_coadd": {
             "band": "i",
-            "skymap": "lsst_cells_v1",
-            "tract": 5063,
-            "patch": 14,
+            "skymap": "lsst_cells_v2",
+            "tract": 9813,
+            "patch": 50,
         },
     }
     for dataset in datasets.items():
         params = imageStats(params, dataset)
 
-    params = addParameter(
-        params,
-        "ndeepcoaddpixtotal",
-        params.values["ndeepcoaddpixx"] * params.values["ndeepcoaddpixy"] / 1e6,
-        sig=3,
-        unit="million",
-    )
+    # params = addParameter(
+    #     params,
+    #     "ndeepcoaddpixtotal",
+    #     params.values["ndeepcoaddpixx"] * params.values["ndeepcoaddpixy"] / 1e6,
+    #     sig=3,
+    #     unit="million",
+    # )
     return params
 
 
@@ -984,7 +987,7 @@ if __name__ == "__main__":
         data_params = DP2Parameters()
         # data_params = observingCampaign(data_params)
         # data_params = observingQuality(data_params)
-        # data_params = imageDatasets(data_params)
+        data_params = imageDatasets(data_params)
         data_params = skymapData(data_params)
         data_params = nRaws(data_params)
         # data_params = coaddSelectionCriteria(data_params)
