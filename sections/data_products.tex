@@ -43,6 +43,7 @@ In the case of DP2 Deep Coadds, there are {\ncellx$\times$\ncelly} cells per pat
 There is no overlap between neighboring cells.
 
 \subsection{Science Images}
+\label{ssec:scienceimages}
 In this section we describe the science images included in DP2.
 These are images of the night sky, as opposed to calibration images (e.g., bias, darks, flats; see \secref{sssec:calibration_images}).
 Since we provide the raw, unprocessed science images and the calibration images and used during processing it is possible, in principle, for a user to generate their own calibrated processed images.
@@ -112,28 +113,28 @@ As highlighted at the start of this subsection, a key diffence between the Deep 
 
 There are a total of \ndeepcoadds Deep Coadds in DP2.
 
-\paragraph{Template Coadds}
-Template Coadds are created, principally, to act as reference images in the process of image subtraction to produce Difference Images (see \secref{sssec:difference_image}).
-When performing image subtraction, the point spread function (PSF) of the reference image is degraded to match that of the science image.
-For this reason, it is beneficial for the reference image to have as small a PSF as possible whilst also ensuring they are deep enough so as to ensure they do not introduce substantial noise during subtraction (i.e., the noise budget is dominated by the single visit image, as opposed to the template coadd).
-When selecting Visit Images for Template Coadds, only images with a PSF FWHM$<$\templatecoaddselectionfwhm are considered.
-Of the Visit Images that meet that PSF FWHM criterion, the \templatecoaddfrac that cover a given region in a given band with the smallest PSF are selected for coaddition.
-If that \templatecoaddfrac corresponds to fewer than \mintemplatecoaddvi Visit Images (i.e., there are fewer than \minmultipletemplatecoaddvi Visit Images that cover the region in a given band), then the \mintemplatecoaddvi Visit Images with the smallest PSFs are selected.
-If there are fewer than \mintemplatecoaddvi Visit Images covering a region with a given band, then all Visit Images (with PSF FWHM$<$\templatecoaddselectionfwhm) are selected.
-This strategy optimizes for image quality in regions that are well-covered by Visit Images, while also ensuring good Template Coadd coverage in regions that are poorly-covered by Visit Images.
-%Of the {\bf \color{red} npvi} in DP2, {\bf \color{red} ntemplatecoaddpvi} are selected to be used to create Template Coadds.
+% \paragraph{Template Coadds}
+% Template Coadds are created, principally, to act as reference images in the process of image subtraction to produce Difference Images (see \secref{sssec:difference_image}).
+% When performing image subtraction, the point spread function (PSF) of the reference image is degraded to match that of the science image.
+% For this reason, it is beneficial for the reference image to have as small a PSF as possible whilst also ensuring they are deep enough so as to ensure they do not introduce substantial noise during subtraction (i.e., the noise budget is dominated by the single visit image, as opposed to the template coadd).
+% When selecting Visit Images for Template Coadds, only images with a PSF FWHM$<$\templatecoaddselectionfwhm are considered.
+% Of the Visit Images that meet that PSF FWHM criterion, the \templatecoaddfrac that cover a given region in a given band with the smallest PSF are selected for coaddition.
+% If that \templatecoaddfrac corresponds to fewer than \mintemplatecoaddvi Visit Images (i.e., there are fewer than \minmultipletemplatecoaddvi Visit Images that cover the region in a given band), then the \mintemplatecoaddvi Visit Images with the smallest PSFs are selected.
+% If there are fewer than \mintemplatecoaddvi Visit Images covering a region with a given band, then all Visit Images (with PSF FWHM$<$\templatecoaddselectionfwhm) are selected.
+% This strategy optimizes for image quality in regions that are well-covered by Visit Images, while also ensuring good Template Coadd coverage in regions that are poorly-covered by Visit Images.
+% %Of the {\bf \color{red} npvi} in DP2, {\bf \color{red} ntemplatecoaddpvi} are selected to be used to create Template Coadds.
 
-In total, there are \ntemplatecoadds Template Coadds in DP2.
+% In total, there are \ntemplatecoadds Template Coadds in DP2.
 
-\paragraph{Pretty Coadds}
-Are these only going to be accessible via the HiPS viewer?
+% \paragraph{Pretty Coadds}
+% Are these only going to be accessible via the HiPS viewer?
 
-\subsubsection{Difference Image}
+% \subsubsection{Difference Image}
 
-\label{sssec:difference_image}
+% \label{sssec:difference_image}
 
 \subsection{Catalogs}
-Catalogs contain data for detections in the images described in \secref{ssec:science_images}, except the \texttt{Calibration} catalog, which contains reference data obtained from previous surveys.
+Catalogs contain data for detections in the images described in \secref{ssec:scienceimages}, except the \texttt{Calibration} catalog, which contains reference data obtained from previous surveys.
 Observatory-produced metadata tables are described in \secref{ssec:metadata}.
 The Vera C.
 Rubin project adopts a naming convention in which objects refer to an astrophysical object, whereas sources refers to a single-epoch detection of that object.
@@ -157,8 +158,9 @@ There are also a number of additional catalogs in DP2 that do not have DP1 equiv
 Throughout this section, we provide high-level overviews of the contents of each catalog, rather than listing and describing each column.
 Instead, full searchable catalogue schemas, including column descriptions, are provided at \url{https://sdm-schemas.lsst.io/}.
 
-Catalog data are stored in the Qserv database (\secref{sssec:qserv}) and are accessible via TAP, and an online DP1 catalog schema is available at \url{https://sdm-schemas.lsst.io/dp2.html}.
+All but one of the catalogs described in this subsection are stored in the Qserv database (\secref{sssec:qserv}) and are accessible via TAP, and an online DP2 catalog schema is available at \url{https://sdm-schemas.lsst.io/dp2.html}.
 Catalog data are also accessible via the Data Butler (see \secref{sssec:data_butler}).
+The aforementioned single exception is the Calibration Reference Catalog, which is only available via the Data Butler.
 
 % The following sections need reordering; they are currently in the order that appears on:
 % https://rubinobs.atlassian.net/wiki/spaces/DM/pages/1794637895/Baby+DP2+Butler+data+products
@@ -195,8 +197,6 @@ In such cases the positional information, including uncertainties, are reported 
 Every entry in the Isolated Star Stellar Motion catalog has a unique identification number and, in cases where a match to the reference catalog has been identified, the unique identification of the matched reference source.
 
 The Isolated Star Stellar Motions catalog contains \nisolatedstars entries.
-
-	{\bf Does it also contain the objectId?}
 
 \subsubsection{Object Shear}
 The Object Shear catalog contains object shape measurements in five different shear steps or ``counterfactual'' images: one in which no shear has been applied (\texttt{no-shear}), and four in which an artificial linear shear has been introduced to the image (\texttt{1p, 1m, 2p, 2m}).
@@ -260,7 +260,6 @@ The DIA Source catalog contains data for \ndiasources DIA sources.
 The Solar System Object catalog and the MPC Orbit Database (MPCORB) carry information about solar system objects.
 The MPCORB table provides the MPC-computed orbital elements for all known asteroids, including those that Rubin discovered.
 
-	{\bf Is the following still correct for (E)DP2?}
 The Solar System Object catalog serves primarily to provide the mapping between the IAU designation of an object (listed in the MPCORB), and the internal \texttt{ssObjectId} identifier, which is used as a key to find solar system object observations in the DIA Source and Solar System Source catalogs.
 The Solar System Object catalog contains data for {\bf \color{red} nssobjects} solar system objects.
 
@@ -287,12 +286,13 @@ All sources from the input catalogs are matched to Gaia \gls{DR3} sources for ro
 After collating the input catalogs and transforming the fluxes to the standard DES and SDSS bandpasses, the catalog was used to identify sources within a specific region of the sky.
 This process generated a set of standard columns containing positional and flux information, along with their associated uncertainties.
 
-\subsubsection{MPCORB}
-This is not listed on the confluence page.
+% \subsubsection{Object Parent}
+%% Not included in (E)DP2. What's below is unverified placeholder.
+% The Object Parent table contains information regarding the detections in the Deep Coadd images (\secref{sssec:coadds}) prior to deblending. As in the case of the Object table, an attempt has been made to match detections across each of the up to six bands. Each entry corresponds to a multi-band matched detection in the Deep Coadd Images, and contains information about the pre-deblended detection in multiple bands.
 
-\subsubsection{Object Parent}
-This is not included in QServ for EDP2, but may be included in the butler.
-Come back to this should it be decided to include.
+% The Object Parent table contains information about the deblend process for each pre-deblended detection. In particular, it highlights those detections that the deblender failed to deblend and the reason for the failure. Every entry in the Object Parent table has a unique \texttt{objectId}. Entries in the Object catalog (\secref{sssec:object}) reference this value via its own \texttt{parentObjectId} column, which enables each object to be linked back to its parent detection.
+
+% The Object Parent table is only available via the data butler; it is not available via the Table Access Platform. There is one Object Parent table for each tract that has coverage in DP2.
 
 \subsection{Maps}
 \subsubsection{Survey Property Maps}
@@ -301,19 +301,30 @@ Each map provides the spatial distribution of a specific quantity at a defined s
 Maps are initially created per tract and then combined to produce a final consolidated map.
 At each sky location, represented by a spatial pixel in the \gls{HEALPix}\citep[][]{2005ApJ...622..759G} grid, values are derived using statistical operations, such as minimum, maximum, mean, weighted mean, or sum, depending on the property.
 
-DP2 contains {\bf \color{red} nsurveypropertymaps} Survey Property maps.
+DP2 contains \nsurveypropertymaps Survey Property maps.
 The available maps describe total exposure times, observation epochs (one each for the earliest, mean, and latest observation epoch), \gls{PSF} size and \gls{shape} (one for each of the $e^1$ and $e^2$ shape parameters; see \secref{ssec:psf_models}), PSF magnitude limits, sky background and noise levels, as well as astrometric shifts (one each for R.A. and decl.) and PSF distortions (one for each of the $e^1$ and $e^2$ shape parameters) due to wavelength-dependent atmospheric \gls{DCR} effects.
 
-They all use the dataset type  format \texttt{deep\_coadd\_<PROPERTY>\_consolidated\_map\_<STATISTIC>}.
-For example, \texttt{deep\_coadd\_exposure\_time\_consolidated\_map\_sum} provides a spatial map of the total exposure time accumulated per
+They all use the dataset type  format \texttt{deepCoadd\_<PROPERTY>\_consolidated\_map\_<STATISTIC>}.
+For example, \texttt{deepCoadd\_exposure\_time\_consolidated\_map\_sum} provides a spatial map of the total exposure time accumulated per
 sky position in units of seconds.
 All maps are stored in \texttt{HealSparse}\footnote{A sparse \gls{HEALPix} representation that efficiently encodes data values on the celestial sphere. \nolinkurl{https://healsparse.readthedocs.io}} format.
-Survey Property maps are only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
+Survey Property maps are only available via the Data Butler (\secref{sssec:data_butler}).
 
 \subsubsection{HiPS Maps}
-This is not listed on the confluence page. I expect that non-listing is an oversight.
-\subsubsection{Multi-order Coverage Maps}
-This is not listed on the confluence page. I expect that non-listing is an oversight.
+\noindent
+{\bf Placeholder. Taken from DP1. I don't know how much of the following applies to DP2.}
+
+\gls{HiPS} maps, offer an interactive way to explore seamless, multiband tiles of the sky regions covered by DP2, allowing for smooth panning and zooming.
+DP2 provides multiband \gls{HiPS} images created by combining data from individual bands of Deep Coadd and {\bf \color{red} Pretty Coadd} images, using an improved version (N. B. Lust et al. in preparation) of the algorithm presented in \cite[][]{2004PASP..116..133L}.
+These images are false-color representations generated using various filter combinations for the red, green, and blue channels.
+
+The available filter combinations include \textit{gri}, \textit{izy}, \textit{riz}, and \textit{ugr} for both \texttt{deep\_coadd}s and \texttt{template\_coadd}s.
+Additionally, for Deep Coadd image only, we provide color blends such as \textit{uug} and \textit{grz}.
+
+\gls{HiPS} maps are only accessible through the \gls{HiPS} viewer in the \gls{RSP} Portal (\secref{ssec:rsp_portal}) and cannot be accessed via the Data \gls{Butler} (\secref{sssec:data_butler}).
+
+%\subsubsection{Multi-order Coverage Maps}
+% This is not listed on the confluence page. I expect that non-listing is an oversight.
 
 \subsection{Ancillary Data Products}
 In addition to the science images and catalog data products described above, there are are number of ancilliary data products included in DP2.
@@ -331,15 +342,33 @@ The corresponding transmission curves are provided as a DP2 data product.
 These datasets tabulate the full-system transmission of the six LSSTCam filters as a function of wavelength and were used as a reference for the LSSTCam DP2 photometry.
 The \texttt{standard\_passband} dataset is keyed by band and is stored in Astropy table format.
 
-\subsubsection{Calibration images}
-\label{sssec:calibration_images}
-Not included in EDP2.
-\subsubsection{Diagnostic Data Products}
-Not included in EDP2.
-\subsubsection{Standard Data Products}
-Not included in EDP2.
+\subsubsection{Object Scarlet Models}
+The Object Scarlet Models dataset stores the scarlet models fit to each deblended detection in the Deep Coadd images. Each model captures an object's spatial profile (morphology) together with its per-band flux values, as assigned by the deblender when separating it from its blended neighbours. When combined with the corresponding Object catalog and Deep Coadd image, this dataset enables the reconstruction of the deblend model to see how a specific detection was deblended. There is one Object Scarlet Models dataset per patch that has coverage in DP2, and they are only available via the Data Butler.
+
+\subsubsection{Deep Coadd Input Summary}
+The Deep Coadd Input Summary table contains the visit and detector IDs of all the Visit Images that were selected and coadded to produce a given Deep Coadd image. Also included in the table are the relative weights of each Visit Image (which are inversely proportional to the image variance), and the number of pixels that each Visit Image contributed to the Deep Coadd (since a given Visit Image may only partially cover a patch). There is one Deep Coadd Input Summary per tract that has coverage in DP2, and they are only available via the Data Butler.
+
+%\subsubsection{Calibration images}
+%\label{sssec:calibration_images}
+%Not included in EDP2.
+%\subsubsection{Diagnostic Data Products}
+%Not included in EDP2.
+%\subsubsection{Standard Data Products}
+%Not included in EDP2.
 
 \subsection{Metadata}
-\subsubsection{Visit Table}
-\subsubsection{Visit Detector Table}
+\subsubsection{Visit}
+The \texttt{Visit} catalog contains technical data for each visit collected at the time of observation, such as telescope pointing, camera rotation, airmass, exposure start and end time, and total exposure time.
+Some of the information contained within the \texttt{Visit} catalog is also contained in the Visit Detector catalog described below (e.g., exposure time), although the latter also includes information produced by the processing pipelines at the per-detector level, such as the PSF size and limiting magnitudes of a given Visit Image.
+
+The Visit catalog contains {\bf \color{red} nvisitrows} entries.
+
+\subsubsection{Visit Detector}
+The Visit Detector catalog contains summary information for all Visit Images in DP2. In addition to technical information, such as the on-sky coordinates of the central pixel and measured pixel scale, the Visit Detector catalog contains a range of data quality measurements, such as whole-image summary statistics for the PSF size, zero-point and 5$\sigma$ depth, sky background, sky noise, and the quality of astrometric solution.
+It provides an efficient method to access the properties of a Visit Image without needing to access the image data.
+When combined with the data contained in the Visit table described above, it provides a full picture of the telescope pointing and sky conditions at the time of observation.
+
+The Visit Detector catalog contains {\bf \color{red} nvisitdetectorrows} entries.
+
 \subsubsection{Visit Summary}
+The Visit Summary table contains the same information as the Visit Detector catalog, but only for a single visit. There is one Visit Summary table per visit (meaning the Visit Detector table is the collation of all the Visit Summary tables), and they are only available via the Data Butler.

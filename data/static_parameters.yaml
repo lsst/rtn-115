@@ -208,3 +208,8 @@ templatecoadd:
       value: 12
     - name: minmultipletemplatecoaddvi
       value: 36
+
+surveypropertymaps:
+  parameters:
+    - name: nsurveypropertymaps
+      value: forteen
