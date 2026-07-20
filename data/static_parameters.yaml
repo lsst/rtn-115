@@ -109,3 +109,21 @@ dptwo:
       unit: mag
     - name: nsinglevisitsimages
       value: 4000
+    - name: cosmosumaglim
+      value: 26.0
+      unit: mag
+    - name: cosmosgmaglim
+      value: 26.8
+      unit: mag
+    - name: cosmosrmaglim
+      value: 26.3
+      unit: mag
+    - name: cosmosimaglim
+      value: 26.1
+      unit: mag
+    - name: cosmoszmaglim
+      value: 25.3
+      unit: mag
+    - name: cosmosymaglim
+      value: 23.9
+      unit: mag
