@@ -182,9 +182,9 @@ raw:
 
 pvi:
   parameters:
-    - name: npvipixx
+    - name: netvpixx
       value: 4096
-    - name: npvipixy
+    - name: netvpixy
       value: 4004
     - name: nitlpixx
       value: 4072

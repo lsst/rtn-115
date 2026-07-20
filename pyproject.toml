@@ -20,6 +20,8 @@ dependencies = [
     "pyarrow",
     "tox>=4.56.0",
     "bibtexparser",
+    "fsspec",
+    "shapely",
 ]
 
 [build-system]

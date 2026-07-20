@@ -93,6 +93,7 @@ def campaignNights(params: DP2Parameters) -> DP2Parameters:
     params : `DP2Parameters`
         Updated parameter store.
     """
+
     if "svcampaignstartdate" in params.values and "svcampaignenddate" in params.values:
         params = addParameter(
             params,
@@ -241,7 +242,7 @@ def imageStats(params: DP2Parameters, imageId: tuple) -> DP2Parameters:
 
     # ref = list(registry.queryDatasets(imageType, dataId=imageDataId))[0]
     # filepath = butler.getURI(ref)
-    
+
     # Filesize not currently working:
     #roughFileSize = round(os.path.getsize(filepath.path) / 1e6, 2)
     #params = addParameter(params, f"{imageName}hdd", f"{roughFileSize:.0f}", unit="MB")
@@ -893,7 +894,7 @@ if __name__ == "__main__":
 
         data_params = DP2Parameters()
         # data_params = observingCampaign(data_params)
-        # data_params = observingQuality(data_params)
+        data_params = observingQuality(data_params)
         data_params = imageDatasets(data_params)
         data_params = skymapData(data_params)
         data_params = nRaws(data_params)
@@ -904,7 +905,7 @@ if __name__ == "__main__":
         # data_params = misc(data_params)
 
         data_params = catalogCounts(data_params)
-        
+
         # data_params = nSSObjects(data_params)
         # data_params = nStarsGals(data_params)
         # data_params = nDeepCoaddInputImages(data_params)
