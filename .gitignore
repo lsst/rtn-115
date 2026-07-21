@@ -14,6 +14,7 @@ authors.tex
 *.gls
 *.ist
 aglossary.tex
+parameters_static.tex
 
 __pycache__
 *.egg-info/

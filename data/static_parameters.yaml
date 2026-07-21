@@ -20,9 +20,13 @@ rubinobservatory:
       unit: square degrees square meters
     - name: startoperations
       value: 2025-10-25
+    - name: firstalerts
+      value: 2026-02-24
 
 lsst:
   parameters:
+    - name: lsststartdate
+      value: "2026-06-29"
     - name: tenyearcatalogsize
       value: 15
       unit: PB
@@ -34,6 +38,11 @@ lsstcamsvcampaign:
     - name: svcampaignenddate
       value: "2025-09-21"
 
+dpone:
+  parameters:
+    - name: dponedate
+      value: "2025-06-30"
+
 dptwo:
   parameters:
     - name: dptwostartdate
@@ -44,6 +53,12 @@ dptwo:
       value: "v30.0.8"
     - name: sciencepipelinesurl
       value: '\url{https://pipelines.lsst.io/v/v30\_0\_8}'
+    - name: dptwodeliverywindow
+      value: Jul--Dec 2026
+    - name: edpteoreleasedate
+      value: 2026-07-27
+    - name: dptworeleasedate
+      value: Oct--Dec 2026
     - name: sizeinbytes
       value: 59.15
       unit: TB
