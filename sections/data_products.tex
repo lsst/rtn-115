@@ -192,6 +192,7 @@ While they may be included in future Data Releases, no photometric redshifts, Pe
 The \texttt{Object} catalog contains data for \nobjects objects in DP2.
 
 \subsubsection{Isolated Star Stellar Motions}
+\label{sssec:isolatedstarstellarmotions}
 The Isolated Star Stellar Motions catalog contains the proper motions and parallaxes of isolated stars.
 The Rubin Observatory uses a specific definition for an isolated star.
 Candidate isolated stars must be point-like (i.e., unresolved) detections with a signal-to-noise ratio of between 8 and 1000, and must not be flagged as blended.
@@ -210,6 +211,7 @@ Every entry in the Isolated Star Stellar Motion catalog has a unique identificat
 The Isolated Star Stellar Motions catalog contains \nisolatedstars entries.
 
 \subsubsection{Object Shear}
+\label{sssec:objectshear}
 The Object Shear catalog contains object shape measurements in five different shear steps or ``counterfactual'' images: one in which no shear has been applied (\texttt{no-shear}), and four in which an artificial linear shear has been introduced to the image (\texttt{1p, 1m, 2p, 2m}).
 The artificial shears are in four different directions: 1p is along the image x-direction, 1m is along the y-direction, 2p is along the 45 degree diagonal, 2m is along the 135 degree diagonal.
 We use Galsim's \texttt{Shear} class (\citealt[][]{2015A&C....10..121R}) with a ``reduced shear'' \texttt{STEP} value of 0.01 to apply the shear in each of the four directions separately.
