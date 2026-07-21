@@ -33,9 +33,6 @@ lsstcamsvcampaign:
       value: "2025-04-16"
     - name: svcampaignenddate
       value: "2025-09-21"
-    - name: sizeinbytes
-      value: X.Y
-      unit: TB
 
 dptwo:
   parameters:
@@ -47,6 +44,9 @@ dptwo:
       value: "v30.0.8"
     - name: sciencepipelinesurl
       value: '\url{https://pipelines.lsst.io/v/v30\_0\_8}'
+    - name: sizeinbytes
+      value: 59.15
+      unit: TB
 
     # Placeholder -- to replace all below  with computation from the data
     # Formetting needs to be reviewed
