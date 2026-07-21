@@ -53,21 +53,21 @@ Talk about fits file format?
 
 \subsubsection{Raw Images}
 \label{sssec:rawimages}
-{\bf Note: Raws are NOT included in EPD2, but we describe them here as it provides useful context for the dataset types that are included in EPD2.
+{\bf Note: Raw Images are NOT included in EPD2, but we describe them here as it provides useful context for the dataset types that are included in EPD2.
 Raw images will be included in DP2; the number of raw images in DP2 will be provided at that time.}
 
-Raw images are those that are produced by the camera following an exposure.
+Raw Images are those that are produced by the camera following an exposure.
 They are the initial input science images to the pipelines and have not undergone any processing.
-Each active detector in LSSTCam produces one raw image per exposure.
-Each exposure therefore results in up to \nactivedetectors raw images, although some exposures taken during the observing campaign resulted in fewer than \nactivedetectors raw images due to the problematic detectors described in \secref{sec:commissioning} and occasional readout failures.
+Each active detector in LSSTCam produces one Raw Image per exposure.
+Each exposure therefore results in up to \nactivedetectors Raw Images, although some exposures taken during the observing campaign resulted in fewer than \nactivedetectors Raw Images due to the problematic detectors described in \secref{sec:commissioning} and occasional readout failures.
 %The \nexposures exposures taken during {\bf \color{red} XXX} resulted in a total of \nraws raw images, all of which are included in DP2.
 % A breakdown of the number of raw images per field and per band is given in table \tabref{tab:rawbreakdown}.
 
 All LSSTCam detectors are made up of 16 sections, laid out in two rows of eight, with each segment read out by a dedicated amplifier.
-These sections are evident in the raw images.
-Despite LSSTCam containing detectors from two different vendors, all raw images have the same dimensions: \nrawpixx $\times$ \nrawpixy pixels.
+These sections are evident in the Raw Images.
+Despite LSSTCam containing detectors from two different vendors, all Raw Images have the same dimensions: \nrawpixx $\times$ \nrawpixy pixels.
 However, the two types of detectors have slightly different numbers of overscan and pre-scan pixels, meaning the number of exposed pixels differs between detector type.
-This difference is reflected in the dimensions of the visit images (\secref{sssec:visitimages}), which have had the prescan and overscan regions removed during data processing.
+This difference is reflected in the dimensions of the Visit Images (\secref{sssec:visitimages}), which have had the prescan and overscan regions removed during data processing.
 %In terms of on-disk size, a single raw image file is typically around {\bf \color{red} rawhddsize}.
 
 \subsubsection{Visit Images}
