@@ -901,7 +901,7 @@ if __name__ == "__main__":
         skymap = butler.get("skyMap", skymap=skymapName)
 
         data_params = DP2Parameters()
-        # data_params = observingCampaign(data_params)
+        data_params = observingCampaign(data_params)
         data_params = observingQuality(data_params)
         data_params = imageDatasets(data_params)
         data_params = skymapData(data_params)
