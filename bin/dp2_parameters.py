@@ -644,11 +644,19 @@ def catalogCounts(params: DP2Parameters) -> DP2Parameters:
         "ndiaforcedsources": ("dp2.ForcedSourceOnDiaObject", 1e9, "billion"),
         "nisolatedstars": ("dp2.IsolatedStarStellarMotions", 1e6, "million"),
         "nshearobjects": ("dp2.ShearObject", 1e9, "billion"),
+        "nssobjects": ("dp2.SSObject", 1e6, "million"),
+        "nsolarsystemsources": ("dp2.SSSource", 1e6, "million"),
+        "nvisitrows": ("dp2.Visit", 1, None),
+        "nvisitdetectorrows": ("dp2.VisitDetector", 1e6, "million"),
     }
     for paramName, (tableName, scale, unit) in tables.items():
         log.info("Adding %s from %s...", paramName, tableName)
         nEntries = _nEntries(tableName)
-        params = addParameter(params, paramName, nEntries / scale, sig=2, unit=unit)
+        params = addParameter(params,
+                              paramName,
+                              nEntries / scale,
+                              sig = (2 if paramName != "nvisitrows" else None),
+                              unit=unit)
     return params
 
 
