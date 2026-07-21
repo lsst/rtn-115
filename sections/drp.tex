@@ -15,6 +15,31 @@ This section describes the high-level algorithms, configurations, and verificati
 
 \subsection{Calibration} \label{sec:drp-calibration}
 \subsubsection{PSF Modeling} \label{sec:drp-calibration-psfmodeling}
+
+PSF modeling in DP2 uses two distinct approaches, as described in the 
+\citep{PSTN-019} and it is similar to what was originally 
+described in \citealt{DP1}. The first model—faster but less precise—is fit 
+with PSFEx \citep{2011ASPC..442..435B}, while the final model—slower yet more 
+accurate—is fit with Piff \citep{DES:2020vau}. Broadly speaking, PSFEx 
+and Piff both represent the PSF on a pixel basis and interpolate its 
+parameters across a single CCD using two-dimensional polynomials.
+However, their technical implementations differ (see Bertin et al. 
+and \citealt{DES:2020vau} for more details). Previous comparisons have shown 
+that Piff outperforms PSFEx by delivering an unbiased reconstruction of 
+the PSF size (see \citealt{2018MNRAS.481.1149Z} and \citealt{DES:2020vau}), can work in 
+sky coordinates like in \citealt{2025OJAp....8E..26S}, can include a color dependency like 
+in \citealt{2025OJAp....8E..26S}, and is supporting alternative models and interpolation 
+schemes (see \citealt{2025OJAp....8E..26S} for more details).
+
+In the initial PSF modeling pass, PSFEx is run with a pixel basis and 
+a second-order polynomial interpolation on each CCD. For the final modeling, 
+Piff uses its PixelGrid with a fourth-order polynomial interpolation per 
+CCD—except in the u-band, where star counts are too low to constrain a 
+fourth-order fit, so a second-order polynomial is used instead. Both are 
+working in pixel coordinates. Choices of polynomial order, overall PSF-modeling 
+performance, and known issues are discussed in Section 
+“Performance and Known Issues for PSF.”
+
 \subsubsection{Astrometric Calibration} \label{sec:drp-calibration-astrometry}
 \subsubsection{Photometric Calibration} \label{sec:drp-calibration-photometry}
 
