@@ -88,17 +88,21 @@ The mask image indicates pixels that are flagged for various different reasons, 
 All three images contain the same number of pixels in each dimension.
 
 \subsubsection{Coadds}
+{\bf Note: Template Coadds are NOT included in EPD2.}
+
 Once produced, individual Visit Images covering the same patch of sky (as defined by the skymap) in the same band are coadded to form coadd images.
-Three different types of coadd images are included in DP2: Deep Coadds, Template Coadds and Pretty Coadds, each of which are described in the following subsections.
+Two different types of coadd images are included in DP2: Deep Coadds and Template Coadds, both of which are described in the following subsections.
 The production of each type of coadd images follows broadly the same process, which is described in detail in \secref{section:drp-multivisit-coaddition} but, to summarize, it involves the selection of Visit Images (in terms of patch coverage and band, and image quality), the warping of those Visit Images onto a common pixel grid, and the coaddition of those warped images.
-The key differences that distinguish each type are the selection of the Visit Images and, in the case of the {\bf \color{red} Pretty Coadds}, the background subtraction.
+The key differences that distinguish each type are the selection of the Visit Images.
 As a result, the structure of the datasets are the same for each type: each coadd contains three arrays corresponding to the science image plane (i.e., the coadd), the variance plane, and the mask plane, with all three containing the same number of pixels in each dimension.
+Up to two different background models are included in the coadd datasets: the background that was subtracted to create the final coadd and, in the case of the \textit{gri} band Deep Coadds, a background that can be added-back to create ``Visualization Coadds'' which, while not recommended for science, are convenient for display purposes.
 Each coadd also contains a position-dependent PSF model, WCS information, plus various other metadata.
 
 The same skymap was used for each type of coadd in DP2, meaning they all cover the same on-sky area, including some overlap with their neighbouring coadds.
-The DP2 skymap defines a patch as having an on-sky area of \patchareanooverlap excluding overlap, and \patcharea including overlap. A single coadd, irrespective of type, contains \npatchpixx$\times$\npatchpixy equal-sized square pixels, including overlap; each pixel is \coaddpixsize on each side.
+The DP2 skymap defines a patch as having an on-sky area of \patchareanooverlap excluding overlap, and \patcharea including overlap.
+A single coadd, irrespective of type, contains \npatchpixx$\times$\npatchpixy equal-sized square pixels, including overlap; each pixel is \coaddpixsize on each side.
 There are up to six coadds of each type per patch - one for each of the six LSSTCam bands.
-While the sky coverage of coadds are similar between types and bands, they are not exactly the same due to the different Visit Image selection functions for each type, and modest differences in sky coverages in each band.
+While the sky coverage of coadds are similar between types and bands, they are not exactly the same due to the different Visit Image selection functions for each type, and differences in sky coverages in each band.
 
 The number of Visit Images that contribute to a coadd varies across the patch.
 This is true even if a patch is fully covered by all the visits that targeted that area because of the presence of chip gaps between neighbouring detectors.
