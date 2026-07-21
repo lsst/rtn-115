@@ -20,9 +20,15 @@ rubinobservatory:
       unit: deg2m2
     - name: nbrokers
       value: seven
+    - name: startoperations
+      value: 2025-10-25
+    - name: firstalerts
+      value: 2026-02-24
 
 lsst:
   parameters:
+    - name: lsststartdate
+      value: "2026-06-29"
     - name: tenyearcatalogsize
       value: 15
       unit: PB
