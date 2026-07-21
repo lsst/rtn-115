@@ -38,7 +38,7 @@ While the tract and patch configuration is the same between DP1 and DP2, in the 
 Cells are subdivisions of patches but, unlike patches, are not exposed to the user: one cannot specify and retrieve an individual ``cell'' from an image.
 Rather, cells are referred to during the generation of coadds in that a region of an input image is only included in a coadd if, and only if, it covers the entire cell.
 This results in more consistent coverage across a coadded image.
-Such cell-based coaddition was not implemented during the production of DP1, and was only implemented for Deep Coadds in DP2 (i.e., Template Coadds and {\bf \color{red} Pretty Coadds} in DP2 do not utilize cells).
+Such cell-based coaddition was not implemented during the production of DP1, and was only implemented for Deep Coadds in DP2 (i.e., Template Coadds in DP2 do not utilize cells).
 In the case of DP2 Deep Coadds, there are {\ncellx$\times$\ncelly} cells per patch, including the patch overlap region (the patch overlap region is \ncellpatchoverlap wide).
 There is no overlap between neighboring cells.
 
@@ -88,11 +88,11 @@ The mask image indicates pixels that are flagged for various different reasons, 
 All three images contain the same number of pixels in each dimension.
 
 \subsubsection{Coadds}
-{\bf Note: Template Coadds are NOT included in EPD2.}
+{\bf Note: Template Coadds are NOT included in EPD2. They will be included in DP2.}
 
 Once produced, individual Visit Images covering the same patch of sky (as defined by the skymap) in the same band are coadded to form coadd images.
 Two different types of coadd images are included in DP2: Deep Coadds and Template Coadds, both of which are described in the following subsections.
-The production of each type of coadd images follows broadly the same process, which is described in detail in \secref{section:drp-multivisit-coaddition} but, to summarize, it involves the selection of Visit Images (in terms of patch coverage and band, and image quality), the warping of those Visit Images onto a common pixel grid, and the coaddition of those warped images.
+The production of each type of coadd image follows broadly the same process, which is described in detail in \secref{section:drp-multivisit-coaddition} but, to summarize, it involves the selection of Visit Images (in terms of patch coverage and band, and image quality), the warping of those Visit Images onto a common pixel grid, and the coaddition of those warped images.
 The key differences that distinguish each type are the selection of the Visit Images.
 As a result, the structure of the datasets are the same for each type: each coadd contains three arrays corresponding to the science image plane (i.e., the coadd), the variance plane, and the mask plane, with all three containing the same number of pixels in each dimension.
 Up to two different background models are included in the coadd datasets: the background that was subtracted to create the final coadd and, in the case of the \textit{gri} band Deep Coadds, a background that can be added-back to create ``Visualization Coadds'' which, while not recommended for science, are convenient for display purposes.
@@ -110,13 +110,16 @@ The Survey Property maps (see \secref{sec:propertymaps}) can be consulted to gai
 Since each coadd image always covers an entire patch, it is not uncommon for regions of a coadd image to have zero Visit Image coverage.
 This is especially the case on the edges of an observed field.
 Such regions of a coadd may contain seemingly valid values (i.e., not necessarily zeros or NaNs), but will instead be indicated by the {\texttt NO\_DATA} flag in the mask image plane.
-It is thereforce crucial that the mask image plane is consulted when analysising any type of coadd.
+It is therefore crucial that the mask image plane is consulted when analysing any type of coadd.
 
 \paragraph{Deep Coadds}
 As the name suggests, Deep Coadds go down to the faintest magnitudes of the three types of coadd.
-All Visit Images with circular PSFs with FWHM$<$\deepcoaddselectionfwhm are selected for inclusion in Deep Coadds.
-This selection is the most inclusive of all coadd productions and aims to maximise the depth of the coadd while still ensuring good image quality.
-As highlighted at the start of this subsection, a key diffence between the Deep Coadds released in DP2 versus those released in DP1 are that the DP2 Deep Coadds are cell-based whereas the DP1 Deep Coadds were not.
+Two basic selection criteria were used to select Visit Images for inclusion in Deep Coadds.
+The first criterion is seeing-based and selects Visit Images with PSF FWHM$<$\deepcoaddselectionfwhm.
+The second criterion is depth-based and uses the concept of ``effective exposure time'', which is the exposure time that would be needed under nominal conditions to achieve the same signal-to-noise as the Visit Image in question (\citep{osti_1250877}).
+Our specific selection uses the transparency component of effective exposure time, and selects Visit Images in which the whole-system transparency was such that the transparency component of the effective exposure time was $>0.75$ times the actual exposure time (corresponding to $\sim0.16$ mag of extinction relative to nominal conditions).
+These selections aim to maximise the depth of the coadd while still ensuring good image quality.
+As highlighted at the start of this subsection, a key difference between the Deep Coadds released in DP2 versus those released in DP1 are that the DP2 Deep Coadds are cell-based whereas the DP1 Deep Coadds were not.
 
 There are a total of \ndeepcoadds Deep Coadds in DP2.
 
@@ -268,12 +271,12 @@ The Solar System Object catalog and the MPC Orbit Database (MPCORB) carry inform
 The MPCORB table provides the MPC-computed orbital elements for all known asteroids, including those that Rubin discovered.
 
 The Solar System Object catalog serves primarily to provide the mapping between the IAU designation of an object (listed in the MPCORB), and the internal \texttt{ssObjectId} identifier, which is used as a key to find solar system object observations in the DIA Source and Solar System Source catalogs.
-The Solar System Object catalog contains data for {\bf \color{red} nssobjects} solar system objects.
+The Solar System Object catalog contains data for \nssobjects solar system objects.
 
 \subsubsection{Solar System Source}
 The Solar System Source catalog contains data on all DIA sources that are either associated with previously known solar system objects, or have been confirmed as newly discovered solar system objects by confirmation of their orbital properties.
 As entries in the solar system SSource catalog stem from the DIA Source catalog, they have all been detected at $>5\sigma$ significance in at least one band.
-The Solar System Source Source catalog contains data for {\bf \color{red} nsolarsystemsources} solar system sources.
+The Solar System Source Source catalog contains data for \nsolarsystemsources solar system sources.
 
 \subsubsection{Calibration Reference Catalog}
 The Calibration Reference Catalog is used to perform astrometric and photometric calibration.
@@ -331,7 +334,7 @@ Taken from DP1.
 I don't know how much of the following applies to DP2.}
 
 \gls{HiPS} maps, offer an interactive way to explore seamless, multiband tiles of the sky regions covered by DP2, allowing for smooth panning and zooming.
-DP2 provides multiband \gls{HiPS} images created by combining data from individual bands of Deep Coadd and {\bf \color{red} Pretty Coadd} images, using an improved version (N. B. Lust et al. in preparation) of the algorithm presented in \cite[][]{2004PASP..116..133L}.
+DP2 provides multiband \gls{HiPS} images created by combining data from individual bands of Deep Coadd images, using an improved version (N. B. Lust et al. in preparation) of the algorithm presented in \cite[][]{2004PASP..116..133L}.
 These images are false-color representations generated using various filter combinations for the red, green, and blue channels.
 
 The available filter combinations include \textit{gri}, \textit{izy}, \textit{riz}, and \textit{ugr} for both \texttt{deep\_coadd}s and \texttt{template\_coadd}s.
@@ -382,7 +385,7 @@ There is one Deep Coadd Input Summary per tract that has coverage in DP2, and th
 The \texttt{Visit} catalog contains technical data for each visit collected at the time of observation, such as telescope pointing, camera rotation, airmass, exposure start and end time, and total exposure time.
 Some of the information contained within the \texttt{Visit} catalog is also contained in the Visit Detector catalog described below (e.g., exposure time), although the latter also includes information produced by the processing pipelines at the per-detector level, such as the PSF size and limiting magnitudes of a given Visit Image.
 
-The Visit catalog contains {\bf \color{red} nvisitrows} entries.
+The Visit catalog contains \nvisitrows entries.
 
 \subsubsection{Visit Detector}
 The Visit Detector catalog contains summary information for all Visit Images in DP2.
@@ -390,7 +393,7 @@ In addition to technical information, such as the on-sky coordinates of the cent
 It provides an efficient method to access the properties of a Visit Image without needing to access the image data.
 When combined with the data contained in the Visit table described above, it provides a full picture of the telescope pointing and sky conditions at the time of observation.
 
-The Visit Detector catalog contains {\bf \color{red} nvisitdetectorrows} entries.
+The Visit Detector catalog contains \nvisitdetectorrows entries.
 
 \subsubsection{Visit Summary}
 The Visit Summary table contains the same information as the Visit Detector catalog, but only for a single visit.
