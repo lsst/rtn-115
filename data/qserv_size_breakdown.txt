@@ -1,0 +1,20 @@
+# Row counts
+# table,row_count
+Source,17566180086
+ShearObject,2530178491
+Object,786420720
+IsolatedStarStellarMotions,318429415
+ForcedSourceOnDiaObject,24259599059
+ForcedSource,44727948693
+DiaSourceOnSSObject,8136150
+DiaSourceOnDiaObject,992689825
+DiaSource,1000825975
+DiaObject,232004216
+numbered_identifications,887935
+mpc_orbits,1505545
+current_identifications,2047622
+VisitDetector,5150198
+Visit,28698
+SSSource,8136150
+SSObject,299343
+CoaddPatches,197105
