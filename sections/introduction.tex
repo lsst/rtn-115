@@ -5,7 +5,7 @@ The \gls{NSF}--\gls{DOE} Vera C. Rubin Observatory is a ground-based, wide-field
 The observatory is named in honor of Vera C. Rubin, whose observations in the latter half of the 20th century established the first compelling empirical case for dark matter \citep[][]{1970ApJ...159..379R, 1980ApJ...238..471R}.
 Its 10-yr survey will image the entire visible southern sky every 3--4 nights, reaching a coadded depth of $\sim$\,~27\,mag in the $r$-band across an 18,000\,deg$^{\rm 2}$ footprint \citep[][]{2022ApJS..258....1B}.
 
-At the heart of the facility is the \lsstcampixels-gigapixel \gls{LSSTCam}, mounted on the \primarymirrordiameter (\effectiveaperture effective aperture) Simonyi Survey Telescope \citep[][]{2024SPIE13094E..09S} .
+At the heart of the facility is the \lsstcampixels-gigapixel \gls{LSSTCam}, mounted on the \primarymirrordiameter (\effectiveaperture effective aperture) Simonyi Survey Telescope \citep[][]{2024SPIE13094E..09S}.
 Together they deliver an instantaneous field of view of \rubinfov in six broadband filters, $ugrizy$ (320--1050\,nm), with seeing-limited image quality.
 The system's \'{e}tendue of \rubinetendue exceeds that of any previous optical facility by over an order of magnitude, enabling the rapid, deep, all-sky cadence that underpins Rubin's four core science themes: the nature of dark energy and dark matter; a census of the solar system; the transient and variable optical sky; and the structure of the Milky Way \citep[][]{2019ApJ...873..111I}.
 An automated \gls{Data Management System} processes tens of terabytes of images per night to produce science-ready data products within minutes of each observation for a global community of scientists.
@@ -16,7 +16,7 @@ It marks the conclusion of the Rubin commissioning program and the transition to
 As such, it represents a natural boundary and provides a comprehensive dataset that captures the on-sky performance of the as-built system at the end of the Rubin construction project.
 
 Two earlier Data Previews preceded \gls{DP2} as part of the Rubin Early Science Program \citep[][]{RTN-011}, established to provide the community with early access to data products and services needed to produce high-impact science during the period spanning commissioning through the first Data Release.
-\gls{DP0} was based on simulated \gls{LSST}-like data \citep[][]{2021ApJS..253...31L} and served primarily to stand up early versions of the RSP and prepare the community for data access at scale.
+\gls{DP0} was based on simulated \gls{LSST}-like data \citep[][]{2021ApJS..253...31L} and served primarily to stand up early versions of the \gls{RSP} and prepare the community for data access at scale.
 \gls{DP1} \citep[][]{10.71929/rubin/2570308} delivered the first data products derived from on-sky observations using science-grade exposures acquired with \gls{LSSTComCam} \citep[][]{2022SPIE12184E..0JS,2020SPIE11447E..0LS,2018SPIE10700E..3DH, 10.71929/rubin/2561361}; a 144-megapixel, single-raft instrument used during early commissioning prior to the installation of \gls{LSSTCam} on the Simonyi Survey Telescope.
 \gls{DP2} supersedes both in scope, fidelity, and scientific depth.
 
@@ -32,10 +32,9 @@ Delivered image quality and PSF ellipticity did not consistently meet \gls{LSST}
 These effects, their diagnosis, and the mitigations applied are described in \secref{sec:commissioning} and \secref{sec:performance}.
 
 Unlike the systematic, rolling revisit pattern that will characterize the \gls{LSST}, \gls{DP2}'s observing cadence is opportunistic: fields and filters were prioritized to serve \gls{AOS} and Science Pipelines commissioning rather than to build a representative time series.
-The Science Validation survey footprint was repeatedly re-scoped over the course of the campaign due to the competing demands of engineering tests,  and filter availability was constrained by hardware issues for part of the campaign.
+The Science Validation survey footprint was repeatedly re-scoped over the course of the science validation campaign due to the competing demands of engineering tests and filter availability, which was constrained by hardware issues for part of the campaign.
 Visit counts and time sampling therefore vary substantially and idiosyncratically from field to field, and \gls{DP2} should not be read as a preview of \gls{LSST}'s eventual survey cadence, revisit statistics, or depth-accumulation pattern.
 
-\gls{DP1} was delivered on \dponedate, \gls{LSST} Operations began on \startoperations, and Rubin First Alerts followed on \firstalerts as an initial demonstration of the alert-production pipeline built on early, opportunistically generated templates.
 \gls{DP2} is being delivered in two phases across the \dptwodeliverywindow window.
 The first phase, Early \gls{DP2} (EDP2), comprises the deep coadd images and all associated catalogs, including new cell-based coadds and the first releases of the Object Shear (\secref{sssec:objectshear}) shape-measurement catalog and the Isolated Star Stellar Motions catalog (\secref{sssec:isolatedstarstellarmotions}).
 EDP2 is targeted for \edpteoreleasedate.
