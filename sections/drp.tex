@@ -24,7 +24,8 @@ This section describes the high-level algorithms, configurations, and verificati
 \subsection{Calibration} \label{sec:drp-calibration}
 \subsubsection{PSF Modeling} \label{sec:drp-calibration-psfmodeling}
 \subsubsection{Astrometric Calibration} \label{sec:drp-calibration-astrometry}
-The final astrometric calibration of the data follows the method in DP1, but with some key additions. The full details of the method are described in Saunders, 2026 (in prep; I'll make a DOI for this). As described in DP1, a joint calibration is performed on all visits in a given band overlapping a given area. By associating all the isolated point sources shared among the overlapping visits, we can refine the astrometric solution beyond the level achieved in single-frame processing using only a reference catalog. 
+The final astrometric calibration of the data follows the method in DP1, but with some key additions. As described in DP1, a joint calibration is performed on all visits in a given band overlapping a given area. By associating all the isolated point sources shared among the overlapping visits, we can refine the astrometric solution beyond the level achieved in single-frame processing using only a reference catalog. 
+% TODO: The full details of the method are described in Saunders, 2026 (in prep; I'll make a DOI for this)
 
 Unlike in DP1, the area we use for individual fits of the astrometric solution is an order-3 healpix, instead of a tract. This is done to reduce repetitive calculations, since the small size of tracts compared to the LSSTCam field of view means that neighboring tracts often share identical overlapping visits, which would lead to doing many identical fits of the astrometric calibration.
 
