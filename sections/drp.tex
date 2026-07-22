@@ -165,6 +165,7 @@ Coadds are built as weighted averages of the input warps.
 Each detector is assigned a weight that is the inverse of the mean of the variance reported in the \texttt{visit_summary} dataset.
 Following \cite{2024arXiv240701771A} for each cell in the coadd, a detector is excluded if its geometry does not overlap the cell completely.
 Furthermore, a detector is excluded if more than 50\% of its pixels are masked as artifacts, unless it would result in an empty cell in which case, this condition is ignored. % fallback.
+Finally, pixels that did not get any contribution from the input visits are interpolated from neighboring pixels.
 
 A key difference between cell-based coadds and coadds in DP1 is in the PSF representation.
 Single visit PSFs are evaluated at point corresponding to the center of cells and warped into a 35x35 postage stamp, which ensures that at least 99.5\% of the flux is captured.
