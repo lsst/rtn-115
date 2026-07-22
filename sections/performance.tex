@@ -48,3 +48,28 @@ Note that image quality improved over commissioning (DP2). Take a late-stage sub
 \subsection{Prediction for 10-year survey}
 Details of calculation should go in a separate paper. This section should probably be just two or three paragraphs, depending on what parameters we want to predict.
 
+\subsubsection{Star--Galaxy Separation}
+DP2 provides several different star--galaxy classifiers within the Object catalog.
+We use objects located within a $1\deg$ radius of the Milky Way satellite Virgo III located at (R.A., decl.) = $(186\fdg3, 4\fdg4)$ in the Rubin `Cosmic Treasure Chest' (M49) First Look field to observe the performance of the various star--galaxy classifiers around Milky Way halo systems.
+Although the depth of the M49 field is not representative of the other DP2 fields, we see a similar trend in the performances of the various star--galaxy classifiers around other Milky Way halo objects such as the Aquarius II dwarf galaxy (SV1000 field) and AM1 globular cluster (EDFS field).
+\figref{fig:sg_classifier_vs_maglim} shows the performance of various star--galaxy separation cuts.
+In the top panel, for each star--galaxy cut we plot the cumulative $g$-band median signal to noise ratio (SNR) of all the selected ``stars" as a function of magnitude limit.
+The bottom panel shows the fraction of objects that pass the cut as a function of magnitude limit.
+Note that \texttt{refExtendedness} and \texttt{\{band\}\_size\_extendedness} are binary classifiers, while \texttt{griz\_model\_extendedness} is a floating point classifier.
+The behavior of the classifiers stars to diverge around $g\sim23$.
+The median SNR of the most conservative $\texttt{griz\_model\_extendedness} < 0.25$ cut remains the highest at faint magnitudes as expected, while the \texttt{refExtendedness} classifier selects the most number of objects at faint magnitudes.
+We expect therefore expect the most complete star sample using \texttt{refExtendedness}, at the cost of heavy galaxy contamination at faint magnitudes.
+We therefore recommend the use of \texttt{refExtendedness} in studies where the completeness of the stellar sample is of higher priority than galaxy contamination.
+Conversely, if the purity of the stellar sample is of paramount importance, we recommend the use of the floating point \texttt{griz\_model\_extendedness} with suitable tuning of the floating point cut to minimize galaxy contamination.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.45\textwidth]{../figures/g_star_galaxy_classifier_virgo3-2.png}
+    \caption{The performance of various star--galaxy classifiers around the Milky Way satellite Virgo III as a function of $g$-band magnitude limit.
+    The top panel shows the cumulative $g$-band median SNR of all objects that pass the star--galaxy cut.
+    The bottom panel shows the fraction of objects that pass the respective cut.
+    The SNR remains the highest for the most conservative $\texttt{griz\_model\_extendedness} < 0.25$ cut due to the low fraction of objects selected at faint magnitudes.
+    Conversely, the fraction of objects selected by the \texttt{refExtendedness} cut increases for magnitudes fainter than $\sim24.5$.
+    This increase is mostly due to the misclassification of galaxies as stars at these faint magnitudes, leading to a drop in the cumulative SNR.}
+    \label{fig:sg_classifier_vs_maglim}
+\end{figure}
