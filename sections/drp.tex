@@ -49,10 +49,12 @@ A corollary product of the \texttt{gbdes} astrometric calibration is the catalog
 
 \subsubsection{Difference Image Analysis (DIA)} \label{sec:drp-variabletransient-dia}
 
-As in DP1, DP2 \gls{DIA} uses the decorrelated Alard and Lupton image differencing algorithm \citep[][]{DMTN-021}.
+DP2 difference imaging analysis did not change significantly relative to DP1.
+DP2 \gls{DIA} uses the decorrelated Alard and Lupton image differencing algorithm \citep{1998ApJ...503..325A,DMTN-021}.
 Both positive and negative \texttt{DIASource}s are detected in the difference image at $5\sigma$.
-We fit a dipole model to sources containing both positive and negative peaks, and inferred trail parameters from the second moments of the PSF.
-After rejecting likely artifacts (\S \ref{sec:drp-variabletransient-artifact}), we associated  \texttt{DIASource}s into \texttt{DIAObject}s with a 1\farcs matching radius.
+We fit a dipole model to sources containing both positive and negative peaks, and infer trail parameters from the second moments of the PSF.
+After rejecting likely artifacts (\S \ref{sec:drp-variabletransient-artifact}), we associate  \texttt{DIASource}s into \texttt{DIAObject}s with a 1\farcs matching radius.
+
 
 \subsubsection{Artifact Rejection} \label{sec:drp-variabletransient-artifact}
 
