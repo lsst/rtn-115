@@ -155,6 +155,10 @@ As an additional constraint on the fit, we use a subset of stars from the Monste
 
 \subsection{Multi-Visit Processing} \label{sec:drp-multivisit}
 \subsubsection{Input Data Selection} \label{sec:drp-multivisit-inputselection}
+Detectors 0, 20, 27, 65, 123, 161, 168, 188 are excluded from the \texttt{deep_coadd} images.
+Only exposures with a seeing better than 1".8 FWHM are included in the \texttt{deep_coadd} images.
+Exposures with poor PSF modeling, identified using internal diagnostics, are also excluded from the \texttt{deep_coadd} images to prevent contamination of the coadds with unreliable PSF estimates.
+
 \subsubsection{Coaddition} \label{sec:drp-multivisit-coaddition}
 The single visit images that pass the selection criteria above are warped onto the coadd pixel grid using Lanczos3 kernel and scaled to have units of \texttt{nJy} (zeropoint of 31.4).
 Artifacts are identified and masked in a manner similar to DP1 before coaddition.
