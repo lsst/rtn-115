@@ -9,14 +9,32 @@ Data quality and key metrics for verification and validation are actively monito
 
 This section describes the high-level algorithms, configurations, and verification metrics for each stage, including changes and improvements from DP1 (citation).
 
+Data Release Processing (DRP) is the data pipeline that produces the calibrated images, detection catalogs, and derived data 
+products defined in section \S TBD, using the LSST Science Pipelines (citation). DP2 was processed at the United States Data Facility (USDF) at SLAC, with pilot runs at the National Institute of Nuclear and Particle Physics (IN2P3) computing center. 
+
+The processing campaign consists of four major stages: (1) single-frame processing, (2) calibration, (3) multi-visit processing, (4) variable and transient source processing.
+Data quality and key metrics for verification and validation are actively monitored during each stage, and comprehensive verification and validation assessments are completed before processing the next stage.
+
+This section describes the high-level algorithms, configurations, and verification metrics for each stage, including changes and improvements from DP1 (citation).
+
 \subsection{Single-Visit Processing} \label{sec:drp-singlevisit}
 
 \subsubsection{Calibration \& Instrument Signature Removal (ISR)} \label{sec:drp-singlevisit-calibrationisr}
 \subsubsection{Background Subtraction} \label{sec:drp-singlevisit-background}
-
 \subsection{Calibration} \label{sec:drp-calibration}
 \subsubsection{PSF Modeling} \label{sec:drp-calibration-psfmodeling}
 \subsubsection{Astrometric Calibration} \label{sec:drp-calibration-astrometry}
+The final astrometric calibration of the data follows the method in DP1, but with some key additions. As described in DP1, a joint calibration is performed on all visits in a given band overlapping a given area. By associating all the isolated point sources shared among the overlapping visits, we can refine the astrometric solution beyond the level achieved in single-frame processing using only a reference catalog. 
+% TODO: The full details of the method are described in Saunders, 2026 (in prep; I'll make a DOI for this)
+
+Unlike in DP1, the area we use for individual fits of the astrometric solution is an order-3 healpix, instead of a tract. This is done to reduce repetitive calculations, since the small size of tracts compared to the LSSTCam field of view means that neighboring tracts often share identical overlapping visits, which would lead to doing many identical fits of the astrometric calibration.
+
+As in DP1, the astrometric model consists of a static map from pixel space to an intermediate frame, which is followed by a per-visit map from the intermediate frame to the plane tangent to the telescope boresight, and finally a deterministic mapping from the tangent plane to the sky. This is done by the \texttt{gbdes} package \citep[][]{2017PASP..129g4503B}, as described in \citet{DMTN-266}. The proper motion and parallax of the objects used in the calibration are fit as part of the solution, but we do not yet include differential chromatic refraction or lateral color. These will be included in future data releases during Rubin Operations.
+
+The main difference from the DP1 astrometric calibration is an additional step that models the effect of atmospheric turbulence on the astrometry. The per-visit part of the astrometric model already described captures large-scale variation between visits, which includes some atmospheric effects. However, higher order oscillations are visible in the astrometric residuals, and these can be attributed to atmospheric turbulence \citep{DMTN-324}. As described in \citet{2021AJ....162..106F} and \citet{2021A&A...650A..81L}, the wave-like astrometric effects caused by turbulence can be modeled by a Gaussian process. In DP2, we do this by taking the astrometric residuals remaining after the \texttt{gbdes} fit, grouping them by visit, then modeling them with the Gaussian Process package \texttt{treegp}. We then use this Gaussian Processes model to predict the effects of turbulence on a grid. Finally, this grid is turned into a two-dimensional spline that can use the AST component \texttt{SplineMap} so that it can be concatenated with the \texttt{gbdes} model. By including this model for the higher-order atmospheric turbulence, we achieve a significant improvement in the astrometric calculation, as demonstrated in Section~\ref{sec:performance}.
+
+A corollary product of the \texttt{gbdes} astrometric calibration is the catalog of proper motions and parallaxes of the sources used in the calibration. Since the \texttt{gbdes} fit is done per-band, and then improved by the turbulence fit, we perform an additional final fit of the proper motion and parallax, using the final astrometric model and all available bands. The resulting catalogs are included in the DP2 data release. These catalogs only include isolated point sources, but future data releases will be extended to include proper motion and parallax for all objects.
+
 \subsubsection{Photometric Calibration} \label{sec:drp-calibration-photometry}
 
 \subsection{Multi-Visit Processing} \label{sec:drp-multivisit}
