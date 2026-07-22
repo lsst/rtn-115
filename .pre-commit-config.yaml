@@ -24,9 +24,7 @@ repos:
       - id: copyedit
         name: Apply journal copy-edit rules
         description: Rewrites .tex files according to .copyedit-rules.yaml.
-        entry: python bin/copyedit.py
+        entry: uv run python bin/copyedit.py
         language: system
         files: '\.tex$'
-        # Skip the lsst-texmf submodule and the structured glossary file
-        # (which contains identifiers like {arcsec} that must not be rewritten).
         exclude: '^(lsst-texmf/|aglossary\.tex$|tests/data/)'

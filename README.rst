@@ -90,21 +90,21 @@ They are defined in .copyedit-rules.yaml
 They can be applied by running the script  bin/copyedit.py
 
 Fix violations in place (modifies input file)
-..  python bin/copyedit.py sections/introduction.tex
+..  uv run python bin/copyedit.py sections/introduction.tex
 
 Report violations without modifying any files
-.. python bin/copyedit.py --check sections/introduction.tex
+.. uv run python bin/copyedit.py --check sections/introduction.tex
 
 Report violations for rule that ate marked as "audit" only. These are rules that are never auto-applied because they have high false-positive rates and require
 human intervention
-.. python bin/copyedit.py --check --audit $(git ls-files '*.tex')
+.. uv run python bin/copyedit.py --check --audit $(git ls-files '*.tex')
 
 Running the precommit checks
 ----------------------------
 
 The DP2 repository now contains a number of pre-commit hooks to reduce the burden of a number of tasks, the main one being appliction of copy-edit rules.
 
-Run the only the copyedit precommit check on all files
+Run only the copyedit precommit check on all files
 .. pre-commit run copyedit
 
 Run only the copyedit precommit check on the introduction file only

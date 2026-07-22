@@ -20,12 +20,24 @@ Examples
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "python"))
 
 from lsst.dptwo.utils.copyedit import load_rules, process_file
+
+_EXCLUDE = re.compile(r"^(lsst-texmf/|aglossary\.tex$|tests/data/)")
+
+
+def _all_tex_files() -> list[str]:
+    root = Path(__file__).parent.parent
+    return [
+        str(p.relative_to(root))
+        for p in sorted(root.rglob("*.tex"))
+        if not _EXCLUDE.search(str(p.relative_to(root)))
+    ]
 
 
 def main() -> int:
@@ -45,7 +57,7 @@ def main() -> int:
         action="store_true",
         help="Also report audit-only rules (never auto-applied; for human review).",
     )
-    parser.add_argument("files", nargs="*", help="Files to process.")
+    parser.add_argument("files", nargs="*", help="Files to process (default: all tracked .tex files).")
     args = parser.parse_args()
 
     rules_path = Path(args.rules)
@@ -59,9 +71,11 @@ def main() -> int:
     fix_rules = [r for r in rules if not r["audit_only"]]
     audit_rules = [r for r in rules if r["audit_only"]] if args.audit else []
 
+    files = args.files or _all_tex_files()
+
     any_fixes = False
     any_audits = False
-    for f in args.files:
+    for f in files:
         fixed, audited = process_file(Path(f), fix_rules, audit_rules, args.check)
         any_fixes = any_fixes or fixed
         any_audits = any_audits or audited

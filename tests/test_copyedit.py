@@ -533,6 +533,32 @@ class CopyeditRuleTestCase(unittest.TestCase):
     def test_data_release_already_correct(self) -> None:
         self.assertEqual(self._hits("data-release", "Data Release"), 0)
 
+    # --- doi-macro-inline-braces -----------------------------------------
+
+    def test_doi_macro_inline_adds_braces(self) -> None:
+        self.assertEqual(
+            self._apply("doi-macro-inline-braces", r"the DOI is \doidptwopaper and"),
+            r"the DOI is \doidptwopaper{} and",
+        )
+
+    def test_doi_macro_at_end_of_line(self) -> None:
+        self.assertEqual(
+            self._apply("doi-macro-inline-braces", r"see \doidptwopaper" + "\n"),
+            r"see \doidptwopaper{}" + "\n",
+        )
+
+    def test_doi_macro_already_correct(self) -> None:
+        self.assertEqual(self._hits("doi-macro-inline-braces", r"\doidptwopaper{}"), 0)
+
+    def test_doi_macro_argument_not_matched(self) -> None:
+        self.assertEqual(self._hits("doi-macro-inline-braces", r"\doi{\doidptwopaper}"), 0)
+
+    def test_doi_macro_other_name(self) -> None:
+        self.assertEqual(
+            self._apply("doi-macro-inline-braces", r"see \doidptwocat and"),
+            r"see \doidptwocat{} and",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
