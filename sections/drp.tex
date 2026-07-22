@@ -156,6 +156,23 @@ As an additional constraint on the fit, we use a subset of stars from the Monste
 \subsection{Multi-Visit Processing} \label{sec:drp-multivisit}
 \subsubsection{Input Data Selection} \label{sec:drp-multivisit-inputselection}
 \subsubsection{Coaddition} \label{sec:drp-multivisit-coaddition}
+The single visit images that pass the selection criteria above are warped onto the coadd pixel grid using Lanczos3 kernel and scaled to have units of \texttt{nJy} (zeropoint of 31.4).
+Artifacts are identified and masked in a manner similar to DP1 (c.f., \sec{sec:dp1-artifactmasking}) before coaddition.
+These masks are also saved as the \texttt{compare_warp_artifact_mask} dataset.
+
+In DP2, the coadded images are cell-based, using the \texttt{lsst_cells_v2} skymap.
+Coadds are built as weighted averages of the input warps.
+Each detector is assigned a weight that is the inverse of the mean of the variance reported in the \texttt{visit_summary} dataset.
+Following \cite{2024arXiv240701771A} for each cell in the coadd, a detector is excluded if its geometry does not overlap the cell completely.
+Furthermore, a detector is excluded if more than 50\% of its pixels are masked as artifacts, unless it would result in an empty cell in which case, this condition is ignored. % fallback.
+
+A key difference between cell-based coadds and coadds in DP1 is in the PSF representation.
+Single visit PSFs are evaluated at point corresponding to the center of cells and warped into a 35x35 postage stamp, which ensures that at least 99.5\% of the flux is captured.
+These postage stamps are then weighted by the same weights used for the coadd and averaged.
+The PSF within the cell is approximated as spatially constant.
+The pixels that have artifacts from any of the input visits have \texttt{INEXACT_PSF} flag set to denote that the PSF of those pixels may differ from that attached to the cell.
+The metadata about which visits contribute to the cell, what fraction of pixels are unmasked, PSF summary statistics are stored.
+
 \subsubsection{Detection, Deblending, \& Measurement} \label{sec:drp-multivisit-detection}
 
 Coadd detection and measurement proceeds with a similar order of steps as in DP1; however, numerous changes have been made to individual algorithms.
