@@ -39,6 +39,25 @@ A corollary product of the \texttt{gbdes} astrometric calibration is the catalog
 
 \subsubsection{Photometric Calibration} \label{sec:drp-calibration-photometry}
 
+Photometric calibration of the DP2 dataset is based on the Forward Global Calibration Method~\citep[FGCM][]{2018AJ....155...41B} adapted for the LSST Science Pipelines~\citep{2022PASJ...74..247A, SITCOMTN-086}.
+We used the FGCM to calibrate the full DP2 dataset with a forward model that uses a parameterized model of the atmosphere as a function of airmass along with a model of the instrument throughput as a function of wavelength.
+The FGCM process typically begins with measurements of the instrumental throughput, including the mirrors, filters, and detectors.
+For the LSSTCam filter throughputs, we start with the filter scans provided by the manufacturer, Matereon.
+These were taken in a grid with 159 positions, at 5 incidence angles from 13.8 to 23 degrees, at a wavelength resolution of 1 nm.
+We performed an averaging procedure to get the approximate appropriate throughput for the LSSTCam beam as it intersects the filter at the central location of each detector.
+For the LSSTCam detector quantum efficiency (QE) curves, we start with per-raft measurements of the QE performed at Brookhaven National Laboratory (BNL) and SLAC National Accelerator Laboratory (SLAC) at 10 to 25 wavelength steps.
+These preliminary scans were then normalized relative to each other at 750 nm.
+However, there are still some per-raft systematic differences seen, particularly in the u and y bands.
+In the future we will use the in-dome tunable laser system and the Collimated Beam Projector (CBP) for improved filter and detector throughputs.
+
+The FGCM atmosphere model, provided by MODTRAN~\citep{1999SPIE.3756..348B}, was used to generate a look-up table for atmospheric throughput as a function of zenith distance at Cerro Pachón.
+This model accounts for absorption and scattering by molecular constituents of the atmosphere, including O2 and O3; absorption by water vapor; and Mie scattering by airborne aerosol particulates.
+Nightly variations in the atmosphere are modeled by minimizing the variance in repeated observations of stars with an SNR greater than 10, measured using ``compensated aperture fluxes.''
+These fluxes include a local background subtraction to mitigate the impact of background offsets.
+The model fitting process incorporates all six bands ($ugrizy$) but does not include any gray (achromatic) terms, except for a linear assumption of mirror reflectance degradation and dust accumulation on lenses.
+Fortunately, there is no evidence of any signficant loss of throughput over the 250 days of the DP2 dataset.
+As an additional constraint on the fit, we use a subset of stars from the Monster reference catalog~\citep{DMTN-277}, primarily to constrain the system’s overall throughput and establish the “absolute” calibration.
+
 \subsection{Multi-Visit Processing} \label{sec:drp-multivisit}
 \subsubsection{Input Data Selection} \label{sec:drp-multivisit-inputselection}
 \subsubsection{Coaddition} \label{sec:drp-multivisit-coaddition}
