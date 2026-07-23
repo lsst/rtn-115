@@ -58,5 +58,17 @@ After rejecting likely artifacts (\S \ref{sec:drp-variabletransient-artifact}), 
 
 \subsubsection{Artifact Rejection} \label{sec:drp-variabletransient-artifact}
 
+DIA analysis is prone to false positives.
+We employ several layers of artifact rejection, although we err on the side of completeness rather than purity in Data Release Processing.
+
+As in DP1, prior to writing the \texttt{DIASource} catalog, we remove sources with pixel flags artifacts, non-astrophysical trail lengths, and unphysically negative direct fluxes.
+In DP2 we also reject sources that land on the modeled positions of diffraction spikes and apply morphological cosmic ray rejection on both the direct and difference images.
+Further, we flag but do not remove multiple \texttt{DIASources} that occur in a straight line with \texttt{glint\_trail}, indicating that they may be due to rotating orbital debris \citep{2022arXiv220205719K}.
+
+We developed a machine-learned reliability score to assess whether \texttt{DIASources} were astrophysical.
+\citep{DMTN-337} provides an overview of the model architecture, training, and performance of the real-bogus model.
+The v0.1 model used in DP1 was again used during DP2 processing.
+No cuts were applied on reliability for the DP2 \texttt{DIASource} catalogs, so users interested in higher purity should apply a minimum reliability threshold.
+
 \subsubsection{Light Curves} \label{sec:drp-variabletransient-lightcurves}
 \subsubsection{Solar System Processing} \label{sec:drp-variabletransient-solar}
