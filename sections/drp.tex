@@ -170,7 +170,15 @@ As detailed in \citet[][]{2018PASJ...70S...5B}, measurement first replaces all p
 During measurement, isolated objects have their original pixel values inserted back into the image, while blended objects use the scarlet lite models as templates to re-distribute the original image values.
 This preserves the flux from the original image where objects have no overlap and dampens the noise elsewhere, since the flux is reapportioned to multiple objects.
 
-The multiband metadetection algorithm is new to DP2. It creates an entirely separate catalog and will be described in (TODO: Arun Kannawadi).
+The \gls{ShearObject} catalog using multiband metadetection algorithm\cite{Sheldon2019} is new to DP2.
+It creates an entirely separate catalog with detections that do not correspond to the \gls{Object} catalog.
+Each 150x150 cell in `griz` bands is extracted with a 50 pixel border to make a 250x250 pixel images, that are then passed to metadetect.
+Internally, metadetect makes counterfactual images by deconvolving by the original PSF, shearing the image and reconvolving to a new PSF using the \texttt{fitgauss} reconvolution algorithm.
+Metadetect coadds `riz' bands to form a coadd for detection, and measures shear using the \texttt{gauss} algorithm by fitting a 2D elliptical Gaussian to $r$, $i$, $z$ coadds.
+Additionally, for these detections, it also reports force-photometered fluxes in $g$, $r$, $i$ and $z$ bands for these detections measured using the \texttt{pgauss} algorithm.
+There is no deblending performed prior to these measurements.
+
+
 
 The single-band measurement plugin system remains unchanged from DP1 and largely follows the description in \citet[][]{2018PASJ...70S...5B}.
 Measurements are made in every available band, and a reference band is defined from the same priority order as detection merging ($irzygu$) for a second round of forced measurements.
