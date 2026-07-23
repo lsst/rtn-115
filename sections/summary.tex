@@ -1,13 +1,15 @@
 \section{Summary and Future Releases}
 \label{sec:summary}
 %
-This paper describes \gls{DP2}, the third Data Preview of the Rubin Observatory Early Science Program \citep[][]{RTN-011} and the first to be based entirely on \gls{LSSTCam} data.
-\gls{DP2} is delivered in two phases: Early \gls{DP2} (\gls{EDP2}), which provides deep coadded images, all associated science catalogs, and ancillary data products including throughput curves, survey property maps, and calibration products; and \gls{DP2}, planned for late 2026, which adds visit-level and difference-image data products to complete the release.
+\gls{DP2} provides the first release of science-grade data products from the  \gls{LSSTCam} focal plane.
+As for \gls{DP1}, \gls{DP2} is part of Rubin's Early Science Program \citep[][]{RTN-011} and carries a 2 yr proprietary period during which access is restricted to \gls{LSST} data rights holders via the cloud-based \gls{RSP}.
+
+\gls{DP2} is delivered in two phases: Early \gls{DP2} (\gls{EDP2}), which provides deep coadded images, all science catalogs, and ancillary data products including throughput curves, survey property maps, and calibration products; and \gls{DP2}, planned for late 2026, which adds visit-level and difference-image data products to complete the release.
 The coadded images and catalogs delivered in \gls{EDP2} are not reprocessed for \gls{DP2}; the data are unchanged, and \gls{DP2} supersedes and fully encompasses \gls{EDP2} by adding the remaining products to the same release.
 Analyses begun on \gls{EDP2} products require no modification.
 
 % DP2 compared to DP1 summary
-\gls{DP2} represents a substantial advance relative to \gls{DP1} in sky coverage, focal plane area, filter complement, and data product scope, and provides the community with the first opportunity to work with \gls{LSSTCam} data at scale ahead of the first \gls{LSST} Data Release.
+\gls{DP2} represents a substantial advance relative to \gls{DP1}: the full \gls{LSSTCam} focal plane replaces the single-raft \gls{LSSTComCam}, all six $ugrizy$ filters are available in place of three, and the sky area is larger by approximately two orders of magnitude.
 Nevertheless, \gls{DP2} reflects the state of an observatory still in the process of optimization: delivered image quality had not yet consistently reached design specification, template coverage is incomplete across the full sky, and several pipeline components remain under active development.
 Users are encouraged to consult the release documentation at \url{https://dp2.lsst.io} and the known issues register maintained there before beginning scientific analyses.
 
@@ -16,12 +18,8 @@ The body of science-grade \gls{LSSTCam} data acquired between the end of the \gl
 The format and timing of this release are still under discussion; planning will be finalised once \gls{DP2} has been delivered.
 
 % LSST DRs
-The first annual \gls{LSST} Data Release, \gls{DR1}, will be derived from a reprocessing of approximately the first year of \gls{LSST} survey data and is currently expected in mid-2028 \citep[][]{RTN-011}; its precise definition remains under consideration.
-\gls{DR1} will represent a substantial improvement over \gls{DP2} across every dimension of the dataset.
-Whereas \gls{DP2} is derived from commissioning and early operations data acquired under a non-standard cadence with frequent engineering interruptions, \gls{DR1} will be based on \gls{LSST} survey observations driven by the \gls{FBS} operating from the baseline survey strategy developed in collaboration with the community \citep[][]{PSTN-053, PSTN-055, PSTN-056, PSTN-057}.
-Sky coverage will be substantially larger and more uniform, extending across the full \gls{WFD} footprint of $\sim$18,000 deg$^{\rm 2}$ using a balanced six-band filter distribution, in contrast to the uneven filter coverage of \gls{DP2} driven by commissioning priorities and engineering constraints.
-Delivered image quality is expected to improve as \gls{AOS} and dome thermal optimisation continues, and photometric and astrometric calibration will benefit from a full year of all-sky data.
-Difference-image templates will be available across a much larger fraction of the survey footprint enabling more complete alert production.
-\gls{DR1} will be processed with a more mature version of the \gls{LSST} Science Pipelines, informed by commissioning experience, \gls{DP2} processing, and community science feedback.
-Subsequent \gls{LSST} Data Releases are planned on an approximately yearly cadence, each representing a complete reprocessing of all accumulated survey data with progressively improved calibration and depth.
-Updated plans will be communicated through revisions to \citet[Rubin Early Science Program][]{RTN-011} and via the Rubin community forum at \url{https://community.lsst.org}.
+The first \gls{LSST} Data Release, \gls{DR1}, will be derived from a reprocessing of approximately the first year of \gls{LSST} survey data and is currently expected in mid-2028; its precise definition remains under consideration.
+\gls{DR1} will mark a qualitative advance beyond \gls{DP2}: observations collected under the community-developed baseline survey strategy \citep[][]{PSTN-053, PSTN-055, PSTN-056, PSTN-057} will yield substantially broader and more uniform sky coverage across the full \gls{WFD} footprint of $\sim$18,000 deg$^{\rm 2}$, a balanced six-band filter distribution, and improved delivered image quality as \gls{AOS} and dome thermal management continue to mature \citep[][]{SOTN-004}.
+Photometric and astrometric calibration will benefit from a full year of all-sky coverage, difference-imaging templates will span a far greater fraction of the footprint and processing will draw on a more mature version of the \gls{LSST} Science Pipelines refined through \gls{DP2} experience and community engagement.
+Subsequent \gls{LSST} Data Releases are planned at an approximately yearly cadence, each a complete reprocessing of all survey data accumulated to that point, with progressively deeper coadds and improved calibration.
+Plans will be updated through revisions to \citet[][]{RTN-011} and on the Rubin community forum at \url{https://community.lsst.org}.
