@@ -30,6 +30,9 @@ lsst:
     - name: tenyearcatalogsize
       value: 15
       unit: PB
+    - name: wfdarea
+      value: 18000
+      unit: square degrees
 
 lsstcamsvcampaign:
   parameters:
