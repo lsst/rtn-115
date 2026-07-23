@@ -324,10 +324,13 @@ rules:
     # Fires on any capital after a full stop, including acronyms ("DP2",
     # "LSSTCam"). Headings and captions are skipped to avoid false positives
     # from title-case text.
-    pattern: '([.!?]) +([A-Z])'
+    # Guard: negative lookbehind (?<! [A-Z]) skips middle initials like "C."
+    # in "Vera C. Rubin" -- a single uppercase letter preceded by a space is
+    # a name initial, not a sentence boundary.
+    pattern: '(?<! [A-Z])([.!?]) +([A-Z])'
     replacement: '\1\n\2'
     skip_lines_matching: '\\(?:section|subsection|subsubsection|paragraph|chapter|title|caption)\*?\{'
-    note: 'Each sentence should start on a new line in the LaTeX source: "word. Next" → "word.\nNext".'
+    note: 'Each sentence should start on a new line in the LaTeX source: "word. Next" → "word.\nNext". Middle initials like "C. Rubin" are preserved.'
 
   - name: doi-macro-inline-braces
     # \doiXXXX parameter macros (e.g. \doidptwopaper) must be followed by {}
