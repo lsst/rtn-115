@@ -1,0 +1,5 @@
+Term,Description,Subsystem Tags,Documentation Tags,Associated Acronyms and Alternative Terms,Type
+EDP2,Early Data Preview 2,OPS,,,A
+MultiProFit,"The MultiProFit astronomical source modelling code, including the multiprofit Python package and its dependencies, and the meas_extensions_multiprofit package for pipeline tasks.",DM,"DMTN-312",,G
+scarlet lite,"The lightweight version of the scarlet algorithm, optimized for multiband deblending on pixel-aligned grids. Includes the scarlet_lite and meas_extensions_scarlet Python packages.",DM,"DMTN-194",,G
+ShearObject,"An object with measurements using the metadetection algorithm, or the catalog thereof.",DM,,,G
