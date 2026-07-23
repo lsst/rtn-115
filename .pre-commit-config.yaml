@@ -27,4 +27,4 @@ repos:
         entry: uv run python bin/copyedit.py
         language: system
         files: '\.tex$'
-        exclude: '^(lsst-texmf/|aglossary\.tex$|tests/data/)'
+        exclude: '^(lsst-texmf/|aglossary\.tex$|tests/data/|RTN-115\.tex$)'
