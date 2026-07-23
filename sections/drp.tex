@@ -2,7 +2,7 @@
 \label{sec:drp}
 
 Data Release Processing (DRP) is the data pipeline that produces the calibrated images, detection catalogs, and derived data products defined in section \S TBD, using the LSST Science Pipelines (citation).
-DP2 was processed at the United States Data Facility (USDF) at SLAC, with pilot runs at the National Institute of Nuclear and Particle Physics (IN2P3) computing center. 
+DP2 was processed at the United States Data Facility (USDF) at SLAC, with pilot runs at the National Institute of Nuclear and Particle Physics (IN2P3) computing center.
 
 The processing campaign consists of four major stages: (1) single-frame processing, (2) calibration, (3) multi-visit processing, (4) variable and transient source processing.
 Data quality and key metrics for verification and validation are actively monitored during each stage, and comprehensive verification and validation assessments are completed before processing the next stage.
@@ -132,29 +132,65 @@ As an additional constraint on the fit, we use a subset of stars from the Monste
 \subsubsection{Coaddition} \label{sec:drp-multivisit-coaddition}
 \subsubsection{Detection, Deblending, \& Measurement} \label{sec:drp-multivisit-detection}
 
-Coadd detection and measurement proceeds with a similar order of steps as in DP1; however, numerous changes have been made to individual algorithms. The main change is that algorithms run on cell-based coadds, which have fewer PSF discontinuities within cells. For this release, though, none of the measurement algorithms take cell boundaries into account, and those that require a PSF model use the PSF model at the centroid of the object (and therefore of the cell that the centroid is within) for all cells.
+Coadd detection and measurement proceeds with a similar order of steps as in DP1; however, numerous changes have been made to individual algorithms.
+The main change is that algorithms run on cell-based coadds, which have fewer PSF discontinuities within cells.
+For this release, though, none of the measurement algorithms take cell boundaries into account, and those that require a PSF model use the PSF model at the centroid of the object (and therefore of the cell that the centroid is within) for all cells.
 
-First, peaks are detected in single-band patch images. These peaks are then merged across bands to produce a multi-band peak catalog. This catalog is used as an input for deblending, which outputs deblended (but not deconvolved) images for each object. All object catalog measurements are performed on these deblended images.
+First, peaks are detected in single-band patch images.
+These peaks are then merged across bands to produce a multiband peak catalog.
+This catalog is used as an input for deblending, which outputs deblended (but not deconvolved) images for each object.
+All object catalog measurements are performed on these deblended images.
 
-The methodology for detection is largely unchanged from the description in \citet{2018PASJ...70S...5B}, which we summarize here. To detect peaks, each image is convolved by a circular Gaussian approximation to the measured PSF to make a significance image. A \gls{footprint} is a contiguous region of pixels above the detection threshold, which is set to detect isolated point sources above $5\sigma$ significance. Footprints can have multiple peaks, which are defined as pixels with values higher than all 9 neighbours (local maxima in a 3x3 box). Note that even for an isolated object, the significance of a detection is not precisely the same as the signal-to-noise from subsequent PSF model fluxes.
+The basic methodology for detection is largely unchanged from the description in \citet[][]{2018PASJ...70S...5B}, which we summarize here.
+To detect peaks, each image is convolved by a circular Gaussian approximation to the measured PSF to make a significance image.
+A \gls{footprint} is a contiguous region of pixels above the detection threshold, which is set to detect isolated point sources above $5\sigma$ significance. Footprints can have multiple peaks, which are defined as pixels with values higher than all 8 neighbours (local maxima within a 3x3 box).
+Note that even for an isolated object, the significance of a detection is not precisely the same as the signal-to-noise from subsequent PSF model fluxes.
 
-The set of pixels outside of footprints are marked as not detected and used for a final round of background estimation and subtraction, excluding significantly negative-valued pixels which are likely to be residual artifacts.
+Pixels within footprints are marked with the DETECTED bit mask.
+The remaining pixels are used for background estimation and subtraction, excluding significantly negative-valued pixels which are likely to be residual artifacts.
+The algorithm also attempts to randomly place 100 ``sky objects'' within the noise-dominated pixels, reducing the number in crowded fields with low numbers of sky-dominated pixels if necessary.
+These objects do not appear in the final object catalog but are used to characterize the sky variance in intermediate steps.
 
-Once detection has run in each band, \gls{footprint}s and their peaks are merged in a fixed priority order, $irzygu$. New peaks are only added if they are at least 1.0 arcseconds further than an existing peak, and existing peaks are marked as detected in multiple bands if a new peak is found within 0.3 arcseconds. After merging, probable spurious peaks detected in only one band are removed.
+As explained in \citet[][]{2019PASJ...71..114A}, the process of convolving the image by an approximation of the PSF reduces the variance in the image, and therefore the pixel significance threshold must be adjusted to achieve the desired detection threshold.
+This factor is computed by measuring the standard deviation of the PSF model \gls{SNR} of the sky objects.
 
-Deblending is performed by the \textrm{scarlet lite} python package. \textrm{scarlet lite} is an optimized implementation of the \textrm{scarlet} \citep{2018A&C....24..129M} deblending algorithm with the assumption that the input images are aligned to the same pixel grid at a fixed resolution, as is the case in deep coadds. Prior to deblending, a new addition in DP2 is a per-band partial deconvolution of the input coadds to a common $\sigma=0.8 pixel$ integrated circular Gaussian PSF. This allows us to sub-divide large parent blends (Footprints) into multiple smaller blends that are only connected by the wings of the PSF. These smaller sub-blends and the initialization of galaxy morphologies from the partially deconvolved images improves numerical convergence and performance, both in the goodness-of-fit of the final models and in memory usage and runtime. Users will notice that this has improved our coverage in crowded fields from DP1, however in the most dense fields an entire patch can still be a single blend and is skipped due to excessive memory consumption.
+Once detection has run in each available band, \gls{footprint}s and their peaks are merged in a fixed priority order, $irzygu$, which is roughly in order of expected \gls{SNR} for typical objects.
+New peaks are only added if they are at least 1\farcs0 further than an existing peak, and existing peaks are marked as detected in multiple bands if a new peak is found within 0\farcs3; peaks within this range are ignored.
+After merging, probable spurious peaks detected in only one band are removed.
 
-\gls{Object} measurements are conducted in three modes: independent per-band measurements, forced measurements in each band, and multiband measurements. Isolated objects use their raw pixel values for insertion into the noise replaced coadd while blended objects use the scarlet lite models as templates to re-distribute the observed image pixels. This preserves the flux from the original image where objects have no overlap and dampens the noise elsewhere, since the flux is reapportioned to multiple objects.
+Deblending is performed by the \gls{scarlet lite} python package.
+\gls{scarlet lite} is an optimized implementation of the \textrm{scarlet} \citep[][]{2018A&C....24..129M} deblending algorithm with the assumption that the input images are aligned to the same pixel grid at a fixed resolution, as is the case in coadds.
+Prior to deblending, a new addition in DP2 is a per-band partial deconvolution of the input coadds to a common $\sigma=0.8 pixel$ integrated circular Gaussian PSF.
+This allows us to sub-divide large parent blends (\gls{footprint}s) into multiple smaller blends that are only connected by the wings of the PSF.
+These smaller sub-blends and the initialization of galaxy morphologies from the partially deconvolved images improves numerical convergence and performance, both in the goodness-of-fit of the final models and in memory usage and runtime.
+Users will notice that this has improved our coverage in crowded fields from DP1; however, in the densest fields, an entire patch can still be a single blend and must be skipped due to excessive memory requirements.
+
+\gls{Object} measurements are conducted in three modes: independent per-band measurements, forced measurements in each band, and multiband measurements.
+As detailed in \citet[][]{2018PASJ...70S...5B}, measurement first replaces all pixels in footprints with noise, so that algorithms that require pixel values beyond footprint boundaries can perform measurements without contamination from neighbors (whether they are part of the same blend or not).
+During measurement, isolated objects have their original pixel values inserted back into the image, while blended objects use the scarlet lite models as templates to re-distribute the original image values.
+This preserves the flux from the original image where objects have no overlap and dampens the noise elsewhere, since the flux is reapportioned to multiple objects.
 
 The multiband metadetection algorithm is new to DP2. It creates an entirely separate catalog and will be described in (TODO: Arun Kannawadi).
 
-The single-band measurement plugin system remains unchanged (besides bug fixes) from DP1 and - for the most part - from the description in \citet{2018PASJ...70S...5B}. Measurements are made in every available band, and a reference band is defined from the same priority order as detection merging ($irzygu$) for a second round of forced measurements. These use the shape and position from the reference band to ensure consistent colors \citep{2018PASJ...70S...5B}. Most algorithms have their free measurements reported in the final object table, but forced values are generally recommended.
+The single-band measurement plugin system remains unchanged from DP1 and largely follows the description in \citet[][]{2018PASJ...70S...5B}.
+Measurements are made in every available band, and a reference band is defined from the same priority order as detection merging ($irzygu$) for a second round of forced measurements.
+These use the shape and position from the reference for consistency.
+Most algorithms have their free measurements reported in the final object table, but forced values are generally recommended.
 
-A variety of \gls{flux} measurements are provided, including aperture fluxes, \citet{1980ApJS...43..305K}, and Gaussian-Aperture-and-PSF \citep[\gls{GAaP}][]{2008A&A...482.1053K, DMTN-190} fluxes for consistent galaxy colors. Forward \gls{PSF} model and Composite model (CModel) magnitudes \citep{2004AJ....128..502A, 2018PASJ...70S...5B} are provided for each band.
+A variety of \gls{flux} measurements are provided, including aperture fluxes, \citet[][]{1980ApJS...43..305K}, and Gaussian-Aperture-and-PSF \citep[\gls{GAaP}][]{2008A&A...482.1053K, DMTN-190} fluxes for consistent galaxy colors.
+Forward \gls{PSF} model and Composite model (CModel) magnitudes \citep[][]{2004AJ....128..502A, 2018PASJ...70S...5B} are provided for each band.
 
-\cite[MultiProFit][]{DMTN-312} (TODO: need to get ascl entries/add to glossary) is used for multiband forward modelling. Beginning in DP2, an exponential model is fit first and used to initialize a subsequent S\'ersic model \citep{1963BAAA....6...41S, 1968adga.book.....S} fit, which improves convergence and particularly limits the prevalence of S\'ersic fits with unrealistically large effective radii. Both exponential and S\'ersic model fits have free centroids, which serve as alternative, multi-band astrometry for objects. Uncertainties on the fitted ellipse parameters are now provided; these will be converted to uncertainties on more commonly used parameterizations (major/minor axis effective radius and axis ratios) for DR1.
+MultiProFit \citep[][]{DMTN-312} performs multiband forward modelling.
+Beginning in DP2, an \gls{exponential profile} is fit first and used to initialize a subsequent S\'ersic model \citep[][]{1963BAAA....6...41S, 1968adga.book.....S} fit, which improves convergence and reduces the prevalence of S\'ersic fits with unrealistically large effective radii.
+Both exponential and S\'ersic model fits have free centroids, which serve as alternative, multiband astrometry for objects.
+The \gls{Object} table now includes uncertainties on the fitted ellipse parameters for both models (the x- and y-axis effective radii and correlation parameter $\rho$).
+These will be converted to uncertainties on more commonly used parameters (major/minor effective radii and axis ratios) for DR1.
 
-Some additional derived parameters are included in the object catalog, mainly for object classification. ``extendedness`` is a binary classifier, set to 1 if the PSF to CModel flux ratio is below 0.985. ``sizeExtendedness`` is a quasi-probabilistic morphological classifier reported as $1 - exp(-0.5*((T_{HSM} - T_{PSF})/T_{PSF}^{0.5})^2)$, where $T_{HSM}$ and $T_{PSF}$ are the sum of the squares of the x- and y-axis moments for the object from the \gls{HSM} algorithm and for the \gls{PSF} model, respectively. As an alternative, DP2 adds $model_extendedness$, which is a continuous, heuristic classifier that uses both the exponential model effective radius and the ratio of the S\'ersic model to PSF model flux. It is available for each band and separately for the sum of the $griz$-band fluxes.
+Some additional derived parameters are included in the object catalog, mainly for object classification.
+``extendedness`` is a binary classifier, set to 1 if the PSF to CModel flux ratio is below 0.985.
+``sizeExtendedness`` is a quasi-probabilistic morphological classifier reported as $1 - exp(-0.5*((T_{HSM} - T_{PSF})/T_{PSF}^{0.5})^2)$, where $T_{HSM}$ and $T_{PSF}$ are the sum of the squares of the x- and y-axis moments for the object from the \gls{HSM} algorithm and for the \gls{PSF} model, respectively.
+As an alternative, DP2 adds model\_extendedness, which is a continuous, heuristic classifier that uses both the exponential model effective radius and the ratio of the S\'ersic model to PSF model flux.
+It is available for each band and separately for the sum of the $griz$-band fluxes.
 
 As for DP1, photometric redshifts are not computed or included in the object table but are planned as a supplementary user-generated product.
 
