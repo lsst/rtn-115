@@ -170,16 +170,6 @@ As detailed in \citet[][]{2018PASJ...70S...5B}, measurement first replaces all p
 During measurement, isolated objects have their original pixel values inserted back into the image, while blended objects use the scarlet lite models as templates to re-distribute the original image values.
 This preserves the flux from the original image where objects have no overlap and dampens the noise elsewhere, since the flux is reapportioned to multiple objects.
 
-The \gls{ShearObject} catalog using multiband metadetection algorithm\cite{Sheldon2019} is new to DP2.
-It creates an entirely separate catalog with detections that do not correspond to the \gls{Object} catalog.
-Each 150x150 cell in `griz` bands is extracted with a 50 pixel border to make a 250x250 pixel images, that are then passed to metadetect.
-Internally, metadetect makes counterfactual images by deconvolving by the original PSF, shearing the image and reconvolving to a new PSF using the \texttt{fitgauss} reconvolution algorithm.
-Metadetect coadds `riz' bands to form a coadd for detection, and measures shear using the \texttt{gauss} algorithm by fitting a 2D elliptical Gaussian to $r$, $i$, $z$ coadds.
-Additionally, for these detections, it also reports force-photometered fluxes in $g$, $r$, $i$ and $z$ bands for these detections measured using the \texttt{pgauss} algorithm.
-There is no deblending performed prior to these measurements.
-
-
-
 The single-band measurement plugin system remains unchanged from DP1 and largely follows the description in \citet[][]{2018PASJ...70S...5B}.
 Measurements are made in every available band, and a reference band is defined from the same priority order as detection merging ($irzygu$) for a second round of forced measurements.
 These use the shape and position from the reference for consistency.
@@ -188,7 +178,7 @@ Most algorithms have their free measurements reported in the final object table,
 A variety of \gls{flux} measurements are provided, including aperture fluxes, \citet[][]{1980ApJS...43..305K}, and Gaussian-Aperture-and-PSF \citep[\gls{GAaP}][]{2008A&A...482.1053K, DMTN-190} fluxes for consistent galaxy colors.
 Forward \gls{PSF} model and Composite model (CModel) magnitudes \citep[][]{2004AJ....128..502A, 2018PASJ...70S...5B} are provided for each band.
 
-MultiProFit \citep[][]{DMTN-312} performs multiband forward modelling.
+\gls{MultiProFit} \citep[][]{DMTN-312} performs multiband forward modelling.
 Beginning in DP2, an \gls{exponential profile} is fit first and used to initialize a subsequent S\'ersic model \citep[][]{1963BAAA....6...41S, 1968adga.book.....S} fit, which improves convergence and reduces the prevalence of S\'ersic fits with unrealistically large effective radii.
 Both exponential and S\'ersic model fits have free centroids, which serve as alternative, multiband astrometry for objects.
 The \gls{Object} table now includes uncertainties on the fitted ellipse parameters for both models (the x- and y-axis effective radii and correlation parameter $\rho$).
@@ -203,6 +193,16 @@ It is available for each band and separately for the sum of the $griz$-band flux
 As for DP1, photometric redshifts are not computed or included in the object table but are planned as a supplementary user-generated product.
 
 Further details on the performance of these algorithms are found in TODO: add relevant section references.
+
+\subsubsection{Metadetection and ShearObject} \label{sec:drp-multivisit-shearobject}
+
+The \gls{ShearObject} catalog using the multiband metadetection algorithm \citep[][]{2020ApJ...902..138S} is new to DP2.
+It creates an entirely separate catalog with detections that do not correspond to the \gls{Object} catalog.
+Each 150x150 cell in `griz` bands is extracted with a 50 pixel border to make 250x250 pixel images, that are then passed to metadetect.
+Internally, metadetect makes counterfactual images by deconvolving by the original PSF, shearing the image and reconvolving to a new PSF using the \texttt{fitgauss} reconvolution algorithm.
+Metadetect coadds `riz' bands to form a coadd for detection, and measures shear using the \texttt{gauss} algorithm by fitting a 2D elliptical Gaussian to $r$, $i$, $z$ coadds.
+Additionally, for these detections, it also reports force-photometered fluxes in $g$, $r$, $i$ and $z$ bands for these detections measured using the \texttt{pgauss} algorithm.
+There is no deblending performed prior to these measurements.
 
 \subsubsection{First Look} \label{sec:drp-multivisit-firstlook}
 
