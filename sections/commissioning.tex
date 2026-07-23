@@ -20,6 +20,22 @@ The Early Operations period continued until the start of the LSST on
 \subsubsection{Filter Complement}
 \label{sssec:lsstcam_filters}
 
+\begin{itemize}
+\item For LSSTComCam we didn’t have any specific measurements of anything so we used the fiducial mirrors/lenses/filters/ITL QE
+\item For LSSTCam we do have measurements but they aren’t incorporated into DP2 so we use the fiducial mirrors/lenses but focal plane average of the vendor filter scans (which is the same as the fiducial filters for ComCam but the calibration knows about the variations over the FOV), and then the focal plane average of ITL and E2V
+\item In the grand scale of things these are therefore very similar!  ITL is not the same as E2V, but it’s only part of the equation, and they aren’t THAT different, but it does matter for mmag calibration.  The difference between ITL and E2V, especially as part of the whole, is much smaller than (say) LSSTCam vs DECam or PanSTARRs1.  They’re basically the same filters!
+\end{itemize}
+
+Note that ITL has better throughput in the red than E2V.  So the focal plane average is slightly worse for LSSTCam vs ComCam.That’s the average E2V/ITL ratio as a function of wavelength from the monochromatic flats (analysis in progress)
+So you can see here quickly that u and g have the biggest chromatic difference.  But u is dominated by the atmosphere and filter anyway.  But g you can really see.  And that’s why the focal plane has two different colors by eye … that’s the g band
+(Which is why I started with g to check if the standards are the same)
+
+We should!  But we have not released individual QE per detector yet … (sorry)
+The standard is the focal plane average and is how things are calibrated.  So is appropriate for the coadds.
+
+
+
+
 
 \subsection{Flat--field System}
 \label{ssec:flat_field_system}
