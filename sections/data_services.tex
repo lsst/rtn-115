@@ -1,5 +1,81 @@
 \section{Rubin Science Platform}
 \label{sec:data_services}
 
-% Not yet part of EDP2
-%\input{sections/consdb}
+The \gls{RSP} \citep[][]{LSE-319} is a powerful, cloud-based environment for scientific research and analysis of peta-scale astronomical survey data.
+It serves as the primary interface for scientists to access, visualize, and conduct next-to-the-data analysis of Rubin and \gls{LSST} data.
+The  \gls{RSP} is designed around a  ``bring the compute to the data'' principle, eliminating the need for users to download massive datasets.
+The \gls{RSP} provides users with access to data and services through three distinct user-facing Aspects: a \emph{Portal}, which facilitates interactive exploration of the data; a JupyterLab-based \emph{Notebook} environment for data analysis using Python; and an extensive set of \emph{\glspl{API}} that enable programmatic access to both data and services.
+The three Aspects are designed to be fully integrated, enabling seamless workflows across the \gls{RSP}.
+The \gls{RSP} is supported by a number of backend services, including databases, files, and batch computing.
+Support for collaborative work through shared workspaces is also included in the \gls{RSP}.
+The RSP features a single sign-on authentication and authorization system to provide secure access for Rubin data rights holders \citep[][]{rdo-013}.
+The data products described in \secref{sec:data_products} are accessible via all three Aspects, and the system facilitates operations such as starting a query in one Aspect and retrieving its results in another.
+\figref{fig:rsp_landing_page} shows the \gls{RSP} landing page in the Google cloud.
+\begin{figure}[htb!]
+\centering
+\includegraphics[width=0.98\linewidth]{rsp_landing_page}
+\caption{The \gls{RSP} landing page at \url{https://data.lsst.cloud/} showing the three user-facing Aspects as well as links to documentation and support information.}
+\label{fig:rsp_landing_page}
+\vspace{0.1cm}
+\end{figure}
+
+A preview of the \gls{RSP} was first launched on Google Cloud in 2022, operating under a shared-risk model to support \href{https://dp0.lsst.io/}{DP0} \citep[][]{2024ASPC..535..227O}, marking the first time an astronomical research environment was hosted in a \gls{cloud} environment.
+\gls{DP1} built on that early preview to bring major upgrades including the hybrid on-premises USDF/cloud deployment, a broader set of IVOA API services (SIAv2, SODA cutouts, HiPS, WebDAV, alongside the existing TAP), and a fully integrated, read-only Data Butler (S3 store + AlloyDB registry) across all three RSP Aspects.
+
+The size (\dponesize) and complexity of \gls{DP1} did not, on their own, necessitate the full functionality of the RSP for analysis; a traditional ``download the data'' model would still have sufficed.
+However, it was important to provide users the same experience and interfaces they will rely on for later, larger releases, and to get them started in this new paradigm on a small, manageable dataset.
+\gls{DP2} marks a new regime, with a size of \edptwosize, firmly outside the reach of the traditional download model.
+The experience users gained working with \gls{DP1} through the \gls{RSP} interfaces can now be applied directly to \gls{DP2}.
+The release of \gls{DP2} builds on this evolving platform to bring additional upgrades and new functionality, including expanded user query-history and query-status capabilities, context-aware in-application documentation (e.g., contextual help linked directly from Portal table columns), support for the ADQL spatial \texttt{INTERSECTS()} operation.
+
+
+The \gls{RSP} remains under active development, with incremental improvements being rolled out as they mature.
+During the Rubin Early Science Phase, the \gls{RSP} will continue to operate under a shared-risk model.
+This section outlines the RSP functionality available at the time of the \gls{DP2} release and provides an overview of planned future capabilities.
+
+% US DAC and hybrid cloud models
+\subsection{Rubin Data Access Center}
+\label{ssec:usdac}
+%
+The Rubin US DAC utilizes a novel hybrid architecture that combines on-premises infrastructure at the \gls{USDF} at SLAC with flexible, scalable resources in the Google \gls{cloud} \citep[][]{2024SPIE13101E..2BO}.
+User-facing services are deployed in the cloud to support dynamic scaling in response to user demand and to simplify the provisioning and management of large numbers of science user accounts, whereas the majority of the static data products described in \secref{sec:data_products} are stored on premises at the \gls{USDF}, benefiting from cost-effective mass storage and close integration with Rubin's data processing infrastructure, also located at the \gls{USDF}.
+For all imaging data except coadds, the Data Butler (\secref{sssec:data_butler}) provides the interface between cloud-based users and the on-premises data; for catalog data, a cloud-based \gls{TAP} client (\secref{sssec:ivoa_services}) submits queries to the on-premises \gls{Qserv} database cluster (\secref{ssec:databases}) and retrieves the results.
+Deep coadd images are the exception to this hybrid model: because there is one coadd per sky region per band, a relatively small and slow-growing dataset, they are hosted directly in Google Cloud to benefit from cloud-native access.
+
+\gls{DP2} is being delivered in two phases because full end-to-end integration of the hybrid RSP was not yet complete by the time data processing (\S\,\ref{ssec:drp}) finished.
+Rubin therefore adopted a phased release, given that neither coadds nor catalogs depend on hybrid RSP integration readiness.
+Early DP2 (EDP2), comprising the deep coadd images and all catalogs, targets \edptworeleasedate, while the full \gls{DP2} release, adding the visit-level data products once hybrid integration is demonstrated, is expected in the \dptworeleasedate range.
+
+% API Aspect
+\subsection{Application Programming Interface Aspect}
+\label{ssec:rsp_api}
+
+
+
+ \subsubsection{IVOA Services}
+\label{sssec:ivoa_services}
+
+
+
+\subsubsection{Data Butler}
+\label{sssec:data_butler}
+
+
+\subsubsection{Remote Programmatic Access}
+\label{sssec:remote_api}
+
+% Portal Aspect
+\subsection{Portal Aspect}
+\label{ssec:rsp_portal}
+
+
+% Notebook Aspect
+\subsection{Notebook Aspect}
+\label{subsec:notebook}
+
+% databases
+\subsection{Databases}
+\label{ssec:databases}
+
+\subsubsection{Qserv}
+\label{sssec:qserv}
