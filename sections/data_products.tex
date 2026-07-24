@@ -212,11 +212,10 @@ The Isolated Star Stellar Motions catalog contains \nisolatedstars entries.
 
 \subsubsection{Object Shear}
 \label{sssec:objectshear}
-The Object Shear catalog contains object shape measurements in five different shear steps or ``counterfactual'' images: one in which no shear has been applied (\texttt{no-shear}), and four in which an artificial linear shear has been introduced to the image (\texttt{1p, 1m, 2p, 2m}).
+The Object Shear catalog contains object shape measurements in five different shear steps or ``counterfactual'' images: one in which no shear (\texttt{ns}) has been applied, and four in which an artificial linear shear has been introduced to the image (\texttt{1p, 1m, 2p, 2m}).
 The artificial shears are in four different directions: 1p is along the image x-direction, 1m is along the y-direction, 2p is along the 45 degree diagonal, 2m is along the 135 degree diagonal.
-We use Galsim's \texttt{Shear} class (\citealt[][]{2015A&C....10..121R}) with a ``reduced shear'' \texttt{STEP} value of 0.01 to apply the shear in each of the four directions separately.
 
-Two different approaches are used to measure the object shapes on each of the five different counterfactuals, with the result of both approaches reported for each detection.
+Two measurement algorithms (\textit{gauss} and \textit{pgauss}) are run on each of the five different counterfactuals, one for measuring shapes and the other for fluxes.
 The first approach is to fit a single 2D gaussian jointly across the r, i, and $z$-band deep coadd images, with the ellipticity components in the image x-y (\texttt{gauss\_g1}) and diagonal (\texttt{gauss\_g2}) directions reported in the catalog.
 The second approach measures 2D gaussian-weighted moments on single band (r, i, z) images separately, calculates the weighted sum of the raw moments across those three bands (weighted by inverse-variance), then reports the ellipticity components of that weighted sum in the image x-y (\texttt{pgauss\_g1}) and diagonal (\texttt{pgauss\_g2}) directions.
 There is one row per object detected in each counterfactual, meaning a given object could result in up to five rows, depending on how many of the counterfactuals it is detected in at a significance of $>5\sigma$.\footnote{It is feasible for a marginal $5\sigma$ object in one counterfactual to be just below the $5\sigma$ detection threshold in another counterfactual.}
