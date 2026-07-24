@@ -54,7 +54,8 @@ This section should probably be just two or three paragraphs, depending on what 
 \subsection{Crowded Fields}
 Crowded fields represent a key challenge for the LSST Science Pipelines, pushing the current limits of source detection, deblending, and photometry.
 They are defined as regions in which the stellar source density exceeds the resolving capability of current algorithms.
-Consequently, the pipeline produces large, contiguous detection footprints encompassing multiple astrophysical sources rather than assigning distinct footprints to individual objects; the corresponding pixels are flagged as \texttt{NOT\_DEBLENDED}.
+In such regions, the pipeline produces large, contiguous detection footprints encompassing multiple astrophysical sources rather than assigning distinct footprints to individual objects; the corresponding pixels are flagged as \texttt{NOT\_DEBLENDED}.
+We therefore use the proportion of pixels flagged as \texttt{NOT\_DEBLENDED} as a proxy for the area of the survey that is associated with crowded fields.
 
 Out of the 2.2 trillion pixels comprising the total DP2 sky area, 12.9\% are crowded fields.
 This is computed by cross-matching each tract's merged detection catalog with its corresponding parent metrics table to identify top-level parent sources and their \texttt{deblend\_skipped} status, then summing the footprint areas across all tracts and patches.
