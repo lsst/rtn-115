@@ -57,7 +57,7 @@ They are defined as regions in which the stellar source density exceeds the reso
 In such regions, the pipeline produces large, contiguous detection footprints encompassing multiple astrophysical sources rather than assigning distinct footprints to individual objects; the corresponding pixels are flagged as \texttt{NOT\_DEBLENDED}.
 We therefore use the proportion of pixels flagged as \texttt{NOT\_DEBLENDED} as a proxy for the area of the survey that is associated with crowded fields.
 
-Out of the 2.2 trillion pixels comprising the total DP2 sky area, 12.9\% are crowded fields.
+Overall, out of the 2.2 trillion pixels comprising the total DP2 sky area, 12.9\% are associated with crowded fields via the aforementioned definition.
 This is computed by cross-matching each tract's merged detection catalog with its corresponding parent metrics table to identify top-level parent sources and their \texttt{deblend\_skipped} status, then summing the footprint areas across all tracts and patches.
 The ratio of the summed footprint area for skipped parents to the total summed footprint area yields the reported value.
 The overall footprint fraction, however, obscures the highly localized nature of crowded fields within the survey.
