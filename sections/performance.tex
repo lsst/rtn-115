@@ -32,12 +32,14 @@ Put the above compatison in a table (table 1?).
 
 Variation in depth across the FOV:
 
-For a median-depth visit, no more than DF2 per cent of detector-images will have a 5sigma point source depth brighter than Z2, where DF2$=$(15,20,10) and Z2$=$(0.2,0.4,0.2).  This should be in a section, not (necessarily) in a table.
+For a median-depth visit, no more than DF2 per cent of detector-images will have a 5sigma point source depth brighter than Z2, where DF2$=$(15,20,10) and Z2$=$(0.2,0.4,0.2).
+This should be in a section, not (necessarily) in a table.
 
 May also want to include an estimate of the saturation limit (in magnitudes) in this subsection.
 
 \subsubsection{Image quality}
-Note that image quality improved over commissioning (DP2). Take a late-stage subset, or perhaps a curated late-stage subset that we can argue would be representative of what we expect going forward.
+Note that image quality improved over commissioning (DP2).
+Take a late-stage subset, or perhaps a curated late-stage subset that we can argue would be representative of what we expect going forward.
 
 \subsubsection{Astrometric accuracy}
 
@@ -46,5 +48,23 @@ Note that image quality improved over commissioning (DP2). Take a late-stage sub
 \subsection{Coadd-level}
 
 \subsection{Prediction for 10-year survey}
-Details of calculation should go in a separate paper. This section should probably be just two or three paragraphs, depending on what parameters we want to predict.
+Details of calculation should go in a separate paper.
+This section should probably be just two or three paragraphs, depending on what parameters we want to predict.
 
+\subsection{Crowded Fields}
+Crowded fields represent a key challenge for the LSST Science Pipelines, pushing the current limits of source detection, deblending, and photometry.
+They are defined as regions in which the stellar source density exceeds the resolving capability of current algorithms.
+In such regions, the pipeline produces large, contiguous detection footprints encompassing multiple astrophysical sources rather than assigning distinct footprints to individual objects; the corresponding pixels are flagged as \texttt{NOT\_DEBLENDED}.
+We therefore use the proportion of pixels flagged as \texttt{NOT\_DEBLENDED} as a proxy for the area of the survey that is associated with crowded fields.
+
+Overall, out of the 2.2 trillion pixels comprising the total DP2 sky area, 12.9\% are associated with crowded fields via the aforementioned definition.
+This fraction, however, obscures the highly localized nature of crowded fields within the survey.
+Specifically, 1,750 of 2,174 total tracts (i.e., 80.5\%) have less than 1\% of their pixels flagged as \texttt{NOT\_DEBLENDED}.
+Of the remaining 424 (i.e., 19.5\%) tracts , 90\% are found within 14.5 degrees of the Galactic plane where the stellar densities are the highest.
+These regions therefore account for the majority of the survey's crowded-field processing challenges.
+
+As the survey continues, crowded fields will comprise an increasingly large fraction of the observed sky.
+Robust processing of these fields is therefore essential to fully realizing the scientific goals of LSST.
+To address this challenge, a dedicated crowded-field processing pipeline is currently under development.
+Early results are promising: regions that appear as merged detections in the standard pipeline can instead be successfully deblended into their constituent sources, enabling individual detection and measurement.
+The pipeline is currently undergoing testing, with integration into the LSST Science Pipelines for general use targeted within the next year.
