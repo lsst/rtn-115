@@ -20,6 +20,57 @@ This section describes the high-level algorithms, configurations, and verificati
 \subsection{Single-Visit Processing} \label{sec:drp-singlevisit}
 
 \subsubsection{Calibration \& Instrument Signature Removal (ISR)} \label{sec:drp-singlevisit-calibrationisr}
+
+The first task in data processing begins with a raw image. This image is in integerized analog-to-digital units (ADU, or counts) and contains detector artifacts imprinted by the physics of the detector and readout hardware. 
+This step aims to remove any artifacts that are not of astrophysical origin and produce science-ready, single-visit exposures in floating-point electron units with complete pixel masks.
+
+The ISR pipeline is built on a physical model of the detectors and readout electronics, in which each artifact is tied to a specific point in the photon-transfer chain and is corrected using calibrations from dedicated campaigns conducted during the day or on cloudy nights. \figref{fig:isr_signal_chain} shows this model of the detector and readout components and the effects each imparts on the measured image. ISR works backward through the chain, undoing these effects in the reverse of the order in which they were imprinted.
+
+Detector response and performance vary across the focal plane, and more so for LSSTCam than for ComCam during DP1 processing. The full LSSTCam focal plane comprises 189 science charge-coupled devices (CCDs) from two vendors (Imaging Technology Laboratories, ITL, and Teledyne e2v, E2V), each of which must be processed separately.
+
+A detailed description of the DP2 ISR procedures and the calibration products they consume can be found in (Cite RTN-117 here when DOI becomes available).
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\linewidth]{figures/calibration_boxes_detector_model}
+  \caption{The model of the detector and REB components, labeled with the effects that they impart on signal.}
+  \label{fig:isr_signal_chain}
+\end{figure}
+
+The ISR processing pipeline for DP2 performs the following steps, in order:
+(1) conversion of the raw integers to floating point,
+(2) ADU dithering to mitigate quantization effects,
+(3) serial overscan subtraction,
+(4) saturated- and suspect-pixel masking,
+(5) gain (electrons/ADU) correction,
+(6) crosstalk correction,
+(7) parallel overscan subtraction,
+(8) non-linearity correction,
+(9) deferred-charge correction,
+(10) vendor-specific masking (E2V edge bleed; the ITL ``dip,'' saturation sag, and edge bleed),
+(11) bias subtraction,
+(12) dark subtraction,
+(13) defect masking,
+(14) saturated pixel footprint widening,
+(15) brighter-fatter correction,
+(16) variance plane estimation,
+(17) flat fielding,
+(18) interpolation over masked pixels,
+(19) amplifier-offset corrections.
+
+Each calibration must be valid for the conditions under which the science image was taken.
+Camera power cycles, large temperature shifts, and changes to the CCD operating mode (sequencer) can all invalidate earlier calibrations.
+Over the DP2 observing period, calibration products are therefore organized into three calibration epochs.
+Epoch~1 (April~24--July~2, 2025) covers the initial on-sky commissioning period with the \texttt{2s\_v30} sequencer, using defect maps derived from in-lab calibration campaigns conducted before the camera was installed on the telescope.
+Epoch~2 (July~3--September~21, 2025) used an updated \texttt{3s\_v1} sequencer, which lowered the saturation point but reduced read noise, crosstalk, and charge persistence relative to Epoch~1.
+Following an observatory maintenance shutdown in October, Epoch~3 (October~24, 2025--January~6, 2026) resumed under the same sequencer but used a new set of calibrations.
+A fourth epoch, not included in DP2, began January~23, 2026 with the \texttt{3s\_v2} sequencer, bringing reduced correlated noise and improved linear readout response.
+
+Compared to DP1~\citep[][]{RTN-095}, the ISR pipeline has been substantially upgraded, including improved sensor diagnostics and characterization, an entirely new brighter-fatter correction based on \citet[][]{2023A&A...670A.118A} and \citet[][]{2024PASP..136d5003B}, and an all-new flat-field production pipeline that corrects for gradients and mis-centering of the flat-field illumination using new calibration hardware.
+A new set of 10 LEDs spanning the full sensitivity range of the LSSTCam sensors (one in $u$, two each in $griz$, and a new 1050~nm LED shared between $y$ and $z$). For the bands covered by two LEDs, we combine separate flats for each LED (for the blue and red side of the band) into a so-called ``anaglyph'' flat, with a weighting that approximates a flat spectral energy distribution across the band.
+
+ogether, these upgrades allow ISR to deliver uniform, science-ready exposures across all 189 LSSTCam science sensors for DP2.
+
 \subsubsection{Background Subtraction} \label{sec:drp-singlevisit-background}
 \input{subsubsections/background}
 
