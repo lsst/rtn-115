@@ -30,6 +30,9 @@ lsst:
     - name: tenyearcatalogsize
       value: 15
       unit: PB
+    - name: wfdarea
+      value: 18000
+      unit: square degrees
 
 lsstcamsvcampaign:
   parameters:
@@ -62,6 +65,10 @@ dptwo:
     - name: sizeinbytes
       value: 59.15
       unit: TB
+drone:
+  parameters:
+    - name: dronedate
+      value: mid-2028
 
     # Placeholder -- to replace all below  with computation from the data
     # Formetting needs to be reviewed
