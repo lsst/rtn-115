@@ -38,11 +38,11 @@ This section outlines the RSP functionality available at the time of the \gls{DP
 The Rubin US DAC utilizes a novel hybrid architecture that combines on-premises infrastructure at the \gls{USDF} at SLAC with flexible, scalable resources in the Google \gls{cloud} \citep[][]{2024SPIE13101E..2BO}.
 User-facing services are deployed in the cloud to support dynamic scaling in response to user demand and to simplify the provisioning and management of large numbers of science user accounts, whereas the majority of the static data products described in \secref{sec:data_products} are stored on premises at the \gls{USDF}, benefiting from cost-effective mass storage and close integration with Rubin's data processing infrastructure, also located at the \gls{USDF}.
 For all imaging data except coadds, the Data Butler (\secref{sssec:data_butler}) provides the interface between cloud-based users and the on-premises data; for catalog data, a cloud-based \gls{TAP} client (\secref{sssec:ivoa_services}) submits queries to the on-premises \gls{Qserv} database cluster (\secref{ssec:databases}) and retrieves the results.
-Deep Coadd images are the exception to this hybrid model: because there is one coadd per sky region per band, a relatively small and slow-growing dataset, they are hosted directly in Google Cloud to benefit from cloud-native access.
+Deep Coadd images are the exception to this hybrid model: because there is one coadd per sky region per band, a relatively small and size-bounded dataset, they are hosted directly in Google Cloud to benefit from cloud-native access.
 
-\gls{DP2} is being delivered in two phases because full end-to-end integration of the hybrid RSP was not yet complete by the time data processing (\S\,\ref{ssec:drp}) finished.
-Rubin therefore adopted a phased release, given that neither coadds nor catalogs depend on hybrid RSP integration readiness.
-Early DP2 (EDP2), comprising the deep coadd images and all catalogs, targets \edptworeleasedate, while the full \gls{DP2} release, adding the visit-level data products once hybrid integration is demonstrated, is expected in the \dptworeleasedate range.
+\gls{DP2} is being delivered in two phases because full end-to-end integration of the hybrid RSP for images was not yet complete by the time data processing (\S\,\ref{ssec:drp}) finished; the hybrid model supporting Qserv (\secref{ssec:qserv}) catalog access over TAP, by contrast, is already in production for  EDP2.
+Rubin therefore adopted a phased release, given that neither coadds nor catalogs depend on the image-side hybrid RSP integration readiness.
+Early DP2 (EDP2), comprising the deep coadd images and all catalogs, was released on \edptworeleasedate, while the full \gls{DP2} release, adding the visit-level data products once hybrid image integration is demonstrated, is expected in the \dptworeleasedate range.
 
 % API Aspect
 \subsection{Application Programming Interface Aspect}
@@ -90,7 +90,7 @@ The result set includes \gls{metadata} about the image, such as the sky position
 \vspace{0.1cm}
 \item \textbf{Image Cutout Service}: The Rubin Cutout Service \citep[][]{SQR-063, SQR-093} is based on the IVOA SODA standard \citep[][]{2017ivoa.spec.0517B}.
 Users submit requests specifying sky coordinates and the cutout size as the radius from the coordinates, and the service performs the operation on the full image and returns a result set.
-As with \gls{DP1}, the Cutout Service for \gls{DP2} remains a single-cutout service, where $N$ cutout requests require $N$ independent synchronous calls; a bulk Cutout Service is now expected by \gls{DR1} rather than \gls{DP2}.
+As with \gls{DP1}, the Cutout Service for \gls{DP2} remains a single-cutout service, where $N$ cutout requests require $N$ independent synchronous calls; a bulk Cutout Service, \citep[][]{DMTN-326} is now planned for \gls{DR1}.
 
 \vspace{0.1cm}
 \item \textbf{HiPS Data Service}: An authenticated \gls{HiPS} \citep[][]{2017ivoa.spec.0519F} Data Service for seamless pan-and-zoom access to large-scale coadds.
@@ -120,7 +120,7 @@ In the context of the \gls{Butler}, a dataset refers to a unique data product, s
 Datasets belong to one of the various types of data products, described in \secref{sec:data_products}.
 The \gls{Butler} ensures that each dataset is uniquely identifiable by a combination of three pieces of information: a data coordinate, a dataset type, and a run collection.
 
-For a DP2 deep coadd on a \gls{patch} of sky, the dimensions would be the \gls{tract}, \gls{patch} and band, specified as a dataId, e.g., \texttt{dataId=\{'tract': 11399, 'patch': 16, 'band': 'g', 'skymap': 'lsst\_cells\_v2'\}} and is associated with the \texttt{deep\_coadd} DatasetType.
+For a DP2 deep coadd on a \gls{patch} of sky, the dimensions would be the \gls{tract}, \gls{patch} and band, specified as a dataId, e.g., \texttt{dataId=\{'tract': 11399, 'patch': 16, 'band': 'g'}} and is associated with the \texttt{deep\_coadd} DatasetType.
 In contrast, the \texttt{visit\_table} and \texttt{visit\_detector\_table} catalogs described in \secref{sec:data_products} have only the instrument dimension, since each is a single table covering all visits (or all visit-detector combinations) for a given instrument; retrieving either therefore requires only \texttt{dataId=\{'instrument': 'LSSTCam'\}}.
 The \texttt{visit\_summary} catalog, by contrast, is keyed on band, instrument, \texttt{day\_obs}, \texttt{physical\_filter}, and visit, e.g., \texttt{dataId=\{'instrument': 'LSSTCam', 'visit': 2025071100074, 'band': 'g', 'physical\_filter': 'g\_6', 'day\_obs': 20250711\}}, and contains one row per detector for that visit.
 
