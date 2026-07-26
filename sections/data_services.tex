@@ -49,12 +49,63 @@ Early DP2 (EDP2), comprising the deep coadd images and all catalogs, targets \ed
 % API Aspect
 \subsection{Application Programming Interface Aspect}
 \label{ssec:rsp_api}
+%
+The \gls{API} Aspect provides a comprehensive set of user-facing interfaces for programmatic access to the \gls{DP1} data products, through both \gls{IVOA}-compliant services and the Rubin Data Butler.
+IVOA services enable standard queries and integration with existing tools, while the Butler facilitates advanced data processing with the LSST Science Pipelines.
+
+Since the \gls{DP1} release, additional services have been added as the RSP moves toward full functionality, but some planned services remain unavailable, and certain data products are only accessible via the Butler.
+This section provides an overview of the available \gls{IVOA} services and Butler access.
 
 
-
- \subsubsection{IVOA Services}
+\subsubsection{IVOA Services}
 \label{sssec:ivoa_services}
+%
+Rubin has adopted a \gls{VO}-first design philosophy, prioritizing compliance with \gls{IVOA} standard interfaces to foster interoperability, standardization, and collaboration.
+In cases where standardized protocols have yet to be established, additional services have been introduced to complement these efforts.
+This approach ensures that the \gls{RSP} can be seamlessly integrated with community-standard tools such as \gls{TOPCAT} \citep[][]{2011ascl.soft01010T} and Aladin \citep[][]{2000A&AS..143...33B, 2014ASPC..485..277B, 2022ASPC..532....7B}, as well as libraries such as PyVO \citep[][]{2014ascl.soft02004G}.
 
+The user-facing \glspl{API} are also used internally within the \gls{RSP}, creating a unified design that ensures consistent and reproducible workflows across all three Aspects.
+This reduces code duplication, simplifies maintenance, and ensures all users, both internal and external, access data in the same way.
+For example, an \gls{ADQL} query on the \texttt{Object} catalog via TAP yields identical results whether run from the Portal, Notebook, or an external client.
+
+Since the \gls{DP1} release, the RSP has continued to progress towards a full-featured platform, with a number of new services and capabilities added in support of \gls{DP2}.
+The following \gls{IVOA} services are available at the time of the \gls{DP2} release.
+\begin{itemize}
+\vspace{0.1cm}
+\item \textbf{\gls{TAP} service}: A TAP service \citep[][]{2019ivoa.spec.0927D} enables queries of catalog data via the IVOA-standard \gls{ADQL}, a dialect of SQL92 with spherical geometry extensions.
+The main \gls{TAP} service for \gls{DP2} runs on the Rubin-developed \gls{Qserv} database (\S~\ref{ssec:databases}), which hosts the core science tables described in \secref{ssec:catalogs}, as well as the \texttt{Visit} database.
+It also provides image metadata in the IVOA \texttt{ObsCore} format via the standard \texttt{ivoa.ObsCore} table, making it an ``ObsTAP'' service \citep[][]{2017ivoa.spec.0509L}.
+The TAP service is based on the \gls{CADC}'s open-source Java TAP implementation\footnote{https://github.com/opencadc/tap}, modified for the exact query language accepted by Qserv.
+Since \gls{DP1}, ADQL support has been expanded to include the spatial \texttt{INTERSECTS()} operation, and temporary-table uploads now provide multi-object query capabilities across both Qserv- and Postgres-backed catalogs.
+It currently supports a large subset of ADQL, with limitations documented in the Data Release materials (see \secref{ssec:documentation}) and exposed via the TAP capabilities endpoint where possible.
+
+The TAP service provides metadata annotations consistent with the standard, including table and column descriptions, indications of foreign-key relationships between tables, and column metadata such as units and \gls{IVOA} unified content descriptors (UCDs).
+
+\vspace{0.1cm}
+\item \textbf{Image access services}: Rubin image access services are compliant with \gls{IVOA} Simple Image Access Protocol, version 2 \citep[SIAv2;][]{2025arXiv250100544J,2015ivoa.spec.1223D}
+for discovering and accessing astronomical images based on \gls{metadata}.
+SIAv2 is a \gls{REST}-based protocol designed for the discovery and retrieval of image data. It allows, for instance, querying all images in a given band over a defined sky region and time period.
+
+Users identify an image or observation of interest and query the service.
+The result set includes \gls{metadata} about the image, such as the sky position, time, or band, and a data-access URL, which includes an IVOA Identifier uniquely identifying the dataset \citep[][]{DMTN-302}, allowing the dataset to be retrieved or a cutout requested via \gls{SODA} \citep[SODA;][]{2017ivoa.spec.0517B}.
+
+\vspace{0.1cm}
+\item \textbf{Image Cutout Service}: The Rubin Cutout Service \citep[][]{SQR-063, SQR-093} is based on the IVOA SODA standard \citep[][]{2017ivoa.spec.0517B}.
+Users submit requests specifying sky coordinates and the cutout size as the radius from the coordinates, and the service performs the operation on the full image and returns a result set.
+As with \gls{DP1}, the Cutout Service for \gls{DP2} remains a single-cutout service, where $N$ cutout requests require $N$ independent synchronous calls; a bulk Cutout Service is now expected by \gls{DR1} rather than \gls{DP2}.
+
+\vspace{0.1cm}
+\item \textbf{HiPS Data Service}: An authenticated \gls{HiPS} \citep[][]{2017ivoa.spec.0519F} Data Service for seamless pan-and-zoom access to large-scale coadds.
+It supports fast interactive progressive image exploration at a range of resolutions.
+
+\vspace{0.1cm}
+\item \textbf{\gls{WebDav}}: A \gls{WebDav} service is provided to enable users to remotely manage, edit, and organize files and directories on the \gls{RSP} as if they were local files on their own computer. This is especially useful for local development.
+\end{itemize}
+
+Beyond these IVOA services, \gls{DP2} introduces expanded user query-history and query-status capabilities, initial context-aware, in-application documentation (e.g., contextual help linked directly from Portal table columns), and initial access to prompt-products catalog data via a Google BigQuery-backed TAP service \citeds{RTN-011}.
+
+Looking ahead to \gls{DR1}, planned RSP functionality includes bulk cutout services (both for individual targets across a range of epochs and for lists of multiple targets), a \gls{PSF} retrieval service, an on-demand forced-photometry service, data product recreation services, parallel and batch computing, support for persistent user-created databases and their federation with project-provided databases, support for collaborative work, and full LSSTCam focal-plane visualizations.
+Access to GPUs and the ability to bring additional user-funded compute resources to the RSP are under consideration for the post-\gls{DR1} period.
 
 
 \subsubsection{Data Butler}
