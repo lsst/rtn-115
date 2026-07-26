@@ -232,4 +232,10 @@ The v0.1 model used in DP1 was again used during DP2 processing.
 No cuts were applied on reliability for the DP2 \texttt{DIASource} catalogs, so users interested in higher purity should apply a minimum reliability threshold.
 
 \subsubsection{Light Curves} \label{sec:drp-variabletransient-lightcurves}
+
+As with DP1, multi-epoch forced photometry is performed on both the visit images and the difference images.
+For users interested in light curve construction, we recommend using the forced photometry performed on the difference-images (the psfDiffFlux column of the ForcedSource table), since this measurement isolates the time-variable component of the flux and is unaffected by contamination from non-varying nearby sources.
+Forced photometry carried out directly on the visit images, by contrast, may pick up flux from blended or nearby static objects, and the severity of this contamination depends on the seeing.
+The centroids adopted for this multi-epoch forced photometry step are drawn either from coadd-based object positions or from the DIAObjects, which are constructed from the DIASources associated from detections in the difference images.
+
 \subsubsection{Solar System Processing} \label{sec:drp-variabletransient-solar}
