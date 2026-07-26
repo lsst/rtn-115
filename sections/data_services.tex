@@ -1,14 +1,12 @@
 \section{Rubin Science Platform}
 \label{sec:data_services}
 
-The \gls{RSP} \citep[][]{LSE-319} is a powerful, cloud-based environment for scientific research and analysis of peta-scale astronomical survey data.
-It serves as the primary interface for scientists to access, visualize, and conduct next-to-the-data analysis of Rubin and \gls{LSST} data.
-The  \gls{RSP} is designed around a  ``bring the compute to the data'' principle, eliminating the need for users to download massive datasets.
-The \gls{RSP} provides users with access to data and services through three distinct user-facing Aspects: a \emph{Portal}, which facilitates interactive exploration of the data; a JupyterLab-based \emph{Notebook} environment for data analysis using Python; and an extensive set of \emph{\glspl{API}} that enable programmatic access to both data and services.
+The \gls{RSP} \citep[][]{LSE-319} is a powerful, cloud-based environment for scientific research and analysis of peta-scale astronomical survey data and serves as the primary interface for scientists to access, visualize, and conduct next-to-the-data analysis of Rubin and \gls{LSST} data.
+Built around a ``bring the compute to the data'' principle, it eliminates the need for users to download massive datasets, instead providing Rubin data rights holders with secure, single-sign-on access to data and services via three distinct user-facing Aspects: a \emph{Portal}, which facilitate interactive exploration of the data; a JupyterLab-based \emph{Notebook} environment for data analysis using Python; and an extensive set of \emph{API}s that enable programmatic access to both data and services.
+
 The three Aspects are designed to be fully integrated, enabling seamless workflows across the \gls{RSP}.
 The \gls{RSP} is supported by a number of backend services, including databases, files, and batch computing.
 Support for collaborative work through shared workspaces is also included in the \gls{RSP}.
-The RSP features a single sign-on authentication and authorization system to provide secure access for Rubin data rights holders \citep[][]{rdo-013}.
 The data products described in \secref{sec:data_products} are accessible via all three Aspects, and the system facilitates operations such as starting a query in one Aspect and retrieving its results in another.
 \figref{fig:rsp_landing_page} shows the \gls{RSP} landing page in the Google cloud.
 \begin{figure}[htb!]
