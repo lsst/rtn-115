@@ -38,9 +38,12 @@ search or an orbit catalog derived from DP2 alone.  The associated sample can
 nevertheless include objects first discovered by Rubin: if Prompt Processing
 reported such an object to the MPC and it entered the MPC catalog before the
 DP2 processing cutoff, it was eligible for the same known-object association.
-Those discoveries were made in Prompt Processing and will be presented
-separately.  DP2 does not deliver a catalog of Rubin discoveries; future data
-releases will deliver such catalogs.
+The Prompt Processing discovery campaign preceded the official DP2 data
+release processing specifically so that newly reported objects entering the
+MPC catalog before the cutoff could be treated as known objects during
+association.  Those discoveries were made in Prompt Processing and will be
+presented separately.  DP2 does not deliver a catalog of Rubin discoveries;
+future Data Releases will deliver such catalogs.
 
 \begin{deluxetable*}{lrrp{0.55\textwidth}}
 \tablecaption{Delivered DP2 Solar System Tables\label{tab:ss-tables}}
@@ -104,9 +107,11 @@ appropriate integer key is unavailable.
 \subsection{Association and the \texttt{SSSource} Product}
 \label{sec:ss-association}
 
-Associations were made independently for each detector and visit using
-positions predicted by Sorcha \citep[][]{2025AJ....170..100M} at the visit epoch from the
-orbit catalog used in DP2 processing.
+The association input was a 2025 March 13 snapshot of the MPC orbit database,
+limited to objects whose observational arcs exceeded two days.  Associations
+were made independently for each detector and visit using positions predicted
+by Sorcha \citep[][]{2025AJ....170..100M} at the visit epoch from this orbit
+catalog.
 Predicted objects were first restricted to the detector footprint.  Measured
 \texttt{DiaSource} coordinates were represented as unit vectors on the
 celestial sphere and stored in a $k$-d tree.  For each predicted position, the
@@ -116,7 +121,13 @@ neither member had already been assigned.  Thus, this is a positional,
 one-to-one match; it uses neither brightness, color, morphology, nor rate and
 does not calculate a probabilistic association score.  The delivered
 \texttt{diaDistanceRank} is set to one for every row and should not be used as
-a measure of match ambiguity.
+a measure of match ambiguity.  Chance associations remain possible because
+the match does not use brightness or detection reliability, and are more
+likely where the \texttt{DiaSource} density is high.  Users constructing a
+high-purity sample should consider detection reliability, angular and
+cross-track residuals, consistency with the predicted magnitude, and the
+uncertainty of the input orbit.  Detection-level reliability information
+requires the join to \texttt{DiaSource} described below.
 
 Each accepted row carries the measured position and the Sorcha ephemeris
 position, the measured PSF photometry and band, the predicted apparent
@@ -131,6 +142,16 @@ light-emission (retarded) time.  External comparisons must convert DP2 TAI
 epochs to the service's time scale; at a representative main-belt rate,
 neglecting the 37~s TAI--UTC offset produces a $\sim0.23\arcsec$ shift.
 
+\texttt{SSSource} is an association and ephemeris product rather than a copy
+of the complete \texttt{DiaSource} record.  Although it contains selected
+measured quantities, users requiring the full detection-level measurements
+and quality information should join to \texttt{DiaSource} using
+\texttt{diaSourceId}.  Each \texttt{diaSourceId} occurs at most once in
+\texttt{SSSource}, while unassociated \texttt{DiaSource} detections have no
+corresponding \texttt{SSSource} row.  The ephemeris coordinates and state
+vectors in \texttt{SSSource} describe the predicted object at the observation
+epoch and should not be interpreted as a Rubin-derived orbital solution.
+
 The matched-position residuals are strongly concentrated inside the adopted
 radius (Figure~\ref{fig:ss-astrometry}).  The median radial offset is
 $0.071\arcsec$, while the median coordinate offsets are $-9.2$~mas in R.A.
@@ -142,7 +163,13 @@ for each of 1000 well-determined, numbered asteroids was compared with JPL
 Horizons.  Median separations were approximately 27~mas for the DP2 prediction
 relative to JPL, 26~mas for Rubin relative to JPL, and 39~mas for Rubin
 relative to the DP2 prediction.  This well-constrained sample is a validation
-test rather than a characterization of all objects.
+test rather than a characterization of all objects.  Separate validation
+against predictions from orbits fitted using only Gaia astrometry found that
+the persistent $\sim30$~mas Rubin-minus-MPC offset disappeared.  This result
+indicates that the offset is primarily associated with the MPC-based orbit
+predictions rather than the Rubin astrometric calibration.  Its scale is
+nevertheless appreciable relative to the median reported astrometric
+uncertainty of 56~mas for an associated \texttt{DiaSource}.
 
 \begin{figure*}[t]
 \centering
@@ -247,7 +274,12 @@ three detections are more model-dependent than fits spanning many epochs and
 a broad phase-angle range.  Users should therefore select on
 \texttt{nObsUsed}, inspect \texttt{phaseAngleMin} and \texttt{phaseAngleMax},
 and treat poor fits or discordant bands as possible signs of sparse sampling,
-variability, blending, or misassociation.
+variability, blending, or misassociation.  A substantial high-value tail in
+the per-band $\chi^2$ per degree of freedom likewise shows that the adopted
+model and uncertainty floor do not capture all of the observed variability.
+Moreover, observations in different bands were generally not simultaneous,
+so colors formed from the fitted per-band $H$ values can include rotational
+variability and should not be interpreted as instantaneous colors.
 
 The resulting cross-band colors are broadly plausible for an asteroid sample:
 the medians are approximately $g-r=0.58$, $r-i=0.18$, and $i-z=-0.01$~mag.
