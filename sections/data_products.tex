@@ -3,8 +3,10 @@
 In this section we describe the data products that are included in DP2.
 Data rights holders can access all of these data products via one or more of the data services outlined in \secref{sec:data_services}.
 For programmatic reasons, the precise names of the data product can differ slightly depending on which data service is being used to retrieve them.
-For this reason, we use descriptive names throughout this section and provide their equivalent names used in the data services in Table \tabref{tab:DP2_datasetnames} in \secref{sec:data_services}.
-We note that some data products are not available in all data services; we indicate in the following descriptions when this is the case.
+For this reason, we use descriptive names throughout this section and provide their equivalent names used in the data services in \tabref{tab:datasetnames}.
+We note that some data products are not available in all data services; such cases are indicated in \tabref{tab:datasetnames}.
+
+\input{tables/datasetnames}
 
 As with DP1, all the data products described in this section fall under one of five categories:
 \begin{itemize}
@@ -399,5 +401,3 @@ The Visit Detector catalog contains \nvisitdetectorrows entries.
 \subsubsection{Visit Summary}
 The Visit Summary table contains the same information as the Visit Detector catalog, but only for a single visit.
 There is one Visit Summary table per visit (meaning the Visit Detector table is the collation of all the Visit Summary tables), and they are only available via the Data Butler.
-
-\input{tables/datasetnames}
