@@ -3,8 +3,8 @@
 
 The \gls{LSSTCam} on-sky commissioning campaign began on \svcampaignstartdate, following the achievemnt of  \gls{LSSTCam}  first photon on sky, and concluded on \svcampaignenddate.
 Its primary objective was to commission and validate and characterize  the fully integrated observatory system of Simonyi Survey Telescope, including the \gls{AOS}, \gls{LSSTCam}, and the automated \gls{DMS}, all operating together as a single integrated observatory at scale.
-This was done with a series of focused engineering tests and the eecution of a set of Science Validation (SV) surveys.
- Following a four-week engineering and operations downtime after the conclusion of the SV surveys on \svcampaignenddate the observatory was formally handed over from Construction to Operationw on \startoperations,, after which the Science Validation surveys resumed during the Early Operations period.
+This was done with a series of focused engineering tests and the eecution of a set of \gls{SV} surveys.
+ Following a four-week engineering and operations downtime after the conclusion of the \gls{SV} surveys on \svcampaignenddate the observatory was formally handed over from Construction to Operationw on \startoperations,, after which the Science Validation surveys resumed during the Early Operations period.
 The full \gls{DP2} dataset spans both the commissioning SV campaign and this early operations phase covering observations acquired between \svcampaignstartdate and \dptwoenddate.
 The Early Operations period continued until the start of the LSST on \lsststartdate
 
@@ -12,21 +12,21 @@ The Early Operations period continued until the start of the LSST on \lsststartd
 \label{ssec:simonyi}
 %
 The Simonyi Survey Telescope \citep[][]{2024SPIE13094E..09S}  features a compact three-mirror design incorporating an 8.4-meter primary--tertiary mirror (\gls{M1M3}) fabricated from a single borosilicate monolith, and a 3.5 m secondary mirror (M2).
-This compact configuration supports a wide 3.\degree 5 field of view while enabling exceptional pointing stability, with slew-and-settle times under 5 seconds.
+This compact \gls{configuration} supports a wide 3.5\degree  field of view while enabling exceptional pointing stability, with slew-and-settle times under 5 seconds.
 
 To achieve the scientific goals of the 10-yr \gls{LSST}, the observatory must maintain high image quality across the full field of view \citep[][]{2008arXiv0805.2366I}.
 This is accomplished through the \gls{AOS} \citep[][]{2015ApOpt..54.9045X, 2024ApJ...974..108M}, which corrects, between successive exposures, wavefront distortions caused by optical misalignments and mirror surface deformations, primarily driven by gravitational and thermal loads.
 
 The \gls{AOS} comprises open-loop and closed-loop components.
-The open-loop component corrects for predictable distortions using look-up tables as a function of telescope elevation and camera rotator angle.
+The open-loop component corrects for predictable distortions using look-up tables as a function of telescope elevation and \gls{camera} rotator angle.
 The closed-loop component addresses unpredictable or slowly varying aberrations using curvature wavefront sensing \citep[][]{2023aoel.confE..67T} on the eight corner wavefront sensors of the \gls{LSSTCam} focal plane, which acquire pairs of intra- and extra-focal ``donut'' images to measure wavefront errors.
-Corrections are applied to the M2 and camera hexapods and to the shape of \gls{M1M3} via its 156-actuator support system, driving the system towards the target optical state within two visits of each measurement.
+Corrections are applied to the M2 and \gls{camera} hexapods and to the shape of \gls{M1M3} via its 156-actuator support system, driving the system towards the target optical state within two visits of each measurement.
 This represents a significant operational advance over the \gls{LSSTComCam} campaign, during which dedicated wavefront sensors were unavailable and wavefront errors were instead estimated by defocusing the telescope $\pm$1.5\,mm on either side of focus \citep[][]{10.71929/rubin/2570308}.
 
 During the \gls{LSSTCam} commissioning campaign, \gls{AOS} operations were interspersed with dedicated engineering periods focused on wavefront sensing and optical state characterisation, enabling iterative improvements across all components of the system throughout the campaign \citep[][]{SITCOMTN-170}.
 The bulk of the \gls{DP2} observations were acquired during the commissioning-era \gls{SV} surveys, a period during which the \gls{AOS} was undergoing intensive characterisation and iterative improvement and the system contribution to the delivered \gls{PSF} \gls{FWHM} still exceeded the design specification \citep[][]{LSE-29, RTN-122, SOTN-004}.
 As a consequence, the majority of \gls{DP2} observations were taken with a larger system contribution to the \gls{PSF} size budget than the system is capable of delivering under comparable atmospheric conditions, producing larger \gls{PSF} \glspl{FWHM} and shallower point-source depths.
-The residual optical aberrations also manifest as spatially coherent structure in \gls{PSF} shape residuals across the focal plane, with implications for weak lensing analyses and \gls{PSF} model validation.
+The residual optical aberrations also manifest as spatially coherent structure in \gls{PSF} \gls{shape} residuals across the focal plane, with implications for weak lensing analyses and \gls{PSF} model validation.
 The quantitative impact on delivered image quality is characterised in \S\ref{ssec:image_quality}, and the \gls{AOS} improvement program and current performance are described in \citet[][]{RTN-122} and \citet[][]{SOTN-004}.
 
 \subsection{LSSTCam}
@@ -36,17 +36,19 @@ The quantitative impact on delivered image quality is characterised in \S\ref{ss
 Its focal plane comprises 25 modular rafts arranged in a 5$\xspace\times\xspace$5 grid: 21 science rafts, each containing nine 4K$\xspace\times\xspace$4K \gls{CCD} sensors, and 4 corner rafts each housing two wavefront sensors and two guider sensors, for a total of 205 sensors: 189 science, 8 wavefront, and 8 guider.
 
 \gls{LSSTCam} employs sensors from two vendors: \gls{E2V} sensors populate the central science rafts, and \gls{ITL} sensors populate the peripheral science rafts.
-Each sensor is subdivided into 16 amplifiers, each reading 512$\xspace\times\xspace$2048 pixels in parallel.\figref{fig:comcam_raft_in_lsstcam_focal_plane} presents a schematic of the \gls{LSSTCam} focal plane, with the \gls{LSSTComCam} raft positioned at the center, corresponding to the \gls{LSSTCam} central science raft location.
+Each sensor is subdivided into 16 amplifiers, each reading 512$\xspace\times\xspace$2048 pixels in parallel.
+\figref{fig:lsst_cam} presents a schematic of the \gls{LSSTCam} focal plane, with the \gls{LSSTComCam} raft positioned at the center, corresponding to the \gls{LSSTCam} central science raft location.
 \figref{fig:lsstcam_schematic} shows the \gls{LSSTCam} focal plane layout, viewed from above looking down through the camera lenses, including the placement and numbering scheme of sensors (``S'') and amplifiers (``C''); a full description is given in \citet[][]{2025JATIS..11a1209P, ctn-001}.
 \begin{figure*}[htb!]
 \plotone{LSSTCam_focal_plane}
-\caption{\gls{LSSTCam} focal plane layout, showing the placement and numbering scheme of sensors (``S'') and amplifiers (``C''). The view is from above, looking through the \gls{LSSTCam} lenses onto the focal plane. Each sensor contains 16 amplifiers. Each raft is composed of a 3$\xspace\times\xspace$3 array of sensors. The detector number for each sensor is indicated in parentheses.)}
+\caption{\gls{LSSTCam} focal plane layout, showing the placement and numbering scheme of sensors (``S'') and amplifiers (``C''). The view is from above, looking through the \gls{LSSTCam} lenses onto the focal plane. Each sensor contains 16 amplifiers. Each raft is composed of a 3$\xspace\times\xspace$3 array of sensors.
+(The detector number for each sensor is indicated in parentheses.)}
 \label{fig:lsst_cam}
 \end{figure*}
 
 During the commissioning campaign, only 188 of the 189 science sensors were operational; sensor R30/S12 was non-operational throughout and is excluded from all \gls{DP2} data products.
 The eight heavily vignetted corner science sensors (detectors), R01/S00 (0), R03/S02 (20), R10/S00 (27), R14/S02 (65), R30/S20 (123), R34/S22 (161), R41/S20 (168), and R43/S22 (188), are also excluded from all \gls{DP2} processing, even though they were functional.
-Science sensors (detectors) R03/S20 (24), R30/S10 (120), R30/S11 (121), and R42/S00 (172) are additionally excluded from data acquired before 2025-07-03 as the calibration data required to process them were not yet available.
+Science sensors (detectors) R03/S20 (24), R30/S10 (120), R30/S11 (121), and R42/S00 (172) are additionally excluded from data acquired before 2025-07-03 as the \gls{calibration} data required to process them were not yet available.
 Any further exclusions that were applied during the processing stage are described further in \secref{sec:drp}.
 
 The median amplifier loses approximately 0.45\% of its area to static defects, with the mean across amplifiers closer to 0.7\%  \citep[][]{SITCOMTN-170}.
@@ -56,6 +58,9 @@ Optical vignetting limits the fully calibrated field radius to 317,mm; a partial
 No new static defect classes were identified on either \gls{ITL} or \gls{E2V} sensors during commissioning beyond those already identified during commissioning with \gls{LSSTComCam} \citep[][]{rtn-095} or in the laboratory \citep[][]{SITCOMTN-148, SITCOMTN-170}.
 A subset of \gls{ITL} sensors exhibits ``vampire'' pixel anomalies and locally elevated readout noise consistent with \gls{LSSTComCam} commissioning.
 Dynamic masking, including treatment of \gls{E2V} edge bleeds and occasional bright-star flare artifacts at extreme detector edges, is ongoing \citep[][]{SITCOMTN-170}.
+
+\input{sections/stray}
+
 
 % Filter complement
 \subsubsection{Filter Complement}
@@ -72,15 +77,16 @@ The detector quantum efficiency is likewise the focal-plane average \gls{ITL} an
 \gls{ITL} and \gls{E2V} sensors are not identical: \gls{ITL} devices have somewhat higher quantum efficiency in the red, so the focal-plane-averaged \gls{LSSTCam} response is marginally lower than the all-\gls{ITL} response used for \gls{LSSTComCam}.
 This chromatic difference is most apparent in the $g$ band, visible even by eye as a two-tone effect across the focal plane.
 $u$-band throughput is dominated by the atmosphere and filter rather than the detector, and the redder bands are comparatively insensitive to the vendor difference.
-In absolute terms the \gls{ITL}/\gls{E2V} difference is small, much smaller than, for example, the difference between \gls{LSSTCam} and other instruments such as DECam, since the two vendors' filters are essentially the same design.
-It is nonetheless large enough to matter for millimagnitude-level photometric calibration.
+In absolute terms the \gls{ITL}/\gls{E2V} difference is small, much smaller than, for example, the difference between \gls{LSSTCam} and other instruments such as \gls{DECam}, since the two vendors' filters are essentially the same design.
+It is nonetheless large enough to matter for millimagnitude-level photometric \gls{calibration}.
 
 Individual per-detector quantum-efficiency curves have not yet been released.
-The standard passband distributed with \gls{DP2} is therefore the focal-plane average, consistent with how the survey is calibrated and appropriate for use with the deep coadds.
+The standard \gls{passband} distributed with \gls{DP2} is therefore the focal-plane average, consistent with how the survey is calibrated and appropriate for use with the deep coadds.
 The full-system throughput of the six \gls{LSSTCam} filters is shown in \figref{fig:lsstcam_standard_bandpasses} and the corresponding transmission curves are provided as a \gls{DP2} data product(\secref{sssec:std_passbands}).
 \begin{figure}[htb!]
 \plotone{dp2_lsstcam_std_bandpasses}
-\caption{\gls{LSSTCam} standard bandpasses, illustrating full-system throughput. The bandpasses include a standard atmosphere at an airmass of 1.2, telescope optics, camera surfaces, and mean \gls{ITL} and \gls{E2V} detector quantum efficiency. The corresponding transmission curves are provided as a \gls{DP2} data product.}
+\caption{\gls{LSSTCam} standard bandpasses, illustrating full-shown
+stem throughput. The bandpasses include a standard atmosphere at an airmass of 1.2, telescope optics, \gls{camera} surfaces, and mean \gls{ITL} and \gls{E2V} detector quantum efficiency. The corresponding transmission curves are provided as a \gls{DP2} data product.}
 \label{fig:lsstcam_standard_bandpasses}
 \end{figure}
 
@@ -101,87 +107,6 @@ Calibration products generated for \gls{DP2} processing include bias frames, dar
 Dome flat fields were used as the primary flat field source, supplemented by a star-flat-based illumination correction and, where dome illumination was unavailable, twilight flats \citep[][]{10.1117/1.JATIS.11.1.011209}.
 Certified calibration products are versioned in the \gls{USDF} archive and transferred to the summit as needed.
 The full suite of calibration and throughput data products included in \gls{DP2} is described in \secref{sec:data_products}.
-
-\subsection{Stray light findings with LSSTCam}
-\label{ssec:stray}
-
-The compact, 3-mirror design of the Simonyi Survey Telescope is especially sensitive to stray and scattered light.
-Stray light is commonly classified as light that does not follow the nominal optical path within the telescope and instrument.
-Stray light can originate from scattered light by optical and non-optical surfaces, and from ghost light paths within refractive components like lenses and filters.
-The most pronounced and extended stray light artifacts were observed in the LSSTCam images when the boresight angle of the telescope was in proximity of bright objects such as the Moon, bright stars, planets or unintended light sources on the sky.
-Stray light contaminates all astronomical imaging to some level, but the unprecedented low-surface brightness science that is targeted by LSST is especially sensitive to these features.
-A significant fraction of these artifacts was back-traced to the Observatory dome status, which is missing its Light Wind Screen (LWS) to restrict the acceptance angle along the elevation axis of the telescope.
-Upon completion and commissioning of the LWS, many stray light artifacts are expected to resolve spontaneously without further mitigation actions, while others will require some extra baffling solutions.
-Part of the stray light features detected were expected from an initial stray light analysis study in FRED\registered \cite[][]{ellis09}, which included the full opto-mechanical model of the telescope and dome.
-Such a study led to the design and development of several light baffles around the Rubin telescope mirrors and camera.
-The study correctly foresaw the existence of the so-called direct paths from the primary (M1) and tertiary (M3) mirror of the telescope: these optical paths consist of lights reflected off the M1/M3 surfaces, bypassing the secondary mirror, and hitting directly the LSSTCam optics and focal plane.
-Other artifacts were new and unexpected, and they required intensive visual inspection of the LSSTCam images, dedicated ray tracing simulation and on-sky tests to infer and confirm their origins \cite[][]{2026arXiv2606.31945}.
-The investigations of the stray light origin were mainly conducted using the Ansys Zemax OpticStudio\registered software, which allows to import and model mechanical components of the telescope, camera, and dome.
-Already from the engineering first photon with the Rubin Commissioning Camera (LSSTComCam), some level of stray light was detected associated in correspondence with bright astronomical objects.
-The LSSTComCam pathfinder optical tests helped developing a team and several testing scripts for addressing stray light issues.
-During the Rubin on-sky commissioning period with LSSTCam (Apr.~2025 -- Sep.~2025), the stray light test campaign was organized in two subsets: tests conducted on-sky, and in-dome testing using the calibration light sources.
-About $\sim$\,38\,test cases were issued and executed for conducting stray light studies with Rubin, cumulatively accounting for more than 14 hours on-sky and 19 hours in-dome.
-The majority of the stray light tests involved a sequence of telescope pointing and camera lateral and/or rotational offsets to place and raster a bright object in specific off-axis positions where stray light features were observed or suspected to appear.
-A large fraction of the observed stray light features were discovered serendipitously while performing other engineering tests or scientific observations.
-An extensive visual inspection campaign was carried out by the stray light team since the first astronomical photons.
-The screening consisted of regular visual inspections of the focal plane mosaic images corrected for instrument signatures but not background-subtracted.
-On-sky and calibration images were inspected on a daily to weekly cadence, and the stray light artifacts were identified in the images and logged.
-Subsequently, the image metadata was augmented with information about the location of the dome, locations of the Moon and bright stars.
-These data served the important purpose of understanding occurrence rates and plausible light sources and of retrieving the angular off-axis coordinates of the bright objects to reproduce the stray light scenario in the ray tracing simulations.
-In-dome studies of stray light were carried out regularly during bad weather nights using the Collimated Beam Projector (CBP) (Rubin calibration tool \cite[][]{Mondrik_2023}) to inject collimated light beams within a small fraction of the telescope pupil at different wavelengths and off-axis angles.
-In this context, the CBP was also used to model the LSSTCam optical ghosts as reported in \cite[][]{2026arXiv2606.31826}.
-
-An initial census of the observed stray light artifacts observed in the LSSTCam image frames during the initial commissioning and observations (April 2025 - May 2026) is reproduced in Table \ref{tab:rates} from \cite[][]{2026arXiv2606.31945}.
-The $\sim$\,70\% of the features come from already identified and confirmed sources, and $\sim$\,80\% of the artifacts have already a possible mitigation strategy.
-The occurrence rate is based on a visual inspection and classification of the features visible by eye in the image frames; for some features, the fractional area is a rough estimate because their extent varies across different image frames.
-The average fractional area can be compared to the maximum percentage of pixel loss at the LSSTCam focal plane ($<$4\% by the end of the 10-year survey) and the minimum area covered by science-grade imaging devices ($>$ 85\% over a 3.5-degree FoV) \cite[][]{LSE-30}.
-
-\begin{table}[t!]
-\centering
-\vspace{2em}
-\begin{tabular}{l c c c c}
-\hline
-Artifact & Source & Mitigation & Occurrence Rate  & Fractional Area \\
-\hline
-\hline
-Scratched Tape & M1 direct path & Mid-Level Baffle Extension & 7.39\% & 2.2\% * \\
-Smudge & M1 direct path & Mid-Level Baffle Extension & 0.19\% & 0.28\% \\
-Muddy Shoe & M1 direct path & Mid-Level Baffle Extension & 0.15\% & 2\%* \\
-Pillow & Unknown & LWS installation & 0.26\% & 9\%* \\
-Nibbled Disc & Unknown  & Mid-Level Baffle Extension & 0.10\% & 1.06 - 10\%* \\
-L2 Bananas & L2 support pads & LWS installation & 0.73\% & 0.7\% \\
-Rivet Holes & Holes in Top-end Baffle & Sealing of holes & 0.45\% & -- \\
-Sharp Arcs & L2 edges \dag & TBD & TBD & 1\% $\Upsilon$ \\
-Submarine & L1/L2 ghosts \dag & LWS installation (TBC) & 0.7\% $\Upsilon$ & 8.5\%* \\
-L3 Horseshoe & L3 chamfer \& mount & Additional L3 edge baffle & 0.09\% & 8.8\% \\
-\hline \\[-1em]
-All artifacts & --- & --- & 10.00\% & --- \\
-\multicolumn{2}{c}{Post Mid-Level Baffle Extension installation} & --- & 2.6\% & ---\\
-\hline
-\end{tabular}
-\vspace{1em}
-\caption{Occurrence rate of stray and scattered light artifacts that were prominent enough to be identified in visual inspection of full focal plane mosaic images. Rates are estimated from visual inspection of $\sim$\,116,000 images and are not expected to be complete or pure. The impacted area is estimated using the average size of the feature. The most prevalent artifact, the {\it scratched tape}, was effectively mitigated through installation of the mid-level baffle extension \citep[][]{2026arXiv2606.31939}. \\
-*\hspace{0.1cm}Fractional area of the artifact is variable; \dag \hspace{0.1cm} artifact origin to be confirmed; $\Upsilon$ preliminary estimate.}
-\label{tab:rates}
-\end{table}
-
-
-The most frequent and impactful stray light feature observed in the LSSTCam image frames during on-sky commissioning is the so-called \textit{scratched tape} feature \cite[][]{2026arXiv2606.31939}.
-This artifact originates from an M1 direct path that skips reflections on M2 and M3 as foreseen from the initial study by \cite[][]{ellis09}.
-The LWS will naturally shield this stray light path from the sky, but due to the delay in its deployment and completion, this feature was visually apparent in approximately 7.4\% of the image frames, with an off-axis range of visibility between $\sim$\,19\fdeg8 and 22$^\circ$.
-Once the origin of the feature was understood through on-sky, and in-dome testing, an annular extension of the telescope mid-level baffle ring was developed to block this stray light.
-The baffle extension was installed between February and April 2026, and the LSSTCam images no longer suffer from this prominent stray light feature as reported in \cite[][]{2026arXiv2606.31939}.
-There are other stray light features, like the so-called \textit{L3 Horseshoe}, coming from edge diffraction phenomena at the tertiary lens (L3) of LSSTCam in the outskirt of its field of view ($\sim1\fdeg99$ and $2\fdeg23$).
-The Rubin stray light team is studying the feasibility of installing an additional light baffle in front of the L3, and a detailed opto-mechanical analysis of the design development is reported by \cite[][]{2026arXiv2606.31898}.
-Intensive ray tracing simulations led also to discover scattered light from the M2 optical baffle which is made of black-anodized Aluminum, and it has a residual reflectance in the longer wavelength bands ($i$, $z$, $y$) that can reach up to 30\%.
-The scattered background light is visually evident only when triggered by the Moon, for off-axis angles between $12^\circ$ and $20^\circ$.
-A detailed analysis of the light scattered by the M2 baffle is reported by \cite[][]{2026arXiv2606.31793}.
-This stray light optical path will not be blocked by the LWS; however, the reflectance of the M2 baffle can be decreased if the surface is coated with Aeroglaze\registered Z306.
-In summary, the initial 2006 stray light study  \cite[][]{ellis09} resulted in approximately 50, new design requirements to prevent stray light, including wedged optical windows, anti-reflection coatings, blackened adjacent surfaces, and a dome interior engineered for very low reflectivity.
-Despite these rigorous preventative measures, about 10\% of early image frames suffered from stray light contamination.
-The most severe issues were structured artifacts on the focal plane, largely stemming from the incomplete status of the LWS.
-A tiger team of experts allowed the construction and installation of an additional annular baffle around the telescope which fully resolved the most prominent and frequent stray light features in the LSSTCam images (\cite[][]{2026arXiv2606.31939}).
-To address part of the other unexpected artifacts, the Rubin team is actively implementing new physical baffling and re-painting (\cite[][]{2026arXiv2606.31898, 2026arXiv2606.31793}).
 
 % Describe the acquisition of the data following the description of the system
 \subsection{Science Program Observations}
