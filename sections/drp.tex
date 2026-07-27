@@ -155,9 +155,9 @@ As an additional constraint on the fit, we use a subset of stars from the Monste
 
 \subsection{Multi-Visit Processing} \label{sec:drp-multivisit}
 \subsubsection{Input Data Selection} \label{sec:drp-multivisit-inputselection}
-Detectors 0, 20, 27, 65, 123, 161, 168, 188 are excluded from the \texttt{deep_coadd} images.
-Only exposures with a seeing better than 1".8 FWHM are included in the \texttt{deep_coadd} images.
-Exposures with poor PSF modeling, identified using internal diagnostics, are also excluded from the \texttt{deep_coadd} images to prevent contamination of the coadds with unreliable PSF estimates.
+Detectors 0, 20, 27, 65, 123, 161, 168, 188 are excluded from the \texttt{deep\_coadd} images.
+Only exposures with a seeing better than 1".8 FWHM are included in the \texttt{deep\_coadd} images.
+Exposures with poor PSF modeling, identified using internal diagnostics, are also excluded from the \texttt{deep\_coadd} images to prevent contamination of the coadds with unreliable PSF estimates.
 
 \subsubsection{Coaddition} \label{sec:drp-multivisit-coaddition}
 The single visit images that pass the selection criteria above are warped onto the coadd pixel grid using Lanczos3 kernel and scaled to have units of \texttt{nJy} (zeropoint of 31.4).
@@ -167,11 +167,11 @@ It operates on a time series of PSF-matched images resampled onto a coadd pixel 
 Artifact rejection uses both direct (where no PSF matching is performed) and PSF-matched warps, homogenized to a standard PSF of 1.8 FWHM, broadly consistent with the 1.7 FWHM seeing threshold used in data screening.
 A sigma-clipped mean of the PSF-matched warps serves as a static sky model, against which individual warps are differenced to identify significant positive and negative residuals.
 Candidate artifact regions are classified as transient if they appear in fewer than a small percentage of the total number of exposures, with the threshold based on the number of visits
-These masks are also saved as the \texttt{compare_warp_artifact_mask} dataset.
+These masks are also saved as the \texttt{compare\_warp\_artifact\_mask} dataset.
 
-In DP2, the coadded images are cell-based, using the \texttt{lsst_cells_v2} skymap.
+In DP2, the coadded images are cell-based, using the \texttt{lsst\_cells\_v2} skymap.
 Coadds are built as weighted averages of the input warps.
-Each detector is assigned a weight that is the inverse of the mean of the variance reported in the \texttt{visit_summary} dataset.
+Each detector is assigned a weight that is the inverse of the mean of the variance reported in the \texttt{visit\_summary} dataset.
 Following \cite{2024arXiv240701771A} for each cell in the coadd, a detector is excluded if its geometry does not overlap the cell completely.
 Furthermore, a detector is excluded if more than 50\% of its pixels are masked as artifacts, unless it would result in an empty cell in which case, this condition is ignored. % fallback.
 Finally, pixels that did not get any contribution from the input visits are interpolated from neighboring pixels.
@@ -180,7 +180,7 @@ A key difference between cell-based coadds and coadds in DP1 is in the PSF repre
 Single visit PSFs are evaluated at point corresponding to the center of cells and warped into a 35x35 postage stamp, which ensures that at least 99.5\% of the flux is captured.
 These postage stamps are then weighted by the same weights used for the coadd and averaged.
 The PSF within the cell is approximated as spatially constant.
-The pixels that have artifacts from any of the input visits have \texttt{INEXACT_PSF} flag set to denote that the PSF of those pixels may differ from that attached to the cell.
+The pixels that have artifacts from any of the input visits have \texttt{INEXACT\_PSF} flag set to denote that the PSF of those pixels may differ from that attached to the cell.
 The metadata about which visits contribute to the cell, what fraction of pixels are unmasked, PSF summary statistics are stored.
 
 \subsubsection{Detection, Deblending, \& Measurement} \label{sec:drp-multivisit-detection}
