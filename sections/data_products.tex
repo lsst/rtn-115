@@ -185,7 +185,7 @@ Catalog data are also accessible via the Data Butler (see \secref{sssec:data_but
 The Object catalog contains data on all objects detected with a greater than $5\sigma$ significance in the Deep Coadds.
 With coadd images produced on a per-band basis, a $>5\sigma$ detection in one or more of the bands will result in an object being included in the Object catalog.
 For cases where an object is detected at $>5\sigma$ in more than one band, a crossmatching has been performed between bands to associate an object in one band with its counterpart(s) in the other bands.
-As such, each entry in the Object catalog contains data from multiple bands.
+As such, each entry in the Object catalog associates objects across multiple bands.
 The objects reported in the Object catalog have also undergone deblending; in the case of blended detections, only the deblended child objects are included in the catalog.
 As with the Source catalog, the criterion for inclusion in the Object catalog is a $>5\sigma$ detection in one of the Deep Coadds prior to deblending, yet the positions and fluxes of objects are reported postdeblending.
 Hence, it is possible for the Object catalog to contain objects whose flux-to-error ratios are less than five in all bands.
@@ -257,7 +257,7 @@ The DIA Object catalog contains the astrophysical objects that DIA sources are a
 The DIA Object catalog contains only non-solar-system objects; solar system objects are, instead, recorded in the Solar System Object catalog (\secref{sssec:SSObject}).
 When a DIA source is identified, the DIA Object and Solar System Object catalogs are searched for objects to associate it with.
 If no association is found, a new DIA object is created and the DIA source is associated to it.
-Along similar lines, an attempt has been made to associate DIA objects across multiple bands, meaning the DIA Object catalog, like the Object catalog, contains data from multiple bands.
+Along similar lines, an attempt has been made to associate DIA objects across multiple bands, meaning the DIA Object catalog, like the Object catalog, associated DIA objects across multiple bands.
 By the nature of their detection, DIA objects are typically transient or variable.
 Therefore, the DIA Object catalog contains summary statistics of their fluxes, such as the mean and standard deviation over multiple epochs; users must refer to the Forced Source at DIA Object catalog (\secref{sssec:ForcedSourceAtDIAObject}) or the DIA Source catalog for single-epoch flux measurements of DIA objects.
 
