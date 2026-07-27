@@ -292,6 +292,16 @@ rules:
     replacement: 'deg$^{\\rm 2}$'
     note: 'AAS style: use deg$^{\rm 2}$ for square degrees.'
 
+  - name: sim-math-mode
+    # Bare \sim used as "approximately" must be wrapped in math mode.
+    # The lookahead allows optional \, (thin space), ~ (non-breaking space), or
+    # ASCII whitespace between \sim and the digit so all spacing variants are
+    # caught. The lookbehind excludes \sim that is already inside $\sim$.
+    # Must run before sim-digit-thin-space so $..$ wrapping is in place.
+    pattern: '(?<!\$)\\sim(?=(?:\\,|~|\s)*\d)'
+    replacement: '$\\sim$'
+    note: 'Bare \sim used as "approximately" must be in math mode: "\sim8" → "$\sim$8".'
+
   - name: sim-thin-space
     # Catches $\sim$~ (non-breaking space with no thin space) → $\sim$\,~.
     pattern: '\$\\sim\$~'
