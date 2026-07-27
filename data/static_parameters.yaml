@@ -24,6 +24,8 @@ rubinobservatory:
       value: 2026-02-24
     - name: nbrokers
       value: seven
+    - name: rubinfirstphoton
+      value: 2025-04-15
 
 lsst:
   parameters:
