@@ -103,14 +103,15 @@ appropriate integer key is unavailable.
 \subsection{Association and the \texttt{SSSource} Product}
 \label{sec:ss-association}
 
-The association input was a 2025 March 13 snapshot of the MPC orbit database,
-limited to objects whose observational arcs exceeded two days.\footnote{Small
-bodies added to the MPC orbit database after this date---including objects
-subsequently discovered in Rubin data---were absent from the association input
-and therefore could not be associated with DP2 detections.}  Associations were
-made independently for each detector and visit using positions predicted by
-Sorcha \citep[][]{2025AJ....170..100M,2025AJ....170...97H} at the visit epoch
-from this orbit catalog.
+The association input was a 2025 March 13 snapshot of the MPC orbit
+database\footnote{Small bodies discovered after 2025 March 13---including those
+found in Rubin data---are therefore absent from the \texttt{SSSource} table
+delivered here.}, limited to objects whose observational arcs exceeded two
+days.
+Associations were made independently for each detector and visit using
+positions predicted by Sorcha
+\citep[][]{2025AJ....170..100M,2025AJ....170...97H} at the visit epoch from
+this orbit catalog.
 Predicted objects were first restricted to the detector footprint.  Measured
 \texttt{DiaSource} coordinates were represented as unit vectors on the
 celestial sphere and stored in a $k$-d tree.  For each predicted position, the
