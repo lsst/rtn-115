@@ -20,6 +20,22 @@ The Early Operations period continued until the start of the LSST on
 \subsubsection{Filter Complement}
 \label{sssec:lsstcam_filters}
 
+\gls{LSSTCam} supports imaging with the same six broadband filters $ugrizy$, spanning 320--1050~nm, as \gls{LSSTComCam}, using an identical filter design.
+Its filter exchanger can hold five filters at a time, as opposed to only three for \gls{LSSTComCam}.
+
+Unlike the \gls{LSSTComCam} bandpasses, which were built entirely from fiducial mirror, lens, filter, and \gls{ITL} detector quantum-efficiency curves in the absence of any device-specific measurements, the \gls{DP2} standard bandpasses incorporate real measurements where available.
+The fiducial mirror and lens throughputs are still used, since detector- and mirror-level measurements have not yet been incorporated into \gls{DP2}.
+The filter throughput, however, is now the focal-plane average of vendor filter scans, using the same underlying filter design as \gls{LSSTComCam} but now capturing real variation across the field of view.
+The detector quantum efficiency is likewise the focal-plane average \gls{ITL} and \gls{E2V}.
+
+\gls{ITL} and \gls{E2V} sensors are not identical: \gls{ITL} devices have somewhat higher quantum efficiency in the red, so the focal-plane-averaged \gls{LSSTCam} response is marginally lower than the all-\gls{ITL} response used for \gls{LSSTComCam}.
+This chromatic difference is most apparent in the $g$ band, visible even by eye as a two-tone effect across the focal plane, while $u$-band throughput is dominated by the atmosphere and filter rather than the detector, and the redder bands are comparatively insensitive to the vendor difference.
+In absolute terms the \gls{ITL}/\gls{E2V} difference is small, much smaller than, for example, the difference between \gls{LSSTCam} and other instruments such as DECam, since the two vendors' filters are essentially the same design.
+It is nonetheless large enough to matter for millimagnitude-level photometric calibration.
+
+Individual per-detector quantum-efficiency curves have not yet been released. The standard passband distributed with \gls{DP2} is therefore the focal-plane average, consistent with how the survey is calibrated and appropriate for use with the deep coadds.
+The full-system throughput of the six \gls{LSSTCam} filters is shown in \figref{fig:lsstcam_standard_bandpasses} and the corresponding transmission curves are provided as a \gls{DP2} data product(\secref{sssec:std_passbands}}).
+
 \begin{itemize}
 \item For LSSTComCam we didn’t have any specific measurements of anything so we used the fiducial mirrors/lenses/filters/ITL QE
 \item For LSSTCam we do have measurements but they aren’t incorporated into DP2 so we use the fiducial mirrors/lenses but focal plane average of the vendor filter scans (which is the same as the fiducial filters for ComCam but the calibration knows about the variations over the FOV), and then the focal plane average of ITL and E2V
@@ -32,6 +48,52 @@ So you can see here quickly that u and g have the biggest chromatic difference.�
 
 We should!  But we have not released individual QE per detector yet … (sorry)
 The standard is the focal plane average and is how things are calibrated.  So is appropriate for the coadds.
+
+\begin{figure}[htb!]
+\plotone{dp2_lsstcam_std_bandpasses}
+\caption{\gls{LSSTCam} standard bandpasses, illustrating full-system throughput. The bandpasses include a standard atmosphere at an airmass of 1.2, telescope optics, camera surfaces, and mean \gls{ITL} and \gls{E2V} detector quantum efficiency. The corresponding transmission curves are provided as a \gls{DP2} data product.}
+\label{fig:lsstcam_standard_bandpasses}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
