@@ -52,7 +52,7 @@ Science images are images taken with the intent of scientific analysis of astron
 DP2 provides all images in the acquisition and processing chain, from the raw, unprocessed science and calibration images through to fully calibrated visit images, coadds, and template images.
 Most science analyses will start from the Deep Coadd images and the single-epoch Visit images.
 While it is possible for users to recreate their own Processed Visit Images (PVIs) from the raw and calibration data, we do not expect anyone will need to do so."
-One important difference between DP1 and DP2 is the format of the Science Images \citep{DMTN-339}.
+One important difference between DP1 and DP2 is the format of the Science Images \citep[][]{DMTN-339}.
 In the case of DP2, the format of the datasets are such that they are more compatible with external packages, in particular Astropy.
 It is, however, straightforward to convert back to ``legacy'' DP1-style datasets for backwards-compatability.
 
@@ -94,7 +94,8 @@ All three images contain the same number of pixels in each dimension.
 
 \subsubsection{Coadds}
 \label{sssec:coadds}
-{\bf Note: Template Coadds are NOT included in EDP2. They will be included in DP2.}
+{\bf Note: Template Coadds are NOT included in EDP2.
+They will be included in DP2.}
 
 Once produced, individual Visit Images covering the same patch of sky (as defined by the skymap) in the same band are coadded to form coadd images.
 Two different types of coadd images are included in DP2: Deep Coadds and Template Coadds, both of which are described in the following subsections.
@@ -289,7 +290,8 @@ The Solar System Source catalog contains data for \nsolarsystemsources solar sys
 \subsubsection{Calibration Reference Catalog}
 \label{sssec:referencecatalog}
 The Calibration Reference Catalog is used to perform astrometric and photometric calibration.
-It is a whole-sky catalog built specifically for LSST by combining data from multiple prior reference catalogs, since no single existing catalog had both the depth and coverage needed to calibrate LSST data. It contains only stellar sources.
+It is a whole-sky catalog built specifically for LSST by combining data from multiple prior reference catalogs, since no single existing catalog had both the depth and coverage needed to calibrate LSST data.
+It contains only stellar sources.
 Full details on how the Calibration Reference Catalog was built are provided in \cite[][]{DMTN-277}.\footnote{In \cite[][]{DMTN-277}, the calibration reference catalog is referred to as ``The Monster".}
 We provide a brief summary here.
 
@@ -338,13 +340,15 @@ Survey Property maps are only available via the Data Butler (\secref{sssec:data_
 \subsubsection{HiPS Maps}
 
 \gls{HiPS} maps, offer an interactive way to explore seamless, multiband tiles of the sky regions covered by DP2, allowing for smooth panning and zooming.
-DP2 provides multiband \gls{HiPS} images created by combining data from individual bands of Deep Coadd images, using an improved version (N. B. Lust et al. in preparation) of the algorithm presented in \cite[][]{2004PASP..116..133L}.
+DP2 provides multiband \gls{HiPS} images created by combining data from individual bands of Deep Coadd images, using an improved version (N.
+B. Lust et al. in preparation) of the algorithm presented in \cite[][]{2004PASP..116..133L}.
 These images are false-color representations generated using various filter combinations for the red, green, and blue channels.
 
 \gls{HiPS} maps are only accessible through the \gls{HiPS} viewer in the \gls{RSP} Portal (\secref{ssec:rsp_portal}) and cannot be accessed via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 %\subsubsection{Multi-order Coverage Maps}
-% This is not listed on the confluence page. I expect that non-listing is an oversight.
+% This is not listed on the confluence page.
+I expect that non-listing is an oversight.
 
 \subsection{Ancillary Data Products}
 In addition to the science images and catalog data products described above, there are a number of ancillary data products included in DP2.
