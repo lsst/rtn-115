@@ -17,6 +17,7 @@ dependencies = [
     "lsst-utils",
     "pyarrow",
     "tox>=4.56.0",
+    "bibtexparser",
 ]
 
 [build-system]
