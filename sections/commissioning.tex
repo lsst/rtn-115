@@ -23,85 +23,41 @@ The Early Operations period continued until the start of the LSST on
 \gls{LSSTCam} supports imaging with the same six broadband filters $ugrizy$, spanning 320--1050~nm, as \gls{LSSTComCam}, using an identical filter design.
 Its filter exchanger can hold five filters at a time, as opposed to only three for \gls{LSSTComCam}.
 
-Unlike the \gls{LSSTComCam} bandpasses, which were built entirely from fiducial mirror, lens, filter, and \gls{ITL} detector quantum-efficiency curves in the absence of any device-specific measurements, the \gls{DP2} standard bandpasses incorporate real measurements where available.
+Unlike the \gls{LSSTComCam} bandpasses, which were built entirely from fiducial mirror, lens, filter, and detector quantum-efficiency curves in the absence of any device-specific measurements, the \gls{DP2} standard bandpasses incorporate real measurements where available.
 The fiducial mirror and lens throughputs are still used, since detector- and mirror-level measurements have not yet been incorporated into \gls{DP2}.
 The filter throughput, however, is now the focal-plane average of vendor filter scans, using the same underlying filter design as \gls{LSSTComCam} but now capturing real variation across the field of view.
 The detector quantum efficiency is likewise the focal-plane average \gls{ITL} and \gls{E2V}.
 
 \gls{ITL} and \gls{E2V} sensors are not identical: \gls{ITL} devices have somewhat higher quantum efficiency in the red, so the focal-plane-averaged \gls{LSSTCam} response is marginally lower than the all-\gls{ITL} response used for \gls{LSSTComCam}.
-This chromatic difference is most apparent in the $g$ band, visible even by eye as a two-tone effect across the focal plane, while $u$-band throughput is dominated by the atmosphere and filter rather than the detector, and the redder bands are comparatively insensitive to the vendor difference.
+This chromatic difference is most apparent in the $g$ band, visible even by eye as a two-tone effect across the focal plane.
+$u$-band throughput is dominated by the atmosphere and filter rather than the detector, and the redder bands are comparatively insensitive to the vendor difference.
 In absolute terms the \gls{ITL}/\gls{E2V} difference is small, much smaller than, for example, the difference between \gls{LSSTCam} and other instruments such as DECam, since the two vendors' filters are essentially the same design.
 It is nonetheless large enough to matter for millimagnitude-level photometric calibration.
 
-Individual per-detector quantum-efficiency curves have not yet been released. The standard passband distributed with \gls{DP2} is therefore the focal-plane average, consistent with how the survey is calibrated and appropriate for use with the deep coadds.
-The full-system throughput of the six \gls{LSSTCam} filters is shown in \figref{fig:lsstcam_standard_bandpasses} and the corresponding transmission curves are provided as a \gls{DP2} data product(\secref{sssec:std_passbands}}).
-
-\begin{itemize}
-\item For LSSTComCam we didn’t have any specific measurements of anything so we used the fiducial mirrors/lenses/filters/ITL QE
-\item For LSSTCam we do have measurements but they aren’t incorporated into DP2 so we use the fiducial mirrors/lenses but focal plane average of the vendor filter scans (which is the same as the fiducial filters for ComCam but the calibration knows about the variations over the FOV), and then the focal plane average of ITL and E2V
-\item In the grand scale of things these are therefore very similar!  ITL is not the same as E2V, but it’s only part of the equation, and they aren’t THAT different, but it does matter for mmag calibration.  The difference between ITL and E2V, especially as part of the whole, is much smaller than (say) LSSTCam vs DECam or PanSTARRs1.  They’re basically the same filters!
-\end{itemize}
-
-Note that ITL has better throughput in the red than E2V.  So the focal plane average is slightly worse for LSSTCam vs ComCam.That’s the average E2V/ITL ratio as a function of wavelength from the monochromatic flats (analysis in progress)
-So you can see here quickly that u and g have the biggest chromatic difference.  But u is dominated by the atmosphere and filter anyway.  But g you can really see.  And that’s why the focal plane has two different colors by eye … that’s the g band
-(Which is why I started with g to check if the standards are the same)
-
-We should!  But we have not released individual QE per detector yet … (sorry)
-The standard is the focal plane average and is how things are calibrated.  So is appropriate for the coadds.
-
+Individual per-detector quantum-efficiency curves have not yet been released.
+The standard passband distributed with \gls{DP2} is therefore the focal-plane average, consistent with how the survey is calibrated and appropriate for use with the deep coadds.
+The full-system throughput of the six \gls{LSSTCam} filters is shown in \figref{fig:lsstcam_standard_bandpasses} and the corresponding transmission curves are provided as a \gls{DP2} data product(\secref{sssec:std_passbands}).
 \begin{figure}[htb!]
 \plotone{dp2_lsstcam_std_bandpasses}
 \caption{\gls{LSSTCam} standard bandpasses, illustrating full-system throughput. The bandpasses include a standard atmosphere at an airmass of 1.2, telescope optics, camera surfaces, and mean \gls{ITL} and \gls{E2V} detector quantum efficiency. The corresponding transmission curves are provided as a \gls{DP2} data product.}
 \label{fig:lsstcam_standard_bandpasses}
 \end{figure}
 
+% Calibration system
+\subsection{Calibration System}
+\label{ssec:calibration_system}
+%
+Unlike the \gls{LSSTComCam} campaign, during which the Rubin calibration system had not yet been installed and flat fielding relied entirely on twilight flats \citep[][]{rtn-095}, the \gls{LSSTCam} commissioning campaign had access to the Rubin flat field illumination system \citep[][]{sitcomtn-086}.
+The baseline calibration plan for the as-built system is described in \citet{sitcomtn-086}; a full description of \gls{ISR} procedures and calibration data products is given in \citet{10.1117/1.JATIS.11.1.011209}.
 
+The calibration system comprises a dome flat field screen, a \gls{CBP}, a NIST-traceable silicon photodiode electrometer, and the \gls{AuxTel} for atmospheric monitoring.
+During the commissioning campaign, the \gls{CBP} was deployed at scale on \gls{LSSTCam} for the first time, providing in-situ measurements of the transmission profiles of five of the six \gls{LSST} broadband filters, $ugrizy$ across multiple primary mirror pupil positions, and characterising the angle-of-incidence-dependent blue-shift of the filter bandpass edges across the focal plane \citep[][]{2606.31822}.
+Achieving absolute throughput calibration at the millimagnitude level  required by the \gls{LSST} requires a more precise characterisation of the \gls{CBP} transmission and a partial-pupil vignetting model; both are the subject of ongoing work \citep[][]{2606.31822}.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\subsection{Flat--field System}
-\label{ssec:flat_field_system}
-
+Calibration products generated for \gls{DP2} processing include bias frames, dark frames, dome flat fields, \glspl{PTC}, crosstalk matrices, brighter-fatter kernels, linearity corrections, and \gls{CTI} models \citep[][]{plazas2025}.
+Dome flat fields were used as the primary flat field source, supplemented by a star-flat-based illumination correction and, where dome illumination was unavailable, twilight flats \citep[][]{plazas2025}.
+Certified calibration products are versioned in the \gls{USDF} archive and transferred to the summit as needed.
+The full suite of calibration and throughput data products included in \gls{DP2} is described in \secref{sec:data_products}.
 
 \subsection{Data Processing}
 \label{ssec:data processing}
