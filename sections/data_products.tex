@@ -3,7 +3,7 @@
 In this section we describe the data products that are included in DP2.
 Data rights holders can access all of these data products via one or more of the data services outlined in \secref{sec:data_services}.
 For programmatic reasons, the precise names of the data product can differ slightly depending on which data service is being used to retrieve them.
-For this reason, we use descriptive names throughout this section and provide their equivalent names used in the data services in Table \tabref{tab:product_names} in \secref{sec:data_services}.
+For this reason, we use descriptive names throughout this section and provide their equivalent names used in the data services in Table \tabref{tab:DP2_datasetnames} in \secref{sec:data_services}.
 We note that some data products are not available in all data services; we indicate in the following descriptions when this is the case.
 
 As with DP1, all the data products described in this section fall under one of five categories:
@@ -25,19 +25,19 @@ In the following sections we clearly indicate those data product types which are
 As with DP1, the science processing pipelines use a skymap to structure how processing is organized spatially.
 The skymap divides the sky into a series of equal-area tracts, which are then subdivided into a number of patches.
 The tracts are arranged in rings of constant decl., starting at the southern pole and having an index number that increases first by increasing R.A. and then by increasing decl..
-The skymap that was generated for DP2 processing contains a total of \ntracts tracts spanning the whole sky, \ncoveredtracts of which were covered during the science validation observing campaign.
+The skymap that was generated for DP2 processing contains a total of \ntracts tracts spanning the whole sky, \ncoveredtracts of which were covered during the science validation observing campaign, including the small field surveys.
 Each DP2 tract covers approximately \tractarea, and contains \npatchx$\times$\npatchy patches, both the same as for the DP1 skymap.
 Tracts are defined to have equal area, and so the amount by which neighboring tracts overlap varies with decl., with tracts near the celestial poles overlapping more than those near the celestial equator.
 The minimum area of overlap between tracts is \tractoverlap.
-Within a tract, the amount of overlap between patches is a constant \patchoverlap.
-The areal coverage of each patch is \patcharea which, due to the patch overlap, is somewhat larger than the tract area divided by the number of patches in a tract.
-Excluding overlap, the areal coverage of a patch is \patchareanooverlap.
+Within a tract, the area of overlap between neighboring patches is a constant \patchoverlap.
+As a result, each patch covers an area of \patcharea, which is larger than the tract area divided by the number of patches in a tract.
+Excluding the overlap region, the area covered uniquely by a single patch is \patchareanooverlap.
 
 Although the tract and patch configuration is unchanged between DP1 and DP2, the two skymaps differ at the cell level for Deep Coadds.
-"Patches are further subdivided into cells for the sole purpose of enabling the construction of cell-based coadds with a continuous PSF (\S\,\ref{sssec:coadds}).
+Patches are further subdivided into cells for the sole purpose of enabling the construction of cell-based coadds with a continuous PSF (\S\,\ref{sssec:coadds}).
 Unlike patches, cells are not exposed to the user, and one cannot specify nor retrieve an individual ``cell'' from an image.
 Instead, cells are used during the construction of  what re termed cell-based coadds (refs).
-A region of an input image is included in a given cell if, and only if, it covers the entire cell. 
+A region of an input image is included in a given cell if, and only if, it covers the entire cell.
 This guarantees that every pixel within a cell is built from exactly the same set of input images, so the PSF is well-defined and effectively constant across the cell, with discontinuities confined to the cell boundaries.
 Such cell-based coaddition was not implemented during the production of DP1, and was only used to produce the Deep Coadds in DP2.
 Template Coadds in DP2 do not utilize cells.
@@ -46,12 +46,12 @@ There is no overlap between neighboring cells.
 
 \subsection{Science Images}
 \label{ssec:scienceimages}
-Science images are images taken with the intent of scientific analysis of astronomical objects, as opposed to calibration images (e.g., bias, darks, flats; see \secref{sssec:calibration_images}) or engineering images, which serve to calibrate or test the instrument and telescope regardless of whether they happen to be pointed at the night sky.
-DP2 provides all images in the acquisition and processing chain, from the raw, unprocessed science and calibration images through to fully calibrated processed visit images, coadds, and template images.
+Science images are images taken with the intent of scientific analysis of astronomical objects, as opposed to calibration images (e.g., bias, darks, flats) or engineering images, which serve to calibrate or test the instrument and telescope regardless of whether they happen to be pointed at the night sky.
+DP2 provides all images in the acquisition and processing chain, from the raw, unprocessed science and calibration images through to fully calibrated visit images, coadds, and template images.
 Most science analyses will start from the Deep Coadd images and the single-epoch Visit images.
 While it is possible for users to recreate their own Processed Visit Images (PVIs) from the raw and calibration data, we do not expect anyone will need to do so."
 One important difference between DP1 and DP2 is the format of the Science Images \citep{DMTN-339}.
-In the case of DP2, the format of the datasets are such that they are more compatible with external software and packages, such as Astropy and, if downloaded, SAOImage DS9.
+In the case of DP2, the format of the datasets are such that they are more compatible with external packages, in particular Astropy.
 It is, however, straightforward to convert back to ``legacy'' DP1-style datasets for backwards-compatability.
 
 \subsubsection{Raw Images}
@@ -61,12 +61,12 @@ Raw images will be included in DP2; the number of raw images in DP2 will be prov
 
 Raw Images are those that are produced by the camera following an exposure.
 They are the initial input science images to the pipelines and have not undergone any processing.
-Each active detector in LSSTCam produces one Raw Image per exposure.
+Each active detector in LSSTCam (\secref{ssec:lsstcam}) produces one Raw Image per exposure.
 Each exposure therefore results in up to \nactivedetectors Raw Images, although some exposures taken during the observing campaign resulted in fewer than \nactivedetectors Raw Images due to the problematic detectors described in \secref{sec:commissioning} and occasional readout failures.
 %The \nexposures exposures taken during {\bf \color{red} XXX} resulted in a total of \nraws raw images, all of which are included in DP2.
 % A breakdown of the number of raw images per field and per band is given in table \tabref{tab:rawbreakdown}.
 
-All LSSTCam detectors have 16 amplifier segments, arranged in two rows of eight, each reading out its own ~1 megapixel region in parallel to enable the fast ~2 second)full focal-plane readout.
+All LSSTCam detectors have 16 amplifier segments, arranged in two rows of eight, each reading out its own $\sim1$ megapixel region in parallel to enable the fast ($\sim2$ second) full focal-plane readout (\secref{ssec:lsstcam}).
 These sections are evident in the Raw Images.
 Despite LSSTCam containing detectors from two different vendors, all Raw Images have the same dimensions: \nrawpixx $\times$ \nrawpixy pixels.
 However, the two types of detectors have slightly different numbers of overscan and pre-scan pixels, meaning the number of exposed pixels differs between detector type.
@@ -102,8 +102,7 @@ As a result, the structure of the datasets is the same for each type: each coadd
 Up to two different background models are included in the coadd datasets: the background that was subtracted to create the final coadd and, in the case of the \textit{gri} band Deep Coadds, a background that can be added-back to create ``Visualization Coadds'' which, while not recommended for science, can be useful for visualization.
 Each coadd also contains a position-dependent PSF model, WCS information, plus various other metadata.
 
-The same skymap was used for each type of coadd in DP2, meaning they all cover the same on-sky area, including some overlap with their neighbouring coadds.
-The DP2 skymap defines a patch as having an on-sky area of \patchareanooverlap excluding overlap, and \patcharea including overlap.
+The same skymap was used for each type of coadd in DP2, meaning they all cover the same on-sky area, including some overlap with their neighbouring coadds (see the introduction to this section).
 A single coadd, irrespective of type, contains \npatchpixx$\times$\npatchpixy equal-sized square pixels, including overlap; each pixel is \coaddpixsize on each side.
 There are up to six coadds of each type per patch - one for each of the six LSSTCam bands.
 While the sky coverage of coadds is similar between types and bands, they are not exactly the same due to the different Visit Image selection functions for each type, and differences in sky coverages in each band.
@@ -113,19 +112,23 @@ This is true even if a patch is fully covered by all the visits that targeted th
 The Survey Property maps (see \secref{sssec:propertymaps}) can be consulted to gain an insight into the total exposure time, and thus the number of contributing Visit Images, at any point within a coadd.
 Since each coadd image always covers an entire patch, it is not uncommon for regions of a coadd image to have zero Visit Image coverage.
 This is especially the case on the edges of an observed field.
-Such regions of a coadd may contain seemingly valid values (i.e., not necessarily zeros or NaNs), but will instead be indicated by the {\texttt NO\_DATA} flag in the mask image plane.
+Such regions of a coadd may contain seemingly valid values (i.e., not necessarily zeros or \texttt{NaNs}), but will instead be indicated by the \texttt{NO\_DATA} flag in the mask image plane.
 It is therefore crucial that the mask image plane is consulted when analysing any type of coadd.
 
 \paragraph{Deep Coadds}
 As the name suggests, Deep Coadds go down to the faintest magnitudes of the three types of coadd.
-Two basic selection criteria were used to select Visit Images for inclusion in Deep Coadds.
-The first criterion is seeing-based and selects Visit Images with PSF FWHM$<$\deepcoaddselectionfwhm.
-The second criterion is depth-based and uses the concept of ``effective exposure time'', which is the exposure time that would be needed under nominal conditions to achieve the same signal-to-noise as the Visit Image in question \citep[][]{osti_1250877}.
-Our specific selection uses the transparency component of effective exposure time, and selects Visit Images in which the whole-system transparency was such that the transparency component of the effective exposure time was $>0.75$ times the actual exposure time (corresponding to $\sim0.16$ mag of extinction relative to nominal conditions).
-These selections aim to maximise the depth of the coadd while still ensuring good image quality.
+Two basic selection criteria were used to select visits for inclusion in Deep Coadds.
+The first criterion is seeing-based and selects visits with a mean (over all detectors) PSF FWHM$<$\deepcoaddselectionfwhm.
+The second criterion is depth-based and uses the concept of ``effective exposure time'', which is the exposure time that would be needed under nominal conditions to achieve the same signal-to-noise as the visit in question \citep[][]{osti_1250877}.
+Our specific selection uses the transparency component of effective exposure time, and selects visits in which the whole-system transparency was such that the transparency component of the effective exposure time was $>0.75$ times the actual exposure time (corresponding to $\sim0.16$ mag of extinction relative to nominal conditions).
+Following the selection of visits, a second round of selection is applied at the detector (i.e., Visit Image) level.
+These per-detector selection criteria are summarised in \tabref{tab:deepcoadd_detector_selection}.
+Together, these selections aim to maximise the depth of the coadd while still ensuring good image quality.
 As highlighted at the start of this subsection, a key difference between the Deep Coadds released in DP2 versus those released in DP1 is that the DP2 Deep Coadds are cell-based whereas the DP1 Deep Coadds were not.
 
 There are a total of \ndeepcoadds Deep Coadds in DP2.
+
+\input{tables/deepcoaddselection}
 
 % \paragraph{Template Coadds}
 % Template Coadds are created, principally, to act as reference images in the process of image subtraction to produce Difference Images (see \secref{sssec:difference_image}).
@@ -171,7 +174,7 @@ There are also a number of additional catalogs in DP2 that do not have DP1 equiv
 Throughout this section, we provide high-level overviews of the contents of each catalog, rather than listing and describing each column.
 Instead, full searchable catalogue schemas, including column descriptions, are provided at \url{https://sdm-schemas.lsst.io/}.
 
-All catalogs except the Calibration Reference Catalog are stored in the Qserv database (\secref{sssec:qserv}) and accessible via TAP, with an online DP2 catalog schema available at \url{https://sdm-schemas.lsst.io/dp2.html}. 
+All catalogs except the Calibration Reference Catalog are stored in the Qserv database (\secref{sssec:qserv}) and accessible via TAP, with an online DP2 catalog schema available at \url{https://sdm-schemas.lsst.io/dp2.html}.
 Catalog data are also accessible via the Data Butler (see \secref{sssec:data_butler}).
 
 % The following sections need reordering; they are currently in the order that appears on:
@@ -292,7 +295,6 @@ For the \textit{grizy} bands, the input catalogs were (in order of decreasing pr
 For the \textit{u} band, the input catalogs were (in order of decreasing priority): standard stars from \gls{SDSS} Data Release 16 \citep[][]{2020ApJS..249....3A}; Gaia \gls{XP} Synthetic Magnitudes \citep[][]{2023A&A...674A..33G}; and synthetic magnitudes generated using \gls{SLR}, which estimates the \textit{u}-band flux from the \textit{g}-band flux and \textit{g} - \textit{r} colors.
 These \gls{SLR} estimates were used to boost the number of \textit{u}-band reference sources, as otherwise the source density from the \textit{u}-band input catalogs is too low to be useful for the LSST.
 
-Only stellar sources were selected from each input catalog.
 Throughout, the Calibration Reference Catalog uses the \gls{DES} bandpasses for the \textit{grizy} bands and the \gls{SDSS} bandpass for the \textit{u}-band; color transformations derived from high-quality sources were used to convert fluxes from the various input catalogs (some of which did not use the \gls{DES} or SDSS bandpasses) to the respective bandpasses.
 All sources from the input catalogs are matched to Gaia \gls{DR3} sources for robust astrometric information, selecting only isolated sources (i.e., no neighbors within 1\arcsec).
 

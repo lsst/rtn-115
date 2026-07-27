@@ -1,0 +1,17 @@
+\begin{deluxetable*}{lll}
+\tablecaption{Per-detector PSF-quality selection cuts for inclusion in Deep Coadd images.\label{tab:deepcoadd_detector_selection}}
+\tablehead{\colhead{Parameter} & \colhead{Description} & \colhead{Numerical cut}}
+\startdata
+PSF FWHM & \parbox[t]{3.2in}{Same FWHM calculation as the visit-level cut, evaluated per detector rather than averaged over the visit.} & $< 1.8$ arcsec \\[4pt]
+Median ellipticity residual & \parbox[t]{3.2in}{Median of $\sqrt{e_1^2 + e_2^2}$ between the PSF model and measured star shapes.\tablenotemark{a}} & $< 0.19$ \\[4pt]
+\texttt{psfStarScaledDeltaSizeScatter} & \parbox[t]{3.2in}{Robust scatter of PSF size residuals, scaled by the median PSF size.} & $< 0.07$ \\[4pt]
+\texttt{psfTraceRadiusDelta} & \parbox[t]{3.2in}{Max$-$min of the PSF trace radius evaluated on a grid across the unmasked detector pixels.} & $< 4.4$ pixels \\[4pt]
+\texttt{psfApFluxDelta} & \parbox[t]{3.2in}{Max$-$min of the model PSF aperture flux (normalized) across the unmasked detector.} & $< 1.6$ \\[4pt]
+\texttt{psfApCorrSigmaScaledDelta} & \parbox[t]{3.2in}{Max$-$min of the PSF aperture correction across the detector, scaled by \texttt{psfSigma}.} & $< 0.15$ \\[4pt]
+\texttt{starEMedian} & \parbox[t]{3.2in}{Median star ellipticity, $\sqrt{e_1^2 + e_2^2}$.\tablenotemark{a}} & $< 0.2$ (all bands) \\[4pt]
+\texttt{starUnNormalizedEMedian} & \parbox[t]{3.2in}{Same, computed from unnormalized second moments.\tablenotemark{b}} & $< 2.3$ (all bands) \\[4pt]
+\texttt{nPsfStar} & \parbox[t]{3.2in}{Number of PSF-candidate stars available on the detector; below this the PSF model is not considered well-constrained.\strut} & $\geq 6$ per band \\[14pt]
+\enddata
+\tablenotetext{a}{$e_1 = (I_{xx}-I_{yy})/(I_{xx}+I_{yy})$, $e_2 = 2I_{xy}/(I_{xx}+I_{yy})$, where $I_{xx}$, $I_{yy}$, $I_{xy}$ are the adaptive second moments of the PSF/star.}
+\tablenotetext{b}{Unnormalized equivalent: $\sqrt{(I_{xx}-I_{yy})^2 + (2I_{xy})^2}$, i.e.\ without dividing by $I_{xx}+I_{yy}$.}
+\end{deluxetable*}
