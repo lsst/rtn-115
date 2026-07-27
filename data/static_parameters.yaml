@@ -45,7 +45,9 @@ dpone:
   parameters:
     - name: dponedate
       value: "2025-06-30"
-
+    - name: dponesize
+      value: 3.5
+      unit: TB
 dptwo:
   parameters:
     - name: dptwostartdate
@@ -58,11 +60,11 @@ dptwo:
       value: '\url{https://pipelines.lsst.io/v/v30\_0\_8}'
     - name: dptwodeliverywindow
       value: Jul--Dec 2026
-    - name: edpteoreleasedate
+    - name: edptworeleasedate
       value: 2026-07-27
     - name: dptworeleasedate
       value: Oct--Dec 2026
-    - name: sizeinbytes
+    - name: edptwosize
       value: 59.15
       unit: TB
 drone:
