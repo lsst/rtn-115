@@ -50,10 +50,6 @@ dpone:
       unit: TB
 dptwo:
   parameters:
-    - name: dptwostartdate
-      value: "2025-04-16"
-    - name: dptwoenddate
-      value: "2026-01-06"
     - name: sciencepipelinesversion
       value: "v30.0.8"
     - name: sciencepipelinesurl
@@ -87,6 +83,9 @@ drone:
       value: 3,000
       unit: square degrees
     - name: dptwoarea
+      value: 15,000
+      unit: square degrees
+    - name: totalarea
       value: 15,000
       unit: square degrees
     - name: nextendedobjects
@@ -151,3 +150,65 @@ drone:
     - name: cosmosymaglim
       value: 23.9
       unit: mag
+detectors:
+  parameters:
+    - name: namppixx
+      value: 512
+    - name: namppixy
+      value: 2048
+    - name: nampx
+      value: 8 # Number of amps in the x-dimension
+    - name: nampy
+      value: 2 # Number of amps in the y-dimension
+    - name: sprescan # Serial prescan
+      value: 3
+    - name: soverscan # Serial overscan
+      value: 64
+    - name: poverscan # Parallel overscan
+      value: 48
+
+# TODO: Raw and PVI dimensions to be auto-generated for DP2 version
+raw:
+  parameters:
+    - name: nrawpixx
+      value: 4608
+    - name: nrawpixy
+      value: 4096
+    - name: nexposedpixx
+      value: 4096
+    - name: nexposedpixy
+      value: 4004
+
+pvi:
+  parameters:
+    - name: netvpixx
+      value: 4096
+    - name: netvpixy
+      value: 4004
+    - name: nitlpixx
+      value: 4072
+    - name: nitlpixy
+      value: 4000
+
+deepcoadd:
+  parameters:
+    - name: deepcoaddselectionfwhm
+      value: 1.7
+      unit: "\\arcsec"
+
+templatecoadd:
+  parameters:
+    - name: templatecoaddfrac
+      value: third
+    - name: templatecoaddselectionfwhm
+      value: 1.4
+      unit: "\\arcsec"
+    - name: mintemplatecoaddvi
+      value: 12
+    - name: minmultipletemplatecoaddvi
+      value: 36
+
+surveypropertymaps:
+  parameters:
+    - name: nsurveypropertymaps
+      value: forteen

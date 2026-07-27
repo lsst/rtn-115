@@ -84,6 +84,8 @@ def unit_to_latex(unit: str) -> str:
 
 def round_sf(value: float, sig: int = 3) -> float:
     """Round a number to the requested significant figures."""
+    if isinstance(value, float) and math.isnan(value):
+        return value
     if value == 0:
         return 0.0
     return float(np.round(value, sig - int(math.floor(math.log10(abs(value)))) - 1))

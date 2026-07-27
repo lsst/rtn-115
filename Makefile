@@ -50,6 +50,7 @@ flat:
 clean:
 	latexmk -c
 	rm -f $(DOCNAME).bbl
+	rm -f $(DOCNAME).gls
 	rm -f $(DOCNAME).pdf
 	rm -f meta.tex
 	rm -f authors.tex
@@ -92,6 +93,6 @@ scripts:
 .PHONY: lander
 lander:
 	uv venv --clear lander
-	. lander/bin/activate
-	uv pip install --python lander/bin/python -r requirements-lander.txt
-	lander/bin/lander --upload --pdf RTN-115.pdf --ltd-product rtn-115 --title "The Vera C. Rubin Observatory Data Preview 2" --handle "RTN-115" --lsstdoc "RTN-115.tex"
+	. lander/bin/activate && \
+	uv pip install --python lander/bin/python -r requirements-lander.txt && \
+	lander --upload --pdf RTN-115.pdf --ltd-product rtn-115 --title "The Vera C. Rubin Observatory Data Preview 2" --handle "RTN-115" --lsstdoc "RTN-115.tex"
