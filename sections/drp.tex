@@ -18,7 +18,7 @@ This step aims to remove any artifacts that are not of astrophysical origin and 
 
 The ISR pipeline is built on a physical model of the detectors and readout electronics, in which each artifact is tied to a specific point in the photon-transfer chain and is corrected using calibrations from dedicated campaigns conducted during the day or on cloudy nights. \figref{fig:isr_signal_chain} shows this model of the detector and readout components and the effects each imparts on the measured image. ISR works backward through the chain, undoing these effects in the reverse of the order in which they were imprinted.
 
-Detector response and performance vary across the focal plane, and more so for LSSTCam than for ComCam during DP1 processing. The full LSSTCam focal plane comprises 189 science charge-coupled devices (CCDs) from two vendors (Imaging Technology Laboratories, ITL, and Teledyne e2v, E2V), each of which must be processed separately.
+Detector response and performance vary across the focal plane, and more so for LSSTCam than for LSSTComCam during DP1 processing. The full LSSTCam focal plane comprises 189 science charge-coupled devices (CCDs) from two vendors (Imaging Technology Laboratories, ITL, and Teledyne e2v, E2V), each of which must be processed separately.
 
 A detailed description of the DP2 ISR procedures and the calibration products they consume can be found in (Cite RTN-117 here when DOI becomes available).
 
@@ -35,9 +35,9 @@ The ISR processing pipeline for DP2 performs the following steps, in order:
 (3) serial overscan subtraction,
 (4) saturated- and suspect-pixel masking,
 (5) gain (electrons/ADU) correction,
-(6) crosstalk correction,
+(6) cross talk correction,
 (7) parallel overscan subtraction,
-(8) non-linearity correction,
+(8) nonlinearity correction,
 (9) deferred-charge correction,
 (10) vendor-specific masking (E2V edge bleed; the ITL ``dip,'' saturation sag, and edge bleed),
 (11) bias subtraction,
@@ -54,7 +54,7 @@ Each calibration must be valid for the conditions under which the science image 
 Camera power cycles, large temperature shifts, and changes to the CCD operating mode (sequencer) can all invalidate earlier calibrations.
 Over the DP2 observing period, calibration products are therefore organized into three calibration epochs.
 Epoch~1 (April~24--July~2, 2025) covers the initial on-sky commissioning period with the \texttt{2s\_v30} sequencer, using defect maps derived from in-lab calibration campaigns conducted before the camera was installed on the telescope.
-Epoch~2 (July~3--September~21, 2025) used an updated \texttt{3s\_v1} sequencer, which lowered the saturation point but reduced read noise, crosstalk, and charge persistence relative to Epoch~1.
+Epoch~2 (July~3--September~21, 2025) used an updated \texttt{3s\_v1} sequencer, which lowered the saturation point but reduced read noise, cross talk, and charge persistence relative to Epoch~1.
 Following an observatory maintenance shutdown in October, Epoch~3 (October~24, 2025--January~6, 2026) resumed under the same sequencer but used a new set of calibrations.
 A fourth epoch, not included in DP2, began January~23, 2026 with the \texttt{3s\_v2} sequencer, bringing reduced correlated noise and improved linear readout response.
 
@@ -86,7 +86,7 @@ The \texttt{star\_background} model and pedestal corrections together constitute
     \label{fig:background-example}
 \end{figure*}
 
-Compared to DP1~\citep{10.71929/rubin/2570308}, several changes were made to background subtraction for DP2\@.
+Compared to DP1~\citep[][]{10.71929/rubin/2570308}, several changes were made to background subtraction for DP2\@.
 The inline re-estimation performed after each detection pass in DP1 (\texttt{reEstimateBackground = True}) has been replaced by the dedicated \texttt{star\_background} subtask.
 In addition to source mask dilation and a pedestal correction, other new features for DP2 include adaptive threshold determination and diffraction spike masking.
 The per-step illumination correction used in DP1 has been disabled for DP2.
@@ -96,24 +96,24 @@ Following background subtraction, the median and standard deviation of all unmas
 \subsubsection{PSF Modeling} \label{sec:drp-calibration-psfmodeling}
 
 PSF modeling in DP2 uses two distinct approaches, as described in the
-\citep{PSTN-019} and it is similar to what was originally
+\citep[][]{PSTN-019} and it is similar to what was originally
 described in DP1 The first model—faster but less precise—is fit
-with PSFEx \citep{2011ASPC..442..435B}, while the final model—slower yet more
-accurate—is fit with Piff \citep{2021MNRAS.501.1282J}. Broadly speaking, PSFEx
+with PSFEx \citep[][]{2011ASPC..442..435B}, while the final model—slower yet more
+accurate—is fit with Piff \citep[][]{2021MNRAS.501.1282J}. Broadly speaking, PSFEx
 and Piff both represent the PSF on a pixel basis and interpolate its
 parameters across a single CCD using two-dimensional polynomials.
 However, their technical implementations differ (see Bertin et al.
-and \citealt{2021MNRAS.501.1282J} for more details). Previous comparisons have shown
+and \citealt[][]{2021MNRAS.501.1282J} for more details). Previous comparisons have shown
 that Piff outperforms PSFEx by delivering an unbiased reconstruction of
-the PSF size (see \citealt{2018MNRAS.481.1149Z} and \citealt{2021MNRAS.501.1282J}), can work in
-sky coordinates like in \citealt{2025OJAp....8E..26S}, can include a color dependency like
-in \citealt{2025OJAp....8E..26S}, and is supporting alternative models and interpolation
-schemes (see \citealt{2025OJAp....8E..26S} for more details).
+the PSF size (see \citealt[][]{2018MNRAS.481.1149Z} and \citealt[][]{2021MNRAS.501.1282J}), can work in
+sky coordinates like in \citealt[][]{2025OJAp....8E..26S}, can include a color dependency like
+in \citealt[][]{2025OJAp....8E..26S}, and is supporting alternative models and interpolation
+schemes (see \citealt[][]{2025OJAp....8E..26S} for more details).
 
 In the initial PSF modeling pass, PSFEx is run with a pixel basis and
 a second-order polynomial interpolation on each CCD. For the final modeling,
 Piff uses its PixelGrid with a fourth-order polynomial interpolation per
-CCD—except in the u-band, where star counts are too low to constrain a
+CCD—except in the $u$-band, where star counts are too low to constrain a
 fourth-order fit, so a second-order polynomial is used instead. Both are
 working in pixel coordinates. Choices of polynomial order, overall PSF-modeling
 performance, and known issues are discussed in Section
@@ -126,15 +126,15 @@ The final astrometric calibration of the data follows the method in DP1, but wit
 
 Unlike in DP1, the area we use for individual fits of the astrometric solution is an order-3 healpix, instead of a tract. This is done to reduce repetitive calculations, since the small size of tracts compared to the LSSTCam field of view means that neighboring tracts often share identical overlapping visits, which would lead to doing many identical fits of the astrometric calibration.
 
-As in DP1, the astrometric model consists of a static map from pixel space to an intermediate frame, which is followed by a per-visit map from the intermediate frame to the plane tangent to the telescope boresight, and finally a deterministic mapping from the tangent plane to the sky. This is done by the \texttt{gbdes} package \citep[][]{2017PASP..129g4503B}, as described in \citet{DMTN-266}. The proper motion and parallax of the objects used in the calibration are fit as part of the solution, but we do not yet include differential chromatic refraction or lateral color. These will be included in future data releases during Rubin Operations.
+As in DP1, the astrometric model consists of a static map from pixel space to an intermediate frame, which is followed by a per-visit map from the intermediate frame to the plane tangent to the telescope boresight, and finally a deterministic mapping from the tangent plane to the sky. This is done by the \texttt{gbdes} package \citep[][]{2017PASP..129g4503B}, as described in \citet[][]{DMTN-266}. The proper motion and parallax of the objects used in the calibration are fit as part of the solution, but we do not yet include differential chromatic refraction or lateral color. These will be included in future Data Releases during Rubin Operations.
 
-The main difference from the DP1 astrometric calibration is an additional step that models the effect of atmospheric turbulence on the astrometry. The per-visit part of the astrometric model already described captures large-scale variation between visits, which includes some atmospheric effects. However, higher order oscillations are visible in the astrometric residuals, and these can be attributed to atmospheric turbulence \citep{DMTN-324}. As described in \citet{2021AJ....162..106F} and \citet{2021A&A...650A..81L}, the wave-like astrometric effects caused by turbulence can be modeled by a Gaussian process. In DP2, we do this by taking the astrometric residuals remaining after the \texttt{gbdes} fit, grouping them by visit, then modeling them with the Gaussian Process package \texttt{treegp}. We then use this Gaussian Processes model to predict the effects of turbulence on a grid. Finally, this grid is turned into a two-dimensional spline that can use the AST component \texttt{SplineMap} so that it can be concatenated with the \texttt{gbdes} model. By including this model for the higher-order atmospheric turbulence, we achieve a significant improvement in the astrometric calculation, as demonstrated in Section~\ref{sec:performance}.
+The main difference from the DP1 astrometric calibration is an additional step that models the effect of atmospheric turbulence on the astrometry. The per-visit part of the astrometric model already described captures large-scale variation between visits, which includes some atmospheric effects. However, higher order oscillations are visible in the astrometric residuals, and these can be attributed to atmospheric turbulence \citep[][]{DMTN-324}. As described in \citet[][]{2021AJ....162..106F} and \citet[][]{2021A&A...650A..81L}, the wave-like astrometric effects caused by turbulence can be modeled by a Gaussian process. In DP2, we do this by taking the astrometric residuals remaining after the \texttt{gbdes} fit, grouping them by visit, then modeling them with the Gaussian Process package \texttt{treegp}. We then use this Gaussian Processes model to predict the effects of turbulence on a grid. Finally, this grid is turned into a two-dimensional spline that can use the AST component \texttt{SplineMap} so that it can be concatenated with the \texttt{gbdes} model. By including this model for the higher-order atmospheric turbulence, we achieve a significant improvement in the astrometric calculation, as demonstrated in Section~\ref{sec:performance}.
 
-A corollary product of the \texttt{gbdes} astrometric calibration is the catalog of proper motions and parallaxes of the sources used in the calibration. Since the \texttt{gbdes} fit is done per-band, and then improved by the turbulence fit, we perform an additional final fit of the proper motion and parallax, using the final astrometric model and all available bands. The resulting catalogs are included in the DP2 data release. These catalogs only include isolated point sources, but future data releases will be extended to include proper motion and parallax for all objects.
+A corollary product of the \texttt{gbdes} astrometric calibration is the catalog of proper motions and parallaxes of the sources used in the calibration. Since the \texttt{gbdes} fit is done per-band, and then improved by the turbulence fit, we perform an additional final fit of the proper motion and parallax, using the final astrometric model and all available bands. The resulting catalogs are included in the DP2 Data Release. These catalogs only include isolated point sources, but future Data Releases will be extended to include proper motion and parallax for all objects.
 
 \subsubsection{Photometric Calibration} \label{sec:drp-calibration-photometry}
 
-Photometric calibration of the DP2 dataset is based on the Forward Global Calibration Method~\citep[FGCM][]{2018AJ....155...41B} adapted for the LSST Science Pipelines~\citep{2022PASJ...74..247A, SITCOMTN-086}.
+Photometric calibration of the DP2 dataset is based on the Forward Global Calibration Method~\citep[FGCM][]{2018AJ....155...41B} adapted for the LSST Science Pipelines~\citep[][]{2022PASJ...74..247A, SITCOMTN-086}.
 We used the FGCM to calibrate the full DP2 dataset with a forward model that uses a parameterized model of the atmosphere as a function of airmass along with a model of the instrument throughput as a function of wavelength.
 The FGCM process typically begins with measurements of the instrumental throughput, including the mirrors, filters, and detectors.
 For the LSSTCam filter throughputs, we start with the filter scans provided by the manufacturer, Matereon.
@@ -145,13 +145,13 @@ These preliminary scans were then normalized relative to each other at 750 nm.
 However, there are still some per-raft systematic differences seen, particularly in the u and y bands.
 In the future we will use the in-dome tunable laser system and the Collimated Beam Projector (CBP) for improved filter and detector throughputs.
 
-The FGCM atmosphere model, provided by MODTRAN~\citep{1999SPIE.3756..348B}, was used to generate a look-up table for atmospheric throughput as a function of zenith distance at Cerro Pachón.
+The FGCM atmosphere model, provided by MODTRAN~\citep[][]{1999SPIE.3756..348B}, was used to generate a look-up table for atmospheric throughput as a function of zenith distance at Cerro Pachón.
 This model accounts for absorption and scattering by molecular constituents of the atmosphere, including O2 and O3; absorption by water vapor; and Mie scattering by airborne aerosol particulates.
 Nightly variations in the atmosphere are modeled by minimizing the variance in repeated observations of stars with an SNR greater than 10, measured using ``compensated aperture fluxes.''
 These fluxes include a local background subtraction to mitigate the impact of background offsets.
 The model fitting process incorporates all six bands ($ugrizy$) but does not include any gray (achromatic) terms, except for a linear assumption of mirror reflectance degradation and dust accumulation on lenses.
 Fortunately, there is no evidence of any signficant loss of throughput over the 250 days of the DP2 dataset.
-As an additional constraint on the fit, we use a subset of stars from the Monster reference catalog~\citep{DMTN-277}, primarily to constrain the system’s overall throughput and establish the “absolute” calibration.
+As an additional constraint on the fit, we use a subset of stars from the Monster reference catalog~\citep[][]{DMTN-277}, primarily to constrain the system’s overall throughput and establish the “absolute” calibration.
 
 \subsection{Multi-Visit Processing} \label{sec:drp-multivisit}
 \subsubsection{Input Data Selection} \label{sec:drp-multivisit-inputselection}
@@ -162,7 +162,7 @@ Exposures with poor PSF modeling, identified using internal diagnostics, are als
 \subsubsection{Coaddition} \label{sec:drp-multivisit-coaddition}
 The single visit images that pass the selection criteria above are warped onto the coadd pixel grid using Lanczos3 kernel and scaled to have units of \texttt{nJy} (zeropoint of 31.4).
 Artifacts are identified and masked in a manner similar to DP1 before coaddition.
-We apply the artifact rejection procedure described in \cite{DMTN-080}, which identifies and masks features such as satellite trails, optical ghosts, and cosmic rays.
+We apply the artifact rejection procedure described in \cite[][]{2018rubn.rept....1A}, which identifies and masks features such as satellite trails, optical ghosts, and cosmic rays.
 It operates on a time series of PSF-matched images resampled onto a coadd pixel grid (“warps”) and leverages their temporal behavior to distinguish persistent astrophysical sources from transient artifacts.
 Artifact rejection uses both direct (where no PSF matching is performed) and PSF-matched warps, homogenized to a standard PSF of 1.8 FWHM, broadly consistent with the 1.7 FWHM seeing threshold used in data screening.
 A sigma-clipped mean of the PSF-matched warps serves as a static sky model, against which individual warps are differenced to identify significant positive and negative residuals.
@@ -172,7 +172,7 @@ These masks are also saved as the \texttt{compare\_warp\_artifact\_mask} dataset
 In DP2, the coadded images are cell-based, using the \texttt{lsst\_cells\_v2} skymap.
 Coadds are built as weighted averages of the input warps.
 Each detector is assigned a weight that is the inverse of the mean of the variance reported in the \texttt{visit\_summary} dataset.
-Following \cite{2024arXiv240701771A} for each cell in the coadd, a detector is excluded if its geometry does not overlap the cell completely.
+Following \cite[][]{2024arXiv240701771A} for each cell in the coadd, a detector is excluded if its geometry does not overlap the cell completely.
 Furthermore, a detector is excluded if more than 50\% of its pixels are masked as artifacts, unless it would result in an empty cell in which case, this condition is ignored. % fallback.
 Finally, pixels that did not get any contribution from the input visits are interpolated from neighboring pixels.
 
@@ -264,7 +264,7 @@ There is no deblending performed prior to these measurements.
 \subsubsection{Difference Image Analysis (DIA)} \label{sec:drp-variabletransient-dia}
 
 DP2 difference imaging analysis did not change significantly relative to DP1.
-DP2 \gls{DIA} uses the decorrelated Alard and Lupton image differencing algorithm \citep{1998ApJ...503..325A,DMTN-021}.
+DP2 \gls{DIA} uses the decorrelated Alard and Lupton image differencing algorithm \citep[][]{1998ApJ...503..325A,DMTN-021}.
 Both positive and negative \texttt{DIASource}s are detected in the difference image at $5\sigma$.
 We fit a dipole model to sources containing both positive and negative peaks, and infer trail parameters from the second moments of the PSF.
 After rejecting likely artifacts (\S \ref{sec:drp-variabletransient-artifact}), we associate  \texttt{DIASource}s into \texttt{DIAObject}s with a 1\farcs matching radius.
@@ -277,16 +277,16 @@ We employ several layers of artifact rejection, although we err on the side of c
 
 As in DP1, prior to writing the \texttt{DIASource} catalog, we remove sources with pixel flags artifacts, non-astrophysical trail lengths, and unphysically negative direct fluxes.
 In DP2 we also reject sources that land on the modeled positions of diffraction spikes and apply morphological cosmic ray rejection on both the direct and difference images.
-Further, we flag but do not remove multiple \texttt{DIASources} that occur in a straight line with \texttt{glint\_trail}, indicating that they may be due to rotating orbital debris \citep{2022arXiv220205719K}.
+Further, we flag but do not remove multiple \texttt{DIASources} that occur in a straight line with \texttt{glint\_trail}, indicating that they may be due to rotating orbital debris \citep[][]{2022arXiv220205719K}.
 
 We developed a machine-learned reliability score to assess whether \texttt{DIASources} were astrophysical.
-\citep{DMTN-337} provides an overview of the model architecture, training, and performance of the real-bogus model.
+\citep[][]{DMTN-337} provides an overview of the model architecture, training, and performance of the real-bogus model.
 The v0.1 model used in DP1 was again used during DP2 processing.
 No cuts were applied on reliability for the DP2 \texttt{DIASource} catalogs, so users interested in higher purity should apply a minimum reliability threshold.
 
 \subsubsection{Light Curves} \label{sec:drp-variabletransient-lightcurves}
 
-As with DP1, multi-epoch forced photometry is performed on both the visit images and the difference images.
+As with DP1, multiepoch forced photometry is performed on both the visit images and the difference images.
 For users interested in light curve construction, we recommend using the forced photometry performed on the difference-images (the psfDiffFlux column of the ForcedSource table), since this measurement isolates the time-variable component of the flux and is unaffected by contamination from non-varying nearby sources.
 Forced photometry carried out directly on the visit images, by contrast, may pick up flux from blended or nearby static objects, and the severity of this contamination depends on the seeing.
-The centroids adopted for this multi-epoch forced photometry step are drawn either from coadd-based object positions or from the DIAObjects, which are constructed from the DIASources associated from detections in the difference images.
+The centroids adopted for this multiepoch forced photometry step are drawn either from coadd-based object positions or from the DIAObjects, which are constructed from the DIASources associated from detections in the difference images.
