@@ -5,8 +5,8 @@ The \gls{LSSTCam} on-sky commissioning campaign began on \svcampaignstartdate, f
 Its primary objective was to commission and validate and characterize  the fully integrated observatory system of Simonyi Survey Telescope, including the \gls{AOS}, \gls{LSSTCam}, and the automated \gls{DMS}, all operating together as a single integrated observatory at scale.
 This was done with a series of focused engineering tests and the eecution of a set of Science Validation (SV) surveys.
  Following a four-week engineering and operations downtime after the conclusion of the SV surveys on \svcampaignenddate the observatory was formally handed over from Construction to Operationw on \startoperations,, after which the Science Validation surveys resumed during the Early Operations period.
-The full \gls{DP2} dataset spans both the commissioning SV campaign and this early operations phase covering observations acquired between \svcampaignstartdate\ and \dptwoenddate.
-The Early Operations period continued until the start of the LSST on
+The full \gls{DP2} dataset spans both the commissioning SV campaign and this early operations phase covering observations acquired between \svcampaignstartdate and \dptwoenddate.
+The Early Operations period continued until the start of the LSST on \lsststartdate
 
 \subsection{Simonyi Survey Telescope}
 \label{ssec:simonyi}
@@ -93,7 +93,7 @@ The full-system throughput of the six \gls{LSSTCam} filters is shown in \figref{
 Unlike the \gls{LSSTComCam} campaign, during which the Rubin calibration system had not yet been installed and flat fielding relied entirely on twilight flats \citep[][]{rtn-095}, the \gls{LSSTCam} commissioning campaign had access to the Rubin flat field illumination system \citep[][]{sitcomtn-086}.
 The baseline calibration plan for the as-built system is described in \citet[][]{sitcomtn-086}; a full description of \gls{ISR} procedures and calibration data products is given in \citet[][]{10.1117/1.JATIS.11.1.011209}.
 
-The calibration system comprises a dome flat field screen, a \gls{CBP}, a NIST-traceable silicon photodiode electrometer, and the \gls{AuxTel} for atmospheric monitoring.
+The calibration system comprises a dome flat field screen, a \gls{CBP}, a \gls{NIST}-traceable silicon photodiode electrometer, and the \gls{AuxTel} for atmospheric monitoring.
 During the commissioning campaign, the \gls{CBP} was deployed at scale on \gls{LSSTCam} for the first time, providing in-situ measurements of the transmission profiles of five of the six \gls{LSST} broadband filters, $ugrizy$ across multiple primary mirror pupil positions, and characterising the angle-of-incidence-dependent blue-shift of the filter bandpass edges across the focal plane \citep[][]{2026arXiv260631822A}.
 Achieving absolute throughput calibration at the millimagnitude level  required by the \gls{LSST} requires a more precise characterisation of the \gls{CBP} transmission and a partial-pupil vignetting model; both are the subject of ongoing work \citep[][]{2026arXiv260631822A}.
 
@@ -183,12 +183,6 @@ The most severe issues were structured artifacts on the focal plane, largely ste
 A tiger team of experts allowed the construction and installation of an additional annular baffle around the telescope which fully resolved the most prominent and frequent stray light features in the LSSTCam images (\cite[][]{2026arXiv2606.31939}).
 To address part of the other unexpected artifacts, the Rubin team is actively implementing new physical baffling and re-painting (\cite[][]{2026arXiv2606.31898, 2026arXiv2606.31793}).
 
-
-
-=======
-\subsection{Stray Light}
-\label{ssec:straylight}
-
 % Describe the acquisition of the data following the description of the system
 \subsection{Science Program Observations}
 \label{ssec:science_program}
@@ -240,7 +234,7 @@ The resulting per-visit quality metrics formed the basis of the visit quality ch
 \subsection{LSST Science Pipelines}
 \label{ssec:pipelines}
 
-......
+TB done
 
 
 % Image Quality -- after the data processing
@@ -265,4 +259,3 @@ individual sensors images.
 \caption{}
 \label{fig:delivered_image_quality}
 \end{figure}
-
