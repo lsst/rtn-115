@@ -1,12 +1,2 @@
 \section{Performance Characterization and Known Issues}
 \label{sec:performance}
-
-\subsection{Solar System Performance}\label{sec:drp-variabletransient-solar-association}
-There are 299,343 ssObjects (i.e. objects measured at least once by Rubin) in DP2, representing almost 20\% of the known solar system. 
-136,608 objects are observed at least once in each `griz` band, but it is important to note that the non-simultaneous observations with different filters adds scatter from an object's light curve into the measurement of individual objects' colors. 
-This can eventually be overcome by per-object light curve fitting, but most objects in DP2 have unreliable colors, and the per-band HErr measurements under-predict objects' unmodeled variability, as visible in the substantial tail of per-band Chi2/dof distribution.
-
-There are 8.1 million diaSources associated to solar system objects in DP2, representing about 2\% of all MPC measurements. 
-There is a persistent $\sim30$mas bias between DP2 astrometric measurements and ephemeris positions of MPC orbits. 
-When Rubin astrometry was compared instead to orbits fit only to Gaia astrometry, the $\sim30$ mas bias disappeared.
-After substantial investigation and discussion with both the MPC and JPL, we concluded that the bias is $\textbf{not}$ in Rubin astrometry (to $\le$~1mas), but in the orbit catalog. While $30$ mas is small, the median astrometric uncertainty on a DP2 diaSource associated with an ssSource is just 56 mas, making $30$ mas a substantial offset in the context of Rubin precision.
