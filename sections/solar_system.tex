@@ -7,23 +7,32 @@
 \subsection{Overview}
 
 The DP2 solar system data products concentrate on associations between Rubin
-\texttt{DiaSource} observations and previously known objects.  Rubin also
-searched for and discovered new solar system objects, but those activities
-were carried out in Prompt Processing rather than as part of the DP2 data
-release processing and will be described in a forthcoming series of papers.
-This release instead delivers observations of known sources whose positions
+\texttt{DiaSource} observations and previously known objects.  These are
+known-object products, not a blind moving-object search or an orbit catalog
+derived from DP2 alone.  This release delivers observations whose positions
 were associated with objects in the MPC orbit catalog, as described in
-Section~\ref{sec:ss-association}.  DP2 does not provide an orbit catalog
-derived by Rubin from these observations.  It does provide a Rubin-derived
-catalog of object-level photometry, including per-band absolute magnitudes,
-in the \texttt{SSObject} table.
+Section~\ref{sec:ss-association}, together with a Rubin-derived catalog of
+object-level photometry, including per-band absolute magnitudes, in the
+\texttt{SSObject} table.
+
+Rubin also searched for and discovered new solar system objects in Prompt
+Processing.  That discovery campaign preceded the official DP2 Data Release
+processing so that newly reported objects entering the MPC catalog before the
+cutoff could be treated as known objects during association.  Consequently,
+objects first discovered by Rubin can occur in these products, but DP2 does
+not deliver a catalog of Rubin discoveries.  The Prompt Processing discoveries
+will be described in a forthcoming series of papers, and future Data Releases
+will deliver catalogs of Rubin discoveries.
 
 DP2 provides five solar system tables (Table~\ref{tab:ss-tables}).  Two are
 derived from the Rubin observations: \texttt{SSSource} contains one row per
 associated detection and links measured \texttt{DiaSource} photometry and
 astrometry to a predicted object, while \texttt{SSObject} contains one row
 per object and summarizes its observations, per-band photometric properties,
-and selected orbit-derived quantities.  The remaining three tables are
+and selected orbit-derived quantities.  Rubin will submit the astrometric
+measurements represented in \texttt{SSSource} to the MPC in stages, allowing
+the association quality to be validated before each submission and minimizing
+the risk of reporting misassociations.  The remaining three tables are
 snapshot copies of tables in the Minor Planet Center (MPC) PostgreSQL
 database, supplied as reference catalogs for orbital information and object
 cross-identification.  Their upstream definitions and field semantics are
@@ -33,17 +42,7 @@ The Rubin-derived
 tables contain 8,149,633
 \texttt{SSSource} rows for 299,819 distinct objects, with the same 299,819
 objects represented in \texttt{SSObject}.  Every \texttt{diaSourceId} occurs
-at most once.  These are known-object products, not a blind moving-object
-search or an orbit catalog derived from DP2 alone.  The associated sample can
-nevertheless include objects first discovered by Rubin: if Prompt Processing
-reported such an object to the MPC and it entered the MPC catalog before the
-DP2 processing cutoff, it was eligible for the same known-object association.
-The Prompt Processing discovery campaign preceded the official DP2 data
-release processing specifically so that newly reported objects entering the
-MPC catalog before the cutoff could be treated as known objects during
-association.  Those discoveries were made in Prompt Processing and will be
-presented separately.  DP2 does not deliver a catalog of Rubin discoveries;
-future Data Releases will deliver such catalogs.
+at most once.
 
 \begin{deluxetable*}{lrrp{0.55\textwidth}}
 \tablecaption{Delivered DP2 Solar System Tables\label{tab:ss-tables}}
@@ -162,14 +161,23 @@ distributions are narrowly centered near zero, with medians of approximately
 for each of 1000 well-determined, numbered asteroids was compared with JPL
 Horizons.  Median separations were approximately 27~mas for the DP2 prediction
 relative to JPL, 26~mas for Rubin relative to JPL, and 39~mas for Rubin
-relative to the DP2 prediction.  This well-constrained sample is a validation
-test rather than a characterization of all objects.  Separate validation
-against predictions from orbits fitted using only Gaia astrometry found that
-the persistent $\sim30$~mas Rubin-minus-MPC offset disappeared.  This result
-indicates that the offset is primarily associated with the MPC-based orbit
-predictions rather than the Rubin astrometric calibration.  Its scale is
-nevertheless appreciable relative to the median reported astrometric
-uncertainty of 56~mas for an associated \texttt{DiaSource}.
+relative to the DP2 prediction.
+
+A broader analysis of approximately 700,000 Rubin measurements of 65,000
+known objects finds two regimes.  For long-observed objects discovered before
+2000, the median measured-minus-predicted coordinate residuals are below
+1~mas, with a scatter of approximately 13--14~mas, comparable to the
+astrometric repeatability for bright stars.  Objects discovered during
+2000--2020 show a different pattern: offsets relative to JPL Horizons are
+spatially coherent across the DP2 footprint.  In $5\degr\times5\degr$ sky
+cells, the median offset-vector length is approximately 19~mas, the 95th
+percentile is approximately 30~mas, and the largest values approach 42~mas;
+ATLAS data show a similar signature.  The current hypothesis is that orbit
+catalogs can carry 20--40~mas systematic errors in predicted positions,
+particularly in the southern hemisphere, because many orbits were constrained
+primarily by northern, pre-Gaia astrometry.  The effect appears to diminish
+for objects discovered in the Gaia era.  This interpretation remains under
+investigation and will be discussed in detail in a subsequent paper.
 
 \begin{figure*}[t]
 \centering
