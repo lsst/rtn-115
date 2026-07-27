@@ -45,13 +45,23 @@ Each sensor is subdivided into 16 amplifiers, each reading 512$\xspace\times\xsp
 \label{fig:lsst_cam}
 \end{figure*}
 
-During the commissioning campaign, only 188 of the 189 science sensors were operational; sensor R30/S12 was non-operational throughout.
-The median amplifier loses approximately 0.45\% of its area to static defects, with the mean across amplifiers closer to 0.7\%.
+During the commissioning campaign, only 188 of the 189 science sensors were operational; sensor R30/S12 was non-operational throughout and is excluded from all \gls{DP2} data products.
+The eight heavily vignetted corner science sensors (detectors), R01/S00 (0), R03/S02 (20), R10/S00 (27), R14/S02 (65), R30/S20 (123), R34/S22 (161), R41/S20 (168), and R43/S22 (188), are also excluded from all \gls{DP2} processing, even though they were functional.
+Science sensors (detectors) R03/S20 (24), R30/S10 (120), R30/S11 (121), and R42/S00 (172) are additionally excluded from data acquired before 2025-07-03 as the calibration data required to process them were not yet available.
+Any further exclusions that were applied during the processing stage are described further in \secref{sec:drp}.
+
+The median amplifier loses approximately 0.45\% of its area to static defects, with the mean across amplifiers closer to 0.7\%  \citep[][]{SITCOMTN-170}.
 Overall, more than 99\% of the active focal-plane area within the calibrated field is usable \citep[][]{SITCOMTN-170}.
 Optical vignetting limits the fully calibrated field radius to 317,mm; a partially vignetted zone extends to 350,mm, beyond which pixels are excluded from science products.
+
+No new static defect classes were identified on either \gls{ITL} or \gls{E2V} sensors during commissioning beyond those already identified during commissioning with \gls{LSSTComCam} \citep[][]{rtn-095} or in the laboratory \citep[][]{SITCOMTN-148, SITCOMTN-170}.
+A subset of \gls{ITL} sensors exhibits ``vampire'' pixel anomalies and locally elevated readout noise consistent with \gls{LSSTComCam} commissioning.
+Dynamic masking, including treatment of \gls{E2V} edge bleeds and occasional bright-star flare artifacts at extreme detector edges, is ongoing \citep[][]{SITCOMTN-170}.
+
+% Filter complement
 \subsubsection{Filter Complement}
 \label{sssec:lsstcam_filters}
-
+%
 \gls{LSSTCam} supports imaging with the same six broadband filters $ugrizy$, spanning 320--1050~nm, as \gls{LSSTComCam}, using an identical filter design.
 Its filter exchanger can hold five filters at a time, as opposed to only three for \gls{LSSTComCam}.
 
