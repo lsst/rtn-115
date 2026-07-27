@@ -37,7 +37,11 @@ Rubin-derived tables contain 8,149,633 \texttt{SSSource} rows for 299,819
 distinct objects, with the same 299,819 objects represented in
 \texttt{SSObject}.  Every \texttt{diaSourceId} occurs at most once.
 
-\begin{deluxetable*}{lrrp{0.55\textwidth}}
+% deluxetable's p{} column type is incompatible with array.sty >= v2.5
+% combined with the lineno package (see AASJournals/AASTeX7#21); wrap
+% long-text cells in a fixed-width \parbox instead of using a p{} column.
+\newcommand{\wrapcell}[1]{\parbox[t]{0.55\textwidth}{#1}}
+\begin{deluxetable*}{lrrl}
 \tablecaption{Delivered DP2 Solar System Tables\label{tab:ss-tables}}
 \tabletypesize{\footnotesize}
 \tablewidth{0pt}
@@ -45,23 +49,23 @@ distinct objects, with the same 299,819 objects represented in
 \colhead{Table} & \colhead{Rows} & \colhead{Columns} &
 \colhead{Intent and useful relations}}
 \startdata
-\texttt{SSSource} & 8,149,633 & 39 & One row per associated
+\texttt{SSSource} & 8,149,633 & 39 & \wrapcell{One row per associated
 \texttt{DiaSource}, containing measured and predicted single-epoch
 quantities.  Join by \texttt{diaSourceId} to the detection and by
-\texttt{ssObjectId} or \texttt{designation} to object-level tables. \\
-\texttt{SSObject} & 299,819 & 80 & One row per recovered known object,
+\texttt{ssObjectId} or \texttt{designation} to object-level tables.} \\
+\texttt{SSObject} & 299,819 & 80 & \wrapcell{One row per recovered known object,
 including sampling summaries, phase-curve fits, and selected quantities
-derived from the input orbit. \\
-\texttt{mpc\_orbits} & TBD\tablenotemark{a} & 53 & MPC snapshot of
+derived from the input orbit.} \\
+\texttt{mpc\_orbits} & TBD\tablenotemark{a} & 53 & \wrapcell{MPC snapshot of
 orbital elements, fit metadata, uncertainties, and MPC photometric
 parameters.  The convenience \texttt{designation} column supports direct
-joins to the Rubin-derived tables. \\
-\texttt{current\_identifications} & TBD\tablenotemark{a} & 11 & MPC
+joins to the Rubin-derived tables.} \\
+\texttt{current\_identifications} & TBD\tablenotemark{a} & 11 & \wrapcell{MPC
 mapping between primary and secondary provisional designations that refer to
-the same physical object; useful for resolving aliases. \\
-\texttt{numbered\_identifications} & TBD\tablenotemark{a} & 11 & MPC
+the same physical object; useful for resolving aliases.} \\
+\texttt{numbered\_identifications} & TBD\tablenotemark{a} & 11 & \wrapcell{MPC
 mapping between permanent numbers and primary provisional designations, with
-IAU designations, names, credits, and publication references where available.
+IAU designations, names, credits, and publication references where available.}
 \\
 \enddata
 \tablenotetext{a}{Insert the row count from the final DP2 MPC snapshot.  The
