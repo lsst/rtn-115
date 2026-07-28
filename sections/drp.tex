@@ -1,13 +1,13 @@
 \section{Data Release Processing}
 \label{sec:drp}
 
-Data Release Processing (DRP) is the data pipeline that produces the calibrated images, detection catalogs, and derived data products defined in section \S TBD, using the LSST Science Pipelines (citation).
+Data Release Processing (DRP) is the data pipeline that produces the calibrated images, detection catalogs, and derived data products defined in section \S TBD, using the LSST Science Pipelines \citep[][]{PSTN-019}.
 DP2 was processed at the United States Data Facility (USDF) at SLAC, with pilot runs at the National Institute of Nuclear and Particle Physics (IN2P3) computing center.
 
 The processing campaign consists of four major stages: (1) single-frame processing, (2) calibration, (3) multi-visit processing, (4) variable and transient source processing.
 Data quality and key metrics for verification and validation are actively monitored during each stage, and comprehensive verification and validation assessments are completed before processing the next stage.
 
-This section describes the high-level algorithms, configurations, and verification metrics for each stage, including changes and improvements from DP1 (citation).
+This section describes the high-level algorithms, configurations, and verification metrics for each stage, including changes and improvements from DP1 \citep[][]{RTN-095}.
 
 \subsection{Single-Visit Processing} \label{sec:drp-singlevisit}
 
@@ -20,7 +20,7 @@ The ISR pipeline is built on a physical model of the detectors and readout elect
 
 Detector response and performance vary across the focal plane, and more so for LSSTCam than for LSSTComCam during DP1 processing. The full LSSTCam focal plane comprises 189 science charge-coupled devices (CCDs) from two vendors (Imaging Technology Laboratories, ITL, and Teledyne e2v, E2V), each of which must be processed separately.
 
-A detailed description of the DP2 ISR procedures and the calibration products they consume can be found in (Cite RTN-117 here when DOI becomes available).
+% A detailed description of the DP2 ISR procedures and the calibration products they consume can be found in (Cite RTN-117 here when DOI becomes available).
 
 \begin{figure}[htb]
   \centering
