@@ -27,11 +27,9 @@ from __future__ import annotations
 
 import argparse
 import logging
-import os
 import warnings
 from datetime import datetime
 from pathlib import Path
-import logging
 
 import numpy as np
 import yaml
@@ -49,6 +47,7 @@ warnings.filterwarnings("ignore")
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
+
 
 def staticParameters(params: DP2Parameters) -> DP2Parameters:
     """Populate ``params`` with values from ``data/static_parameters.yaml``.
@@ -234,7 +233,7 @@ def imageStats(params: DP2Parameters, imageId: tuple) -> DP2Parameters:
         Updated parameter store.
     """
     imageType = imageId[0]
-    imageDataId = imageId[1]
+    # imageDataId = imageId[1]
     imageName = imageType.replace("_", "")
 
     refs = list(registry.queryDatasets(imageType))
@@ -244,8 +243,8 @@ def imageStats(params: DP2Parameters, imageId: tuple) -> DP2Parameters:
     # filepath = butler.getURI(ref)
 
     # Filesize not currently working:
-    #roughFileSize = round(os.path.getsize(filepath.path) / 1e6, 2)
-    #params = addParameter(params, f"{imageName}hdd", f"{roughFileSize:.0f}", unit="MB")
+    # roughFileSize = round(os.path.getsize(filepath.path) / 1e6, 2)
+    # params = addParameter(params, f"{imageName}hdd", f"{roughFileSize:.0f}", unit="MB")
 
     # image = butler.get(ref)
     # params = addParameter(params, f"n{imageName}pixx", image.bbox.shape.x)
@@ -329,7 +328,9 @@ def nRaws(params: DP2Parameters) -> DP2Parameters:
     # params = addParameter(params, "nexposures")
 
     visit_detector_table = butler.get("visit_detector_table")
-    params = addParameter(params, "nactivedetectors", len(set(visit_detector_table["detector"])))
+    params = addParameter(
+        params, "nactivedetectors", len(set(visit_detector_table["detector"]))
+    )
     # params = addParameter(params, "nraws", )
     return params
 
@@ -352,7 +353,8 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
     params = addParameter(params, "ntracts", len(skymap))
 
     coveredTractIds = {
-        dataId["tract"] for dataId in registry.queryDataIds(["tract"], datasets="object")
+        dataId["tract"]
+        for dataId in registry.queryDataIds(["tract"], datasets="object")
     }
     params = addParameter(params, "ncoveredtracts", len(coveredTractIds))
 
@@ -386,17 +388,19 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
         params, "patchareanooverlap", f"{patchArea:.3f}", unit="deg$^{\\rm 2}$"
     )
 
-    refs = list(butler.query_datasets("deep_coadd",
-        where="tract=9813 AND patch=50 AND band='g' AND skymap='lsst_cells_v2'")
+    refs = list(
+        butler.query_datasets(
+            "deep_coadd",
+            where="tract=9813 AND patch=50 AND band='g' AND skymap='lsst_cells_v2'",
+        )
     )
-
 
     coadd = butler.get(refs[0])
     bbox = coadd.bbox
     sky_projection = coadd.sky_projection
 
     corner_00 = sky_projection.pixel_to_sky(x=bbox.x.min, y=bbox.y.min)
-    corner_01 = sky_projection.pixel_to_sky(x=bbox.x.min+1, y=bbox.y.min)
+    corner_01 = sky_projection.pixel_to_sky(x=bbox.x.min + 1, y=bbox.y.min)
     corner_x1 = sky_projection.pixel_to_sky(x=bbox.x.stop, y=bbox.y.min)
     corner_y1 = sky_projection.pixel_to_sky(x=bbox.x.min, y=bbox.y.stop)
 
@@ -411,7 +415,9 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
     coaddpixsize = corner_00.separation(corner_01).arcsec
     params = addParameter(params, "npatchpixx", npatchpixx)
     params = addParameter(params, "npatchpixy", npatchpixy)
-    params = addParameter(params, "coaddpixsize", coaddpixsize.item(), unit="\\arcsec", sig=2)
+    params = addParameter(
+        params, "coaddpixsize", coaddpixsize.item(), unit="\\arcsec", sig=2
+    )
 
     wcs = tract.getWcs()
     patchInfo = tract.getPatchInfo((5, 5))
@@ -427,7 +433,9 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
     params = addParameter(params, "ncelly", numYCells)
 
     numCellsInPatchBorder = skymap.config.tractBuilder["cells"].numCellsInPatchBorder
-    params = addParameter(params, "ncellpatchoverlap", numCellsInPatchBorder, unit="cell")
+    params = addParameter(
+        params, "ncellpatchoverlap", numCellsInPatchBorder, unit="cell"
+    )
     return params
 
 
@@ -615,10 +623,11 @@ def _nEntries(tableName: str) -> int:
     query = f"SELECT COUNT(*) AS nEntries FROM {tableName}"
     job = service.submit_job(query)
     job.run()
-    job.wait(phases=['COMPLETED', 'ERROR'])
+    job.wait(phases=["COMPLETED", "ERROR"])
     results = job.fetch_result()
 
-    return results['nEntries'][0]
+    return results["nEntries"][0]
+
 
 def catalogCounts(params: DP2Parameters) -> DP2Parameters:
     """Add row-count parameters for a set of TAP tables.
@@ -635,27 +644,23 @@ def catalogCounts(params: DP2Parameters) -> DP2Parameters:
     """
     # Maps output parameter name -> (TAP table name, scale divisor, unit).
     tables = {
-        "nobjects": ("dp2.Object", 1e6, "million"),
-        "nsources": ("dp2.Source", 1e9, "billion"),
-        "ndiaobjects": ("dp2.DiaObject", 1e6, "million"),
-        "ndiasources": ("dp2.DiaSource", 1e9, "billion"),
-        "nforcedsources": ("dp2.ForcedSource", 1e9, "billion"),
-        "ndiaforcedsources": ("dp2.ForcedSourceOnDiaObject", 1e9, "billion"),
-        "nisolatedstars": ("dp2.IsolatedStarStellarMotions", 1e6, "million"),
-        "nshearobjects": ("dp2.ShearObject", 1e9, "billion"),
-        "nssobjects": ("dp2.SSObject", 1e6, "million"),
-        "nsolarsystemsources": ("dp2.SSSource", 1e6, "million"),
-        "nvisitrows": ("dp2.Visit", 1, None),
-        "nvisitdetectorrows": ("dp2.VisitDetector", 1e6, "million"),
+        "nobjects": ("dp2.Object", 1e6, "million", 2),
+        "nsources": ("dp2.Source", 1e9, "billion", 2),
+        "ndiaobjects": ("dp2.DiaObject", 1e6, "million", 2),
+        "ndiasources": ("dp2.DiaSource", 1e9, "billion", 2),
+        "nforcedsources": ("dp2.ForcedSource", 1e9, "billion", 2),
+        "ndiaforcedsources": ("dp2.ForcedSourceOnDiaObject", 1e9, "billion", 2),
+        "nisolatedstars": ("dp2.IsolatedStarStellarMotions", 1e6, "million", 2),
+        "nshearobjects": ("dp2.ShearObject", 1e9, "billion", 2),
+        "nssobjects": ("dp2.SSObject", 1, None, None),
+        "nsolarsystemsources": ("dp2.SSSource", 1e6, "million", 2),
+        "nvisitrows": ("dp2.Visit", 1, None, None),
+        "nvisitdetectorrows": ("dp2.VisitDetector", 1e6, "million", 2),
     }
-    for paramName, (tableName, scale, unit) in tables.items():
+    for paramName, (tableName, scale, unit, sig) in tables.items():
         log.info("Adding %s from %s...", paramName, tableName)
         nEntries = _nEntries(tableName)
-        params = addParameter(params,
-                              paramName,
-                              nEntries / scale,
-                              sig = (2 if paramName != "nvisitrows" else None),
-                              unit=unit)
+        params = addParameter(params, paramName, nEntries / scale, sig=sig, unit=unit)
     return params
 
 
@@ -882,7 +887,7 @@ if __name__ == "__main__":
         try:
             query = "SELECT * FROM tap_schema.tables WHERE tap_schema.tables.schema_name = 'dp2'"
             dp2_available = len(service.search(query)) > 0
-        except DALServiceError as e:
+        except DALServiceError:
             warnings.warn("TAP service unavailable, skipping TAP-dependent steps.")
             dp2_available = False
 
