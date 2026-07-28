@@ -302,6 +302,15 @@ rules:
     replacement: '$\\sim$'
     note: 'Bare \sim used as "approximately" must be in math mode: "\sim8" → "$\sim$8".'
 
+  - name: sim-outside-math
+    # Catches \sim immediately before an inline $…$ math environment and merges
+    # \sim into that environment: \sim$3,000\,deg^2$ → $\sim\,3,000\,deg^2$.
+    # Lookbehind (?<!\$) skips \sim already inside math (e.g. $\sim$).
+    # Negative lookahead (?!\$) avoids matching display math ($$…$$).
+    pattern: '(?<!\$)\\sim\$(?!\$)'
+    replacement: '$\\sim\\,'
+    note: 'Merge \sim into the following $…$: \sim$3,000\,deg^2$ → $\sim\,3,000\,deg^2$.'
+
   - name: sim-thin-space
     # Catches $\sim$~ (non-breaking space with no thin space) → $\sim$\,~.
     pattern: '\$\\sim\$~'
@@ -352,7 +361,7 @@ rules:
     pattern: '(?<!\{)(\\doi[A-Za-z]+)(?=[^A-Za-z])(?!\{\})(?!\})'
     replacement: '\1{}'
     note: 'DOI parameter macros need {} suffix in prose; omit inside \doi{...}.'
-  
+
   - name: sentence-break
     # Insert a newline after a sentence-ending period so each sentence starts
     # on its own line (standard LaTeX prose style).
