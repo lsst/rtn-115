@@ -37,12 +37,10 @@ Its focal plane comprises 25 modular rafts arranged in a 5$\xspace\times\xspace$
 
 \gls{LSSTCam} employs sensors from two vendors: \gls{E2V} sensors populate the central science rafts, and \gls{ITL} sensors populate the peripheral science rafts.
 Each sensor is subdivided into 16 amplifiers, each reading 512$\xspace\times\xspace$2048 pixels in parallel.
-\figref{fig:lsst_cam} presents a schematic of the \gls{LSSTCam} focal plane, with the \gls{LSSTComCam} raft positioned at the center, corresponding to the \gls{LSSTCam} central science raft location.
 \figref{fig:lsstcam_schematic} shows the \gls{LSSTCam} focal plane layout, viewed from above looking down through the camera lenses, including the placement and numbering scheme of sensors (``S'') and amplifiers (``C''); a full description is given in \citet[][]{2025JATIS..11a1209P, ctn-001}.
 \begin{figure*}[htb!]
 \plotone{LSSTCam_focal_plane}
-\caption{\gls{LSSTCam} focal plane layout, showing the placement and numbering scheme of sensors (``S'') and amplifiers (``C''). The view is from above, looking through the \gls{LSSTCam} lenses onto the focal plane. Each sensor contains 16 amplifiers. Each raft is composed of a 3$\xspace\times\xspace$3 array of sensors.
-(The detector number for each sensor is indicated in parentheses.)}
+\caption{\gls{LSSTCam} focal plane layout, showing the placement and numbering scheme of sensors (``S'') and amplifiers (``C''). The view is from above, looking through the \gls{LSSTCam} lenses onto the focal plane. Each sensor contains 16 amplifiers. Each raft is composed of a 3$\xspace\times\xspace$3 array of sensors. The detector number for each sensor is indicated in parentheses.}
 \label{fig:lsstcam_schematic}
 \end{figure*}
 
@@ -157,20 +155,38 @@ The \gls{SV} surveys began on \svcampaignstartdate and comprised two interleaved
 The Wide Survey covered an initial footprint of $\sim$\,3,000\,deg$^2$ tracing the ecliptic plane from dense regions of the Galactic Bulge through low-dust regions of the planned \gls{LSST} \gls{WFD} footprint.
 Approximately halfway through the SV period, the footprint was consolidated to $\sim$\,750\,deg$^2$, and further to $\sim$\,300\,deg$^2$ in the final week of commissioning to concentrate visits and achieve the depth required for difference-image testing.
 As a result, median visit counts and coadded depth increase substantially toward the inner regions of the footprint: the full 3,000\,deg$^2$ region reaches a median of 38 visits across all bands ($m\_5 \approx 25.0$), the 750\,deg$^2$ subset reaches 56 visits ($m\_5 \approx 25.8$), and the 300\,deg$^2$ core reaches 64 visits ($m\_5 \approx 25.7$).
+\tabref{tab:sv_wide_observations}  provides the median numbers of visits and estimated m\_5 coadded depths within each of the subsets of the wide SV area.
 
+
+\input{tables/dp2_sv_wide_observations}
+
+% Deep survey
 The Deep Survey targeted four of the five planned \gls{LSST} \gls{DDF}s:\gls{ECDFS}, \gls{EDFS} (fields A and B), ELAISS1, and \gls{COSMOS}.
 The \gls{FBS} interleaved \gls{DDF} observations with the wide survey, scheduling visits to each field according to the prescribed \gls{DDF} observing cadence.
 ELAISS1 received the largest number of visits, 539 across all six $ugrizy$ bands, and is the only \gls{DDF} observed in all bands during the \gls{SV} survey.
 \gls{COSMOS} was not accessible during the \gls{SV} period as described above.
 The remaining \glspl{DDF} were observed primarily in $griz$, as the $u$ and $y$ filters were unavailable after 2025-08-10 due to a hardware issue with the filter exchanger.
 The dither pattern for the \glspl{DDF} evolved during the campaign; early observations used only small translational dithers with no intra-night rotation, while later observations introduced both translational and rotational intra-night dithers.
-\tabref{tab:sv_wide_observations}  provides the median  numbers of visits and estimated m\_5 coadded depths within each of the subsets of the Wide SV area.
+\tabref{tab:sv_ddf_summary}  provides the median numbers of visits and estimated m\_5 coadded depths within each of the subsets of the wide SV area.
 
-\input{tables/dp2_sv_wide_observations}
 
+\input{tables/dp2_sv_ddf_observations}
+
+% Early ops operations
 \subsubsection{Early Operations Observations}
 \label{sssec:early_ops}
 %
+Following the transition to Operations on \startoperations, \gls{FBS}-driven observations resumed during the Early Operations optimization period.
+Observations during this period, which ran from \startoperations through \dptwoenddate, were a mixture of engineering activities and \gls{FBS}-driven survey observations aimed at improving image quality and survey speed in preparation to  start the \gls{LSST}, and  building difference-imaging templates across the full \gls{LSST} footprint \citep[][]{survey-strategy-dp2}.
+
+The pre-\gls{LSST} observations are characterised by a lower and less regular cadence than
+the \gls{SV} surveys, reflecting frequent engineering interruptions.
+The \gls{FBS} was configured with a single-visit template tier as a scheduling priority, and on any given night would typically concentrate observations in a single band rather than interleaving filters, to maximise sky coverage for template building.
+The $i$ band was preferred  due to its high throughput and suitability for difference imaging.
+A concentrated block of $i$-band observations in late October 2025 reflected deliberate \gls{AOS} engineering tests that held the filter fixed to isolate optical state changes from filter-induced perturbations, producing the prominent $i$-band coverage regions visible in
+\figref{fig:dp2_sky} \citep[][]{survey-strategy-dp2}.
+Pre-\gls{LSST} visits not overlapping existing \gls{SV} survey regions were not combined into coadds but are included in the \gls{DP2} visit dataset.
+
 % Describe the processing if the science program observations
 \subsection{Data Processing}
 \label{ssec:data processing}
@@ -187,7 +203,7 @@ During the \gls{LSSTCam} commissioning campaign, the \gls{DMS} was operated at f
 Following each exposure, the \gls{DAQ} system at the summit stores the raw image data as a set of 205 files per exposure: 189 science sensors, 8 wavefront sensors, and 8 guiding sensors on the \gls{LSSTCam} focal plane.
 Uncompressed, a full science exposure totals $\sim$\,8.2\,GB; after compression, $\sim$\,4\,GB.
 Transfer occurs over Rubin's Long Haul Network, a dedicated hardware \gls{IPsec}-encrypted link with 100\,Gbps primary and 40\,Gbps backup capacity.
-A local buffer at the base facility can store up to three days' worth of data, providing resilience against network interruptions without halting observations \citep[][]{2507.12955}.
+A local buffer at the base facility can store up to three days' worth of data, providing resilience against network interruptions without halting observations \citep[][]{DMTN-306}.
 
 At the summit, each exposure is processed in near real time by the Rapid Analysis pipeline, performing \gls{ISR} (\secref{ssec:isr}) and source detection (\secref{ssec:detection}) on a 30--60 second timescale to provide quick-look image diagnostics and support real-time \gls{AOS} assessment.
 The resulting per-visit quality metrics formed the basis of the visit quality characterisations used to define the \gls{DP2} coadd inputs; summary visit and detector-level metadata are available to users as \gls{DP2} data products (\S\ref{sec:data_products}).
