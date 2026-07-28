@@ -101,7 +101,7 @@ They will be included in DP2.}
 
 Once produced, individual Visit Images covering the same patch of sky (as defined by the skymap) in the same band are coadded to form coadd images.
 Two different types of coadd images are included in DP2: Deep Coadds and Template Coadds, both of which are described in the following subsections.
-The production of each type of coadd image follows broadly the same process, which is described in detail in \secref{section:drp-multivisit-coaddition} but, to summarize, it involves the selection of Visit Images (in terms of patch coverage and band, and image quality), the warping of those Visit Images onto a common pixel grid, and the coaddition of those warped images.
+The production of each type of coadd image follows broadly the same process, which is described in detail in \secref{sec:drp-multivisit-coaddition} but, to summarize, it involves the selection of Visit Images (in terms of patch coverage and band, and image quality), the warping of those Visit Images onto a common pixel grid, and the coaddition of those warped images.
 The main difference that distinguishes each type of coadd are the selection of the Visit Images.
 As a result, the structure of the datasets is the same for each type: each coadd contains three planes corresponding to the science image plane (i.e., the coadd), the variance plane, and the mask plane, with all three containing the same number of pixels in each dimension.
 Up to two different background models are included in the coadd datasets: the background that was subtracted to create the final coadd and, in the case of the \textit{gri} band Deep Coadds, a background that can be added-back to create ``Visualization Coadds'' which, while not recommended for science, can be useful for visualization.
@@ -157,7 +157,6 @@ There are a total of \ndeepcoadds Deep Coadds in DP2.
 
 \subsection{Catalogs}
 \label{ssec:catalogs}
-%
 Catalogs contain data for detections in the images described in \secref{ssec:scienceimages}, except the \texttt{Calibration} catalog, which contains reference data obtained from previous surveys.
 Observatory-produced metadata tables are described in \secref{ssec:metadata}.
 Rubin adopts a naming convention in which  the term ``object" refers to an astrophysical object, whereas the term ``source" refers to a single-epoch detection of that object.
@@ -429,12 +428,14 @@ There is one Deep Coadd Input Summary per tract that has coverage in DP2, and th
 \subsection{Metadata}
 \label{ssec:metadata}
 \subsubsection{Visit}
+\label{sssec:visitcatalog}
 The \texttt{Visit} catalog contains technical data for each visit collected at the time of observation, such as telescope pointing, camera rotation, airmass, exposure start and end time, and total exposure time.
 Some of the information contained within the \texttt{Visit} catalog is also contained in the Visit Detector catalog described below (e.g., exposure time), although the latter also includes information produced by the processing pipelines at the per-detector level, such as the PSF size and limiting magnitudes of a given Visit Image.
 
 The Visit catalog contains \nvisitrows entries.
 
 \subsubsection{Visit Detector}
+\label{sssec:visitdetector}
 The Visit Detector catalog contains summary information for all Visit Images in DP2.
 In addition to technical information, such as the on-sky coordinates of the central pixel and measured pixel scale, the Visit Detector catalog contains a range of data quality measurements, such as whole-image summary statistics for the PSF size, zero-point and 5$\sigma$ depth, sky background, sky noise, and the quality of astrometric solution.
 It provides an efficient method to access the properties of a Visit Image without needing to access the image data.

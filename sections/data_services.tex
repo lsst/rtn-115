@@ -40,7 +40,7 @@ User-facing services are deployed in the cloud to support dynamic scaling in res
 For all imaging data except coadds, the Data Butler (\secref{sssec:data_butler}) provides the interface between cloud-based users and the on-premises data; for catalog data, a cloud-based \gls{TAP} client (\secref{sssec:ivoa_services}) submits queries to the on-premises \gls{Qserv} database cluster (\secref{sssec:qserv}) and retrieves the results.
 Deep Coadd images are the exception to this hybrid model: because there is one coadd per sky region per band, a relatively small and size-bounded dataset, they are hosted directly in Google Cloud to benefit from cloud-native access.
 
-\gls{DP2} is being delivered in two phases because full end-to-end integration of the hybrid RSP for images was not yet complete by the time data processing (\secref{sec:drp}) finished; the hybrid model supporting Qserv (\secref{sssec:qserv}) catalog access over TAP, by contrast, is already in production for  EDP2.
+\gls{DP2} is being delivered in two phases because full end-to-end integration of the hybrid RSP for images was not yet complete by the time data processing (\S\,\ref{sec:drp}) finished; the hybrid model supporting Qserv (\secref{sssec:qserv}) catalog access over TAP, by contrast, is already in production for  EDP2.
 Rubin therefore adopted a phased release, given that neither coadds nor catalogs depend on the image-side hybrid RSP integration readiness.
 Early DP2 (EDP2), comprising the deep coadd images and all catalogs, was released on \edptworeleasedate, while the full \gls{DP2} release, adding the visit-level data products once hybrid image integration is demonstrated, is expected in the \dptworeleasedate range.
 
@@ -71,7 +71,7 @@ The following \gls{IVOA} services are available at the time of the \gls{DP2} rel
 \begin{itemize}
 \vspace{0.1cm}
 \item \textbf{\gls{TAP} service}: A TAP service \citep[][]{2019ivoa.spec.0927D} enables queries of catalog data via the IVOA-standard \gls{ADQL}, a dialect of SQL92 with spherical geometry extensions.
-The main \gls{TAP} service for \gls{DP2} runs on the Rubin-developed \gls{Qserv} database (\S~\ref{ssec:databases}), which hosts the core science tables described in \secref{ssec:catalogs}, as well as the \texttt{Visit} database.
+The main \gls{TAP} service for \gls{DP2} runs on the Rubin-developed \gls{Qserv} database (\S~\ref{ssec:databases}), which hosts the core science catalogs described in \secref{ssec:catalogs}, as well as the Visit and Visit Detector catalogs.
 It also provides image metadata in the IVOA \texttt{ObsCore} format via the standard \texttt{ivoa.ObsCore} table, making it an ``ObsTAP'' service \citep[][]{2017ivoa.spec.0509L}.
 The TAP service is based on the \gls{CADC}'s open-source Java TAP implementation\footnote{https://github.com/opencadc/tap}, modified for the exact query language accepted by Qserv.
 Since \gls{DP1}, ADQL support has been expanded to include the spatial \texttt{INTERSECTS()} operation, and temporary-table uploads now provide multi-object query capabilities across both Qserv- and Postgres-backed catalogs.
@@ -155,7 +155,7 @@ Designed to support both exploratory data access and detailed scientific investi
 \label{subsec:notebook}
 %
 The Notebook Aspect provides an interactive, web-based environment built on Jupyter Notebooks, enabling users to write and execute Python code directly on Rubin and \gls{LSST} data without downloading it locally.
-It offers programmatic access to Rubin and LSST data products, allowing users to query and retrieve datasets, manipulate and display images, compute derived properties, plot results, and reprocess data using the LSST Science Pipelines (\secref{ssec:pipelines}).
+It offers programmatic access to Rubin and LSST data products, allowing users to query and retrieve datasets, manipulate and display images, compute derived properties, plot results, and reprocess data using the LSST Science Pipelines (\secref{sec:drp}).
 The environment comes preinstalled with the Pipelines and a broad set of widely used astronomical \gls{software} tools, supporting immediate and flexible data analysis.
 
 % databases
@@ -184,7 +184,11 @@ While \gls{DP1} was small enough that Qserv's full capabilities were not strictl
 \label{sssec:opsim}
 %
 \gls{DP2} provides an opsim-format SQLite database of visit-level observational metadata for the visits included in \gls{DP2}, downloadable from \url{https://s3df.slac.stanford.edu/data/rubin/sim-data/prelsst/dp2_visits.db}, with additional documentation available at \url{https://survey-strategy.lsst.io/progress/prelsst/prelsst_dp2.html\#visit-database}.
+<<<<<<< HEAD
 Like the Butler \texttt{visit\_table}, this database contains visit-level entries, but it has no equivalent of the \texttt{visit\_detector\_table} described in \secref{ssec:metadata} and so provides no per-detector information.
+=======
+Like the Visit catalog descibed in \secref{sssec:visitcatalog}, this database contains visit-level entries, but it has no equivalent of the Visit Detector catalog described in \secref{sssec:visitdetector} and so provides no per-detector information.
+>>>>>>> 561a121 (Fix a bunch of secrefs)
 Its quantities (e.g., PSF FWHM, 5$\sigma$ point-source depth) are drawn from the real-time Rapid Analysis QuickLook processing, \citep[][]{} performed on the summit rather than from \gls{DRP} processing.
 Values may therefore differ somewhat from the corresponding \gls{DRP}-derived quantities in the Butler \texttt{visit\_table}.
 The database also includes some quantities not otherwise available from \gls{DRP} outputs, such as \gls{AOS} Zernike coefficients, as well as predicted quantities useful for comparison against simulated survey performance.
