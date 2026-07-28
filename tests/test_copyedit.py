@@ -551,7 +551,9 @@ class CopyeditRuleTestCase(unittest.TestCase):
         self.assertEqual(self._hits("doi-macro-inline-braces", r"\doidptwopaper{}"), 0)
 
     def test_doi_macro_argument_not_matched(self) -> None:
-        self.assertEqual(self._hits("doi-macro-inline-braces", r"\doi{\doidptwopaper}"), 0)
+        self.assertEqual(
+            self._hits("doi-macro-inline-braces", r"\doi{\doidptwopaper}"), 0
+        )
 
     def test_doi_macro_other_name(self) -> None:
         self.assertEqual(

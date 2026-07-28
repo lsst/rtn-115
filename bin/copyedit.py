@@ -57,7 +57,9 @@ def main() -> int:
         action="store_true",
         help="Also report audit-only rules (never auto-applied; for human review).",
     )
-    parser.add_argument("files", nargs="*", help="Files to process (default: all tracked .tex files).")
+    parser.add_argument(
+        "files", nargs="*", help="Files to process (default: all tracked .tex files)."
+    )
     args = parser.parse_args()
 
     rules_path = Path(args.rules)
