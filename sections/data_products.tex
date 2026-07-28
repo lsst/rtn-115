@@ -269,6 +269,7 @@ Therefore, the DIA Object catalog contains summary statistics of their fluxes, s
 The DIA Object catalog contains data for \ndiaobjects DIA objects.
 
 \subsubsection{DIA Source}
+\label{sssec:DIASource}
 The DIA Source catalog contains data on all the sources detected at $>5\sigma$ significance, including those associated with known solar system objects, in the difference images.
 Unlike sources detected in visit images, DIA sources detected in difference images have gone through an association step in which an attempt has been made to associate them into underlying objects called DIA objects.
 The DIA Source catalog consolidates all this information across multiple visits and bands.
@@ -276,18 +277,53 @@ The detections reported in the DIA Source catalog have not undergone deblending.
 
 The DIA Source catalog contains data for \ndiasources DIA sources.
 
+\subsubsection{Solar System Source}
+\label{sssec:SSSource}
+The Solar System Sources catalog is derived from the Rubin observations.
+It contains one row per associated detection and links measured DIA Source photometry and astrometry to a predicted object in the Solar System Object catalog.
+As entries in the Solar System Source catalog stem from the DIA Source catalog, they have all been detected at $>5\sigma$ significance in at least one band.
+The \texttt{diaSourceId} can be used to identify corresponding detections in the DIA Source catalog; each \texttt{diaSourceId} occurs at most once in the Solar System Source catalog.
+The \texttt{ssObjectId} or \texttt{designation} can be used to identify corresponding entries in the object-level catalogs (i.e., Solar System Object, MPC Orbit, Current Identifications, and Numbered Identifications).
+Each entry in the Solar System Source catalog carries the measured position and the Sorcha \citep[][]{2025AJ....170..100M,2025AJ....170...97H} ephemeris position, the measured PSF photometry and band, the predicted apparent $V$-band magnitude, phase angle and solar elongation, heliocentric and topocentric distances, sky-plane and radial rates, and Cartesian position and velocity components.
+R.A. and decl. are in degrees in the ICRS frame; the observation epoch \texttt{DIA\_midpointMjdTai} is an MJD on the TAI time scale.
+State vectors are equatorial and evaluated at the light-emission (retarded) time.
+External comparisons must convert DP2 TAI epochs to the service's time scale; at a representative main-belt rate, neglecting the 37\,s TAI--UTC offset produces a $\sim0.23\arcsec$ shift.
+The \texttt{ephVmag} field is an approximate predicted Johnson $V$ magnitude derived from the input catalog photometric parameters.
+It is not a prediction in the Rubin band of the associated detection, so comparisons to the measured $ugrizy$ photometry include both object color and phase-model differences.
+One delivered record for 2015~GE86 has \texttt{ephVmag}$=104.6$ because the input absolute magnitude was the MPC missing-value sentinel $H=99.99$; this value should be treated as missing rather than physical.
+The Solar System Source catalog contains \nsolarsystemsources solar system source rows for \nssobjects distinct objects.
+
+
 \subsubsection{Solar System Object}
 \label{sssec:SSObject}
-The Solar System Object catalog and the MPC Orbit Database (MPCORB) carry information about solar system objects.
-The MPCORB table provides the MPC-computed orbital elements for all known asteroids, including those that Rubin discovered.
+The Solar System Object catalog is also derived from Rubin observations.
+It contains one row per object and summarizes its observations, per-band photometric properties, including absolute magnitudes, and selected orbit-derived quantities.
+The Solar System Object catalog contains \nssobjects entries; one entry for each distinct object.
+There are 17,528 objects with a single associated detection, 31,873 with at most two, 212,181 with at least ten, and 7,293 with at least 100.
+The main belt dominates the distance and rate distributions, but the catalog includes 35 objects observed beyond 50\,au, 765 source records at topocentric distances below 0.1\,au, and 2,105 records with predicted rates above
+$1\mathrm{\,deg\,day^{-1}}$.
+The ecliptic-latitude range of the objects, $-69.4\degr$ to $+13.3\degr$, primarily reflects the southern DP2 footprint rather than the intrinsic solar system distribution.
 
-The Solar System Object catalog serves primarily to provide the mapping between the IAU designation of an object (listed in MPCORB), and the internal \texttt{ssObjectId} identifier, which is used as a key to find solar system object observations in the DIA Source and Solar System Source catalogs.
-The Solar System Object catalog contains data for \nssobjects solar system objects.
+\subsubsection{MPC Orbit, Current Identifications, Numbered Identifications}
 
-\subsubsection{Solar System Source}
-The Solar System Source catalog contains data on all DIA sources that are either associated with previously known solar system objects, or have been confirmed as newly discovered solar system objects by confirmation of their orbital properties.
-As entries in the Solar System Source catalog stem from the DIA Source catalog, they have all been detected at $>5\sigma$ significance in at least one band.
-The Solar System Source catalog contains data for \nsolarsystemsources solar system sources.
+The MPC Orbit, Current Identifications, and Numbered Identifications catalogs are each auxiliary snapshots of tables in the MPC PostgreSQL database.
+They provide reference catalogs for orbital information and object cross-identification, retaining the upstream MPC semantics rather than being recomputed from DP2 observations.
+Their field definitions are documented in the MPC schema for the PostgreSQL tables replicated through the Small Bodies Node.\footnote{\url{https://docs.minorplanetcenter.net/mpc-ops-docs/data-and-services/replicated-tables-schema/}}
+The MPC Orbits catalog records the MPC orbit solution and associated fit information for designated objects.
+The Current Identifications catalog identifies primary and secondary provisional designations that refer to the same object, and the Numbered Identifications catalog connects an object's permanent number to
+its primary provisional designation.
+The former includes both self-mappings ($A=A$) and links among aliases ($A=B$); the latter also carries IAU naming information when available.
+The MPC Orbits catalog available at ingestion did not contain comets.
+Because the predictions used for association were generated from that snapshot, no comets were available to be associated with DP2 detections and none occur in the delivered Solar System Source or Solar System Object catalogs.
+
+In the Solar Syetem Source, Solar System Object, and MPC Orbits catalogs,
+\texttt{designation} denotes the unpacked primary provisional designation of
+the object.  This was added to the delivered MPS Orbits copy
+as an end-user convenience; there it is identical, row by row, to
+\texttt{unpacked\_primary\_provisional\_designation}.  It therefore provides
+a readable and direct join key among the Solar System Source, Solar System Object, MPC Orbits catalogs, without requiring users to unpack MPC designations.
+For query performance, users should nevertheless prever to use integer
+identifiers such as \texttt{ssObjectId} to link catalogs wherever those identifiers are available, and use \texttt{designation} for readability or when an appropriate integer identifier is unavailable.
 
 \subsubsection{Calibration Reference Catalog}
 \label{sssec:referencecatalog}
@@ -331,7 +367,7 @@ Maps are initially created per tract and then combined to produce a final consol
 At each sky location, represented by a spatial pixel in the \gls{HEALPix}\citep[][]{2005ApJ...622..759G} grid, values are derived using statistical operations, such as minimum, maximum, mean, weighted mean, or sum, depending on the property.
 
 DP2 contains \nsurveypropertymaps Survey Property maps.
-The available maps describe total exposure times, observation epochs (one each for the earliest, mean, and latest observation epoch), \gls{PSF} size and \gls{shape} (one for each of the $e^1$ and $e^2$ shape parameters; see \secref{ssec:psf_models}), PSF magnitude limits, sky background and noise levels, as well as astrometric shifts (one each for R.A. and decl.) and PSF distortions (one for each of the $e^1$ and $e^2$ shape parameters) due to wavelength-dependent atmospheric \gls{DCR} effects.
+The available maps describe total exposure times, observation epochs (one each for the earliest, mean, and latest observation epoch), \gls{PSF} size and \gls{shape} (one for each of the $e^1$ and $e^2$ shape parameters), PSF magnitude limits, sky background and noise levels, as well as astrometric shifts (one each for R.A. and decl.) and PSF distortions (one for each of the $e^1$ and $e^2$ shape parameters) due to wavelength-dependent atmospheric \gls{DCR} effects.
 
 They all use the dataset type format \texttt{deepCoadd\_<PROPERTY>\_consolidated\_map\_<STATISTIC>}.
 For example, \texttt{deepCoadd\_exposure\_time\_consolidated\_map\_sum} provides a spatial map of the total exposure time accumulated per

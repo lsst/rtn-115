@@ -289,3 +289,39 @@ As with DP1, multiepoch forced photometry is performed on both the Visit Images 
 For users interested in light curve construction, we recommend using the forced photometry performed on the difference-images (the \texttt{psfDiffFlux} column of the ForcedSource table), since this measurement isolates the time-variable component of the flux and is unaffected by contamination from non-varying nearby sources.
 Forced photometry carried out directly on the Visit Images, by contrast, may pick up flux from blended or nearby static objects, and the severity of this contamination depends on the seeing.
 The centroids adopted for this multiepoch forced photometry step are drawn either from coadd-based object positions or from the DIAObjects, which are constructed from the DIASources associated from detections in the difference images.
+
+\subsection{Solar System Association}
+\label{sec:ss-association}
+
+The solar system association input was a 2025 March 13 snapshot of the MPC Orbit database\footnote{Small bodies discovered after 2025 March 13---including those found in Rubin data---are therefore absent from the Solar System Source catalog \secref{sssec:SSSource}}, limited to objects whose observational arcs exceeded two days.
+Associations were made independently for each detector and visit using positions predicted by Sorcha \citep[][]{2025AJ....170..100M,2025AJ....170...97H} at the visit epoch from this orbit catalog.
+Predicted objects were first restricted to the detector footprint.
+Measured DIA Source (\secref{sssec:DIASource}) coordinates were represented as unit vectors on the celestial sphere and stored in a $k$-d tree.
+For each predicted position, the algorithm identified the nearest detection within $1\arcsec$.
+Candidate pairs were considered in increasing separation, accepting a pair only if neither member had already been assigned.
+Thus, this is a positional, one-to-one match; it uses neither brightness, color, morphology, nor rate and does not calculate a probabilistic association score.
+The delivered \texttt{diaDistanceRank} is set to one for every row and should not be used as a measure of match ambiguity.
+Chance associations remain possible because the match does not use brightness or detection reliability, and are more likely where the DIA source density is high.
+Users constructing a high-purity sample should consider detection reliability, angular and cross-track residuals, consistency with the predicted magnitude, and the uncertainty of the input orbit.
+Detection-level reliability information requires reference to the DIA Source catalog (\secref{sssec:DIASource}).
+
+\subsection{Solat System Photometry and Phase Curves}
+
+The Solar Sytem Object photometric fields were derived independently in each of the $ugrizy$ bands from PSF fluxes in the associated detections.
+For a flux $f$ in nJy, the conversion used was $m_{\rm AB}=31.4-2.5\log_{10}f$, with magnitude uncertainty $1.085736\,\sigma_f/f$.
+Non-positive fluxes therefore yield non-finite magnitudes and were removed before fitting.
+Apparent magnitudes were reduced to unit heliocentric and topocentric distance using $m(1,1,\alpha)=m-5\log_{10}(r\Delta)$, where $r$ and $\Delta$ are in au.
+
+The reduced magnitudes were described with the $H,G_{12}$ phase function of \citet[][]{2010Icar..209..542M}.
+The DP2 processing fixed $G_{12}=0.5$ and fit only the absolute magnitude $H$, since the short observing interval and limited phase-angle coverage do not generally support a stable two-parameter fit.
+Accordingly, valid per-band \texttt{G12} values are all 0.5, while \texttt{G12Err} and the $H$--$G_{12}$ covariance are undefined.
+A 0.05~mag uncertainty floor was added in quadrature to the measurement uncertainties to reduce sensitivity to unmodeled scatter, including rotational variability.
+After removing non-finite magnitudes, an initial fit with a robust loss was used to reject residuals beyond $10\sigma$, followed by a conventional least-squares fit to the retained observations.
+The per-band \texttt{nObsUsed} field records the retained count and should be compared with \texttt{nObs} when assessing clipping or invalid photometry.
+
+Valid $H$ estimates were obtained for 35,268, 196,015, 224,888, 231,890,
+203,341, and 90,789 objects in $ugrizy$, respectively.
+Among objects with sufficient observations for a fit, failures range from 53 in $y$ to 1,034 in $g$, or less than approximately 0.5\% in every band.  Depending on band, 1--5\% of the eligible measurements were removed as invalid or clipped.
+There are 25,706 objects with no fitted $H$ in any band; many are represented by only one detection and hence have insufficient information for a fit.
+The median fitted $H$ values are 18.7, 18.2, 17.5, 17.3, 17.2, and 16.6~mag in $ugrizy$.
+These statistics are dominated by main-belt objects and are also shaped by the DP2 footprint, cadence, phase-angle coverage, and band-dependent detection selection; they should not be interpreted as intrinsic population size distributions.
