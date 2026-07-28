@@ -93,7 +93,9 @@ def plot_std_bandpasses(throughputs, outfile):
         ax.plot(wavelengths, tputs, lw=1.5, color=color, alpha=0.95, zorder=2)
 
         if fill == "solid":
-            ax.fill_between(wavelengths, tputs, 0, where=tputs > 0, color=color, alpha=0.3, zorder=1)
+            ax.fill_between(
+                wavelengths, tputs, 0, where=tputs > 0, color=color, alpha=0.3, zorder=1
+            )
         elif fill == "gradient":
             plot_gradient(ax, color, band, wavelengths, tputs, alpha=0.5)
 
@@ -112,7 +114,10 @@ def plot_std_bandpasses(throughputs, outfile):
             ha="center",
             va="bottom",
             alpha=1,
-            path_effects=[pe.Stroke(linewidth=0.7, foreground=color, alpha=0.7), pe.Normal()],
+            path_effects=[
+                pe.Stroke(linewidth=0.7, foreground=color, alpha=0.7),
+                pe.Normal(),
+            ],
             zorder=3,
         )
 
@@ -165,7 +170,9 @@ def assert_bandpasses_differ(throughputs_by_release):
             ref_bp = ref_throughputs[band]
             other_bp = other_throughputs[band]
             same_shape = ref_bp["throughput"].shape == other_bp["throughput"].shape
-            identical = same_shape and np.array_equal(ref_bp["throughput"], other_bp["throughput"])
+            identical = same_shape and np.array_equal(
+                ref_bp["throughput"], other_bp["throughput"]
+            )
             assert not identical, (
                 f"Band '{band}' standard passband is identical between "
                 f"{ref_release.upper()} and {other_release.upper()}; expected different curves."
@@ -215,7 +222,9 @@ def plot_release_comparison_grid(throughputs_by_release, outfile, nrows=2, ncols
     """Plot the standard passband for every band, overlaid across releases,
     laid out in a nrows x ncols grid of subplots (one panel per band)."""
     band_list = list(bands)
-    fig, axes = plt.subplots(nrows, ncols, figsize=(ncols * 4.2, nrows * 3), sharex=False)
+    fig, axes = plt.subplots(
+        nrows, ncols, figsize=(ncols * 4.2, nrows * 3), sharex=False
+    )
     axes = np.atleast_1d(axes).flatten()
 
     for ax, band in zip(axes, band_list):
@@ -238,7 +247,7 @@ def plot_release_comparison_grid(throughputs_by_release, outfile, nrows=2, ncols
         ax.legend(fontsize=9)
 
     # Hide any unused panels if there are fewer bands than grid cells.
-    for ax in axes[len(band_list):]:
+    for ax in axes[len(band_list) :]:
         ax.set_visible(False)
 
     fig.tight_layout()
@@ -254,7 +263,9 @@ def plot_release_comparison_grid(throughputs_by_release, outfile, nrows=2, ncols
 if __name__ == "__main__":
     throughputs_by_release = {}
     for release, cfg in RELEASES.items():
-        butler = Butler(cfg["repo"], instrument=cfg["instrument"], collections=cfg["collections"])
+        butler = Butler(
+            cfg["repo"], instrument=cfg["instrument"], collections=cfg["collections"]
+        )
         throughputs_by_release[release] = get_throughputs(butler)
 
     assert_bandpasses_differ(throughputs_by_release)
@@ -267,4 +278,4 @@ if __name__ == "__main__":
     # Plot a comparison for interest between all releases per band
     grid_outfile = "./figures/std_bandpass_compare_dp1dp2.pdf"
     # plot_release_comparison_grid(throughputs_by_release, grid_outfile)
-    # print(f"Saved DP1 vs DP2 comparison grid to {grid_outfile}") 
+    # print(f"Saved DP1 vs DP2 comparison grid to {grid_outfile}")
