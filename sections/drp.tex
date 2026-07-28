@@ -290,7 +290,8 @@ For users interested in light curve construction, we recommend using the forced 
 Forced photometry carried out directly on the Visit Images, by contrast, may pick up flux from blended or nearby static objects, and the severity of this contamination depends on the seeing.
 The centroids adopted for this multiepoch forced photometry step are drawn either from coadd-based object positions or from the DIAObjects, which are constructed from the DIASources associated from detections in the difference images.
 
-\subsection{Solar System Association}
+\subsection{Solar System}
+\subsubsection{Source Association}
 \label{sec:ss-association}
 
 The solar system association input was a 2025 March 13 snapshot of the MPC Orbit database\footnote{Small bodies discovered after 2025 March 13---including those found in Rubin data---are therefore absent from the Solar System Source catalog \secref{sssec:SSSource}}, limited to objects whose observational arcs exceeded two days.
@@ -305,7 +306,7 @@ Chance associations remain possible because the match does not use brightness or
 Users constructing a high-purity sample should consider detection reliability, angular and cross-track residuals, consistency with the predicted magnitude, and the uncertainty of the input orbit.
 Detection-level reliability information requires reference to the DIA Source catalog (\secref{sssec:DIASource}).
 
-\subsection{Solat System Photometry and Phase Curves}
+\subsection{Photometry and Phase Curves}
 
 The Solar Sytem Object photometric fields were derived independently in each of the $ugrizy$ bands from PSF fluxes in the associated detections.
 For a flux $f$ in nJy, the conversion used was $m_{\rm AB}=31.4-2.5\log_{10}f$, with magnitude uncertainty $1.085736\,\sigma_f/f$.
