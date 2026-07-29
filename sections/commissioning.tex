@@ -194,25 +194,29 @@ Pre-\gls{LSST} visits not overlapping existing \gls{SV} survey regions were not 
 The Rubin \gls{DMS} is responsible for the acquisition, transfer, archiving, processing, and distribution of all data produced by the observatory.
 It operates as a fully automated end-to-end system, ingesting raw pixels from the \gls{LSSTCam} focal plane within seconds of shutter close and delivering science-ready data products to a global community of researchers within 120 secs.
 
-The data products in \gls{DP2} are the result of \gls{DRP} (secref{sec:drp}), which reprocesses the full accumulated image archive to produce the deep, well-calibrated data products that form the basis of each Data Release, delivered to the community via the \gls{RSP} \citep[][]{LSE-319}.
+The data products in \gls{DP2} are the result of \gls{DRP} (\secref{sec:drp}), which reprocesses the full accumulated image archive to produce the deep, well-calibrated data products that form the basis of each Data Releases are delivered to the community via the \gls{RSP} (\secref{sec:data_services}).
 During the \gls{LSSTCam} commissioning campaign, the \gls{DMS} was operated at full scale for the first time, transferring, archiving, and processing all \gls{LSSTCam} images and validating the end-to-end data flow from summit to \gls{RSP}.
 
 % Includes rapid analysis and quick look
 \subsubsection{Data Acquisition, Transfer and Archive}
 \label{ssec:dataacq}
-Following each exposure, the \gls{DAQ} system at the summit stores the raw image data as a set of 205 files per exposure: 189 science sensors, 8 wavefront sensors, and 8 guiding sensors on the \gls{LSSTCam} focal plane.
+Following each exposure, the \gls{DAQ} system at the summit stores the raw image data as a set of 205 files per exposure: 189 science sensors\footnote{(Only 188 science sensor files were generated per exposure  as sensor R30/S12 was non-operational throughout; see \S\ref{ssec:lsstcam}).}, 8 wavefront sensors, and 8 guiding sensors on the \gls{LSSTCam} focal plane.
 Uncompressed, a full science exposure totals $\sim$\,8.2\,GB; after compression, $\sim$\,4\,GB.
-Transfer occurs over Rubin's Long Haul Network, a dedicated hardware \gls{IPsec}-encrypted link with 100\,Gbps primary and 40\,Gbps backup capacity.
-A local buffer at the base facility can store up to three days' worth of data, providing resilience against network interruptions without halting observations \citep[][]{DMTN-306}.
 
 At the summit, each exposure is processed in near real time by the Rapid Analysis pipeline, performing \gls{ISR} (\secref{ssec:isr}) and source detection (\secref{ssec:detection}) on a 30--60 second timescale to provide quick-look image diagnostics and support real-time \gls{AOS} assessment.
-The resulting per-visit quality metrics formed the basis of the visit quality characterisations used to define the \gls{DP2} coadd inputs; summary visit and detector-level metadata are available to users as \gls{DP2} data products (\S\ref{sec:data_products}).
+The resulting per-visit quality metrics formed the basis of the visit quality characterisations used to define the \gls{DP2} coadd inputs; summary visit and detector-level metadata are available to users as \gls{DP2} data products (\secref{ssec:metadata}) and are also available in an opsim-format SQLite database\secref{sssec:opsim}.
 
 \subsection{LSST Science Pipelines}
 \label{ssec:pipelines}
-
-TB done
-
+%
+The \gls{DP2} science-ready data products in are the result of dedicated \gls{DRP} campaigns executed at the \gls{USDF} at \gls{SLAC}.
+\gls{DP2} processing was done using version \sciencepipelinesversion of the LSST Science Pipelines \citep[][]{PSTN-019} and follows a four-stage structure.
+Stage~1 performs single-visit processing, including \gls{ISR}, source detection, astrometric and photometric calibration, and \gls{PSF} characterisation.
+Stage~2 performs global recalibration, Gaussian-process modelling of atmospheric turbulence, proper motion and parallax fitting, and \gls{PSF} re-estimation using a standard star set.
+Stage~3 performs coaddition and measurement on coadded images, including the generation of the Object catalog.
+Stage~4 performs \gls{DIA} and  solar system object processing, and the generation of light curves via forced photometry.
+Each stage underwent continuous data quality monitoring and a formal verification and validation review before processing advanced to the subsequent stage.
+A full description of the processing pipelines, algorithms, and configuration used for \gls{DP2} is given in \secref{sec:drp}.
 
 % Image Quality -- after the data processing
 \subsection{Delivered Image Quality}
@@ -220,11 +224,10 @@ TB done
 %
 The delivered image quality at Rubin Observatory reflects contributions from the atmosphere, dome environment, telescope optics, \gls{AOS}, and LSSTCam.
 The design specification for the median delivered \gls{PSF} \gls{FWHM}, referenced to zenith at 550,nm, is 0\farcs7 \citep[][]{LPM-17}, corresponding to the measured median atmospheric seeing of 0\farcs72 at Cerro Pach'on \citep[][]{SOTN-004} added in quadrature with a total system contribution of 0\farcs35 \citep[][]{SOTN-004}.
-
 During the period covered by the \gls{DP2} dataset, the system had not yet consistently met this design specification \citep[][]{SOTN-004, SITCOMTN-170}.
 The primary excess contributions are from the optical system,  including residual \gls{AOS} errors and mirror thermal gradients, as well as from dome seeing.
 The current total system contribution to \gls{PSF} \gls{FWHM} is approximately 0\farcs55--0\farcs60, compared to the design allocation of 0\farcs40.
-At the median survey airmass of 1.2, an atmospheric contribution of 0\farcs72 at zenith corresponds to $\sim$\,0\farcs80; combined in quadrature with the current system contribution, this is consistent with the observed median delivered image quality of $\sim$\,1\farcs0 \gls{PSF} \gls{FWHM} in the \textit{riz} bands during the \gls{DP2} observations \citep[][]{RTN-122}.
+At the median survey airmass of 1.2, an atmospheric contribution of 0\farcs72 at zenith corresponds to $\sim$\,0\farcs80; combined in quadrature with the current system contribution, this is consistent with the observed median delivered image quality of $\sim$\,1\farcs0 \gls{PSF} \gls{FWHM} in the $riz$ bands during the \gls{DP2} observations \citep[][]{RTN-122}.
 
 % \input{./dp2_iq_summary_target_band}
 The median delivered image quality per band is provided in \tabref{tab:iq_band_field}.
