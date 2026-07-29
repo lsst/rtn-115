@@ -120,15 +120,11 @@ The sky distribution of \gls{DP2} visits across all three phases is shown in \fi
 All observations were taken using the \gls{FBS}, which scheduled visits adaptively to balance sky coverage, filter distribution, airmass, and lunar phase constraints \citep[][]{SMTN-020}.
 %
 \begin{figure*}[hbt!]
-\plotone{dp2_skymap}
-\caption{Sky distribution of \gls{DP2} visits, showing the three distinct phases of the observing program.
-The small-field observations acquired during and shortly after the Rubin First Look campaign are visible as compact, deeply observed regions including \gls{COSMOS}, M49, the Prawn Nebula, and Rubin\_SV\_225\_-40.
-The commissioning-era \gls{SV} wide survey footprint covers $\sim\,3,000\,deg^2$ tracing the ecliptic plane, with increasing visit density toward the $\sim\,300\,deg^2$ core region.
-The four \gls{LSST} \glspl{DDF}s targeted during the \gls{SV} deep survey (\gls{ECDFS}, \gls{EDFS}, ELAISS1, and \gls{COSMOS}) are visible as high-density compact regions within the wider footprint.
-The pre-\gls{LSST} Early Operations observations are visible as sparser, predominantly $i$-band coverage extending across a larger area of the \gls{LSST} footprint.}
+\plotone{dp2_sky_coverage}
+\caption{Sky distribution of \gls{DP2} visits across the three components of the observing program. Small-field survey areas are marked with black circles and \glspl{DDF} with violet squares. The \gls{SV} wide survey covers $\sim\,3,000\,deg^2$ tracing the ecliptic plane, with visit density increasing toward the $\sim\,300\,deg^2$ core. Pre-\gls{LSST} Early Operations observations appear as sparser, predominantly ii
+$i$-band coverage extending across a larger area of the \gls{LSST} footprint.}
 \label{fig:dp2_sky}
 \end{figure*}
-
 Data collected between the end of the \gls{DP2} observing window on \dptwoenddate and the formal start of the \gls{LSST} on \lsststartdate will be processed and made available to \gls{LSST} data rights holders through the same \gls{RSP} services.
 The format and timing of that release are still to be determined; planning will begin once \gls{DP2} has been delivered \citep[][]{RTN-011}
 
@@ -142,23 +138,28 @@ Observations were typically acquired in sequences of at least 10 visits per band
 Several of these fields, including \gls{COSMOS}, M49, the Prawn Nebula region, and Rubin\_SV\_225\_-40, received substantial numbers of visits and are among the most deeply observed regions in \gls{DP2}.
 The \gls{COSMOS} field was first observed as part of the small-field campaign but was not accessible during the main \gls{SV} survey period; additional observations were later acquired during the Early Operations phase.
 
-A summary of the data collected during the small-field surveys, including visit counts and median delivered image quality expressed as the \gls{PSF} \gls{FWHM}, is provided in \tabref{tab:sv_small_field_summary}.
+A summary of the data collected during the small-field surveys, including visit counts and median delivered image quality expressed as the \gls{PSF} \gls{FWHM}, is provided in \tabref{tab:dp2_sf_visits}
 
-\input{tables/dp2_small_field_observations}
+
+
+\input{tables/dp2_sf_visits}
 
 % SV commissioning surveys
 \subsubsection{Science Validation Surveys}
 \label{sssec:sv_surveys}
 %
+\todo{Plots and estimates of coadded depth still need to be added}
+
 The \gls{SV} surveys began on \svcampaignstartdate and comprised two interleaved components within a single \gls{FBS} configuration, a wide survey and a deep survey.
 
 The Wide Survey covered an initial footprint of $\sim$\,3,000\,deg$^2$ tracing the ecliptic plane from dense regions of the Galactic Bulge through low-dust regions of the planned \gls{LSST} \gls{WFD} footprint.
 Approximately halfway through the SV period, the footprint was consolidated to $\sim$\,750\,deg$^2$, and further to $\sim$\,300\,deg$^2$ in the final week of commissioning to concentrate visits and achieve the depth required for difference-image testing.
 As a result, median visit counts and coadded depth increase substantially toward the inner regions of the footprint: the full 3,000\,deg$^2$ region reaches a median of 38 visits across all bands ($m\_5 \approx 25.0$), the 750\,deg$^2$ subset reaches 56 visits ($m\_5 \approx 25.8$), and the 300\,deg$^2$ core reaches 64 visits ($m\_5 \approx 25.7$).
-\tabref{tab:sv_wide_observations}  provides the median numbers of visits and estimated m\_5 coadded depths within each of the subsets of the wide SV area.
 
+\todo{Tables of n visits and depth in WFD area still to come}
 
-\input{tables/dp2_sv_wide_observations}
+%\tabref{tab:sv_wide_observations}  provides the median numbers of visits and estimated m\_5 coadded depths within each of the subsets of the wide SV area.
+%\input{tables/dp2_wfd_visits}
 
 % Deep survey
 The Deep Survey targeted four of the five planned \gls{LSST} \gls{DDF}s:\gls{ECDFS}, \gls{EDFS} (fields A and B), ELAISS1, and \gls{COSMOS}.
@@ -170,14 +171,14 @@ The dither pattern for the \glspl{DDF} evolved during the campaign; early observ
 \tabref{tab:sv_ddf_summary}  provides the median numbers of visits and estimated m\_5 coadded depths within each of the subsets of the wide SV area.
 
 
-\input{tables/dp2_sv_ddf_observations}
+\input{tables/dp2_ddf_visits}
 
 % Early ops operations
 \subsubsection{Early Operations Observations}
 \label{sssec:early_ops}
 %
 Following the transition to Operations on \startoperations, \gls{FBS}-driven observations resumed during the Early Operations optimization period.
-Observations during this period, which ran from \startoperations through \dptwoenddate, were a mixture of engineering activities and \gls{FBS}-driven survey observations aimed at improving image quality and survey speed in preparation to  start the \gls{LSST}, and  building difference-imaging templates across the full \gls{LSST} footprint \citep[][]{survey-strategy-dp2}.
+Observations during this period, which ran from \startoperations through \dptwoenddate, were a mixture of engineering activities and \gls{FBS}-driven survey observations aimed at improving image quality and survey speed in preparation to  start the \gls{LSST}, and  building difference-imaging templates across the full \gls{LSST} footprint..
 
 The pre-\gls{LSST} observations are characterised by a lower and less regular cadence than
 the \gls{SV} surveys, reflecting frequent engineering interruptions.
@@ -204,9 +205,9 @@ Following each exposure, the \gls{DAQ} system at the summit stores the raw image
 Uncompressed, a full science exposure totals $\sim$\,8.2\,GB; after compression, $\sim$\,4\,GB.
 
 At the summit, each exposure is processed in near real time by the Rapid Analysis pipeline, performing \gls{ISR} (\secref{ssec:isr}) and source detection (\secref{ssec:detection}) on a 30--60 second timescale to provide quick-look image diagnostics and support real-time \gls{AOS} assessment.
-The resulting per-visit quality metrics formed the basis of the visit quality characterisations used to define the \gls{DP2} coadd inputs; summary visit and detector-level metadata are available to users as \gls{DP2} data products (\secref{ssec:metadata}) and are also available in an opsim-format SQLite database\secref{sssec:opsim}.
+The resulting per-visit quality metrics formed the basis of the visit quality characterisations used to define the \gls{DP2} coadd inputs; summary visit and detector-level metadata are available to users as \gls{DP2} data products (\secref{ssec:metadata}) and are also available in an opsim-format SQLite database ()\secref{sssec:opsim}).
 
-\subsection{LSST Science Pipelines}
+\subsubsection{LSST Science Pipelines}
 \label{ssec:pipelines}
 %
 The \gls{DP2} science-ready data products in are the result of dedicated \gls{DRP} campaigns executed at the \gls{USDF} at \gls{SLAC}.
@@ -229,13 +230,14 @@ The primary excess contributions are from the optical system,  including residua
 The current total system contribution to \gls{PSF} \gls{FWHM} is approximately 0\farcs55--0\farcs60, compared to the design allocation of 0\farcs40.
 At the median survey airmass of 1.2, an atmospheric contribution of 0\farcs72 at zenith corresponds to $\sim$\,0\farcs80; combined in quadrature with the current system contribution, this is consistent with the observed median delivered image quality of $\sim$\,1\farcs0 \gls{PSF} \gls{FWHM} in the $riz$ bands during the \gls{DP2} observations \citep[][]{RTN-122}.
 
+\todo{Image quality tables and plots still to come}
 % \input{./dp2_iq_summary_target_band}
-The median delivered image quality per band is provided in \tabref{tab:iq_band_field}.
-\figref{fig:delivered_image_quality} shows the  distribution of PSF FWHM (in arcseconds) over all
-% \nvisitdetectorrows  -- need to check this is the value
-individual sensors images.
-\begin{figure}[hbt!]
-%\plotone{dp2_delivered_image_quality}
-\caption{}
-\label{fig:delivered_image_quality}
-\end{figure}
+%The median delivered image quality per band is provided in \tabref{tab:iq_band_field}.
+%\figref{fig:delivered_image_quality} shows the  distribution of PSF FWHM (in arcseconds) over all
+%% \nvisitdetectorrows  -- need to check this is the value
+%individual sensors images.
+%\begin{figure}[hbt!]
+%%\plotone{dp2_delivered_image_quality}
+%\caption{}
+%\label{fig:delivered_image_quality}
+%\end{figure}
