@@ -69,7 +69,7 @@ Its filter exchanger can hold five filters at a time, as opposed to only three f
 Unlike the \gls{LSSTComCam} bandpasses, which were built entirely from fiducial mirror, lens, filter, and detector quantum-efficiency curves in the absence of any device-specific measurements, the \gls{DP2} standard bandpasses incorporate real measurements where available.
 The fiducial mirror and lens throughputs are still used, since detector- and mirror-level measurements have not yet been incorporated into \gls{DP2}.
 The filter throughput, however, is now the focal-plane average of vendor filter scans, using the same underlying filter design as \gls{LSSTComCam} but capturing real variation across the field of view.
-The detector quantum efficiency is likewise the focal-plane average \gls{ITL} and \gls{E2V}.
+The detector quantum efficiency is likewise the focal-plane average over all the \gls{ITL} and \gls{E2V} detectors combined.
 
 \gls{ITL} and \gls{E2V} sensors are not identical: \gls{ITL} devices have somewhat higher quantum efficiency in the red, so the focal-plane-averaged \gls{LSSTCam} response is marginally lower than the all-\gls{ITL} response used for \gls{LSSTComCam}.
 This chromatic difference is most apparent in the $g$ band, visible even by eye as a two-tone effect across the focal plane.
