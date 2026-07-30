@@ -2,6 +2,7 @@ DOCTYPE = RTN
 DOCNUMBER = 115
 DOCNAME = $(DOCTYPE)-$(DOCNUMBER)
 FLATDIR = forAAS
+SUBDIRS = figures
 
 tex = $(filter-out $(wildcard *aglossary.tex) , $(wildcard sections/*.tex) $(wildcard *.tex) )
 
@@ -32,18 +33,23 @@ flat:
 		mkdir $(FLATDIR) ; \
 	fi
 	latexpand --keep-comments -o $(FLATDIR)/$(DOCNAME).tex $(DOCNAME).tex
-	if [ -d "figures" ]; then \
-		cp figures/* $(FLATDIR) ;\
-	fi
+	@for dir in $(SUBDIRS); do \
+		if [ -d "$$dir" ] && [ -n "$$(ls -A $$dir 2>/dev/null)" ]; then \
+			cp $$dir/* $(FLATDIR); \
+			echo "  ✓ Copied $$dir"; \
+		fi; \
+	done
 	cp aas*.* $(FLATDIR)
 	cp *.bib $(FLATDIR)
 	cd $(FLATDIR) &&\
+	python3 $(TEXMFHOME)/../bin/extract_citations.py $(DOCNAME).tex &&\
+	sed -i '' 's|\\bibliography{local,lsst,ivoa,lsst-dm,refs_ads,refs,books}|\\bibliography{local,allcitations}|g' $(DOCNAME).tex &&\
 	latexmk -bibtex -xelatex -f $(DOCNAME) &&\
 	makeglossaries $(DOCNAME) &&\
 	latexmk -bibtex -xelatex -f $(DOCNAME) &&\
 	latexmk -c &&\
 	rm -f *.gls *.xdv *.glg *.glo *.ist *.bib &&\
-	rm README.txt
+	if [ -f README.txt ]; then rm README.txt; fi && \
 	echo "Flat files in $(FLATDIR)."
 
 .PHONY: clean
@@ -68,7 +74,7 @@ authors.txt: authors.yaml
 authors.csv: authors.yaml
 	$(UV_RUN) python $(TEXMFHOME)/../bin/db2authors.py -m aascsv > authors.csv
 
-aglossary.tex: $(tex) myacronyms.txt
+aglossary.tex: $(tex) myglossarydefs.csv
 	$(UV_RUN) python $(TEXMFHOME)/../bin/generateAcronyms.py -n -t"Sci DM Gen" -g $(tex)
 
 .PHONY: deps

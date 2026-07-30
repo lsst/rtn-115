@@ -100,14 +100,14 @@ The corresponding transmission curves are provided as a \gls{DP2} data product.}
 \label{ssec:calibration_system}
 %
 Unlike the \gls{LSSTComCam} campaign, during which the Rubin calibration system had not yet been installed and flat fielding relied entirely on twilight flats \citep[][]{rtn-095}, the \gls{LSSTCam} commissioning campaign had access to the Rubin flat field illumination system \citep[][]{sitcomtn-086}.
-The baseline calibration plan for the as-built system is described in \citet[][]{sitcomtn-086}; a full description of \gls{ISR} procedures and calibration data products is given in \citet[][]{10.1117/1.JATIS.11.1.011209}.
+The baseline calibration plan for the as-built system is described in \citet[][]{sitcomtn-086}; a full description of \gls{ISR} procedures and calibration data products is given in \citet[][]{2025JATIS..11a1209P}.
 
 The calibration system comprises a dome flat field screen, a \gls{CBP}, a \gls{NIST}-traceable silicon photodiode electrometer, and the \gls{AuxTel} for atmospheric monitoring.
 During the commissioning campaign, the \gls{CBP} was deployed at scale on \gls{LSSTCam} for the first time, providing in-situ measurements of the transmission profiles of five of the six \gls{LSST} broadband filters, $ugrizy$, across multiple primary mirror pupil positions, and characterising the angle-of-incidence-dependent blue-shift of the filter bandpass edges across the focal plane \citep[][]{2026arXiv260631822A}.
 Achieving absolute throughput calibration at the millimagnitude level  required by the \gls{LSST} requires a more precise characterisation of the \gls{CBP} transmission and a partial-pupil vignetting model; both are the subject of ongoing work \citep[][]{2026arXiv260631822A}.
 
-Calibration products generated for \gls{DP2} processing include bias frames, dark frames, dome flat fields, \glspl{PTC}, cross talk matrices, brighter-fatter kernels, linearity corrections, and \gls{CTI} models \citep[][]{10.1117/1.JATIS.11.1.011209}.
-Dome flat fields were used as the primary flat field source, supplemented by a star-flat-based illumination correction and, where dome illumination was unavailable, twilight flats \citep[][]{10.1117/1.JATIS.11.1.011209}.
+Calibration products generated for \gls{DP2} processing include bias frames, dark frames, dome flat fields, \glspl{PTC}, cross talk matrices, brighter-fatter kernels, linearity corrections, and \gls{CTI} models \citep[][]{2025JATIS..11a1209P}.
+Dome flat fields were used as the primary flat field source, supplemented by a star-flat-based illumination correction and, where dome illumination was unavailable, twilight flats \citep[][]{2025JATIS..11a1209P}.
 Certified calibration products are versioned in the \gls{USDF} archive and transferred to the summit as needed.
 The full suite of calibration and throughput data products included in \gls{DP2} is described in \secref{sec:data_products}.
 
@@ -171,7 +171,6 @@ The remaining \glspl{DDF} were observed primarily in $griz$, as the $u$ and $y$ 
 The dither pattern for the \glspl{DDF} evolved during the campaign; early observations used only small translational dithers with no intra-night rotation, while later observations introduced both translational and rotational intra-night dithers.
 \tabref{tab:dp2_ddf_visits}  provides the median numbers of visits within each of the subsets of the wide SV area.
 
-
 \input{tables/dp2_ddf_visits}
 
 % Early ops operations
@@ -205,7 +204,7 @@ During the \gls{LSSTCam} commissioning campaign, the \gls{DMS} was operated at f
 Following each exposure, the \gls{DAQ} system at the summit stores the raw image data as a set of 205 files per exposure: 189 science sensors\footnote{Only 188 science sensor files were generated per exposure  as sensor R30/S12 was non-operational throughout; see \S\ref{ssec:lsstcam}.}, 8 wavefront sensors, and 8 guiding sensors on the \gls{LSSTCam} focal plane.
 Uncompressed, a full science exposure totals $\sim$\,8.2\,GB; after compression, $\sim$\,4\,GB.
 
-At the summit, each exposure is processed in near real time by the Rapid Analysis pipeline, performing \gls{ISR} (\secref{ssec:isr}) and source detection (\secref{ssec:detection}) on a 30--60 second timescale to provide quick-look image diagnostics and support real-time \gls{AOS} assessment.
+At the summit, each exposure is processed in near real time by the Rapid Analysis pipeline, performing \gls{ISR} (\secref{sec:drp-singlevisit-calibrationisr}) and source detection (\secref{sec:drp-singlevisit}) on a 30--60 second timescale to provide quick-look image diagnostics and support real-time \gls{AOS} assessment.
 The resulting per-visit quality metrics formed the basis of the visit quality characterisations used to define the \gls{DP2} coadd inputs.
 Summary visit and detector-level metadata are available to users as \gls{DP2} data products (\secref{ssec:metadata}) and are also available in an opsim-format SQLite database ()\secref{sssec:opsim}).
 
