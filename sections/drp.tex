@@ -7,7 +7,7 @@ Data Release Processing (DRP) is the data pipeline that produces the calibrated 
 The processing campaign consists of four major stages: (1) single-frame processing, (2) \gls{calibration}, (3) multi-visit processing, (4) variable and transient source processing.
 Data quality and key metrics for verification and validation are actively monitored during each stage, and comprehensive verification and validation assessments are completed before processing the next stage.
 
-This section describes the high-level algorithms, configurations, and verification metrics for each stage, including changes and improvements from DP1 \citep{2026AJ....171..360V}.
+This section describes the high-level algorithms, configurations, and verification metrics for each stage, including changes and improvements from DP1 \citep[][]{2026AJ....171..360V}.
 
 \subsection{Single-Visit Processing} \label{sec:drp-singlevisit}
 
@@ -15,10 +15,12 @@ This section describes the high-level algorithms, configurations, and verificati
 
 \subsubsection{Calibration \& Instrument Signature Removal (ISR)} \label{sec:drp-singlevisit-calibrationisr}
 
-The first task in data processing begins with a raw image. This image is in discretized analog-to-digital units (ADU, or counts) and contains detector artifacts imprinted by the physics of the detector and readout hardware.
+The first task in data processing begins with a raw image.
+This image is in discretized analog-to-digital units (ADU, or counts) and contains detector artifacts imprinted by the physics of the detector and readout hardware.
 This step aims to remove any artifacts that are not of astrophysical origin and produce science-ready, single-visit exposures in floating-point electron units with complete pixel masks.
 
-The \gls{ISR} \gls{pipeline} is built on a physical model of the detectors and readout electronics, in which each artifact is tied to a specific point in the photon-transfer chain and is corrected using calibrations from dedicated campaigns conducted during the day or on cloudy nights. \figref{fig:isr_signal_chain} shows this model of the detector and readout components and the effects each imparts on the measured image. ISR works backward through the chain, undoing these effects in the reverse of the order in which they were imprinted.
+The \gls{ISR} \gls{pipeline} is built on a physical model of the detectors and readout electronics, in which each artifact is tied to a specific point in the photon-transfer chain and is corrected using calibrations from dedicated campaigns conducted during the day or on cloudy nights. \figref{fig:isr_signal_chain} shows this model of the detector and readout components and the effects each imparts on the measured image.
+ISR works backward through the chain, undoing these effects in the reverse of the order in which they were imprinted.
 Detector response and performance vary across the focal plane (see \secref{ssec:lsstcam}), and each detector must be calibrated individually.
 
 A detailed description of the DP2 ISR procedures and the calibration products they consume can be found in \citep[][]{RTN-117}.
@@ -60,7 +62,8 @@ The \gls{ISR} processing pipeline for DP2 performs the following steps, in order
 % A fourth epoch, not included in DP2, began January~23, 2026 with the \texttt{3s\_v2} sequencer, bringing reduced correlated noise and improved linear readout response.
 
 Compared to DP1~\citep[][]{rtn-095}, the ISR pipeline has been substantially upgraded, including improved sensor diagnostics and characterization, an entirely new brighter-fatter correction based on \citet[][]{2023A&A...670A.118A} and \citet[][]{2024PASP..136d5003B}, and an all-new flat-field production pipeline that corrects for gradients and mis-centering of the flat-field illumination using new calibration hardware.
-We generate flats using a new set of 10 LEDs spanning the full sensitivity range of the LSSTCam sensors (one in $u$, two each in $griz$, and a new 1050~nm \gls{LED} shared between $y$ and $z$). For the bands covered by two LEDs, we combine separate flats for each \gls{LED} (for the blue and red side of the band) into a so-called ``anaglyph'' flat, with a weighting that approximates a flat spectral energy distribution across the band.
+We generate flats using a new set of 10 LEDs spanning the full sensitivity range of the LSSTCam sensors (one in $u$, two each in $griz$, and a new 1050~nm \gls{LED} shared between $y$ and $z$).
+For the bands covered by two LEDs, we combine separate flats for each \gls{LED} (for the blue and red side of the band) into a so-called ``anaglyph'' flat, with a weighting that approximates a flat spectral energy distribution across the band.
 
 Together, these upgrades allow \gls{ISR} to deliver uniform, science-ready exposures across all LSSTCam science sensors for DP2.
 
@@ -108,38 +111,56 @@ accurate, is fit with Piff \citep[][]{2021MNRAS.501.1282J}.
 Broadly speaking, PSFEx and Piff both represent the \gls{PSF} on a pixel basis and interpolate its
 parameters across a single \gls{CCD} using two-dimensional polynomials.
 However, their technical implementations differ (see Bertin et al.
-and \citealt[][]{2021MNRAS.501.1282J} for more details). Previous comparisons have shown
+and \citealt[][]{2021MNRAS.501.1282J} for more details).
+Previous comparisons have shown
 that Piff outperforms PSFEx by delivering an unbiased reconstruction of
 the PSF size (see \citealt[][]{2018MNRAS.481.1149Z} and \citealt[][]{2021MNRAS.501.1282J}), can work in
 sky coordinates and can include a color dependency, and supports alternative models and interpolation
-schemes (see \citealt{2025OJAp....8E..26S} for more details).
+schemes (see \citealt[][]{2025OJAp....8E..26S} for more details).
 
 
 In the initial \gls{PSF} modeling pass, PSFEx is run with a pixel basis and
-a second-order polynomial interpolation on each \gls{CCD}. For the final modeling,
+a second-order polynomial interpolation on each \gls{CCD}.
+For the final modeling,
 Piff uses its PixelGrid with a fourth-order polynomial interpolation per
 \gls{CCD}—except in the $u$-band, where star counts are too low to constrain a
-fourth-order fit, so a second-order polynomial is used instead. Both are
+fourth-order fit, so a second-order polynomial is used instead.
+Both are
 working in pixel coordinates.
 %Choices of polynomial order, overall PSF-modeling performance, and known issues are discussed in \secref{sec:performance}.
 
 
 \subsubsection{Astrometric Calibration} \label{sec:drp-calibration-astrometry}
-The final astrometric calibration of the data follows the same method as for DP1, but with some key additions. As described in \cite[][]{10.71929/rubin/2570308}, a joint calibration is performed on all visits in a given band overlapping a given area.
-By associating all the isolated point sources shared among the overlapping visits, we can refine the astrometric solution beyond the level achieved in single-frame processing using only a reference catalog \citep{DMTN-266}.
+The final astrometric calibration of the data follows the same method as for DP1, but with some key additions.
+As described in \cite[][]{10.71929/rubin/2570308}, a joint calibration is performed on all visits in a given band overlapping a given area.
+By associating all the isolated point sources shared among the overlapping visits, we can refine the astrometric solution beyond the level achieved in single-frame processing using only a reference catalog \citep[][]{DMTN-266}.
 The full details of the method are described in \citet[][]{DMTN-266}.
 
-Unlike in \gls{DP1}, the area we use for individual fits of the astrometric solution is an order-3 healpix, instead of a tract. This is done to reduce repetitive calculations, since the small size of tracts compared to the LSSTCam field of view means that neighboring tracts often share identical overlapping visits, which would lead to doing many identical fits of the astrometric calibration.
+Unlike in \gls{DP1}, the area we use for individual fits of the astrometric solution is an order-3 healpix, instead of a tract.
+This is done to reduce repetitive calculations, since the small size of tracts compared to the LSSTCam field of view means that neighboring tracts often share identical overlapping visits, which would lead to doing many identical fits of the astrometric calibration.
 
-As in DP1, the astrometric model consists of a static map from pixel space to an intermediate frame, which is followed by a per-visit map from the intermediate frame to the plane tangent to the telescope boresight, and finally a deterministic mapping from the tangent plane to the sky. This is done by the \texttt{gbdes} package \citep[][]{2017PASP..129g4503B}, as described in \citet[][]{DMTN-266}. The proper motion and parallax of the objects used in the calibration are fit as part of the solution, but we do not yet include differential chromatic refraction or lateral color. These will be included in future Data Releases during Rubin Operations.
+As in DP1, the astrometric model consists of a static map from pixel space to an intermediate frame, which is followed by a per-visit map from the intermediate frame to the plane tangent to the telescope boresight, and finally a deterministic mapping from the tangent plane to the sky.
+This is done by the \texttt{gbdes} package \citep[][]{2017PASP..129g4503B}, as described in \citet[][]{DMTN-266}.
+The proper motion and parallax of the objects used in the calibration are fit as part of the solution, but we do not yet include differential chromatic refraction or lateral color.
+These will be included in future Data Releases during Rubin Operations.
 
-The main difference from the DP1 astrometric calibration is an additional step that models the effect of atmospheric turbulence on the astrometry. The per-visit part of the astrometric model already described captures large-scale variation between visits, which includes some atmospheric effects. However, higher order oscillations are visible in the astrometric residuals, and these can be attributed to atmospheric turbulence \citep{DMTN-324}. As described in \citet{2021AJ....162..106F} and \citet{2021A&A...650A..81L}, the wave-like astrometric effects caused by turbulence can be modeled by a Gaussian process. In DP2, we do this by taking the astrometric residuals remaining after the \texttt{gbdes} fit, grouping them by visit, then modeling them with the Gaussian Process package \texttt{treegp}. We then use this Gaussian Processes model to predict the effects of turbulence on a grid. Finally, this grid is turned into a two-dimensional spline that can use the AST component \texttt{SplineMap} so that it can be concatenated with the \texttt{gbdes} model. By including this model for the higher-order atmospheric turbulence, we achieve a significant improvement in the astrometric calculation.
+The main difference from the DP1 astrometric calibration is an additional step that models the effect of atmospheric turbulence on the astrometry.
+The per-visit part of the astrometric model already described captures large-scale variation between visits, which includes some atmospheric effects.
+However, higher order oscillations are visible in the astrometric residuals, and these can be attributed to atmospheric turbulence \citep[][]{DMTN-324}.
+As described in \citet[][]{2021AJ....162..106F} and \citet[][]{2021A&A...650A..81L}, the wave-like astrometric effects caused by turbulence can be modeled by a Gaussian process.
+In DP2, we do this by taking the astrometric residuals remaining after the \texttt{gbdes} fit, grouping them by visit, then modeling them with the Gaussian Process package \texttt{treegp}.
+We then use this Gaussian Processes model to predict the effects of turbulence on a grid.
+Finally, this grid is turned into a two-dimensional spline that can use the AST component \texttt{SplineMap} so that it can be concatenated with the \texttt{gbdes} model.
+By including this model for the higher-order atmospheric turbulence, we achieve a significant improvement in the astrometric calculation.
 
-A corollary product of the \texttt{gbdes} astrometric calibration is the catalog of proper motions and parallaxes of the sources used in the calibration. Since the \texttt{gbdes} fit is done per-band, and then improved by the turbulence fit, we perform an additional final fit of the proper motion and parallax, using the final astrometric model and all available bands. The resulting catalogs are included in the \gls{DP2} Data Release. These catalogs only include isolated point sources, but future Data Releases will be extended to include proper motion and parallax for all objects.
+A corollary product of the \texttt{gbdes} astrometric calibration is the catalog of proper motions and parallaxes of the sources used in the calibration.
+Since the \texttt{gbdes} fit is done per-band, and then improved by the turbulence fit, we perform an additional final fit of the proper motion and parallax, using the final astrometric model and all available bands.
+The resulting catalogs are included in the \gls{DP2} Data Release.
+These catalogs only include isolated point sources, but future Data Releases will be extended to include proper motion and parallax for all objects.
 
 \subsubsection{Photometric Calibration} \label{sec:drp-calibration-photometry}
 
-Photometric calibration of the DP2 dataset is based on the \gls{FGCM}~\citep[][]{2018AJ....155...41B} adapted for the LSST Science Pipelines~\citep{2022PASJ...74..247A, sitcomtn-086}.
+Photometric calibration of the DP2 dataset is based on the \gls{FGCM}~\citep[][]{2018AJ....155...41B} adapted for the LSST Science Pipelines~\citep[][]{2022PASJ...74..247A, sitcomtn-086}.
 We used the FGCM to calibrate the full DP2 dataset with a forward model that uses a parameterized model of the atmosphere as a function of \gls{airmass} along with a model of the instrument throughput as a function of wavelength.
 The FGCM process typically begins with measurements of the instrumental throughput, including the mirrors, filters, and detectors.
 For the \gls{LSSTCam} filter throughputs, we start with the filter scans provided by the manufacturer, Matereon.
@@ -172,7 +193,8 @@ It operates on a time series of PSF-matched images resampled onto a coadd pixel 
 Artifact rejection uses both direct (where no PSF matching is performed) and PSF-matched warps, homogenized to a standard PSF of 1\farcs8 \gls{FWHM}, broadly consistent with the 1\farcs7 \gls{FWHM} seeing threshold used in data screening.
 A sigma-clipped mean of the \gls{PSF}-matched warps serves as a static sky model, against which individual warps are differenced to identify significant positive and negative residuals.
 Candidate artifact regions are classified as \gls{transient} if they appear in fewer than a small percentage of the total number of exposures, with the threshold based on the number of visits
-% These masks are also saved as the \texttt{compare\_warp\_artifact\_mask} dataset. Note: note released as data product in DP2
+% These masks are also saved as the \texttt{compare\_warp\_artifact\_mask} dataset.
+Note: note released as data product in DP2
 
 In \gls{DP2}, the coadded images are cell-based (\secref{sssec:coadds}), using the \texttt{lsst\_cells\_v2} skymap.
 Coadds are built as weighted averages of the input warps.
@@ -201,7 +223,8 @@ All object catalog measurements are performed on these deblended images.
 
 The basic methodology for detection is largely unchanged from the description in \citet[][]{2018PASJ...70S...5B}, which we summarize here.
 To detect peaks, each image is convolved by a circular Gaussian approximation to the measured \gls{PSF} to make a significance image.
-A \gls{footprint} is a contiguous region of pixels above the detection threshold, which is set to detect isolated point sources above $5\sigma$ significance. Footprints can have multiple peaks, which are defined as pixels with values higher than all 8 neighbours (local maxima within a 3x3 box).
+A \gls{footprint} is a contiguous region of pixels above the detection threshold, which is set to detect isolated point sources above $5\sigma$ significance.
+Footprints can have multiple peaks, which are defined as pixels with values higher than all 8 neighbours (local maxima within a 3x3 box).
 Note that even for an isolated object, the significance of a detection is not precisely the same as the signal-to-noise from subsequent \gls{PSF} model fluxes.
 
 Pixels within footprints are marked with the \texttt{DETECTED} bit mask.
@@ -262,7 +285,7 @@ Metadetect coadds $riz$ bands to form a coadd for detection, and measures shear 
 Additionally, for these detections, it also reports force-photometered fluxes in $g$, $r$, $i$ and $z$ bands for these detections measured using the \texttt{pgauss} \gls{algorithm}.
 There is no deblending performed prior to these measurements.
 
-\subsubsection{First Look} \label{sec:drp-multivisit-firstlook}
+%\subsubsection{First Look} \label{sec:drp-multivisit-firstlook}
 
 \subsection{Variable \& Transient Source Processing} \label{sec:drp-variabletransient}
 
@@ -300,7 +323,7 @@ The centroids adopted for this multiepoch \gls{forced photometry} step are drawn
 \subsubsection{Source Association}
 \label{sec:ss-association}
 
-The solar system association input was a 2025 March 13 snapshot of the MPC Orbit database\footnote{Small bodies discovered after 2025 March 13---including those found in Rubin data---are therefore absent from the Solar System \gls{Source} catalog \secref{sssec:SSSource}}, limited to objects whose observational arcs exceeded two days.
+The solar system association input was a 2025 March 13 snapshot of the MPC Orbit database\footnote{Small bodies discovered after 2025 March 13---including those found in Rubin data---are therefore absent from the solar system \gls{Source} catalog \secref{sssec:SSSource}}, limited to objects whose observational arcs exceeded two days.
 Associations were made independently for each detector and visit using positions predicted by Sorcha \citep[][]{2025AJ....170..100M,2025AJ....170...97H} at the visit epoch from this orbit catalog.
 Predicted objects were first restricted to the detector \gls{footprint}.
 Measured \gls{DIA} Source (\secref{sssec:DIASource}) coordinates were represented as unit vectors on the celestial sphere and stored in a $k$-d tree.
@@ -314,7 +337,7 @@ Detection-level reliability information requires reference to the \gls{DIA} Sour
 
 \subsubsection{Photometry and Phase Curves}
 
-The Solar Sytem \gls{Object} photometric fields were derived independently in each of the $ugrizy$ bands from PSF fluxes in the associated detections.
+The solar system \gls{Object} photometric fields were derived independently in each of the $ugrizy$ bands from PSF fluxes in the associated detections.
 For a \gls{flux} $f$ in nJy, the conversion used was $m_{\rm AB}=31.4-2.5\log_{10}f$, with magnitude uncertainty $1.085736\,\sigma_f/f$.
 Non-positive fluxes therefore yield non-finite magnitudes and were removed before fitting.
 Apparent magnitudes were reduced to unit heliocentric and topocentric distance using $m(1,1,\alpha)=m-5\log_{10}(r\Delta)$, where $r$ and $\Delta$ are in \gls{au}.
@@ -328,7 +351,8 @@ The per-band \texttt{nObsUsed} field records the retained count and should be co
 
 Valid $H$ estimates were obtained for 35,268, 196,015, 224,888, 231,890,
 203,341, and 90,789 objects in $ugrizy$, respectively.
-Among objects with sufficient observations for a fit, failures range from 53 in $y$ to 1,034 in $g$, or less than approximately 0.5\% in every band.  Depending on band, 1--5\% of the eligible measurements were removed as invalid or clipped.
+Among objects with sufficient observations for a fit, failures range from 53 in $y$ to 1,034 in $g$, or less than approximately 0.5\% in every band.
+Depending on band, 1--5\% of the eligible measurements were removed as invalid or clipped.
 There are 25,706 objects with no fitted $H$ in any band; many are represented by only one detection and hence have insufficient information for a fit.
 The median fitted $H$ values are 18.7, 18.2, 17.5, 17.3, 17.2, and 16.6~mag in $ugrizy$.
 These statistics are dominated by main-belt objects and are also shaped by the DP2 \gls{footprint}, cadence, phase-angle coverage, and band-dependent detection selection; they should not be interpreted as intrinsic population size distributions.
