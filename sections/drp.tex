@@ -11,14 +11,15 @@ This section describes the high-level algorithms, configurations, and verificati
 
 \subsection{Single-Visit Processing} \label{sec:drp-singlevisit}
 
+\todo{This will be provided for the full DP2 release}
+
 \subsubsection{Calibration \& Instrument Signature Removal (ISR)} \label{sec:drp-singlevisit-calibrationisr}
 
-The first task in data processing begins with a raw image. This image is in integerized analog-to-digital units (ADU, or counts) and contains detector artifacts imprinted by the physics of the detector and readout hardware.
+The first task in data processing begins with a raw image. This image is in discretized analog-to-digital units (ADU, or counts) and contains detector artifacts imprinted by the physics of the detector and readout hardware.
 This step aims to remove any artifacts that are not of astrophysical origin and produce science-ready, single-visit exposures in floating-point electron units with complete pixel masks.
 
 The \gls{ISR} pipeline is built on a physical model of the detectors and readout electronics, in which each artifact is tied to a specific point in the photon-transfer chain and is corrected using calibrations from dedicated campaigns conducted during the day or on cloudy nights. \figref{fig:isr_signal_chain} shows this model of the detector and readout components and the effects each imparts on the measured image. ISR works backward through the chain, undoing these effects in the reverse of the order in which they were imprinted.
-
-Detector response and performance vary across the focal plane, and more so for LSSTCam than for LSSTComCam during DP1 processing. The full LSSTCam focal plane comprises 189 science charge-coupled devices (CCDs) from two vendors (Imaging Technology Laboratories, ITL, and Teledyne e2v, E2V), each of which must be processed separately.
+Detector response and performance vary across the focal plane (see \secref{ssec:lsstcam}), and each detector must be calibrated individually. 
 
 A detailed description of the DP2 ISR procedures and the calibration products they consume can be found in \citep[][]{RTN-117}.
 
@@ -61,7 +62,7 @@ The ISR processing pipeline for DP2 performs the following steps, in order:
 Compared to DP1~\citep[][]{RTN-095}, the ISR pipeline has been substantially upgraded, including improved sensor diagnostics and characterization, an entirely new brighter-fatter correction based on \citet[][]{2023A&A...670A.118A} and \citet[][]{2024PASP..136d5003B}, and an all-new flat-field production pipeline that corrects for gradients and mis-centering of the flat-field illumination using new calibration hardware.
 We generate flats using a new set of 10 LEDs spanning the full sensitivity range of the LSSTCam sensors (one in $u$, two each in $griz$, and a new 1050~nm LED shared between $y$ and $z$). For the bands covered by two LEDs, we combine separate flats for each LED (for the blue and red side of the band) into a so-called ``anaglyph'' flat, with a weighting that approximates a flat spectral energy distribution across the band.
 
-Together, these upgrades allow ISR to deliver uniform, science-ready exposures across all 189 LSSTCam science sensors for DP2.
+Together, these upgrades allow ISR to deliver uniform, science-ready exposures across all LSSTCam science sensors for DP2.
 
 \subsubsection{Background Subtraction} \label{sec:drp-singlevisit-background}
 
@@ -71,25 +72,25 @@ The background is estimated twice: an initial model (\texttt{psf\_subtract\_back
 Each post-ISR image is divided into $128 \times 128$\,pixel superpixels, and the iterative $3\sigma$-clipped mean of unmasked pixels in each bin is fit with a sixth-order two-dimensional Chebyshev polynomial, evaluated at native pixel resolution via Akima spline interpolation.
 Before fitting \texttt{star\_background}, the \texttt{DETECTED} mask plane is dilated by up to 10\,pixels to suppress source-wing flux from leaking into background bins.
 After \texttt{star\_background} subtraction, a zeroth-order pedestal correction is estimated iteratively over bin sizes starting at $32 \times 32$\,pixels, doubling each step until the cumulative pedestal level changes by less than 5\% or 0.5\,counts between steps.
-The \texttt{star\_background} model and pedestal corrections together constitute the output background model (\texttt{preliminary\_visit\_image\_background}; see Figure~\ref{fig:background-example}).
+The \texttt{star\_background} model and pedestal corrections together constitute the full background model.
 
-\begin{figure*}
-    \centering
-    \includegraphics[width=\textwidth]{figures/background_visit2025110500300_det025}
-    \caption{
-        Background subtraction for LSSTCam visit~2025110500300, detector~25.
-        \textit{Left:} Post-ISR image (\texttt{post\_isr\_image}), before any background removal.
-        \textit{Center:} Preliminary visit image (\texttt{visit\_image}), after background subtraction by \texttt{CalibrateImageTask}.
-        \textit{Right:} The subtracted background model (\texttt{preliminary\_visit\_image\_background}), illustrating the large-scale structure removed.
-        All three panels use a linear stretch clipped to the central 95th percentile of pixel values.
-    }
-    \label{fig:background-example}
-\end{figure*}
+% \begin{figure*}
+%     \centering
+%     \includegraphics[width=\textwidth]{figures/background_visit2025110500300_det025}
+%     \caption{
+%         Background subtraction for LSSTCam visit~2025110500300, detector~25.
+%         \textit{Left:} Post-ISR image (\texttt{post\_isr\_image}), before any background removal.
+%         \textit{Center:} Preliminary visit image (\texttt{visit\_image}), after background subtraction by \texttt{CalibrateImageTask}.
+%         \textit{Right:} The subtracted background model (\texttt{preliminary\_visit\_image\_background}), illustrating the large-scale structure removed.
+%         All three panels use a linear stretch clipped to the central 95th percentile of pixel values.
+%     }
+%     \label{fig:background-example}
+% \end{figure*}
 
 Compared to DP1~\citep[][]{10.71929/rubin/2570308}, several changes were made to background subtraction for DP2\@.
 The inline re-estimation performed after each detection pass in DP1 (\texttt{reEstimateBackground = True}) has been replaced by the dedicated \texttt{star\_background} subtask.
 In addition to source mask dilation and a pedestal correction, other new features for DP2 include adaptive threshold determination and diffraction spike masking.
-The per-step illumination correction used in DP1 has been disabled for DP2.
+The per-step illumination correction used in DP1 has been disabled for DP2.  % Why has this been disabled?
 Following background subtraction, the median and standard deviation of all unmasked pixels and of \textit{sky source} fluxes are recorded in the task metadata as diagnostics of background subtraction quality.
 
 \subsection{Calibration} \label{sec:drp-calibration}
@@ -97,10 +98,11 @@ Following background subtraction, the median and standard deviation of all unmas
 
 PSF modeling in DP2 uses two distinct approaches, as described in the
 \citep[][]{PSTN-019} and it is similar to what was originally
-described in DP1 The first model—faster but less precise—is fit
-with PSFEx \citep[][]{2011ASPC..442..435B}, while the final model—slower yet more
-accurate—is fit with Piff \citep[][]{DES:2020vau}. Broadly speaking, PSFEx
-and Piff both represent the PSF on a pixel basis and interpolate its
+described in DP1.
+The first model, which is faster but less precise, is fit with
+PSFEx \citep[][]{2011ASPC..442..435B}, while the final model, which is slower but more
+accurate, is fit with Piff \citep[][]{DES:2020vau}. 
+Broadly speaking, PSFEx and Piff both represent the PSF on a pixel basis and interpolate its
 parameters across a single CCD using two-dimensional polynomials.
 However, their technical implementations differ (see Bertin et al.
 and \citealt[][]{DES:2020vau} for more details). Previous comparisons have shown
@@ -145,17 +147,17 @@ These preliminary scans were then normalized relative to each other at 750 nm.
 However, there are still some per-raft systematic differences seen, particularly in the u and y bands.
 In the future we will use the in-dome tunable laser system and the \gls{CBP} for improved filter and detector throughputs.
 
-The FGCM atmosphere model, provided by MODTRAN~\citep[][]{1999SPIE.3756..348B}, was used to generate a look-up table for atmospheric throughput as a function of zenith distance at Cerro Pachón.
+The FGCM atmosphere model, provided by MODTRAN~\citep[][]{1999SPIE.3756..348B}, was used to generate a look-up table for atmospheric throughput as a function of zenith distance at Cerro Pach\'on.
 This model accounts for absorption and scattering by molecular constituents of the atmosphere, including O2 and O3; absorption by water vapor; and Mie scattering by airborne aerosol particulates.
 Nightly variations in the atmosphere are modeled by minimizing the variance in repeated observations of stars with an SNR greater than 10, measured using ``compensated aperture fluxes.''
 These fluxes include a local background subtraction to mitigate the impact of background offsets.
-The model fitting process incorporates all six bands ($ugrizy$) but does not include any gray (achromatic) terms, except for a linear assumption of mirror reflectance degradation and dust accumulation on lenses.
+The model fitting process incorporates all six bands, $ugrizy$, but does not include any gray (achromatic) terms, except for a linear assumption of mirror reflectance degradation and dust accumulation on lenses.
 Fortunately, there is no evidence of any signficant loss of throughput over the 250 days of the DP2 dataset.
-s an additional constraint on the fit, we use a subset of stars from the Calibration Reference Catalog (\secref{sssec:referencecatalog}; see \citealt[][]{DMTN-277}, in which it is referred to as ``The Monster''), primarily to constrain the system’s overall throughput and establish the “absolute” calibration.
+As an additional constraint on the fit, we use a subset of stars from the Calibration Reference Catalog\footnote{Referred to as ``The Monster" (\secref{sssec:referencecatalog}; see \citealt[][]{DMTN-277}}, primarily to constrain the system's overall throughput and establish the ``absolute" calibration.
 
 \subsection{Multi-Visit Processing} \label{sec:drp-multivisit}
 \subsubsection{Input Data Selection} \label{sec:drp-multivisit-inputselection}
-Detectors 0, 20, 27, 65, 123, 161, 168, 188 are excluded from the \texttt{deep\_coadd} images as they are strongly affected by vignetting.
+As described in \secref{ssec:lsstcam}, detectors 0, 20, 27, 65, 123, 161, 168, 188 are excluded from the \texttt{deep\_coadd} images as they are strongly affected by vignetting.
 Only exposures with a seeing better than 1\farcs7 FWHM and transparency better than 0.75 are included in the \texttt{deep\_coadd} images.
 Exposures with poor PSF modeling, identified using internal diagnostics, are also excluded from the \texttt{deep\_coadd} images to prevent contamination of the coadds with unreliable PSF estimates.
 
@@ -163,17 +165,17 @@ Exposures with poor PSF modeling, identified using internal diagnostics, are als
 The single Visit Images that pass the selection criteria above are warped onto the coadd pixel grid using Lanczos3 kernel and scaled to have units of \texttt{nJy} (zeropoint of 31.4).
 Artifacts are identified and masked in a manner similar to DP1 before coaddition.
 We apply the artifact rejection procedure described in \cite[][]{2018rubn.rept....1A}, which identifies and masks features such as satellite trails, optical ghosts, and cosmic rays.
-It operates on a time series of PSF-matched images resampled onto a coadd pixel grid (“warps”) and leverages their temporal behavior to distinguish persistent astrophysical sources from transient artifacts.
+It operates on a time series of PSF-matched images resampled onto a coadd pixel grid (``warps”) and leverages their temporal behavior to distinguish persistent astrophysical sources from transient artifacts.
 Artifact rejection uses both direct (where no PSF matching is performed) and PSF-matched warps, homogenized to a standard PSF of 1\farcs8 FWHM, broadly consistent with the 1\farcs7 FWHM seeing threshold used in data screening.
 A sigma-clipped mean of the PSF-matched warps serves as a static sky model, against which individual warps are differenced to identify significant positive and negative residuals.
 Candidate artifact regions are classified as transient if they appear in fewer than a small percentage of the total number of exposures, with the threshold based on the number of visits
-These masks are also saved as the \texttt{compare\_warp\_artifact\_mask} dataset.
+% These masks are also saved as the \texttt{compare\_warp\_artifact\_mask} dataset. Note: note released as data product in DP2
 
-In DP2, the coadded images are cell-based, using the \texttt{lsst\_cells\_v2} skymap.
+In DP2, the coadded images are cell-based (\secref{sssec:coadds}), using the \texttt{lsst\_cells\_v2} skymap.
 Coadds are built as weighted averages of the input warps.
 Each detector is assigned a weight that is the inverse of the mean of the variance reported in the \texttt{visit\_summary} dataset (\secref{sssec:visitsummary}).
 Following \cite[][]{2024arXiv240701771A} for each cell in the coadd, a detector is excluded if its geometry does not overlap the cell completely.
-Furthermore, a detector is excluded if more than 50\% of its pixels are masked as artifacts, unless it would result in an empty cell in which case, this condition is ignored. % fallback.
+Furthermore, a detector is excluded if more than 50\% of its pixels are masked as artifacts, unless doing so would result in an empty cell in which case, this condition is ignored. % fallback.
 Finally, pixels that did not get any contribution from the input visits are interpolated from neighboring pixels.
 
 A key difference between cell-based coadds and coadds in DP1 is in the PSF representation.
@@ -211,12 +213,12 @@ Once detection has run in each available band, \gls{footprint}s and their peaks 
 New peaks are only added if they are at least 1\farcs0 further than an existing peak, and existing peaks are marked as detected in multiple bands if a new peak is found within 0\farcs3; peaks within this range are ignored.
 After merging, probable spurious peaks detected in only one band are removed.
 
-Deblending is performed by the ScarletLite python package.
-ScarletLite is an optimized implementation of the \textrm{scarlet} \citep[][]{2018A&C....24..129M} deblending algorithm with the assumption that the input images are aligned to the same pixel grid at a fixed resolution, as is the case in coadds.
+Deblending is performed by the \texttt{ScarletLite} python package.
+\texttt{ScarletLite} is an optimized implementation of the \textrm{scarlet} \citep[][]{2018A&C....24..129M} deblending algorithm with the assumption that the input images are aligned to the same pixel grid at a fixed resolution, as is the case in coadds.
 Prior to deblending, a new addition in DP2 is a per-band partial deconvolution of the input coadds to a common $\sigma=0.8$ pixel integrated circular Gaussian PSF.
 This allows us to sub-divide large parent blends (\gls{footprint}s) into multiple smaller blends that are only connected by the wings of the PSF.
 These smaller sub-blends and the initialization of galaxy morphologies from the partially deconvolved images improves numerical convergence and performance, both in the goodness-of-fit of the final models and in memory usage and runtime.
-Users will notice that this has improved our coverage in crowded fields from DP1; however, in the densest fields, an entire patch can still be a single blend and must be skipped due to excessive memory requirements.
+Users will notice that this has improved our coverage\footnote{the fraction of each field with usable measurements} in crowded fields from DP1; however, in the densest fields, an entire patch can still be a single blend and must be skipped due to excessive memory requirements.
 
 \gls{Object} measurements are conducted in three modes: independent per-band measurements, forced measurements in each band, and multiband measurements.
 As detailed in \citet[][]{2018PASJ...70S...5B}, measurement first replaces all pixels in footprints with noise, so that algorithms that require pixel values beyond footprint boundaries can perform measurements without contamination from neighbors (whether they are part of the same blend or not).
@@ -250,7 +252,7 @@ Further details on the performance of these algorithms are found in \secref{sec:
 \subsubsection{Metadetection and ShearObject} \label{sec:drp-multivisit-shearobject}
 
 The \gls{ShearObject} catalog using the multiband metadetection algorithm \citep[][]{2020ApJ...902..138S} is new to DP2.
-It creates an entirely separate catalog with detections that do not correspond to the \gls{Object} catalog.
+It creates a separate catalog of detections that do not correspond to entries in the Object catalog.
 Each 150x150 cell in $griz$ bands is extracted with a 50 pixel border to make 250x250 pixel images, that are then passed to metadetect.
 Internally, metadetect makes counterfactual images by deconvolving by the original PSF, shearing the image and reconvolving to a new PSF using the \texttt{fitgauss} reconvolution algorithm.
 Metadetect coadds $riz$ bands to form a coadd for detection, and measures shear using the \texttt{gauss} algorithm by fitting a 2D elliptical Gaussian to $r$, $i$, $z$ coadds.
@@ -279,6 +281,7 @@ In DP2 we also reject sources that land on the modeled positions of diffraction 
 Further, we flag but do not remove multiple \texttt{DIASources} that occur in a straight line with \texttt{glint\_trail}, indicating that they may be due to rotating orbital debris \citep[][]{2022arXiv220205719K}.
 
 We developed a machine-learned reliability score to assess whether \texttt{DIASources} were astrophysical.
+This model is a convolutional neural network that was trained on template, science, and difference-image postage stamps around \texttt{DIASources} using a combination of simulated fake injections and human-labeled detections.
 \citep[][]{DMTN-337} provides an overview of the model architecture, training, and performance of the real-bogus model.
 The v0.1 model used in DP1 was again used during DP2 processing.
 No cuts were applied on reliability for the DP2 \texttt{DIASource} catalogs, so users interested in higher purity should apply a minimum reliability threshold.
