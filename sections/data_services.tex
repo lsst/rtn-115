@@ -184,11 +184,7 @@ While \gls{DP1} was small enough that Qserv's full capabilities were not strictl
 \label{sssec:opsim}
 %
 \gls{DP2} provides an opsim-format SQLite database of visit-level observational metadata for the visits included in \gls{DP2}, downloadable from \url{https://s3df.slac.stanford.edu/data/rubin/sim-data/prelsst/dp2_visits.db}, with additional documentation available at \url{https://survey-strategy.lsst.io/progress/prelsst/prelsst_dp2.html\#visit-database}.
-<<<<<<< HEAD
-Like the Butler \texttt{visit\_table}, this database contains visit-level entries, but it has no equivalent of the \texttt{visit\_detector\_table} described in \secref{ssec:metadata} and so provides no per-detector information.
-=======
 Like the Visit catalog descibed in \secref{sssec:visitcatalog}, this database contains visit-level entries, but it has no equivalent of the Visit Detector catalog described in \secref{sssec:visitdetector} and so provides no per-detector information.
->>>>>>> 561a121 (Fix a bunch of secrefs)
 Its quantities (e.g., PSF FWHM, 5$\sigma$ point-source depth) are drawn from the real-time Rapid Analysis QuickLook processing, \citep[][]{} performed on the summit rather than from \gls{DRP} processing.
 Values may therefore differ somewhat from the corresponding \gls{DRP}-derived quantities in the Butler \texttt{visit\_table}.
 The database also includes some quantities not otherwise available from \gls{DRP} outputs, such as \gls{AOS} Zernike coefficients, as well as predicted quantities useful for comparison against simulated survey performance.

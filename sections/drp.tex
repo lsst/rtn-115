@@ -59,7 +59,7 @@ The ISR processing pipeline for DP2 performs the following steps, in order:
 % Following an observatory maintenance shutdown in October, Epoch~3 (October~24, 2025--January~6, 2026) resumed under the same sequencer but used a new set of calibrations.
 % A fourth epoch, not included in DP2, began January~23, 2026 with the \texttt{3s\_v2} sequencer, bringing reduced correlated noise and improved linear readout response.
 
-Compared to DP1~\citep[][]{RTN-095}, the ISR pipeline has been substantially upgraded, including improved sensor diagnostics and characterization, an entirely new brighter-fatter correction based on \citet[][]{2023A&A...670A.118A} and \citet[][]{2024PASP..136d5003B}, and an all-new flat-field production pipeline that corrects for gradients and mis-centering of the flat-field illumination using new calibration hardware.
+Compared to DP1~\citep[][]{rtn-095}, the ISR pipeline has been substantially upgraded, including improved sensor diagnostics and characterization, an entirely new brighter-fatter correction based on \citet[][]{2023A&A...670A.118A} and \citet[][]{2024PASP..136d5003B}, and an all-new flat-field production pipeline that corrects for gradients and mis-centering of the flat-field illumination using new calibration hardware.
 We generate flats using a new set of 10 LEDs spanning the full sensitivity range of the LSSTCam sensors (one in $u$, two each in $griz$, and a new 1050~nm LED shared between $y$ and $z$). For the bands covered by two LEDs, we combine separate flats for each LED (for the blue and red side of the band) into a so-called ``anaglyph'' flat, with a weighting that approximates a flat spectral energy distribution across the band.
 
 Together, these upgrades allow ISR to deliver uniform, science-ready exposures across all LSSTCam science sensors for DP2.
@@ -92,6 +92,9 @@ The inline re-estimation performed after each detection pass in DP1 (\texttt{reE
 In addition to source mask dilation and a pedestal correction, other new features for DP2 include adaptive threshold determination and diffraction spike masking.
 The per-step illumination correction used in DP1 has been disabled for DP2.  % Why has this been disabled?
 Following background subtraction, the median and standard deviation of all unmasked pixels and of \textit{sky source} fluxes are recorded in the task metadata as diagnostics of background subtraction quality.
+
+\subsubsection{Source Detection}
+\todo{Pending}
 
 \subsection{Calibration} \label{sec:drp-calibration}
 \subsubsection{PSF Modeling} \label{sec:drp-calibration-psfmodeling}
@@ -136,7 +139,7 @@ A corollary product of the \texttt{gbdes} astrometric calibration is the catalog
 
 \subsubsection{Photometric Calibration} \label{sec:drp-calibration-photometry}
 
-Photometric calibration of the DP2 dataset is based on the \gls{FGCM}~\citep[][]{2018AJ....155...41B} adapted for the LSST Science Pipelines~\citep{2022PASJ...74..247A, SITCOMTN-086}.
+Photometric calibration of the DP2 dataset is based on the \gls{FGCM}~\citep[][]{2018AJ....155...41B} adapted for the LSST Science Pipelines~\citep{2022PASJ...74..247A, sitcomtn-086}.
 We used the FGCM to calibrate the full DP2 dataset with a forward model that uses a parameterized model of the atmosphere as a function of airmass along with a model of the instrument throughput as a function of wavelength.
 The FGCM process typically begins with measurements of the instrumental throughput, including the mirrors, filters, and detectors.
 For the LSSTCam filter throughputs, we start with the filter scans provided by the manufacturer, Matereon.
@@ -173,7 +176,7 @@ Candidate artifact regions are classified as transient if they appear in fewer t
 
 In DP2, the coadded images are cell-based (\secref{sssec:coadds}), using the \texttt{lsst\_cells\_v2} skymap.
 Coadds are built as weighted averages of the input warps.
-Each detector is assigned a weight that is the inverse of the mean of the variance reported in the \texttt{visit\_summary} dataset (\secref{sssec:visitsummary}).
+Each detector is assigned a weight that is the inverse of the mean of the variance reported in the Visit Summary dataset (\secref{sssec:visitsummary}).
 Following \cite[][]{2024arXiv240701771A} for each cell in the coadd, a detector is excluded if its geometry does not overlap the cell completely.
 Furthermore, a detector is excluded if more than 50\% of its pixels are masked as artifacts, unless doing so would result in an empty cell in which case, this condition is ignored. % fallback.
 Finally, pixels that did not get any contribution from the input visits are interpolated from neighboring pixels.

@@ -171,7 +171,6 @@ The remaining \glspl{DDF} were observed primarily in $griz$, as the $u$ and $y$ 
 The dither pattern for the \glspl{DDF} evolved during the campaign; early observations used only small translational dithers with no intra-night rotation, while later observations introduced both translational and rotational intra-night dithers.
 \tabref{tab:dp2_ddf_visits}  provides the median numbers of visits within each of the subsets of the wide SV area.
 
-
 \input{tables/dp2_ddf_visits}
 
 % Early ops operations
@@ -205,7 +204,7 @@ During the \gls{LSSTCam} commissioning campaign, the \gls{DMS} was operated at f
 Following each exposure, the \gls{DAQ} system at the summit stores the raw image data as a set of 205 files per exposure: 189 science sensors\footnote{Only 188 science sensor files were generated per exposure  as sensor R30/S12 was non-operational throughout; see \S\ref{ssec:lsstcam}.}, 8 wavefront sensors, and 8 guiding sensors on the \gls{LSSTCam} focal plane.
 Uncompressed, a full science exposure totals $\sim$\,8.2\,GB; after compression, $\sim$\,4\,GB.
 
-At the summit, each exposure is processed in near real time by the Rapid Analysis pipeline, performing \gls{ISR} (\secref{ssec:isr}) and source detection (\secref{ssec:detection}) on a 30--60 second timescale to provide quick-look image diagnostics and support real-time \gls{AOS} assessment.
+At the summit, each exposure is processed in near real time by the Rapid Analysis pipeline, performing \gls{ISR} (\secref{sec:drp-singlevisit-calibrationisr}) and source detection (\secref{sec:drp-singlevisit}) on a 30--60 second timescale to provide quick-look image diagnostics and support real-time \gls{AOS} assessment.
 The resulting per-visit quality metrics formed the basis of the visit quality characterisations used to define the \gls{DP2} coadd inputs.
 Summary visit and detector-level metadata are available to users as \gls{DP2} data products (\secref{ssec:metadata}) and are also available in an opsim-format SQLite database ()\secref{sssec:opsim}).
 
