@@ -1,4 +1,0 @@
-EDP2:Early Data Preview 2
-MultiProFit:The MultiProFit astronomical source modelling code, including the multiprofit Python package and its dependencies, and the meas_extensions_multiprofit package for pipeline tasks.
-scarlet lite:The "lite" version of the scarlet algorithm, optimized for multiband deblending on pixel-aligned grids. Includes the scarlet_lite and meas_extensions_scarlet Python packages.
-ShearObject:An object with measurements using the metadetection algorithm, or the catalog thereof.

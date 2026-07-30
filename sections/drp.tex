@@ -19,7 +19,7 @@ The first task in data processing begins with a raw image. This image is in disc
 This step aims to remove any artifacts that are not of astrophysical origin and produce science-ready, single-visit exposures in floating-point electron units with complete pixel masks.
 
 The \gls{ISR} pipeline is built on a physical model of the detectors and readout electronics, in which each artifact is tied to a specific point in the photon-transfer chain and is corrected using calibrations from dedicated campaigns conducted during the day or on cloudy nights. \figref{fig:isr_signal_chain} shows this model of the detector and readout components and the effects each imparts on the measured image. ISR works backward through the chain, undoing these effects in the reverse of the order in which they were imprinted.
-Detector response and performance vary across the focal plane (see \secref{ssec:lsstcam}), and each detector must be calibrated individually. 
+Detector response and performance vary across the focal plane (see \secref{ssec:lsstcam}), and each detector must be calibrated individually.
 
 A detailed description of the DP2 ISR procedures and the calibration products they consume can be found in \citep[][]{RTN-117}.
 
@@ -104,14 +104,14 @@ PSF modeling in DP2 uses two distinct approaches, as described in the
 described in DP1.
 The first model, which is faster but less precise, is fit with
 PSFEx \citep[][]{2011ASPC..442..435B}, while the final model, which is slower but more
-accurate, is fit with Piff \citep[][]{DES:2020vau}. 
+accurate, is fit with Piff \citep[][]{2021MNRAS.501.1282J}.
 Broadly speaking, PSFEx and Piff both represent the PSF on a pixel basis and interpolate its
 parameters across a single CCD using two-dimensional polynomials.
 However, their technical implementations differ (see Bertin et al.
-and \citealt[][]{DES:2020vau} for more details). Previous comparisons have shown
+and \citealt[][]{2021MNRAS.501.1282J} for more details). Previous comparisons have shown
 that Piff outperforms PSFEx by delivering an unbiased reconstruction of
-the PSF size (see \citealt[][]{2018MNRAS.481.1149Z} and \citealt[][]{DES:2020vau}), can work in
-sky coordinates and can include a color dependency, and supports alternative models and interpolation 
+the PSF size (see \citealt[][]{2018MNRAS.481.1149Z} and \citealt[][]{2021MNRAS.501.1282J}), can work in
+sky coordinates and can include a color dependency, and supports alternative models and interpolation
 schemes (see \citealt{2025OJAp....8E..26S} for more details).
 
 
@@ -120,13 +120,13 @@ a second-order polynomial interpolation on each CCD. For the final modeling,
 Piff uses its PixelGrid with a fourth-order polynomial interpolation per
 CCD—except in the $u$-band, where star counts are too low to constrain a
 fourth-order fit, so a second-order polynomial is used instead. Both are
-working in pixel coordinates. 
+working in pixel coordinates.
 %Choices of polynomial order, overall PSF-modeling performance, and known issues are discussed in \secref{sec:performance}.
 
 
 \subsubsection{Astrometric Calibration} \label{sec:drp-calibration-astrometry}
 The final astrometric calibration of the data follows the same method as for DP1, but with some key additions. As described in \cite[][]{10.71929/rubin/2570308}, a joint calibration is performed on all visits in a given band overlapping a given area.
-By associating all the isolated point sources shared among the overlapping visits, we can refine the astrometric solution beyond the level achieved in single-frame processing using only a reference catalog \citep{DMTN-266}. 
+By associating all the isolated point sources shared among the overlapping visits, we can refine the astrometric solution beyond the level achieved in single-frame processing using only a reference catalog \citep{DMTN-266}.
 The full details of the method are described in \citet[][]{DMTN-266}.
 
 Unlike in DP1, the area we use for individual fits of the astrometric solution is an order-3 healpix, instead of a tract. This is done to reduce repetitive calculations, since the small size of tracts compared to the LSSTCam field of view means that neighboring tracts often share identical overlapping visits, which would lead to doing many identical fits of the astrometric calibration.
