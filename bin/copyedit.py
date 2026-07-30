@@ -28,7 +28,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "python"))
 
 from lsst.dptwo.utils.copyedit import load_rules, process_file
 
-_EXCLUDE = re.compile(r"^(lsst-texmf/|aglossary\.tex$|tests/data/)")
+_EXCLUDE = re.compile(r"^(lsst-texmf/|aglossary\.tex$|tests/data/|RTN-115\.tex$)")
 
 
 def _all_tex_files() -> list[str]:
@@ -57,7 +57,9 @@ def main() -> int:
         action="store_true",
         help="Also report audit-only rules (never auto-applied; for human review).",
     )
-    parser.add_argument("files", nargs="*", help="Files to process (default: all tracked .tex files).")
+    parser.add_argument(
+        "files", nargs="*", help="Files to process (default: all tracked .tex files)."
+    )
     args = parser.parse_args()
 
     rules_path = Path(args.rules)

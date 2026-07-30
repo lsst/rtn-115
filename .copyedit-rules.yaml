@@ -171,6 +171,21 @@ rules:
     replacement: '$\1$\2band'
     note: 'Italicize ugrizy filter letters before "band". Already-wrapped "$g$ band" is not double-wrapped.'
 
+  - name: ugrizy-math-mode
+    # The six-band set "ugrizy" must always appear in math mode: $ugrizy$.
+    # Two alternatives separated by |:
+    #   1. Any LaTeX markup wrapper (\textit, \texttt, \emph, \textbf) around
+    #      ugrizy -- the entire \cmd{ugrizy} span is replaced by $ugrizy$.
+    #   2. Bare "ugrizy" in prose, including forms like (ugrizy) or {ugrizy}
+    #      where () or {} or other delimiters surround it.
+    # Protection: (?<!\$) checks the character immediately before the "u".
+    # In every correct $ugrizy$ form -- whether bare, wrapped in (),  {}, [],
+    # or any other delimiter -- that character is always $, so the lookbehind
+    # reliably prevents double-wrapping regardless of what surrounds the token.
+    pattern: '\\(?:textit|texttt|emph|textbf)\{ugrizy\}|(?<!\$)\bugrizy\b(?!\$)'
+    replacement: '$ugrizy$'
+    note: 'The six-band set must be in math mode: \textit{ugrizy} or bare ugrizy → $ugrizy$.'
+
   - name: multiepoch
     # Capture group preserves the leading letter's case so both lowercase and
     # sentence-initial forms are handled.
@@ -277,12 +292,64 @@ rules:
     replacement: 'deg$^{\\rm 2}$'
     note: 'AAS style: use deg$^{\rm 2}$ for square degrees.'
 
+  - name: sim-math-mode
+    # Bare \sim used as "approximately" must be wrapped in math mode.
+    # The lookahead allows optional \, (thin space), ~ (non-breaking space), or
+    # ASCII whitespace between \sim and the digit so all spacing variants are
+    # caught. The lookbehind excludes \sim that is already inside $\sim$.
+    # Must run before sim-digit-thin-space so $..$ wrapping is in place.
+    pattern: '(?<!\$)\\sim(?=(?:\\,|~|\s)*\d)'
+    replacement: '$\\sim$'
+    note: 'Bare \sim used as "approximately" must be in math mode: "\sim8" → "$\sim$8".'
+
+  - name: sim-outside-math
+    # Catches \sim immediately before an inline $…$ math environment and merges
+    # \sim into that environment: \sim$3,000\,deg^2$ → $\sim\,3,000\,deg^2$.
+    # Lookbehind (?<!\$) skips \sim already inside math (e.g. $\sim$).
+    # Negative lookahead (?!\$) avoids matching display math ($$…$$).
+    pattern: '(?<!\$)\\sim\$(?!\$)'
+    replacement: '$\\sim\\,'
+    note: 'Merge \sim into the following $…$: \sim$3,000\,deg^2$ → $\sim\,3,000\,deg^2$.'
+
   - name: sim-thin-space
-    # Catches $\sim$~ (missing thin space) and replaces with $\sim$\,~.
-    # The \, separates the tilde from the non-breaking space before the value.
+    # Catches $\sim$~ (non-breaking space with no thin space) → $\sim$\,~.
     pattern: '\$\\sim\$~'
     replacement: '$\\sim$\\,~'
-    note: 'Add thin space after \sim: "$\sim$~27" → "$\sim$\,~27".'
+    note: 'Add thin space after \sim before ~: "$\sim$~27" → "$\sim$\,~27".'
+
+  - name: sim-digit-thin-space
+    # Catches $\sim$ followed immediately by a digit (no separator) or by one
+    # or more plain ASCII spaces then a digit, and inserts \,.
+    # \s* matches ASCII whitespace only; it does NOT match \, (backslash is not
+    # \s) or ~ (not \s), so already-correct $\sim$\, and $\sim$\,~ forms are
+    # untouched. Must run after sim-thin-space so the ~ case is already fixed.
+    pattern: '\$\\sim\$\s*(\d)'
+    replacement: '$\\sim$\\,\1'
+    note: 'Ensure thin space after \sim: "$\sim$8" or "$\sim$ 8" → "$\sim$\,8".'
+
+  - name: sim-unit-thin-space
+    # After $\sim$\, and a numeric value (integer or decimal), catches a plain
+    # space before the first letter of a unit word and replaces it with \,.
+    # The optional ~? accommodates the non-breaking space left by sim-thin-space.
+    # Only the space is replaced; the rest of the unit string is untouched
+    # because re.sub only rewrites the matched span.
+    pattern: '(\$\\sim\$\\,~?\d+(?:\.\d+)?) ([A-Za-z])'
+    replacement: '\1\\,\2'
+    note: 'Ensure thin space between \sim value and unit: "$\sim$\,30 seconds" → "$\sim$\,30\,seconds".'
+
+  - name: sentence-newline
+    # Two sentences running together on the same line: sentence-ending
+    # punctuation followed by one or more spaces and an uppercase letter.
+    # Fires on any capital after a full stop, including acronyms ("DP2",
+    # "LSSTCam"). Headings and captions are skipped to avoid false positives
+    # from title-case text.
+    # Guard: negative lookbehind (?<! [A-Z]) skips middle initials like "C."
+    # in "Vera C. Rubin" -- a single uppercase letter preceded by a space is
+    # a name initial, not a sentence boundary.
+    pattern: '(?<! [A-Z])([.!?]) +([A-Z])'
+    replacement: '\1\n\2'
+    skip_lines_matching: '\\(?:section|subsection|subsubsection|paragraph|chapter|title|caption)\*?\{'
+    note: 'Each sentence should start on a new line in the LaTeX source: "word. Next" → "word.\nNext". Middle initials like "C. Rubin" are preserved.'
 
   - name: doi-macro-inline-braces
     # \doiXXXX parameter macros (e.g. \doidptwopaper) must be followed by {}
@@ -294,7 +361,7 @@ rules:
     pattern: '(?<!\{)(\\doi[A-Za-z]+)(?=[^A-Za-z])(?!\{\})(?!\})'
     replacement: '\1{}'
     note: 'DOI parameter macros need {} suffix in prose; omit inside \doi{...}.'
-  
+
   - name: sentence-break
     # Insert a newline after a sentence-ending period so each sentence starts
     # on its own line (standard LaTeX prose style).

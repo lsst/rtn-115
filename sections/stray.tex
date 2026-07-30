@@ -1,0 +1,47 @@
+\subsubsection{Stray Light}
+\label{ssec:stray}
+%
+The compact, 3-mirror design of the Simonyi Survey Telescope (\secref{ssec:simonyi}) is especially sensitive to stray and scattered light\footnote{Light that does not follow the nominal optical path within the telescope and instrument, originating from scattering off optical and non-optical surfaces or from ghost paths in refractive components such as lenses and filters}.
+The most pronounced and extended artifacts appear in \gls{LSSTCam} images when the telescope's boresight is near bright objects such as the Moon, bright stars, planets, or unintended light sources on the sky.
+Stray light contaminates all astronomical imaging to some level, but \gls{LSST}'s low-surface-brightness science is especially sensitive to it.
+
+A significant fraction of these artifacts traced back to the Observatory dome, which lacked its \gls{LWS} to restrict the acceptance angle along the telescopes's elevation axis; many artifacts are expected to resolve once the \gls{LWS} is comissionined, whereas others will require additional baffling.
+Some artifacts detected were expected based on an initial stray light analysis in FRED\registered \cite[][]{2009SPIE.7427E..08E}, which correctly predicted direct paths from the primary (M1) and tertiary (M3) mirrors that bypass the secondary mirror and hit the \gls{LSSTCam} optics and focal plane directly.
+Other artifacts were new and unexpected, requiring visual inspection, ray tracing simulation, and on-sky tests to confirm their origins \citep[][]{2026arXiv2606.31945}.
+
+An initial census of stray light artifacts observed in \gls{LSSTCam} images during initial commissioning (April 2025–May 2026) is reproduced in \tabref{tab:rates} from \cite[][]{2026arXiv2606.31945}.
+About 70\% of features come from identified, confirmed sources, and 80\% already have a possible mitigation strategy.
+Occurrence rates are based on visual classification of features visible by eye; for some, fractional area is a rough estimate due to variation across frames.
+
+\begin{deluxetable*}{lcccc}
+\tablecaption{Occurrence rate of stray and scattered light artifacts identifiable by visual inspection of $\sim$\,116,000 full focal plane mosaic images.
+Rates are not expected to be complete nor pure; impacted area uses average feature size.
+The most prevalent artifact, the \textit{scratched tape}, was effectively mitigated through installation of the mid-level baffle extension \citep[][]{2026arXiv2606.31939}.
+\vspace{1em}
+*\hspace{0.1cm}Fractional area of the artifact is variable; \dag \hspace{0.1cm} artifact origin to be confirmed; $\Upsilon$ preliminary estimate.  \label{tab:rates}}
+\tablehead{\colhead{Artifact} & \colhead{Source} & \colhead{Mitigation} & \colhead{Occurrence Rate}  & \colhead{Fractional Area}}
+\startdata
+Scratched Tape & \gls{M1} direct path & Mid-Level Baffle Extension & 7.39\% & 2.2\% * \\
+Smudge & \gls{M1} direct path & Mid-Level Baffle Extension & 0.19\% & 0.28\% \\
+Muddy Shoe & \gls{M1} direct path & Mid-Level Baffle Extension & 0.15\% & 2\%* \\
+Pillow & Unknown & \gls{LWS} installation & 0.26\% & 9\%* \\
+Nibbled Disc & Unknown  & Mid-Level Baffle Extension & 0.10\% & 1.06 - 10\%* \\
+L2 Bananas & L2 support pads & \gls{LWS} installation & 0.73\% & 0.7\% \\
+Rivet Holes & Holes in Top-end Baffle & Sealing of holes & 0.45\% & -- \\
+Sharp Arcs & \gls{L2} edges \dag & TBD & TBD & 1\% $\Upsilon$ \\
+Submarine & \gls{L1}/L2 ghosts \dag & LWS installation (TBC) & 0.7\% $\Upsilon$ & 8.5\%* \\
+\gls{L3} Horseshoe & \gls{L3} chamfer \& mount & Additional \gls{L3} edge baffle & 0.09\% & 8.8\% \\
+\hline \\[-1em]
+All artifacts & --- & --- & 10.00\% & --- \\
+\multicolumn{2}{c}{Post Mid-Level Baffle Extension installation} & --- & 2.6\% & ---\\
+\enddata
+\end{deluxetable*}
+
+The most frequent and impactful feature,  the \textit{scratched tape} feature \citep[][]{2026arXiv2606.31939}, originates from the M1 direct path that skips M2 and M3 reflections, and was visible in $\sim$\,7.4\% of image frames with an off-axis range of visibility between $\sim$\,19\fdeg8 and 22$^\circ$.
+An annular extension of the telescope's mid-level baffle ring, installed between February and April 2026, elimintated this feature from \gls{LSSTCam} images \citep[][]{2026arXiv2606.31939}.
+Other features such as the \textit{L3 Horseshoe}, arise from edge diffraction at \gls{LSSTCam}'s tertiary lens (L3) near the field-of-view edge ($\sim1\fdeg99$ and $2\fdeg23$).
+Ray tracing simulations also revealed scattered light from the M2 optical baffle, whose residual reflectance in the longer wavelength bands ($i$, $z$, $y$) can reach up to 30\%.
+
+Despite the preventative measures taken, $\sim$\,10\% of early image frames suffer from stray light contamination, dropping to $\sim$\,2.6\% following the mid-level baffle extension installation \citep[][]{2026arXiv2606.31939}.
+The most severe issues were structured artifacts on the focal plane, largely stemming from the incomplete status of the \gls{LWS}.
+ Rubin is implementing new physical baffling and re-painting to address the remaining artifacts \citep[][]{2026arXiv2606.31898, 2026arXiv2606.31793}.

@@ -148,7 +148,7 @@ class DP2Parameters:
                         angular_unit, "", 1
                     )
             return value_text, unit
-        return value_text, f"\\xspace {unit}"
+        return value_text, f"\\,{unit}"
 
 
 def addParameter(

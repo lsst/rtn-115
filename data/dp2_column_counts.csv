@@ -1,0 +1,16 @@
+# Column counts for tables in Qserv
+# table_name,column_count
+Object,1248
+Source,156
+ForcedSource,28
+DiaSource,92
+DiaObject,64
+ForcedSourceOnDiaObject,28
+CoaddPatches,5
+Visit,15
+VisitDetector,56
+SSObject,80
+SSSource,39
+mpc_orbits,53
+ShearObject,67
+IsolatedStarStellarMotions,28

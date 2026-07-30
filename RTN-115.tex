@@ -20,6 +20,11 @@
 \newcommand{\james}[2][]{\Oldtodo[inline,color=cyan, #1]{James: #2}}
 \newcommand{\leanne}[2][]{\Oldtodo[inline,color=teal, #1]{Leanne: #2}}
 \newcommand{\alex}[2][]{\Oldtodo[inline,color=orange, #1]{Alex: #2}}
+% from straylight
+\newcommand{\registered}{\textsuperscript{\textregistered}\xspace}
+\newcommand{\fdeg}{\mbox{\ensuremath{.\!\!^\circ}}}
+% end from straylight
+
 
 % Rubin glossaries
 \usepackage[nonumberlist]{glossaries}
@@ -35,13 +40,13 @@
 \newcommand{\docRef}{RTN-115}
 \newcommand{\docUpstreamLocation}{\url{https://github.com/lsst/rtn-115}}
 
-%\providecommand{\secref}[1]{\hyperref[#1]{\autoref{#1}}}
-\providecommand{\secref}[1]{\hyperref[#1]{\S\ref{#1}}}
-\providecommand{\appref}[1]{\hyperref[#1]{Appendix \ref{#1}}}
-\providecommand{\tabref}[1]{\hyperref[#1]{\autoref{#1}}}
-\providecommand{\figref}[1]{\hyperref[#1]{\autoref{#1}}}
-\providecommand{\eqnref}[1]{\hyperref[#1]{Eq.~\ref{#1}}}
-\providecommand{\recref}[1]{\hyperref[#1]{REC-\ref{#1}}}
+% \ref* suppresses the inner hyperlink so \hyperref does not nest annotations.
+\providecommand{\secref}[1]{\hyperref[#1]{\S\ref*{#1}}}
+\providecommand{\appref}[1]{\hyperref[#1]{Appendix~\ref*{#1}}}
+\providecommand{\tabref}[1]{\hyperref[#1]{Table~\ref*{#1}}}
+\providecommand{\figref}[1]{\hyperref[#1]{Figure~\ref*{#1}}}
+\providecommand{\eqnref}[1]{\hyperref[#1]{Eq.~\ref*{#1}}}
+\providecommand{\recref}[1]{\hyperref[#1]{REC-\ref*{#1}}}
 
 \newcommand{\degsq}{$\rm deg^{2}$}
 
@@ -85,7 +90,8 @@
 \hypersetup{
     pdftitle={The Vera C. Rubin Observatory Data Preview 2},
     pdfauthor={guylp},
-    pdfkeywords={}
+    pdfkeywords={},
+    breaklinks=true
 }
 
 \input{authors}
