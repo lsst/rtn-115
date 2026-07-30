@@ -38,7 +38,7 @@ Excluding the overlap region, the area covered uniquely by a single \gls{patch} 
 Although the tract and \gls{patch} configuration is unchanged between DP1 and DP2, the two skymaps differ at the cell level for Deep Coadds.
 Patches are further subdivided into cells for the sole purpose of enabling the construction of cell-based coadds with a continuous \gls{PSF} (\secref{sssec:coadds}).
 Unlike patches, cells are not exposed to the user, and one cannot specify nor retrieve an individual ``cell'' from an image.
-Instead, cells are used during the construction of  what re termed cell-based coadds (refs).
+Instead, cells are used during the construction of  what are termed cell-based coadds.
 A region of an input image is included in a given cell if, and only if, it covers the entire cell.
 This guarantees that every pixel within a cell is built from exactly the same set of input images, so the \gls{PSF} is well-defined and effectively constant across the cell, with discontinuities confined to the cell boundaries.
 Such cell-based coaddition was not implemented during the production of \gls{DP1}, and was only used to produce the Deep Coadds in DP2.
@@ -51,7 +51,7 @@ There is no overlap between neighboring cells.
 Science images are images taken with the intent of scientific analysis of astronomical objects, as opposed to \gls{calibration} images (e.g., bias, darks, flats) or engineering images, which serve to calibrate or test the instrument and telescope regardless of whether they happen to be pointed at the night sky.
 \gls{DP2} provides all images in the acquisition and processing chain, from the raw, unprocessed science and calibration images through to fully calibrated visit images, coadds, and template images.
 Most science analyses will start from the Deep Coadd images and the single-epoch \gls{Visit} images.
-While it is possible for users to recreate their own \glspl{PVI} from the raw and calibration data, we do not expect anyone will need to do so."
+While it is possible for users to recreate their own \glspl{PVI} from the raw and calibration data, we do not expect anyone will need to do so.
 One important difference between DP1 and DP2 is the format of the Science Images \citep[][]{DMTN-339}.
 In the case of \gls{DP2}, the format of the datasets are such that they are more compatible with external packages, in particular Astropy.
 It is, however, straightforward to convert back to ``legacy'' \gls{DP1}-style datasets for backwards-compatability.
@@ -293,7 +293,7 @@ State vectors are equatorial and evaluated at the light-emission (retarded) time
 The \texttt{ephVmag} field is an approximate predicted Johnson $V$ magnitude derived from the input catalog photometric parameters.
 It is not a prediction in the Rubin band of the associated detection, so comparisons to the measured $ugrizy$ photometry include both object color and phase-model differences.
 
-The Solar System \gls{Source} catalog contains \nsolarsystemsources solar system source rows for \nssobjects distinct objects.
+The solar system \gls{Source} catalog contains \nsolarsystemsources solar system source rows for \nssobjects distinct objects.
 
 
 \subsubsection{Solar System Object}
@@ -318,11 +318,13 @@ The former includes both self-mappings ($A=A$) and links among aliases ($A=B$); 
 The \gls{MPC} Orbits catalog available at ingestion did not contain comets.
 Because the predictions used for association were generated from that snapshot, no comets were available to be associated with \gls{DP2} detections and none occur in the delivered Solar System Source or Solar System Object catalogs.
 
-In the Solar Syetem Source, Solar System Object, and \gls{MPC} Orbits catalogs,
+In the Solar System Source, Solar System Object, and \gls{MPC} Orbits catalogs,
 \texttt{designation} denotes the unpacked primary provisional designation of
-the object.  This was added to the delivered \gls{MPS} Orbits copy
+the object.
+This was added to the delivered \gls{MPS} Orbits copy
 as an end-user convenience; there it is identical, row by row, to
-\texttt{unpacked\_primary\_provisional\_designation}.  It therefore provides
+\texttt{unpacked\_primary\_provisional\_designation}.
+It therefore provides
 a readable and direct join key among the Solar System Source, Solar System Object, \gls{MPC} Orbits catalogs, without requiring users to unpack \gls{MPC} designations.
 For query performance, users should nevertheless prever to use integer
 identifiers such as \texttt{ssObjectId} to link catalogs wherever those identifiers are available, and use \texttt{designation} for readability or when an appropriate integer identifier is unavailable.
@@ -380,7 +382,9 @@ Survey Property maps are only available via the Data \gls{Butler} (\secref{sssec
 \subsubsection{HiPS Maps}
 
 \gls{HiPS} maps, offer an interactive way to explore seamless, multiband tiles of the sky regions covered by \gls{DP2}, allowing for smooth panning and zooming.
-DP2 provides multiband \gls{HiPS} images created by combining data from individual bands of Deep Coadd images, using an improved version (N. B. Lust et al. in preparation) of the algorithm presented in \cite[][]{2004PASP..116..133L}.
+DP2 provides multiband \gls{HiPS} images created by combining data from individual bands of Deep Coadd images, using an improved version (N.
+B.
+Lust et al. in preparation) of the algorithm presented in \cite[][]{2004PASP..116..133L}.
 These images are false-color representations generated using various filter combinations for the red, green, and blue channels.
 
 \gls{HiPS} maps are only accessible through the \gls{HiPS} viewer in the \gls{RSP} Portal (\secref{ssec:rsp_portal}) and cannot be accessed via the Data \gls{Butler} (\secref{sssec:data_butler}).
