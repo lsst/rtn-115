@@ -75,7 +75,7 @@ authors.csv: authors.yaml
 	$(UV_RUN) python $(TEXMFHOME)/../bin/db2authors.py -m aascsv > authors.csv
 
 aglossary.tex: $(tex) myglossarydefs.csv
-	$(UV_RUN) python $(TEXMFHOME)/../bin/generateAcronyms.py -n -t"Sci DM Gen" -g $(tex)
+	$(UV_RUN) python $(TEXMFHOME)/../bin/generateAcronyms.py -n -t"Sci DM" -g $(tex)
 
 .PHONY: deps
 deps:
