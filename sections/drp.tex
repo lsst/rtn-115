@@ -124,7 +124,7 @@ working in pixel coordinates.
 \subsubsection{Astrometric Calibration} \label{sec:drp-calibration-astrometry}
 The final astrometric calibration of the data follows the same method as for DP1, but with some key additions. As described in \cite[][]{10.71929/rubin/2570308}, a joint calibration is performed on all visits in a given band overlapping a given area.
 By associating all the isolated point sources shared among the overlapping visits, we can refine the astrometric solution beyond the level achieved in single-frame processing using only a reference catalog \citep{DMTN-266}. 
-% TODO: The full details of the method are described in Saunders, 2026 (in prep; I'll make a DOI for this)
+The full details of the method are described in \citet[][]{DMTN-266}.
 
 Unlike in DP1, the area we use for individual fits of the astrometric solution is an order-3 healpix, instead of a tract. This is done to reduce repetitive calculations, since the small size of tracts compared to the LSSTCam field of view means that neighboring tracts often share identical overlapping visits, which would lead to doing many identical fits of the astrometric calibration.
 
@@ -309,7 +309,7 @@ Chance associations remain possible because the match does not use brightness or
 Users constructing a high-purity sample should consider detection reliability, angular and cross-track residuals, consistency with the predicted magnitude, and the uncertainty of the input orbit.
 Detection-level reliability information requires reference to the DIA Source catalog (\secref{sssec:DIASource}).
 
-\subsection{Photometry and Phase Curves}
+\subsubsection{Photometry and Phase Curves}
 
 The Solar Sytem Object photometric fields were derived independently in each of the $ugrizy$ bands from PSF fluxes in the associated detections.
 For a flux $f$ in nJy, the conversion used was $m_{\rm AB}=31.4-2.5\log_{10}f$, with magnitude uncertainty $1.085736\,\sigma_f/f$.
