@@ -1,0 +1,404 @@
+# Copy-edit rules for journal compliance.
+#
+# Each rule:
+#   name:        short identifier shown in --check output
+#   pattern:     Python regex (single-quoted to avoid YAML escaping; backslashes
+#                are passed through to the regex engine literally)
+#   replacement: literal replacement string; \1, \2, ... reference capture groups
+#   note:        free-text reason
+#   audit_only:  optional bool. If true, the rule is never auto-applied; it is
+#                only reported when the script is invoked with --audit. Use this
+#                for rules with high false-positive risk.
+#
+# Files are skipped at the pre-commit level (see .pre-commit-config.yaml exclude),
+# not here. Add new rules to the bottom as the journal flags more nits.
+
+rules:
+  - name: dataset
+    pattern: '\bdata set\b'
+    replacement: 'dataset'
+    note: 'AAS prefers the single-word form "dataset".'
+
+  - name: farcs-numeric
+    # Convert "<N>.<M> arcsec(ond)(s)" -> "<N>\farcs<M>" for numeric quantities.
+    # Connector between number and unit can be space, ~ (LaTeX nbsp), or \,
+    # (LaTeX thin space). Multi-digit N and M are supported (e.g. "12.345
+    # arcseconds" -> "12\farcs345").
+    # MUST run before the bare-arcsec rule so numeric quantities are handled
+    # first and the bare-arcsec rule sees no leftover "arcsec" tokens to rewrite.
+    pattern: '\b(\d+)\.(\d+)(?:[ ~]|\\,)arcsec(?:ond)?s?\b'
+    replacement: '\1\\farcs\2'
+    note: 'Numeric arcsec quantities use the \farcs LaTeX macro: "0.7 arcseconds" -> "0\farcs7".'
+
+  - name: arcseconds
+    # Match a bare "arcsec" word, but skip:
+    #   \arcsec          -- LaTeX macro (lookbehind: not preceded by \)
+    #   0.7 arcsec       -- numeric quantity (not preceded by digit + space)
+    #   0.7~arcsec       -- numeric quantity with LaTeX non-breaking space
+    #   0.7\,arcsec      -- numeric quantity with LaTeX thin space
+    # The trailing \b also prevents matching inside arcseconds, arcsecs, etc.
+    pattern: '(?<!\\)(?<!\\,)(?<!\d )(?<!\d~)\barcsec\b'
+    replacement: 'arcseconds'
+    note: 'Use "arcseconds" in prose; numeric quantities and the \arcsec macro are preserved.'
+
+  - name: nonzero
+    pattern: '\bnon-zero\b'
+    replacement: 'nonzero'
+    note: 'AAS prefers the single-word form "nonzero".'
+
+  - name: bit-mask
+    # \1 captures an optional trailing "s" so the plural "bitmasks" is also
+    # rewritten to "bit masks".
+    pattern: '\bbitmask(s?)\b'
+    replacement: 'bit mask\1'
+    note: 'Two words: "bit mask".'
+
+  - name: coadd
+    # Enumerated suffixes only; a greedy \w* would mangle "co-address",
+    # "co-addiction", etc.
+    pattern: '\bco-add(s|ed|ing|ition|itions)?\b'
+    replacement: 'coadd\1'
+    note: 'Single word: "coadd". Covers co-add, co-adds, co-added, co-adding, co-addition, co-additions.'
+
+  - name: coworking
+    # Family: co-work, co-works, co-worked, co-working, co-worker, co-workers.
+    pattern: '\b([Cc])o-work(s|ed|ing|er|ers)?\b'
+    replacement: '\1owork\2'
+    note: 'Single word: "coworking" / "cowork" / "coworker" etc.'
+
+  - name: survey-property-maps
+    # Lowercase "Maps" in body prose; preserve titles/captions verbatim.
+    pattern: '\bSurvey Property Maps\b'
+    replacement: 'Survey Property maps'
+    skip_lines_matching: '\\(?:section|subsection|subsubsection|paragraph|chapter|title|caption)\*?\{'
+    note: 'Body prose uses "Survey Property maps". Section headings and captions keep the title-case form.'
+
+  - name: per-pixel
+    # "<number> per pixel" -> "<number> pixel$^{-1}$" (LaTeX superscript form).
+    # The connector between the number and "per" (space, ~, or \,) is captured
+    # in \1 so it is preserved verbatim.
+    # Only fires after a digit, so non-numeric prose ("electrons per pixel",
+    # "lookups per pixel") is left alone.
+    pattern: '(\d(?: |~|\\,))per pixel\b'
+    replacement: '\1pixel$^{-1}$'
+    note: 'AAS-style superscript: "0\farcs2 per pixel" -> "0\farcs2 pixel$^{-1}$".'
+
+  # --- Dataset-name pluralization rules. --------------------------------------
+  # Convention: Rubin dataset type names stay in \texttt{}; the plural marker
+  # moves to the prose noun "images". So
+  #   \texttt{deep\_coadds}   -> \texttt{deep\_coadd} images
+  #   deep\_coadds            -> deep\_coadd images
+  # The \texttt{...} rules MUST be ordered before the bare-prose rules so the
+  # bare rule sees the already-rewritten text.
+
+  # Note on escaping: replacement strings are processed by Python's re.sub,
+  # which interprets backslash escapes (\t = tab, \n = newline, \1 = group).
+  # To insert a literal "\" into the output we write "\\" in the YAML, which
+  # YAML stores as a 2-char string "\\" that re.sub then collapses to one "\".
+
+  - name: raws-texttt
+    pattern: '\\texttt\{raws\}'
+    replacement: '\\texttt{raw} images'
+    note: '\texttt{raws} -> \texttt{raw} images.'
+
+  - name: raws
+    pattern: '\braws\b'
+    replacement: 'raw images'
+    note: 'Bare prose: "raws" -> "raw images".'
+
+  - name: deep-coadds-texttt
+    pattern: '\\texttt\{deep\\_coadds\}'
+    replacement: '\\texttt{deep\\_coadd} images'
+    note: '\texttt{deep\_coadds} -> \texttt{deep\_coadd} images.'
+
+  - name: deep-coadds
+    pattern: '\bdeep\\_coadds\b'
+    replacement: 'deep\\_coadd images'
+    note: 'Bare prose: "deep\_coadds" -> "deep\_coadd images".'
+
+  - name: template-coadds-texttt
+    pattern: '\\texttt\{template\\_coadds\}'
+    replacement: '\\texttt{template\\_coadd} images'
+    note: '\texttt{template\_coadds} -> \texttt{template\_coadd} images.'
+
+  - name: template-coadds
+    pattern: '\btemplate\\_coadds\b'
+    replacement: 'template\\_coadd images'
+    note: 'Bare prose: "template\_coadds" -> "template\_coadd images".'
+
+  - name: boolean-flags
+    # Lookahead: only fire when "boolean" is followed by "flag" or "flags".
+    # The lookahead is zero-width so "flags" is preserved as-is.
+    pattern: '\bboolean(?=\s+flags?\b)'
+    replacement: 'Boolean'
+    note: 'Capitalize "Boolean" when modifying "flag" or "flags".'
+
+  - name: right-ascension
+    # Inline (?i) flag = case-insensitive. Output is always "R.A."
+    pattern: '(?i)\bright ascension\b'
+    replacement: 'R.A.'
+    skip_lines_matching: '\\(?:section|subsection|subsubsection|paragraph|chapter|title|caption)\*?\{'
+    note: 'Abbreviate "right ascension" -> "R.A." in body prose; section/caption titles preserved.'
+
+  - name: declination
+    # Captures the leading letter so "Declination" at sentence start becomes
+    # "Decl." (capital D), while "declination" mid-sentence becomes "decl.".
+    pattern: '\b([Dd])eclination\b'
+    replacement: '\1ecl.'
+    skip_lines_matching: '\\(?:section|subsection|subsubsection|paragraph|chapter|title|caption)\*?\{'
+    note: 'Abbreviate "declination" -> "decl." (case preserved for sentence-initial "Decl.").'
+
+  - name: dec-abbrev
+    # Astronomical short-form "dec" or "dec." -> "decl.". Guards:
+    #   (?<!\\)              -- skip LaTeX macros like \dec
+    #   \b ... \.?           -- standalone word, optional trailing period
+    #   (?![a-zA-Z])         -- next char is not a letter, so words like
+    #                           decline, decimal, decay, decode etc. are safe.
+    #   (?!\})               -- skip when immediately followed by a closing
+    #                           curly brace, e.g. \texttt{dec} or {dec} as a
+    #                           literal column/field name that must stay "dec".
+    # Test corpus contained: decay, decide, decimal, decl, declination,
+    # decreasing — none of these match this pattern.
+    pattern: '(?<!\\)\bdec\.?(?![a-zA-Z])(?!\})'
+    replacement: 'decl.'
+    skip_lines_matching: '\\(?:section|subsection|subsubsection|paragraph|chapter|title|caption)\*?\{'
+    note: 'Astronomical "dec"/"dec." -> "decl.". Heavily guarded against false positives; "dec" immediately inside {} (e.g. \texttt{dec}) is preserved.'
+
+  - name: band-filter
+    # Italicize the filter letter: "g band" -> "$g$ band", "g-band" -> "$g$-band".
+    # \1 captures the filter letter, \2 captures the connector (space or hyphen).
+    pattern: '\b([ugrizy])([- ])band\b'
+    replacement: '$\1$\2band'
+    note: 'Italicize ugrizy filter letters before "band". Already-wrapped "$g$ band" is not double-wrapped.'
+
+  - name: ugrizy-math-mode
+    # The six-band set "ugrizy" must always appear in math mode: $ugrizy$.
+    # Two alternatives separated by |:
+    #   1. Any LaTeX markup wrapper (\textit, \texttt, \emph, \textbf) around
+    #      ugrizy -- the entire \cmd{ugrizy} span is replaced by $ugrizy$.
+    #   2. Bare "ugrizy" in prose, including forms like (ugrizy) or {ugrizy}
+    #      where () or {} or other delimiters surround it.
+    # Protection: (?<!\$) checks the character immediately before the "u".
+    # In every correct $ugrizy$ form -- whether bare, wrapped in (),  {}, [],
+    # or any other delimiter -- that character is always $, so the lookbehind
+    # reliably prevents double-wrapping regardless of what surrounds the token.
+    pattern: '\\(?:textit|texttt|emph|textbf)\{ugrizy\}|(?<!\$)\bugrizy\b(?!\$)'
+    replacement: '$ugrizy$'
+    note: 'The six-band set must be in math mode: \textit{ugrizy} or bare ugrizy → $ugrizy$.'
+
+  - name: multiepoch
+    # Capture group preserves the leading letter's case so both lowercase and
+    # sentence-initial forms are handled.
+    pattern: '\b([Mm])ulti-epoch\b'
+    replacement: '\1ultiepoch'
+    note: 'Single word: "multiepoch".'
+
+  - name: multiband
+    pattern: '\b([Mm])ulti-band\b'
+    replacement: '\1ultiband'
+    note: 'Single word: "multiband".'
+
+  - name: multidimensional
+    # Family: multi-dimensional, multi-dimensionally, multi-dimensionality.
+    pattern: '\b([Mm])ulti-dimensional(ly|ity)?\b'
+    replacement: '\1ultidimensional\2'
+    note: 'Single word: "multidimensional" (covers -ly and -ity suffixes).'
+
+  - name: citation-empty-options
+    # Ensure every \cite*{} has empty [][] optional args between the command and
+    # the key, matching the \citep[][]{...} convention used elsewhere in the doc.
+    # Matches: \cite{, \citep{, \citet{, \citealp{, \citenum{, \citep*{, ...
+    # Does NOT match: anything already followed by '[' (already has options),
+    # so \cite[][]{X}, \citep[See][]{X}, \citep[2007]{X} are left alone.
+    pattern: '\\(cite[a-z]*\*?)\{'
+    replacement: '\\\1[][]{'
+    note: 'Add [][] to bare \cite/\citep/\citet/etc. so every citation has the standard options form.'
+
+  - name: preinstalled
+    # Family: pre-install, pre-installed, pre-installing, pre-installation(s).
+    pattern: '\b([Pp])re-install(ed|ing|ation|ations|s)?\b'
+    replacement: '\1reinstall\2'
+    note: 'Single word: "preinstalled" / "preinstall" / "preinstalling" / "preinstallation".'
+
+  - name: pregenerated
+    # Family: pre-generate(s|d), pre-generating, pre-generation(s).
+    pattern: '\b([Pp])re-generat(e|es|ed|ing|ion|ions)\b'
+    replacement: '\1regenerat\2'
+    note: 'Single word: "pregenerated" / "pregenerate" / "pregeneration".'
+
+  - name: nonlinear
+    # Family: non-linear, non-linearity, non-linearities, non-linearly.
+    # Restricted suffix list keeps unrelated words like "non-linear-ish" untouched.
+    pattern: '\b([Nn])on-linear(ity|ities|ly)?\b'
+    replacement: '\1onlinear\2'
+    note: 'Single word: "nonlinear" / "nonlinearity" / "nonlinearities" / "nonlinearly".'
+
+  - name: crosstalk
+    # Two words: "cross talk". Case-preserving so "Crosstalk" at sentence start
+    # becomes "Cross talk".
+    # \b at the trailing edge protects identifiers like "crosstalk_residual"
+    # (underscore is a word char in regex, so no \b matches between k and _).
+    pattern: '\b([Cc])rosstalk\b'
+    replacement: '\1ross talk'
+    skip_lines_matching: '\\(?:section|subsection|subsubsection|paragraph|chapter|title|caption)\*?\{|\\includegraphics'
+    note: 'Two words: "cross talk". Headings and \includegraphics filenames are preserved.'
+
+  - name: crossmatch
+    # Family: cross-match, cross-matches, cross-matched, cross-matching.
+    # \1 preserves leading-letter case for sentence-initial "Cross-matching".
+    # \2 preserves the verb suffix.
+    pattern: '\b([Cc])ross-match(es|ed|ing)?\b'
+    replacement: '\1rossmatch\2'
+    note: 'Single word: "crossmatch" / "crossmatching" / "crossmatched" / "crossmatches".'
+
+  - name: solar-system
+    # Lowercase "Solar System" -> "solar system" in body prose.
+    # Three guards keep capitals where they belong:
+    #   (?<![.!?]\s)              -- skip after sentence-ending punctuation
+    #   (?<!\n)                   -- skip when at start of a line/paragraph
+    #   (?!\s+[A-Z][a-z])         -- skip when followed by another capitalized
+    #                                word (proper-noun continuation, e.g.
+    #                                "Solar System Science Collaboration",
+    #                                "Solar System Objects")
+    # skip_lines_matching also drops section/caption headings entirely.
+    pattern: '(?<![.!?]\s)(?<!\n)\bSolar System\b(?!\s+[A-Z][a-z])'
+    replacement: 'solar system'
+    skip_lines_matching: '\\(?:section|subsection|subsubsection|paragraph|chapter|title|caption)\*?\{'
+    note: 'Lowercase "solar system" in body prose; sentence-initial / heading / proper-noun cases preserved.'
+
+  - name: lsstcomcam
+    # Bare "ComCam" -> "LSSTComCam". The negative lookbehind keeps the
+    # already-correct form "LSSTComCam" from being double-prefixed to
+    # "LSSTLSSTComCam".
+    pattern: '(?<!LSST)\bComCam\b'
+    replacement: 'LSSTComCam'
+    note: 'Use the full instrument name "LSSTComCam" everywhere.'
+
+  - name: data-release
+    # Capitalize "Data Release" (and plural "Data Releases") when written as a
+    # phrase referring to a Rubin data release. Case-sensitive lowercase pattern
+    # only -- the already-correct "Data Release" form is left alone, avoiding
+    # noisy no-op rewrites in pre-commit. Mixed-case typos like "Data release"
+    # or "data Release" are not caught by this narrow pattern; add manually if
+    # they appear.
+    pattern: '\bdata release(s?)\b'
+    replacement: 'Data Release\1'
+    note: 'Capitalize "Data Release(s)" when describing a Rubin Data Release.'
+
+  - name: sq-deg
+    # Matches abbreviated and written-out forms of square degrees.
+    # Covers: "sq deg", "sq. deg", "square degree", "square degrees".
+    pattern: '\b(?:sq\.?\s*deg\.?|square\s+degrees?)\b'
+    replacement: 'deg$^{\\rm 2}$'
+    note: 'AAS style: use deg$^{\rm 2}$ for square degrees.'
+
+  - name: sim-math-mode
+    # Bare \sim used as "approximately" must be wrapped in math mode.
+    # The lookahead allows optional \, (thin space), ~ (non-breaking space), or
+    # ASCII whitespace between \sim and the digit so all spacing variants are
+    # caught. The lookbehind excludes \sim that is already inside $\sim$.
+    # Must run before sim-digit-thin-space so $..$ wrapping is in place.
+    pattern: '(?<!\$)\\sim(?=(?:\\,|~|\s)*\d)'
+    replacement: '$\\sim$'
+    note: 'Bare \sim used as "approximately" must be in math mode: "\sim8" → "$\sim$8".'
+
+  - name: sim-outside-math
+    # Catches \sim immediately before an inline $…$ math environment and merges
+    # \sim into that environment: \sim$3,000\,deg^2$ → $\sim\,3,000\,deg^2$.
+    # Lookbehind (?<!\$) skips \sim already inside math (e.g. $\sim$).
+    # Negative lookahead (?!\$) avoids matching display math ($$…$$).
+    pattern: '(?<!\$)\\sim\$(?!\$)'
+    replacement: '$\\sim\\,'
+    note: 'Merge \sim into the following $…$: \sim$3,000\,deg^2$ → $\sim\,3,000\,deg^2$.'
+
+  - name: sim-thin-space
+    # Catches $\sim$~ (non-breaking space with no thin space) → $\sim$\,~.
+    pattern: '\$\\sim\$~'
+    replacement: '$\\sim$\\,~'
+    note: 'Add thin space after \sim before ~: "$\sim$~27" → "$\sim$\,~27".'
+
+  - name: sim-digit-thin-space
+    # Catches $\sim$ followed immediately by a digit (no separator) or by one
+    # or more plain ASCII spaces then a digit, and inserts \,.
+    # \s* matches ASCII whitespace only; it does NOT match \, (backslash is not
+    # \s) or ~ (not \s), so already-correct $\sim$\, and $\sim$\,~ forms are
+    # untouched. Must run after sim-thin-space so the ~ case is already fixed.
+    pattern: '\$\\sim\$\s*(\d)'
+    replacement: '$\\sim$\\,\1'
+    note: 'Ensure thin space after \sim: "$\sim$8" or "$\sim$ 8" → "$\sim$\,8".'
+
+  - name: sim-unit-thin-space
+    # After $\sim$\, and a numeric value (integer or decimal), catches a plain
+    # space before the first letter of a unit word and replaces it with \,.
+    # The optional ~? accommodates the non-breaking space left by sim-thin-space.
+    # Only the space is replaced; the rest of the unit string is untouched
+    # because re.sub only rewrites the matched span.
+    pattern: '(\$\\sim\$\\,~?\d+(?:\.\d+)?) ([A-Za-z])'
+    replacement: '\1\\,\2'
+    note: 'Ensure thin space between \sim value and unit: "$\sim$\,30 seconds" → "$\sim$\,30\,seconds".'
+
+  - name: sentence-newline
+    # Two sentences running together on the same line: sentence-ending
+    # punctuation followed by one or more spaces and an uppercase letter.
+    # Fires on any capital after a full stop, including acronyms ("DP2",
+    # "LSSTCam"). Headings and captions are skipped to avoid false positives
+    # from title-case text.
+    # Guard: negative lookbehind (?<! [A-Z]) skips middle initials like "C."
+    # in "Vera C. Rubin" -- a single uppercase letter preceded by a space is
+    # a name initial, not a sentence boundary.
+    pattern: '(?<! [A-Z])([.!?]) +([A-Z])'
+    replacement: '\1\n\2'
+    skip_lines_matching: '\\(?:section|subsection|subsubsection|paragraph|chapter|title|caption)\*?\{'
+    note: 'Each sentence should start on a new line in the LaTeX source: "word. Next" → "word.\nNext". Middle initials like "C. Rubin" are preserved.'
+
+  - name: doi-macro-inline-braces
+    # \doiXXXX parameter macros (e.g. \doidptwopaper) must be followed by {}
+    # when used inline so TeX's macro-name scanner does not swallow the
+    # trailing space.  Argument use — \doi{\doidptwopaper} — is excluded by
+    # the lookbehind on {.  Already-correct inline use — \doidptwopaper{} —
+    # is excluded by the first lookahead.  The \doi command itself is not
+    # matched because it has no letters after "doi" before the {.
+    pattern: '(?<!\{)(\\doi[A-Za-z]+)(?=[^A-Za-z])(?!\{\})(?!\})'
+    replacement: '\1{}'
+    note: 'DOI parameter macros need {} suffix in prose; omit inside \doi{...}.'
+
+  - name: sentence-break
+    # Insert a newline after a sentence-ending period so each sentence starts
+    # on its own line (standard LaTeX prose style).
+    # Heuristic: period + spaces + uppercase-then-lowercase is a sentence
+    # boundary. The [A-Z][a-z] lookahead avoids firing on acronyms (NASA,
+    # LSST) that follow a period.
+    # (?<!et al) skips "et al. Smith"-style citations, where the period
+    # after "al" is not a sentence boundary.
+    # (?<!\b[A-Z]) skips single-letter initials ("N. B. Lust"), where the
+    # period after a lone capital letter preceded by a word boundary is not
+    # a sentence boundary. Multi-letter acronyms (NASA., LSST.) are
+    # unaffected, since the letter immediately before their period is not
+    # itself preceded by a word boundary.
+    # Known false positives: title abbreviations before proper names
+    # ("Dr. Smith", "Prof. Jones"). "Fig.", "Eq.", "Sec." are safe because
+    # they are followed by digits or \ref{}, not [A-Z][a-z].
+    pattern: '(?<!et al)(?<!\b[A-Z])\.[ ]+(?=[A-Z][a-z])'
+    replacement: ".\n"
+    audit_only: true
+    note: |
+      Run "bin/copyedit.py --audit $(git ls-files '*.tex')" to list candidates.
+      Review each hit manually: false positives include title abbreviations
+      before names ("Dr. Smith", "Prof. Jones"). "et al." and single-letter
+      initials (e.g. "N. B. Lust") are guarded automatically.
+      Sentence-boundary hits should be applied to keep one sentence per line.
+
+  - name: thousands-separator-5digit
+    # Flag bare 5-digit numbers like 10000 that should be 10,000 in prose.
+    # Audit-only: many 5-digit values in a typical astronomy paper are
+    # identifiers (tract numbers, etc.) that must NOT be commafied. The
+    # lookbehind auto-skips DOI fragments of the form "10.71929/..." since
+    # DOIs always start "10.".
+    pattern: '(?<!10\.)\b(\d{2})(\d{3})\b'
+    replacement: '\1,\2'
+    audit_only: true
+    note: |
+      Run "bin/copyedit.py --audit $(git ls-files '*.tex')" to list
+      candidates. Each match must be reviewed manually: tract identifiers and
+      similar IDs should be left alone; counts (e.g. \ntotaltracts) should be
+      rewritten to use a comma.

@@ -14,3 +14,18 @@ authors.tex
 *.gls
 *.ist
 aglossary.tex
+parameters_static.tex
+
+__pycache__
+*.egg-info/
+
+# Development tooling
+.idea/
+uv.lock
+
+# Test outputs
+tests/outputs
+token.pickle
+client_secret.json
+parameters_static.tex
+PAT

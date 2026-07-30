@@ -2,9 +2,9 @@ name: Process Author signup  form
 
 on:
   workflow_dispatch:
-  schedule:
+  #schedule:
     #  UTC min hour day month dayOfWeek
-    - cron: '40 6 * * *'
+   # - cron: '40 6 * * *'
 
 jobs:
   authorform:
@@ -17,6 +17,11 @@ jobs:
           fetch-depth: 0 # full history for metadata
           submodules: true
 
+      # new authos may be in lsst-txmf and its giiod to pull that up anyway
+      - name: Update lsst-texmf submodule to latest remote
+        run: |
+          git submodule sync --recursive
+          git submodule update --init --recursive --remote lsst-texmf
 
       - name: Set up Python
         uses: actions/setup-python@v5

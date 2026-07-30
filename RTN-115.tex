@@ -1,6 +1,6 @@
 %% Beginning of file 'RTN-115.tex'
-\documentclass[twocolumn,twocolappendix, linenumbers ,trackchanges]{aastex7}
-
+\documentclass[twocolumn,twocolappendix,trackchanges]{aastex7}
+\input{draft}
 % Package imports go here.
 \usepackage{amsmath}
 \usepackage{textcomp}
@@ -16,33 +16,47 @@
 % TODO notes
 \usepackage[colorinlistoftodos]{todonotes}
 \let\Oldtodo\todo
-\renewcommand{\todo}[1]{\Oldtodo[inline, color=red]{#1}}
+\renewcommand{\todo}[1]{\Oldtodo[inline, color=pink]{#1}}
 \newcommand{\james}[2][]{\Oldtodo[inline,color=cyan, #1]{James: #2}}
 \newcommand{\leanne}[2][]{\Oldtodo[inline,color=teal, #1]{Leanne: #2}}
 \newcommand{\alex}[2][]{\Oldtodo[inline,color=orange, #1]{Alex: #2}}
+% from straylight
+\newcommand{\registered}{\textsuperscript{\textregistered}\xspace}
+\newcommand{\fdeg}{\mbox{\ensuremath{.\!\!^\circ}}}
+% end from straylight
+
 
 % Rubin glossaries
 \usepackage[nonumberlist]{glossaries}
 %\setglossarystyle{long} #(or this but tis very odd format)
 
 
+% Line numbers -- loaded explicitly to patch bibliography crash in twocolumn+TeX Live 2025
+\usepackage{lineno}
+\linenumbers
+\AtBeginEnvironment{thebibliography}{\nolinenumbers}
 
 % Local commands go here.
 \newcommand{\docRef}{RTN-115}
 \newcommand{\docUpstreamLocation}{\url{https://github.com/lsst/rtn-115}}
 
-%\providecommand{\secref}[1]{\hyperref[#1]{\autoref{#1}}}
-\providecommand{\secref}[1]{\hyperref[#1]{\S\ref{#1}}}
-\providecommand{\appref}[1]{\hyperref[#1]{Appendix \ref{#1}}}
-\providecommand{\tabref}[1]{\hyperref[#1]{\autoref{#1}}}
-\providecommand{\figref}[1]{\hyperref[#1]{\autoref{#1}}}
-\providecommand{\eqnref}[1]{\hyperref[#1]{Eq.~\ref{#1}}}
-\providecommand{\recref}[1]{\hyperref[#1]{REC-\ref{#1}}}
+% \ref* suppresses the inner hyperlink so \hyperref does not nest annotations.
+\providecommand{\secref}[1]{\hyperref[#1]{\S\ref*{#1}}}
+\providecommand{\appref}[1]{\hyperref[#1]{Appendix~\ref*{#1}}}
+\providecommand{\tabref}[1]{\hyperref[#1]{Table~\ref*{#1}}}
+\providecommand{\figref}[1]{\hyperref[#1]{Figure~\ref*{#1}}}
+\providecommand{\eqnref}[1]{\hyperref[#1]{Eq.~\ref*{#1}}}
+\providecommand{\recref}[1]{\hyperref[#1]{REC-\ref*{#1}}}
 
 \newcommand{\degsq}{$\rm deg^{2}$}
 
+% ---- Input paths for sections and tables
+\makeatletter
+\def\input@path{{sections}{tables}}
+\makeatother
+
 % All graphics paths here
-\graphicspath{{./}, {./figures}, {./figures/*}}
+\graphicspath{{./}, {./figures}, {./figures/*}, {figures}}
 
 %% Reintroduced the \received and \accepted commands from AASTeX v5.2
 %\received{March 1, 2021}
@@ -54,34 +68,34 @@
 %\submitjournal{PSJ}
 
 % Input the premade glossary to work around issues with makeglossaries in twocolumn mode
-\input{aglossary.tex}
+\input{aglossary}
 \makeglossaries
 
-% Include the parameters file with the data
-\input{sections/parameters.tex}
+% Include the parameters files
+\input{parameters_static}
+\input{parameters_data}
 
 % Document
 \begin{document}
-
-% Rubin DOI
-%\doi{10.71929/rubin/XXXXXXX}
 
 \date{\today}
 \title{The Vera C. Rubin Observatory Data Preview 2}
 \shorttitle{Rubin DP2}
 \doi{10.71929/rubin/3377440}
 
+
+
 % This can write metadata into the PDF.
 % Update keywords and author information as necessary.
 \hypersetup{
     pdftitle={The Vera C. Rubin Observatory Data Preview 2},
     pdfauthor={guylp},
-    pdfkeywords={}
+    pdfkeywords={},
+    breaklinks=true
 }
 
 \input{authors}
-\correspondingauthor{Leanne P. Guy}
-
+\correspondingauthor{Leanne P. Guy, James Mullaney, Alex Broughton}
 
 \input{sections/abstract}
 
@@ -94,6 +108,7 @@
 \input{sections/commissioning}
 \input{sections/data_products}
 \input{sections/drp}
+%\input{sections/solar_system}
 \input{sections/performance}
 \input{sections/data_services}
 \input{sections/community_science}
@@ -101,7 +116,7 @@
 
 
 %% Modify acknowledgements as needed.
-\begin{acknowledgments}.
+\begin{acknowledgments}
 This material is based upon work supported in part by the National Science Foundation through Cooperative Agreements AST-1258333 and AST-2241526 and Cooperative Support Agreements AST-1202910 and AST-2211468 managed by the \gls{AURA}, and the Department of Energy under Contract No.\ DE-AC02-76SF00515 with the SLAC National Accelerator Laboratory managed by Stanford University.
 Additional Rubin Observatory funding comes from private donations, grants to universities, and in-kind support from LSST-DA Institutional Members.
 
@@ -115,22 +130,23 @@ This work has been supported by STFC funding for UK participation in LSST, throu
 \facilities{Rubin:Simonyi (LSSTComCam), Rubin:USDAC}
 
 % Acknowledge all software used here
-\software{Rubin Data Butler \citep{2022SPIE12189E..11J},
-          LSST Science Pipelines \citep{PSTN-019},
-          LSST Feature Based Scheduler v3.0  \citep{peter_yoachim_2024_13985198, Naghib_2019}
-          Astropy \citep{2013A&A...558A..33A, 2018AJ....156..123A, 2022ApJ...935..167A}
-          PIFF \citep{DES:2020vau},
-          GBDES \citep{2022ascl.soft10011B},
-          Qserv \citep{Wang:2011:QDS:2063348.2063364, C15_adassxxxii},
-          Slurm, HTCondor, CVMFS, FTS3, ESNet
+\software{Rubin Data Butler \citep[][]{2022SPIE12189E..11J},
+          LSST Science Pipelines \citep[][]{PSTN-019},
+          LSST Feature Based Scheduler v3.0  \citep[][]{SMTN-020, peter_yoachim_2024_13985198, 2019AJ....157..151N},
+          Astropy \citep[][]{2013A&A...558A..33A, 2018AJ....156..123A, 2022ApJ...935..167A},
+          PIFF \citep[][]{2021MNRAS.501.1282J},
+          GBDES \citep[][]{2022ascl.soft10011B},
+          MultiProFit \citep[][]{DMTN-312},
+          Qserv \citep[][]{Wang:2011:QDS:2063348.2063364, 2025ASPC..538..114M},
           }
 
 \appendix
-\printglossaries
 
 % Include all the relevant bib files so that references can be found from
 % lsst-texmf.
 % https://lsst-texmf.lsst.io/lsstdoc.html#bibliographies
 \bibliographystyle{aasjournal}
-\bibliography{local,lsst,ivoa,lsst-dm,refs_ads,refs,books}
+\bibliography{local,lsst,ivoa,refs_ads,refs,books}
+
+\printglossaries
 \end{document}

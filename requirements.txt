@@ -1,0 +1,9 @@
+setuptools
+pyyaml
+tox
+numpy
+astropy
+haversine
+tqdm
+lsst-daf-butler
+pydantic>2

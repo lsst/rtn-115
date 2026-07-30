@@ -28,7 +28,7 @@ Clone this repository::
 
 Compile the PDF::
 
-    make
+    make deps; make
 
 Clean built files::
 
@@ -66,3 +66,49 @@ To update to a newer version of `lsst-texmf`_, you can update the submodule in t
 Commit, then push, the updated submodule.
 
 .. _lsst-texmf: https://github.com/lsst/lsst-texmf
+
+Producing the parameters file
+-----------------------------
+
+All parameters in the DP2 paper are auto generated.
+They can be broadly grouped into  two categories, static or hard-coded paramteres, and those extracted or computed from the DP2 dataset or metadata.
+The static parameters are all in the ``data/static_parameters.tex`` file and  include for example, the LSST start date,
+whereas parameters such as the number of visits in a release are extracted from the dataset itself and require a connection to the dataset.
+
+To generate the parameters.tex file with the static parameters only. Sections is the defaut directory
+
+.. uv run python bin/dp2_parameters.py --static-only
+
+.. uv run python bin/dp2_parameters.py --static-only --output-dir adir
+
+Running the copyedit check script
+---------------------------------
+
+Copy editing is a very tedious and time-consuming task of producing a paper.
+To ease this burden and to harmonise style across a paper which contains contributions from many people, journal copy edit rules have been codified.
+They are defined in .copyedit-rules.yaml
+They can be applied by running the script  bin/copyedit.py
+
+Fix violations in place (modifies input file)
+..  uv run python bin/copyedit.py sections/introduction.tex
+
+Report violations without modifying any files
+.. uv run python bin/copyedit.py --check sections/introduction.tex
+
+Report violations for rule that ate marked as "audit" only. These are rules that are never auto-applied because they have high false-positive rates and require
+human intervention
+.. uv run python bin/copyedit.py --check --audit $(git ls-files '*.tex')
+
+Running the precommit checks
+----------------------------
+
+The DP2 repository now contains a number of pre-commit hooks to reduce the burden of a number of tasks, the main one being appliction of copy-edit rules.
+
+Run only the copyedit precommit check on all files
+.. pre-commit run copyedit
+
+Run only the copyedit precommit check on the introduction file only
+..  pre-commit run copyedit --files sections/introduction.tex
+
+Run all precommit checks on all files
+.. pre-commit run --all-files

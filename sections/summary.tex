@@ -1,2 +1,25 @@
 \section{Summary and Future Releases}
 \label{sec:summary}
+%
+\gls{DP2} provides the first release of science-grade data products from the  \gls{LSSTCam} focal plane.
+As for \gls{DP1}, \gls{DP2} is part of Rubin's Early Science Program \citep[][]{RTN-011} and carries a 2 yr proprietary period during which access is restricted to \gls{LSST} data rights holders via the cloud-based \gls{RSP}.
+
+\gls{DP2} is delivered in two phases: Early \gls{DP2} (\gls{EDP2}), which provides deep coadded images, all science catalogs, and ancillary data products including throughput curves, survey property maps, and calibration products; and \gls{DP2}, planned for late 2026, which adds single-epoch visit-level and difference-image data products to complete the release.
+The coadded images and catalogs delivered in \gls{EDP2} will not be reprocessed for \gls{DP2}; the data are unchanged, and \gls{DP2} supersedes and fully encompasses \gls{EDP2} by adding the remaining products to the same release.
+Analyses begun on \gls{EDP2} products require no modification.
+
+% DP2 compared to DP1 summary
+\gls{DP2} represents a substantial advance relative to \gls{DP1}: the full \gls{LSSTCam} focal plane replaces the single-raft \gls{LSSTComCam}, all six $ugrizy$ filters are available in place of three, and the sky area is larger by approximately two orders of magnitude.
+Nevertheless, \gls{DP2} reflects the state of an observatory still in the process of optimization: delivered image quality had not yet consistently reached design specification, template coverage is incomplete across the full sky, and several pipeline components remain under active development.
+Users are encouraged to consult the release documentation at \url{https://dp2.lsst.io} and the known issues register maintained there before beginning scientific analyses.
+
+% Remaining pre-LSST data
+The body of science-grade \gls{LSSTCam} data acquired between the end of the \gls{DP2} observing window on \dptwoenddate and the formal start of the \gls{LSST} on \lsststartdate will be processed and made available to \gls{LSST} data rights holders through the same \gls{RSP} services.
+The format and timing of this release are still under discussion; planning will be finalised once \gls{DP2} has been delivered.
+
+% LSST DRs
+The first \gls{LSST} Data Release, \gls{DR1}, will be derived from a reprocessing of approximately the first year of \gls{LSST} survey data and is currently expected in \dronedate; its precise definition remains under consideration.
+\gls{DR1} will mark a qualitative advance beyond \gls{DP2}: observations collected under the community-developed baseline survey strategy \citep[][]{PSTN-053, PSTN-055, PSTN-056, PSTN-057} will yield substantially broader and more uniform sky coverage across the full \gls{WFD} footprint of \wfdarea, a balanced six-band filter distribution, and improved delivered image quality as \gls{AOS} and dome thermal management continue to mature \citep[][]{SOTN-004}.
+Photometric and astrometric calibration will benefit from a full year of all-sky coverage, difference-imaging templates will span a far greater fraction of the footprint and processing will draw on a more mature version of the \gls{LSST} Science Pipelines refined through \gls{DP2} experience and community engagement.
+Subsequent \gls{LSST} Data Releases are planned at an approximately yearly cadence, each a complete reprocessing of all survey data accumulated to that point, with progressively deeper coadds and improved calibration.
+Plans will be updated through revisions to \citet[][]{RTN-011} and on the Rubin community forum at \url{https://community.lsst.org}.

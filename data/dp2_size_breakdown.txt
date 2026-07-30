@@ -1,0 +1,36 @@
+| Dataset Type                                            | Dataset Count | File Count | File Size | File Size (bytes) |
+|---------------------------------------------------------|---------------|------------|-----------|-------------------|
+| deepCoadd_dcr_ddec_consolidated_map_weighted_mean       | 6             | 6          | 5.6 GB    | 5583902400        |
+| deepCoadd_dcr_dra_consolidated_map_weighted_mean        | 6             | 6          | 5.9 GB    | 5868774720        |
+| deepCoadd_dcr_e1_consolidated_map_weighted_mean         | 6             | 6          | 5.8 GB    | 5820560640        |
+| deepCoadd_dcr_e2_consolidated_map_weighted_mean         | 6             | 6          | 5.9 GB    | 5891849280        |
+| deepCoadd_epoch_consolidated_map_max                    | 6             | 6          | 1.1 GB    | 1145865600        |
+| deepCoadd_epoch_consolidated_map_mean                   | 6             | 6          | 4.1 GB    | 4078575360        |
+| deepCoadd_epoch_consolidated_map_min                    | 6             | 6          | 1.1 GB    | 1142743680        |
+| deepCoadd_exposure_time_consolidated_map_sum            | 6             | 6          | 3.2 GB    | 3175496640        |
+| deepCoadd_psf_e1_consolidated_map_weighted_mean         | 6             | 6          | 38.3 GB   | 38338752960       |
+| deepCoadd_psf_e2_consolidated_map_weighted_mean         | 6             | 6          | 38.3 GB   | 38346284160       |
+| deepCoadd_psf_maglim_consolidated_map_weighted_mean     | 6             | 6          | 31.7 GB   | 31681923840       |
+| deepCoadd_psf_size_consolidated_map_weighted_mean       | 6             | 6          | 34.1 GB   | 34098238080       |
+| deepCoadd_sky_background_consolidated_map_weighted_mean | 6             | 6          | 32.9 GB   | 32877570240       |
+| deepCoadd_sky_noise_consolidated_map_weighted_mean      | 6             | 6          | 32.8 GB   | 32785447680       |
+| deep_coadd                                              | 925460        | 925460     | 30.5 TB   | 30472036191360    |
+| deep_coadd_input_summary                                | 1             | 1          | 197.3 MB  | 197301150         |
+| dia_object                                              | 2112          | 2112       | 29.6 GB   | 29632520547       |
+| dia_object_forced_source                                | 183169        | 183169     | 606.8 GB  | 606831352951      |
+| dia_source                                              | 2112          | 2112       | 222.2 GB  | 222215247587      |
+| isolated_star_stellar_motions                           | 7809          | 7809       | 83.6 GB   | 83636160140       |
+| object                                                  | 2174          | 2174       | 2.3 TB    | 2292391206720     |
+| object_forced_source                                    | 192147        | 192147     | 1.2 TB    | 1162890664579     |
+| object_scarlet_models                                   | 195366        | 195366     | 11.9 TB   | 11914537359123    |
+| object_shear_all                                        | 1699          | 1699       | 382.1 GB  | 382108326721      |
+| run_provenance                                          | 53            | 53         | 509.9 GB  | 509853428823      |
+| skyMap                                                  | 1             | 1          | 1.5 kB    | 1548              |
+| source                                                  | 28589         | 28589      | 8.9 TB    | 8917456997138     |
+| ss_object                                               | 1             | 1          | 57.0 MB   | 57015404          |
+| ss_source                                               | 1             | 1          | 2.4 GB    | 2375473155        |
+| standard_passband                                       | 6             | 6          | 4.4 MB    | 4401042           |
+| the_monster_20250219                                    | 131072        | 131072     | 944.7 GB  | 944694607680      |
+| visit_detector_table                                    | 1             | 1          | 1.3 GB    | 1307972889        |
+| visit_summary                                           | 28698         | 28698      | 1.4 TB    | 1363907073600     |
+| visit_table                                             | 1             | 1          | 3.8 MB    | 3772003           |

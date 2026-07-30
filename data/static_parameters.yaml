@@ -1,0 +1,227 @@
+rubinobservatory:
+  parameters:
+    - name: rubinfov
+      value: 9.6
+      unit: deg2
+    - name: lsstcampixels
+      value: 3.2
+      unit: gigapixels
+    - name: rawplatescale
+      value: 0.2
+      unit: inverse pixels
+    - name: primarymirrordiameter
+      value: 8.4
+      unit: m
+    - name: effectiveaperture
+      value: 6.5
+      unit: m
+    - name: rubinetendue
+      value: 319
+      unit: deg2m2
+    - name: startoperations
+      value: 2025-10-25
+    - name: firstalerts
+      value: 2026-02-24
+    - name: nbrokers
+      value: seven
+    - name: rubinfirstphoton
+      value: 2025-04-15
+
+lsst:
+  parameters:
+    - name: lsststartdate
+      value: "2026-06-29"
+    - name: tenyearcatalogsize
+      value: 15
+      unit: PB
+    - name: wfdarea
+      value: 18000
+      unit: square degrees
+
+lsstcamsvcampaign:
+  parameters:
+    - name: svcampaignstartdate
+      value: "2025-04-16"
+    - name: svcampaignenddate
+      value: "2025-09-21"
+
+dpone:
+  parameters:
+    - name: dponedate
+      value: "2025-06-30"
+    - name: dponesize
+      value: 3.5
+      unit: TB
+
+dptwo:
+  parameters:
+    - name: sciencepipelinesversion
+      value: "v30.0.8"
+    - name: sciencepipelinesurl
+      value: '\url{https://pipelines.lsst.io/v/v30\_0\_8}'
+    - name: dptwodeliverywindow
+      value: Jul--Dec 2026
+    - name: edptworeleasedate
+      value: 2026-07-27
+    - name: dptworeleasedate
+      value: Oct--Dec 2026
+    - name: edptwosize
+      value: 59.15
+      unit: TB
+drone:
+  parameters:
+    - name: dronedate
+      value: mid-2028
+
+drone:
+  parameters:
+    - name: dronedate
+      value: mid-2028
+
+    # Placeholder -- to replace all below with computation from the data
+    # Formatting needs to be reviewed
+    - name: bestpsfwhm
+      value: 1.05
+      unit: arcsec
+    - name: zmedianpsffwhmwide
+      value: 1.17
+      unit: arcsec
+    - name: grmedianpsffwhmwide
+      value: 1.26
+      unit: arcsec
+    - name: coaddedarea
+      value: 3,000
+      unit: square degrees
+    - name: dptwoarea
+      value: 15,000
+      unit: square degrees
+    - name: totalarea
+      value: 15,000
+      unit: square degrees
+    - name: nextendedobjects
+      value: X
+    - name: nsolarsystemobjects
+      value: X
+    - name: nnewasteroiddiscoveries
+      value: X
+    - name: udepthwfd
+      value: 00
+      unit: mag
+    - name: gdepthwfd
+      value: 00
+      unit: mag
+    - name: rdepthwfd
+      value: 00
+      unit: mag
+    - name: idepthwfd
+      value: 00
+      unit: mag
+    - name: zdepthwfd
+      value: 00
+      unit: mag
+    - name: ydepthwfd
+      value: 00
+      unit: mag
+    - name: udepthcosmos
+      value: 26.0
+      unit: mag
+    - name: gdepthcosmos
+      value: 26.8
+      unit: mag
+    - name: rdepthcosmos
+      value: 26.3
+      unit: mag
+    - name: idepthcosmos
+      value: 26.1
+      unit: mag
+    - name: zdepthcosmos
+      value: 25.3
+      unit: mag
+    - name: ydepthcosmos
+      value: 23.9
+      unit: mag
+    - name: nsinglevisitsimages
+      value: 4000
+    - name: cosmosumaglim
+      value: 26.0
+      unit: mag
+    - name: cosmosgmaglim
+      value: 26.8
+      unit: mag
+    - name: cosmosrmaglim
+      value: 26.3
+      unit: mag
+    - name: cosmosimaglim
+      value: 26.1
+      unit: mag
+    - name: cosmoszmaglim
+      value: 25.3
+      unit: mag
+    - name: cosmosymaglim
+      value: 23.9
+      unit: mag
+detectors:
+  parameters:
+    - name: namppixx
+      value: 512
+    - name: namppixy
+      value: 2048
+    - name: nampx
+      value: 8 # Number of amps in the x-dimension
+    - name: nampy
+      value: 2 # Number of amps in the y-dimension
+    - name: sprescan # Serial prescan
+      value: 3
+    - name: soverscan # Serial overscan
+      value: 64
+    - name: poverscan # Parallel overscan
+      value: 48
+
+# TODO: Raw and PVI dimensions to be auto-generated for DP2 version
+raw:
+  parameters:
+    - name: nrawpixx
+      value: 4608
+    - name: nrawpixy
+      value: 4096
+    - name: nexposedpixx
+      value: 4096
+    - name: nexposedpixy
+      value: 4004
+
+pvi:
+  parameters:
+    - name: netvpixx
+      value: 4096
+    - name: netvpixy
+      value: 4004
+    - name: nitlpixx
+      value: 4072
+    - name: nitlpixy
+      value: 4000
+
+deepcoadd:
+  parameters:
+    - name: deepcoaddselectionfwhm
+      value: 1.7
+      unit: "\\arcsec"
+
+templatecoadd:
+  parameters:
+    - name: templatecoaddfrac
+      value: third
+    - name: templatecoaddselectionfwhm
+      value: 1.4
+      unit: "\\arcsec"
+    - name: mintemplatecoaddvi
+      value: 12
+    - name: minmultipletemplatecoaddvi
+      value: 36
+
+surveypropertymaps:
+  parameters:
+    - name: nsurveypropertymaps
+      value: forteen
+      unit: mag
+    - name: ndrpinputvisits
+      value: 21067

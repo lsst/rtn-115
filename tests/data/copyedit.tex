@@ -1,0 +1,55 @@
+%% Test fixture: one violation per copy-edit rule, in rule-file order.
+%% Each line is annotated with the rule name it triggers.
+\documentclass[twocolumn]{aastex7}
+
+\begin{document}
+
+\title{Copy-Edit Violations Fixture}
+
+\author{Test Fixture}
+
+\begin{abstract}
+This document contains deliberate copy-edit violations for use as a test fixture.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+
+The data set used in this analysis                          % dataset
+spans a range from 0.7 arcsec to 2.0 arcsec in seeing,      % farcs-numeric, arcseconds
+with a non-zero fraction of flagged visits.                 % nonzero
+Pixels are masked using a bitmask,                         % bit-mask
+and images are co-added nightly.                           % coadd
+The co-addition pipeline is maintained by co-workers       % coadd (noun), coworking
+at the data facility.
+The Survey Property Maps were generated per tile           % survey-property-maps
+at a plate scale of 0.2 arcsec per pixel.                 % per-pixel
+
+Raw inputs comprise \texttt{raws} from the camera,         % raws-texttt
+and processed raws are stored separately.                  % raws
+The \texttt{deep\_coadds} are built from                   % deep-coadds-texttt
+deep\_coadds accumulated over multiple nights,             % deep-coadds
+while \texttt{template\_coadds} serve as references        % template-coadds-texttt
+and template\_coadds are updated each season.              % template-coadds
+
+Artifacts are identified using boolean flags               % boolean-flags
+derived from right ascension and declination,              % right-ascension, declination
+with dec values recorded to milliarcsecond precision.      % dec-abbrev
+Photometry is performed in the g band and r-band,          % band-filter (both forms)
+across multi-epoch, multi-band, multi-dimensional stacks.  % multiepoch, multiband, multidimensional
+
+The reduction follows the approach of \cite{Smith2020}     % citation-empty-options
+using pre-installed software and pre-generated templates.  % preinstalled, pregenerated
+The detector exhibits non-linear response                  % nonlinear
+and crosstalk between amplifiers,                          % crosstalk
+requiring cross-matching to the reference catalogue.       % crossmatch
+In addition, Solar System objects are filtered             % solar-system
+and ComCam data are processed separately.                  % lsstcomcam
+This constitutes the first data release of the survey,     % data-release
+covering 10000 visits in total.                            % thousands-separator-5digit (audit-only)
+The survey covers 18000 sq. deg,                           % sq-deg (abbrev)
+equivalent to 18000 square degrees.                        % sq-deg (written-out)
+The footprint covers \sim$3,000\,deg^2$ of sky.             % sim-outside-math
+Depth reaches $\sim$~27\,mag in the r-band.                % sim-thin-space
+
+\end{document}
