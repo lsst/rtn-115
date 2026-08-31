@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: tickets/DM-55981
           fetch-depth: 0 # full history for metadata
@@ -24,7 +24,7 @@ jobs:
           git submodule update --init --recursive --remote lsst-texmf
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: 3.13
 
@@ -40,8 +40,10 @@ jobs:
           TOKEN_PASSPHRASE: ${{ secrets.TOKEN_PASSPHRASE }}
         run: |
           echo $CLIENT >> client_secret.json
+          SKIP=`cat skip.count`
           ./lsst-texmf/bin/decrypt_secret.sh $TOKEN_PASSPHRASE
           make skip
+          SKIP2=`cat skip.count`
           if [ "$SKIP2" -gt "$SKIP" ]; then
               echo "Got new author $SKIP2 , had $SKIP"
           fi
