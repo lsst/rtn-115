@@ -46,35 +46,51 @@ jobs:
           SKIP2=`cat skip.count`
           if [ "$SKIP2" -gt "$SKIP" ]; then
               echo "Got new author $SKIP2 , had $SKIP"
+          else
+              echo "Got no new author $SKIP2 ==  $SKIP"
           fi
 
       - name: Check diff
-        run: | #  set an environment variable
-           if git diff --exit-code; then
-              echo "CHANGED=false" >> ${GITHUB_ENV}
-              echo "No changes - no PR"
-           else
-              echo "CHANGED=true" >> ${GITHUB_ENV}
-              echo "Git changes - should make PR"
-              cat authors.yaml
-           fi
+        shell: bash
+        run: |
+          set -euo pipefail
 
+          echo "Current repository status:"
+          git status --short --ignore-submodules=none
+
+          echo "Submodule commit change:"
+          git diff --submodule=log \
+            --ignore-submodules=dirty \
+            HEAD -- lsst-texmf
+
+          if git diff --quiet \
+            --ignore-submodules=dirty \
+            HEAD -- authors.yaml skip.count lsst-texmf; then
+            echo "CHANGED=false" >> "$GITHUB_ENV"
+            echo "No authors or lsst-texmf changes"
+          else
+            echo "CHANGED=true" >> "$GITHUB_ENV"
+            echo "Authors or lsst-texmf changed"
+          fi
       - name: Commit new authors.yaml
         if: env.CHANGED == 'true'
-        run: | # cpr adds all files - these shoudl not be added
+        run: | # cpr adds all files - these should not be added
           rm client_secret.json token.pickle
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git commit -m " Author updates from google form " authors.yaml skip.count
+          git commit -m " Author updates from google form and or new texmf " authors.yaml skip.count lsst-texmf
 
       - name: Create Pull Request
         id: cpr
         if: env.CHANGED == 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.WOM_RTN_115_PAT }}
+          base: tickets/DM-55981
           branch: update-authors-from-form
           branch-suffix: short-commit-hash
           title: Automatic authors  update
           commit-message: authors update from google form
-          body: Update authors.yaml from new entries in the google form
+          body: |
+            Update authors.yaml from new entries in the Google form
+            and update the lsst-texmf submodule reference.
