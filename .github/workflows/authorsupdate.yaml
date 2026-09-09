@@ -17,12 +17,6 @@ jobs:
           fetch-depth: 0 # full history for metadata
           submodules: true
 
-      # new authos may be in lsst-txmf and its giiod to pull that up anyway
-      - name: Update lsst-texmf submodule to latest remote
-        run: |
-          git submodule sync --recursive
-          git submodule update --init --recursive --remote lsst-texmf
-
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -44,11 +38,21 @@ jobs:
           ./lsst-texmf/bin/decrypt_secret.sh $TOKEN_PASSPHRASE
           make skip
           SKIP2=`cat skip.count`
+          # decided to only PR if there is anew author.
           if [ "$SKIP2" -gt "$SKIP" ]; then
               echo "Got new author $SKIP2 , had $SKIP"
+              echo "NEWAUTHORS=true" >> "$GITHUB_ENV"
           else
               echo "Got no new author $SKIP2 ==  $SKIP"
+              echo "NEWAUTHORS=false" >> "$GITHUB_ENV"
           fi
+
+      # new authos may be in lsst-txmf so get the latest one
+      - name: Update lsst-texmf submodule to latest remote
+        if: env.NEWAUTHORS == 'true'
+        run: |
+          git submodule sync --recursive
+          git submodule update --init --recursive --remote lsst-texmf
 
       - name: Check diff
         shell: bash
@@ -66,12 +70,13 @@ jobs:
           if git diff --quiet \
             --ignore-submodules=dirty \
             HEAD -- authors.yaml skip.count lsst-texmf; then
-            echo "CHANGED=false" >> "$GITHUB_ENV"
             echo "No authors or lsst-texmf changes"
+            echo "CHANGED=false" >> "$GITHUB_ENV"
           else
-            echo "CHANGED=true" >> "$GITHUB_ENV"
             echo "Authors or lsst-texmf changed"
+            echo "CHANGED=true" >> "$GITHUB_ENV"
           fi
+
       - name: Commit new authors.yaml
         if: env.CHANGED == 'true'
         run: | # cpr adds all files - these should not be added
