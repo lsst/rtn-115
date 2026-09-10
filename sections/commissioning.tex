@@ -116,15 +116,26 @@ The full suite of calibration and throughput data products included in \gls{DP2}
 \label{ssec:science_program}
 %
 The \gls{DP2} dataset spans three distinct phases of the commissioning and early operations program: small-field observations acquired shortly after the \gls{LSSTCam} First Photon milestone in support of the Rubin First Look event; the commissioning-era \gls{SV} surveys; and pre-\gls{LSST} observations acquired during the Early Operations period between the construction-to-operations handover on \startoperations\ and \dptwoenddate.
-The sky distribution of \gls{DP2} visits across all three phases is shown in \figref{fig:dp2_sky}.
-
 All observations were taken using the \gls{FBS}, which scheduled visits adaptively to balance sky coverage, filter distribution, airmass, and lunar phase constraints \citep[][]{SMTN-020}.
-%
+
+\figref{fig:dp2_mjd_cumulative} shows the cumulative distribution of visit \glspl{JD} for all \gls{DP2} visits, combined across all filters. 
+Notable dates are indicated: the \gls{DP2} start date, \dptwostartdate; the end of the \gls{DP2} data collection window, \dptwoenddate; a phase of rapid data acquisition (July 1–25, 2025); and the end of the engineering shutdown, when observations resumed at the start of Operations, \startoperations.
+The sky distribution of \gls{DP2} visits is shown in \figref{fig:dp2_sky}.
+The observation cadence during \gls{DP2} differs significantly from that of  the planned \gls{LSST}. 
+Rather than following the cadence intended for the full survey, visit acquisition during this period was driven by engineering and commissioning priorities.
+As a result, the distribution of visits in time reflects the sequence of commissioning activities and engineering interventions rather than a scientifically-optimized observing strategy.
+ \begin{figure}[hbt!]
+\plotone{dp2_visit_mjd_cumulative}
+\caption{Cumulative distribution of visit \gls{JD} for all \gls{DP2} visits, combined across all filters. Vertical dotted lines mark notable dates: the \gls{DP2} start date, \dptwostartdate; the end of the data collection window, \dptwoenddate; a phase of rapid data acquisition (July 1–25, 2025); and the end of the engineering shutdown, when observations resumed \startoperations}
+\label{fig:dp2_mjd_cumulative}
+\end{figure}
+ 
 \begin{figure*}[hbt!]
 \plotone{dp2_sky_coverage}
 \caption{Sky distribution of \gls{DP2} visits across the three components of the observing program. Small-field survey areas are marked with black circles and \glspl{DDF} with violet squares. The \gls{SV} wide survey covers $\sim\,3,000\,{\rm deg^2}$ tracing the ecliptic plane, with visit density increasing toward the $\sim\,300\,{\rm deg^2}$ core. Pre-\gls{LSST} Early Operations observations appear as sparser, predominantly $i$-band coverage extending across a larger area of the \gls{LSST} footprint.}
 \label{fig:dp2_sky}
 \end{figure*}
+
 Data collected between the end of the \gls{DP2} observing window on \dptwoenddate and the formal start of the \gls{LSST} on \lsststartdate will be processed and made available to \gls{LSST} data rights holders through the same \gls{RSP} services.
 The format and timing of that release are still to be determined; planning will begin once \gls{DP2} has been delivered \citep[][]{RTN-011}
 
@@ -210,7 +221,7 @@ Summary visit and detector-level metadata are available to users as \gls{DP2} da
 \subsubsection{LSST Science Pipelines}
 \label{ssec:pipelines}
 %
-The \gls{DP2} science-ready data products in are the result of dedicated \gls{DRP} campaigns executed at the \gls{USDF} at \gls{SLAC}.
+The \gls{DP2} science-ready data products are the result of dedicated \gls{DRP} campaigns executed at the \gls{USDF} at \gls{SLAC}.
 \gls{DP2} processing was done using version \sciencepipelinesversion of the LSST Science Pipelines \citep[][]{PSTN-019} and follows a four-stage structure.
 Stage~1 performs single-visit processing, including \gls{ISR}, source detection, astrometric and photometric calibration, and \gls{PSF} characterisation.
 Stage~2 performs global recalibration, Gaussian-process modelling of atmospheric turbulence, proper motion and parallax fitting, and \gls{PSF} re-estimation using a standard star set.
@@ -224,20 +235,17 @@ A full description of the processing pipelines, algorithms, and configuration us
 \label{ssec:image_quality}
 %
 The delivered image quality at Rubin Observatory reflects contributions from the atmosphere, dome environment, telescope optics, \gls{AOS}, and LSSTCam.
-The design specification for the median delivered \gls{PSF} \gls{FWHM}, referenced to zenith at 550,nm, is 0\farcs7 \citep[][]{LPM-17}, corresponding to the measured median atmospheric seeing of 0\farcs72 at Cerro Pach'on \citep[][]{SOTN-004} added in quadrature with a total system contribution of 0\farcs35 \citep[][]{SOTN-004}.
+The design specification for the median delivered \gls{PSF} \gls{FWHM}, referenced to zenith at 550,nm, is 0\farcs7 \citep[][]{LPM-17}, corresponding to the measured median atmospheric seeing of 0\farcs72 at Cerro Pach\'on \citep[][]{SOTN-004} added in quadrature with a total system contribution of 0\farcs35 \citep[][]{SOTN-004}.
 During the period covered by the \gls{DP2} dataset, the system had not yet consistently met this design specification \citep[][]{SOTN-004, SITCOMTN-170}.
 The primary excess contributions are from the optical system,  including residual \gls{AOS} errors and mirror thermal gradients, as well as from dome seeing.
 The current total system contribution to \gls{PSF} \gls{FWHM} is approximately 0\farcs55--0\farcs60, compared to the design allocation of 0\farcs40.
 At the median survey airmass of 1.2, an atmospheric contribution of 0\farcs72 at zenith corresponds to $\sim$\,0\farcs80; combined in quadrature with the current system contribution, this is consistent with the observed median delivered image quality of $\sim$\,1\farcs0 \gls{PSF} \gls{FWHM} in the $riz$ bands during the \gls{DP2} observations \citep[][]{RTN-122}.
 
-\todo{Image quality tables and plots still to come}
-% \input{./dp2_iq_summary_target_band}
-%The median delivered image quality per band is provided in \tabref{tab:iq_band_field}.
-%\figref{fig:delivered_image_quality} shows the  distribution of PSF FWHM (in arcseconds) over all
-%% \nvisitdetectorrows  -- need to check this is the value
-%individual sensors images.
-%\begin{figure}[hbt!]
-%%\plotone{dp2_delivered_image_quality}
-%\caption{}
-%\label{fig:delivered_image_quality}
-%\end{figure}
+% \input{./dp2_median_per_visit_psf_fwhm_ecdf}
+%The median delivered image quality per  per band is provided in \tabref{tab:iq_band_field}.
+\figref{fig:delivered_image_quality} shows the cummulative distribution of the median PSF FWHM (in arcseconds) per visit computed across all detectors, for each band.
+\begin{figure}[hbt!]
+\plotone{dp2_median_per_visit_psf_fwhm_ecdf}
+\caption{Cumulative distribution of the median per-visit seeing (PSF FWHM) per band. All regions included}
+\label{fig:delivered_image_quality}
+\end{figure}
