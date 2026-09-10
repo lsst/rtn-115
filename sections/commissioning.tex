@@ -210,7 +210,7 @@ Summary visit and detector-level metadata are available to users as \gls{DP2} da
 \subsubsection{LSST Science Pipelines}
 \label{ssec:pipelines}
 %
-The \gls{DP2} science-ready data products in are the result of dedicated \gls{DRP} campaigns executed at the \gls{USDF} at \gls{SLAC}.
+The \gls{DP2} science-ready data products are the result of dedicated \gls{DRP} campaigns executed at the \gls{USDF} at \gls{SLAC}.
 \gls{DP2} processing was done using version \sciencepipelinesversion of the LSST Science Pipelines \citep[][]{PSTN-019} and follows a four-stage structure.
 Stage~1 performs single-visit processing, including \gls{ISR}, source detection, astrometric and photometric calibration, and \gls{PSF} characterisation.
 Stage~2 performs global recalibration, Gaussian-process modelling of atmospheric turbulence, proper motion and parallax fitting, and \gls{PSF} re-estimation using a standard star set.
@@ -224,20 +224,17 @@ A full description of the processing pipelines, algorithms, and configuration us
 \label{ssec:image_quality}
 %
 The delivered image quality at Rubin Observatory reflects contributions from the atmosphere, dome environment, telescope optics, \gls{AOS}, and LSSTCam.
-The design specification for the median delivered \gls{PSF} \gls{FWHM}, referenced to zenith at 550,nm, is 0\farcs7 \citep[][]{LPM-17}, corresponding to the measured median atmospheric seeing of 0\farcs72 at Cerro Pach'on \citep[][]{SOTN-004} added in quadrature with a total system contribution of 0\farcs35 \citep[][]{SOTN-004}.
+The design specification for the median delivered \gls{PSF} \gls{FWHM}, referenced to zenith at 550,nm, is 0\farcs7 \citep[][]{LPM-17}, corresponding to the measured median atmospheric seeing of 0\farcs72 at Cerro Pach\'on \citep[][]{SOTN-004} added in quadrature with a total system contribution of 0\farcs35 \citep[][]{SOTN-004}.
 During the period covered by the \gls{DP2} dataset, the system had not yet consistently met this design specification \citep[][]{SOTN-004, SITCOMTN-170}.
 The primary excess contributions are from the optical system,  including residual \gls{AOS} errors and mirror thermal gradients, as well as from dome seeing.
 The current total system contribution to \gls{PSF} \gls{FWHM} is approximately 0\farcs55--0\farcs60, compared to the design allocation of 0\farcs40.
 At the median survey airmass of 1.2, an atmospheric contribution of 0\farcs72 at zenith corresponds to $\sim$\,0\farcs80; combined in quadrature with the current system contribution, this is consistent with the observed median delivered image quality of $\sim$\,1\farcs0 \gls{PSF} \gls{FWHM} in the $riz$ bands during the \gls{DP2} observations \citep[][]{RTN-122}.
 
-\todo{Image quality tables and plots still to come}
-% \input{./dp2_iq_summary_target_band}
-%The median delivered image quality per band is provided in \tabref{tab:iq_band_field}.
-%\figref{fig:delivered_image_quality} shows the  distribution of PSF FWHM (in arcseconds) over all
-%% \nvisitdetectorrows  -- need to check this is the value
-%individual sensors images.
-%\begin{figure}[hbt!]
-%%\plotone{dp2_delivered_image_quality}
-%\caption{}
-%\label{fig:delivered_image_quality}
-%\end{figure}
+% \input{./dp2_median_per_visit_psf_fwhm_ecdf}
+%The median delivered image quality per  per band is provided in \tabref{tab:iq_band_field}.
+\figref{fig:delivered_image_quality} shows the cummulative distribution of the median PSF FWHM (in arcseconds) per visit computed across all detectors, for each band.
+\begin{figure}[hbt!]
+\plotone{dp2_median_per_visit_psf_fwhm_ecdf}
+\caption{Cumulative distribution of the median per-visit seeing (PSF FWHM) per band. All regions included}
+\label{fig:delivered_image_quality}
+\end{figure}
