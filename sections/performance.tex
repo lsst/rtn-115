@@ -2,3 +2,16 @@
 \label{sec:performance}
 For information regarding the performance and known issues of the data contained in the Early DP2 release, we refer to the Data Quality, Image Artifacts, and Known Issues sections of the Release Documentation at \url{https://dp2.lsst.io}.
 A detailed analysis of the validation of DP2 will be provided at the time of its release (expected in the \dptworeleasedate range).
+
+\subsection{Stellar Photometry}
+Since most of the DP2 footprint area was observed multiple times, we can use the photometric repeatability of bright (i.e., SNR$>200$), isolated, unresolved objects to assess the quality of our photometry at the visit-level.
+Repeatability is measured by calculating the standard deviation of multiple measurements of the same object across all visits that cover that object. 
+To make this calculation computationally feasible, however, this repeatability measurement is performed at the tract-level: the same set of objects are identified in each visit that cover a given tract, and the between-visit standard deviation of the multiple photometric measurements of those objects is calculated.  
+Following recalibration using the \gls{FGCM} fits, the photometric repeatability is excellent; the median per-tract standard deviation in the $ugrizy$ bands is , respectively.
+
+The post-FGCM repeatability measures the consistency of our photometric measurements between visits.
+We turn to stellar loci in $ugriz$ to assess the quality of the photometry of Deep Coadds; these are shown in \figref{fig:coadd_stellar_loci}.
+Unresolved objects (the vast majority of which will be stars) are selected using the Object table's extendedness parameter.
+This is a measure of the difference between the PSF flux and the CModel flux; a large value (\todo{quantify!}) inidicates a substantial difference betweem the CModel fit and the PSF model, which is taken as implying that the object is resolved.
+The narrowness \todo{quantify!} of the stellar loci are testament to the quality of the photometry measured in the Deep Coadds.  
+
