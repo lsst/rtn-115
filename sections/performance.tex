@@ -1,17 +1,35 @@
 \section{Performance Characterization and Known Issues}
 \label{sec:performance}
+\begin{figure*}[htb!]
+\plotone{dp2_stellar_loci}
+\caption{Blah}
+\label{fig:dp2_stellar_loci}
+\end{figure*}
+
 For information regarding the performance and known issues of the data contained in the Early DP2 release, we refer to the Data Quality, Image Artifacts, and Known Issues sections of the Release Documentation at \url{https://dp2.lsst.io}.
 A detailed analysis of the validation of DP2 will be provided at the time of its release (expected in the \dptworeleasedate range).
 
 \subsection{Stellar Photometry}
-Since most of the DP2 footprint area was observed multiple times, we can use the photometric repeatability of bright (i.e., SNR$>200$), isolated, unresolved objects to assess the quality of our photometry at the visit-level.
-Repeatability is measured by calculating the standard deviation of multiple measurements of the same object across all visits that cover that object. 
-To make this calculation computationally feasible, however, this repeatability measurement is performed at the tract-level: the same set of objects are identified in each visit that cover a given tract, and the between-visit standard deviation of the multiple photometric measurements of those objects is calculated.  
-Following recalibration using the \gls{FGCM} fits, the photometric repeatability is excellent; the median per-tract standard deviation in the $ugrizy$ bands is , respectively.
+Since most of the DP2 footprint area was observed multiple times, we can use the multiple photometric measurements of the same star to assess the consistency, and hence reliability, of the per-visit photometric calibration. 
+This photometric repeatability is measured by calculating the standard deviation of multiple measurements of the same unresolved object (the vast majority of which will be stars) across all visits that observed it.
+We only use bright (i.e., SNR$>200$), isolated, unresolved objects (i.e., bright, isolated stars) to perform this measurement.
+To make this calculation computationally feasible, however, photometric repeatability is measured at the tract-level: the same set of stars are identified in each visit that cover a given tract.
+For each star, the standard deviation of the multiple photometric measurements across all visits is measured.
+A star must have at least three measurements in order for the standard deviation to be calculated.
+We then calculate the median standard deviation over all stars in a tract to obtain a single value for the photometric repeatability within that tract.
+This is referred to as ``PA1'' \citep[][]{LPM-17}.    
+Following recalibration using the \gls{FGCM} fits, the photometric repeatability is excellent: across all tracts with coverage, the median PA1 values for the $ugrizy$ bands are 9.1, 7.1, 6.8, 5.9, 5.8, and 6.2, mmag respectively.
 
-The post-FGCM repeatability measures the consistency of our photometric measurements between visits.
 We turn to stellar loci in $ugriz$ to assess the quality of the photometry of Deep Coadds; these are shown in \figref{fig:coadd_stellar_loci}.
-Unresolved objects (the vast majority of which will be stars) are selected using the Object table's extendedness parameter.
-This is a measure of the difference between the PSF flux and the CModel flux; a large value (\todo{quantify!}) inidicates a substantial difference betweem the CModel fit and the PSF model, which is taken as implying that the object is resolved.
-The narrowness \todo{quantify!} of the stellar loci are testament to the quality of the photometry measured in the Deep Coadds.  
+Unresolved objects are selected using the Object table's extendedness parameter.
+This parameter is a measure of the difference between the PSF flux and the CModel flux; a large value (\todo{quantify!}) inidicates a substantial difference betweem the CModel fit and the PSF model, which is taken as implying that the object is resolved.
+The narrowness \todo{quantify!} of the stellar loci are testament to the quality of the photometry measured in the Deep Coadds.
+
+Neither the repeatability nor the stellar locus tests described above are sensitive to errors in the absolute flux scale, since both are differential measures (i.e., between visits or between bands) in which any common offsets will cancel.
+As a simple check of absolute calibration, we compare DP2 photometry to \gls{Gaia}\todo{confirm which Gaia data product/release}, finding a median offset of \todo{quantify, per band} and a scatter of \todo{quantify, per band} in the \todo{bands} bands.
+This comparison should, however, be interpreted with caution.
+Gaia's own photometry carries calibration systematics of its own -- most notably chromaticity-related biases in the BP/RP spectra used to synthesize magnitudes in the LSST passbands, which are known to be more significant for faint and red sources -- so agreement (or disagreement) with Gaia cannot be uncritically attributed to DP2.
+The comparison is also restricted to the relatively bright, mostly unsaturated stars in the magnitude range where Gaia and LSST overlap, and is therefore not representative of the full DP2 depth.
+Furthermore, converting Gaia spectra into the LSST passbands is itself a synthetic-photometry exercise, so this test is better described as a comparison between two calibration systems than as a validation against an independent physical standard.
+A more thorough assessment of DP2's absolute photometric calibration -- including a proper treatment of these systematics, alongside complementary tests such as recovery of the fluxes of sources injected into the images at known brightness -- is left to a dedicated future paper on photometric performance.
 
