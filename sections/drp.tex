@@ -1,7 +1,7 @@
 \section{Data Release Processing}
 \label{sec:drp}
 
-Data Release Processing (DRP) is the data pipeline that produces the calibrated images, detection catalogs, and derived data products defined in section \secref{sec:data_products}, using the LSST Science Pipelines \citep[][]{PSTN-019}.
+Data Release Processing (DRP) is the data pipeline that produces the calibrated images, detection catalogs, and derived data products defined in section \secref{sec:data_products}, using version \sciencepipelinesversion of the LSST Science Pipelines \citep[][]{PSTN-019}.
 \gls{DP2} was processed at the United States Data Facility (USDF) at SLAC, with pilot runs at the National Institute of Nuclear and Particle Physics (IN2P3) computing center.
 
 The processing campaign consists of four major stages: (1) single-frame processing, (2) \gls{calibration}, (3) multi-visit processing, (4) variable and transient source processing.
@@ -96,10 +96,10 @@ In addition to source mask dilation and a pedestal correction, other new feature
 The per-step illumination correction used in DP1 has been disabled for \gls{DP2}.  % Why has this been disabled?
 Following \gls{background} subtraction, the median and standard deviation of all unmasked pixels and of \textit{sky source} fluxes are recorded in the task metadata as diagnostics of \gls{background} subtraction quality.
 
-\subsubsection{Source Detection}
-\todo{Pending}
-
 \subsection{Calibration} \label{sec:drp-calibration}
+
+\alex{Add an intro paragraph here on star selection for calibration (PSF modeling, photometric calibration, and astrometric calibration), reworded from the DP1 description of detecting stars per post-ISR image at $5\sigma$ and associating repeat detections into a consistent isolated-star sample.}
+
 \subsubsection{PSF Modeling} \label{sec:drp-calibration-psfmodeling}
 
 PSF modeling in \gls{DP2} uses two distinct approaches, as described in the
@@ -112,11 +112,7 @@ Broadly speaking, PSFEx and Piff both represent the \gls{PSF} on a pixel basis a
 parameters across a single \gls{CCD} using two-dimensional polynomials.
 However, their technical implementations differ (see Bertin et al.
 and \citealt[][]{2021MNRAS.501.1282J} for more details).
-Previous comparisons have shown
-that Piff outperforms PSFEx by delivering an unbiased reconstruction of
-the PSF size (see \citealt[][]{2018MNRAS.481.1149Z} and \citealt[][]{2021MNRAS.501.1282J}), can work in
-sky coordinates and can include a color dependency, and supports alternative models and interpolation
-schemes (see \citealt[][]{2025OJAp....8E..26S} for more details).
+Previous comparisons have shown that Piff outperforms PSFEx by delivering an unbiased reconstruction of the PSF size (see \citealt[][]{2018MNRAS.481.1149Z} and \citealt[][]{2021MNRAS.501.1282J}), working in sky coordinates, including a color dependency, and supporting alternative models and interpolation schemes (see \citealt[][]{2025OJAp....8E..26S} for more details).
 
 
 In the initial \gls{PSF} modeling pass, PSFEx is run with a pixel basis and
@@ -127,6 +123,8 @@ Piff uses its PixelGrid with a fourth-order polynomial interpolation per
 fourth-order fit, so a second-order polynomial is used instead.
 Both are
 working in pixel coordinates.
+
+\alex{Reword this paragraph so that it is not word-for-word from the DP1 paper.}
 %Choices of polynomial order, overall PSF-modeling performance, and known issues are discussed in \secref{sec:performance}.
 
 
@@ -169,21 +167,20 @@ We performed an averaging procedure to get the approximate appropriate throughpu
 For the \gls{LSSTCam} detector \gls{QE} curves, we start with per-raft measurements of the QE performed at \gls{BNL} and \gls{SLAC} at 10 to 25 wavelength steps.
 These preliminary scans were then normalized relative to each other at 750 nm.
 However, there are still some per-raft systematic differences seen, particularly in the u and y bands.
+\alex{Follow up with Eli on the origin of this---likely temperature differences between testing campaigns.}
 In the future we will use the in-dome tunable laser system and the \gls{CBP} for improved filter and detector throughputs.
 
-The FGCM atmosphere model, provided by MODTRAN~\citep[][]{1999SPIE.3756..348B}, was used to generate a look-up table for atmospheric throughput as a function of zenith distance at Cerro Pach\'on.
-This model accounts for absorption and scattering by molecular constituents of the atmosphere, including O2 and O3; absorption by water vapor; and Mie scattering by airborne aerosol particulates.
-Nightly variations in the atmosphere are modeled by minimizing the variance in repeated observations of stars with an \gls{SNR} greater than 10, measured using ``compensated aperture fluxes.''
-These fluxes include a local \gls{background} subtraction to mitigate the impact of \gls{background} offsets.
-The model fitting process incorporates all six bands, $ugrizy$, but does not include any gray (achromatic) terms, except for a linear assumption of mirror reflectance degradation and dust accumulation on lenses.
-Fortunately, there is no evidence of any signficant loss of throughput over the 250 days of the \gls{DP2} dataset.
-As an additional constraint on the fit, we use a subset of stars from the Calibration Reference Catalog\footnote{Referred to as ``The Monster" (\secref{sssec:referencecatalog}; see \citealt[][]{DMTN-277}}, primarily to constrain the system's overall throughput and establish the ``absolute" calibration.
+The FGCM atmosphere model, provided by MODTRAN~\citep[][]{1999SPIE.3756..348B}, generates a look-up table of atmospheric throughput as a function of zenith distance at Cerro Pach\'on, accounting for absorption and scattering by molecular constituents of the atmosphere (including O2 and O3), absorption by water vapor, and Mie scattering by airborne aerosol particulates.
+Night-to-night atmospheric variation is constrained by minimizing the scatter among repeated ``compensated aperture flux'' measurements of stars with \gls{SNR} greater than 10, where these compensated fluxes include a local \gls{background} subtraction to remove the effect of \gls{background} offsets.
+All six bands ($ugrizy$) are fit simultaneously, with no gray (achromatic) terms allowed beyond a linear term for mirror reflectance degradation and dust accumulation on the lenses; over the 250 days spanned by the \gls{DP2} dataset, we find no evidence for a significant loss of throughput.
+To anchor the overall system throughput and set the ``absolute'' calibration, the fit is additionally constrained using a subset of stars drawn from the Calibration Reference Catalog\footnote{Referred to as ``The Monster'' (\secref{sssec:referencecatalog}; see \citealt[][]{DMTN-277}).}.
 
 \subsection{Multi-Visit Processing} \label{sec:drp-multivisit}
 \subsubsection{Input Data Selection} \label{sec:drp-multivisit-inputselection}
 As described in \secref{ssec:lsstcam}, detectors 0, 20, 27, 65, 123, 161, 168, 188 are excluded from the \texttt{deep\_coadd} images as they are strongly affected by vignetting.
-Only exposures with a seeing better than 1\farcs7 \gls{FWHM} and transparency better than 0.75 are included in the \texttt{deep\_coadd} images.
-Exposures with poor \gls{PSF} modeling, identified using internal diagnostics, are also excluded from the \texttt{deep\_coadd} images to prevent contamination of the coadds with unreliable \gls{PSF} estimates.
+Detector 122 was turned off for the entire \gls{DP2} data-taking campaign and is therefore absent from all single-visit and coadded data products.
+Only exposures with mean seeing better than 1\farcs7 \gls{FWHM} and transparency better than 0.75 are included in the \texttt{deep\_coadd} images.
+Exposures with poor \gls{PSF} modeling, identified using internal diagnostics and algorithm processing flags, are also excluded from the \texttt{deep\_coadd} images to prevent contamination of the coadds with unreliable \gls{PSF} estimates.
 
 \subsubsection{Coaddition} \label{sec:drp-multivisit-coaddition}
 The single \gls{Visit} Images that pass the selection criteria above are warped onto the coadd pixel grid using Lanczos3 kernel and scaled to have units of \texttt{nJy} (zeropoint of 31.4).
@@ -192,7 +189,7 @@ We apply the artifact rejection procedure described in \cite[][]{DMTN-080}, whic
 It operates on a time series of PSF-matched images resampled onto a coadd pixel grid (``warps”) and leverages their temporal behavior to distinguish persistent astrophysical sources from \gls{transient} artifacts.
 Artifact rejection uses both direct (where no PSF matching is performed) and PSF-matched warps, homogenized to a standard PSF of 1\farcs8 \gls{FWHM}, broadly consistent with the 1\farcs7 \gls{FWHM} seeing threshold used in data screening.
 A sigma-clipped mean of the \gls{PSF}-matched warps serves as a static sky model, against which individual warps are differenced to identify significant positive and negative residuals.
-Candidate artifact regions are classified as \gls{transient} if they appear in fewer than a small percentage of the total number of exposures, with the threshold based on the number of visits
+Candidate artifact regions are classified as \gls{transient} if they appear in fewer than a small percentage of the total number of exposures, with the threshold based on the number of visits. Adequate artifact rejection requires a minimum of three overlapping images.
 % These masks are also saved as the \texttt{compare\_warp\_artifact\_mask} dataset.
 Note: note released as data product in DP2
 
@@ -200,7 +197,7 @@ In \gls{DP2}, the coadded images are cell-based (\secref{sssec:coadds}), using t
 Coadds are built as weighted averages of the input warps.
 Each detector is assigned a weight that is the inverse of the mean of the variance reported in the \gls{Visit} Summary dataset (\secref{sssec:visitsummary}).
 Following \cite[][]{2024arXiv240701771A} for each cell in the coadd, a detector is excluded if its geometry does not overlap the cell completely.
-Furthermore, a detector is excluded if more than 50\% of its pixels are masked as artifacts, unless doing so would result in an empty cell in which case, this condition is ignored. % fallback.
+A detector is also excluded if more than 50\% of its pixels are masked as artifacts, unless doing so would result in an empty cell, in which case this condition is ignored. % fallback.
 Finally, pixels that did not get any contribution from the input visits are interpolated from neighboring pixels.
 
 A key difference between cell-based coadds and coadds in \gls{DP1} is in the PSF representation.
@@ -212,14 +209,9 @@ The \gls{metadata} about which visits contribute to the cell, what fraction of p
 
 \subsubsection{Detection, Deblending, \& Measurement} \label{sec:drp-multivisit-detection}
 
-Coadd detection and measurement proceeds with a similar order of steps as in \gls{DP1}; however, numerous changes have been made to individual algorithms.
-The main change is that algorithms run on cell-based coadds, which have fewer \gls{PSF} discontinuities within cells.
-For this release, though, none of the measurement algorithms take cell boundaries into account, and those that require a \gls{PSF} model use the \gls{PSF} model at the centroid of the object (and therefore of the cell that the centroid is within) for all cells.
-
-First, peaks are detected in single-band \gls{patch} images.
-These peaks are then merged across bands to produce a multiband peak catalog.
-This catalog is used as an input for deblending, which outputs deblended (but not deconvolved) images for each object.
-All object catalog measurements are performed on these deblended images.
+Coadd detection and measurement follow a similar sequence of steps as in \gls{DP1}, though numerous changes have been made to individual algorithms; the main change is that these algorithms now run on cell-based coadds, which have fewer \gls{PSF} discontinuities within a cell.
+For this release, however, none of the measurement algorithms account for cell boundaries directly: any algorithm that requires a \gls{PSF} model instead uses the model evaluated at the centroid of the object (and therefore of the cell containing that centroid) throughout.
+The processing proceeds as follows: peaks are first detected in single-band \gls{patch} images, then merged across bands into a multiband peak catalog; this catalog is the input to deblending, which produces deblended (but not deconvolved) images for each object, and all subsequent object catalog measurements are performed on these deblended images.
 
 The basic methodology for detection is largely unchanged from the description in \citet[][]{2018PASJ...70S...5B}, which we summarize here.
 To detect peaks, each image is convolved by a circular Gaussian approximation to the measured \gls{PSF} to make a significance image.
@@ -232,7 +224,7 @@ The remaining pixels are used for \gls{background} estimation and subtraction, e
 The \gls{algorithm} also attempts to randomly place 100 ``sky objects'' within the noise-dominated pixels, reducing the number in crowded fields with low numbers of sky-dominated pixels if necessary.
 These objects do not appear in the final object catalog but are used to characterize the sky variance in intermediate steps.
 
-As explained in \citet[][]{2019PASJ...71..114A}, the process of convolving the image by an approximation of the PSF reduces the variance in the image, and therefore the pixel significance threshold must be adjusted to achieve the desired detection threshold.
+\citet[][]{2019PASJ...71..114A} show that convolving the image with an approximation of the \gls{PSF} reduces the image variance, so the pixel significance threshold must be adjusted accordingly to achieve the desired detection threshold.
 This factor is computed by measuring the standard deviation of the \gls{PSF} model \gls{SNR} of the sky objects.
 
 Once detection has run in each available band, \gls{footprint}s and their peaks are merged in a fixed priority order, $irzygu$, which is roughly in order of expected \gls{SNR} for typical objects.
@@ -247,7 +239,7 @@ These smaller sub-blends and the initialization of galaxy morphologies from the 
 Users will notice that this has improved our coverage\footnote{the fraction of each field with usable measurements} in crowded fields from \gls{DP1}; however, in the densest fields, an entire patch can still be a single blend and must be skipped due to excessive memory requirements.
 
 \gls{Object} measurements are conducted in three modes: independent per-band measurements, forced measurements in each band, and multiband measurements.
-As detailed in \citet[][]{2018PASJ...70S...5B}, measurement first replaces all pixels in footprints with noise, so that algorithms that require pixel values beyond footprint boundaries can perform measurements without contamination from neighbors (whether they are part of the same blend or not).
+Following \citet[][]{2018PASJ...70S...5B}, measurement begins by replacing all pixels within footprints with noise, allowing algorithms that need pixel values beyond footprint boundaries to measure without contamination from neighbors, whether or not those neighbors are part of the same blend.
 During measurement, isolated objects have their original pixel values inserted back into the image, while blended objects use the \gls{scarlet lite} models as templates to re-distribute the original image values.
 This preserves the \gls{flux} from the original image where objects have no overlap and dampens the noise elsewhere, since the \gls{flux} is reapportioned to multiple objects.
 
@@ -271,11 +263,9 @@ Some additional derived parameters are included in the object catalog, mainly fo
 As an alternative, \gls{DP2} adds \texttt{model\_extendedness}, which is a continuous, heuristic classifier that uses both the exponential model effective radius and the ratio of the S\'ersic model to PSF model flux.
 It is available for each band and separately for the sum of the $griz$-band fluxes.
 
-As for \gls{DP1}, photometric redshifts are not computed or included in the object table but are planned as a supplementary user-generated product.
+As for \gls{DP1}, photometric redshifts are not computed or included in the object table but are planned as a supplementary user-generated product; further details on the performance of these algorithms are given in \secref{sec:performance}.
 
-Further details on the performance of these algorithms are found in \secref{sec:performance}.
-
-\subsubsection{Metadetection and ShearObject} \label{sec:drp-multivisit-shearobject}
+\subsubsection{Metadetection} \label{sec:drp-multivisit-shearobject}
 
 The \gls{ShearObject} catalog using the multiband metadetection algorithm \citep[][]{2020ApJ...902..138S} is new to DP2.
 It creates a separate catalog of detections that do not correspond to entries in the \gls{Object} catalog.
@@ -302,17 +292,19 @@ After rejecting likely artifacts (\S \ref{sec:drp-variabletransient-artifact}), 
 \gls{DIA} analysis is prone to false positives.
 We employ several layers of artifact rejection, although we err on the side of completeness rather than purity in \gls{Data Release Processing}.
 
-As in \gls{DP1}, prior to writing the \texttt{DIASource} catalog, we remove sources with pixel flags artifacts, non-astrophysical trail lengths, and unphysically negative direct fluxes.
+Artifact rejection in \gls{DP1} consisted of removing sources with pixel flags artifacts, non-astrophysical trail lengths, and unphysically negative direct fluxes.
 In \gls{DP2} we also reject sources that land on the modeled positions of diffraction spikes and apply morphological cosmic ray rejection on both the direct and difference images.
 Further, we flag but do not remove multiple \texttt{DIASources} that occur in a straight line with \texttt{glint\_trail}, indicating that they may be due to rotating orbital debris \citep[][]{2022arXiv220205719K}.
 
 We developed a machine-learned reliability score to assess whether \texttt{DIASources} were astrophysical.
 This model is a convolutional neural network that was trained on template, science, and difference-image postage stamps around \texttt{DIASources} using a combination of simulated fake injections and human-labeled detections.
-\citep[][]{DMTN-337} provides an overview of the model architecture, training, and performance of the real-bogus model.
+\citep[][]{DMTN-337} details the model architecture, training, and performance of the real-bogus model.
 The v0.1 model used in DP1 was again used during \gls{DP2} processing.
 No cuts were applied on reliability for the \gls{DP2} \texttt{DIASource} catalogs, so users interested in higher purity should apply a minimum reliability threshold.
 
 \subsubsection{Light Curves} \label{sec:drp-variabletransient-lightcurves}
+
+\alex{Check and record the light curves section---nothing to do here yet.}
 
 As with DP1, multiepoch forced photometry is performed on both the \gls{Visit} Images and the difference images.
 For users interested in light curve construction, we recommend using the \gls{forced photometry} performed on the difference-images (the \texttt{psfDiffFlux} column of the ForcedSource table), since this measurement isolates the time-variable component of the flux and is unaffected by contamination from non-varying nearby sources.
