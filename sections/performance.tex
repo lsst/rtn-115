@@ -2,3 +2,22 @@
 \label{sec:performance}
 For information regarding the performance and known issues of the data contained in the Early DP2 release, we refer to the Data Quality, Image Artifacts, and Known Issues sections of the Release Documentation at \url{https://dp2.lsst.io}.
 A detailed analysis of the validation of DP2 will be provided at the time of its release (expected in the \dptworeleasedate range).
+
+\subsection{ShearObject}
+\begin{figure*}[htb!]
+\plotone{dp2_object_shear_mean}
+\caption{Distribution of \texttt{gauss\_g1} and \texttt{gauss\_g2} values for the \gls{ShearObject} catalog's no-shear subcatalog.
+The mean values of $g_1$ and $g_2$ are marked as vertical lines.}
+\label{fig:dp2_object_shear_mean}
+\end{figure*}
+\gls{ShearObject} catalog is the result of running metadetection algorithm on the coadded images and contains the lensing shear measured as ellipticity, and four subcatalogs to compute the shear response and selection biases.
+On large areas (such as those covered by DP2), the mean shear is expected to be zero.
+After excluding all the detections with any of the flags set, and limiting to detections with \texttt{is\_primary=True}, a small but significant mean $g_1$ is seen in the no-shear catalog (\texttt{metaStep="ns"}).
+This remains even if we set \texttt{mfrac<0.1} and \texttt{gauss\_snr>10} to select only the best detections, and even when using inverse variance weights.
+The non-zero mean shear can be attributed to the behavior around the tail of the distribution.
+From visual inspection, these correspond to bright stars and nearby galaxies, which may need to be masked out by hand.
+
+As described earlier, the \gls{ShearObject} catalog is a collection of five catalogs, which must not be matched amongst themselves, or to the \gls{Object} catalog, as they reintroduce the shear biases that the metadetection algorithm is designed to remove.
+However, for validation purposes, we match the no-shear catalog to the \gls{Object} catalog.
+\gls{ShearObject} catalog contains \texttt{pgauss} flux measurements for each of the five subcatalogs, which are similar to the \gls{Gaussian Aperture and PSF} fluxes in the \gls{Object} catalog.
+Figure {\bf Dan Taranu should have a high-quality image} shows that for both stars and galaxies, both color measurements agree very well with each other.
