@@ -2,3 +2,20 @@
 \label{sec:performance}
 For information regarding the performance and known issues of the data contained in the Early DP2 release, we refer to the Data Quality, Image Artifacts, and Known Issues sections of the Release Documentation at \url{https://dp2.lsst.io}.
 A detailed analysis of the validation of DP2 will be provided at the time of its release (expected in the \dptworeleasedate range).
+\subsection{Deblending}
+By deconvolving before deblending we significantly decrease the number of blends.
+In extragalactic fields, like COSMOS, just over half of the objects are not blended in model space, allowing the deblender to quickly and efficiently recover the flux for objects isolated in observed seeing and model seeing.
+Most of the remaining blends are small, with only a handful of objects, which scarlet lite deblends fairly easily (see Figure~\ref{fig:sample_blend}).
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\linewidth]{figures/sample_blend}
+  \caption{Example multi-object blend. The top row shows the observed multi-band image (panel a) followed by the scarlet lite models of the four brightest sources (panels b through e). The bottom row shows the residual image when the scarlet lite models are subtracted from the observation (panel f) followed by the flux conserved models (panels g through j), created by using the scarlet lite models as templates to re-distribute flux from the observation so that the total flux is conserved. The flux conserved models, injected in a noise replaced image, are what the science pipelines use for measurement.}
+  \label{fig:sample_blend}
+\end{figure}
+
+Approximately 10\% of objects come from blends with more than 5 children.
+The biggest failure modes are resolved grand design spirals, which are shredded into multiple poorly modeled objects, and undetected objects in the wings of brighter objects.
+The deblenders primary limitation is its memory usage, which in crowded fields can become significant and for DP2 forced us to skip deblending near the galactic plane and a few other dense regions.
+We are currently working on algorithms to allow us to process crowded fields and expect most fields to be successfully processed in future releases.
+For users wanting to have a clean sample of objects that are either isolated or blended only in observed space, we recommend applying `('deblend\_blendNChild' == 0) | 'isIsolated'` flag when selecting objects.
