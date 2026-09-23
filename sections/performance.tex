@@ -16,6 +16,6 @@ Most of the remaining blends are small, with only a handful of objects, which sc
 \end{figure}
 
 The biggest failure modes are resolved grand design spirals, which are shredded into multiple poorly modeled objects, and undetected objects in the wings of brighter objects.
-The deblenders primary limitation is its memory usage, which in crowded fields can become significant and for DP2 forced us to skip deblending near the galactic plane and a few other dense regions.
+The deblender's primary limitation is its memory usage, which in crowded fields can become significant and for DP2 forced us to skip deblending near the galactic plane and a few other dense regions.
 We are currently working on algorithms to allow us to process crowded fields and expect most fields to be successfully processed in future releases.
 For users wanting to have a clean sample of objects that are either isolated or blended only in observed space, we recommend applying `('deblend\_blendNChild' == 0) | 'isIsolated'` flag when selecting objects.
