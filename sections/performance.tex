@@ -2,3 +2,20 @@
 \label{sec:performance}
 For information regarding the performance and known issues of the data contained in the Early DP2 release, we refer to the Data Quality, Image Artifacts, and Known Issues sections of the Release Documentation at \url{https://dp2.lsst.io}.
 A detailed analysis of the validation of DP2 will be provided at the time of its release (expected in the \dptworeleasedate range).
+
+\subsection{Differential Chromatic Refraction}
+Differential chromatic refraction (DCR) is the wavelength-dependent astrometric displacement effect arising from atmospheric refraction. The displacement is directed along the parallactic angle and increases toward shorter wavelengths, producing a color-dependent angular offset that can be visualized as a function of color.
+
+The presence of DCR in LSSTComCam data was previously discussed in DP1. Here, we characterize the effect in LSSTCam data using two representative sky regions: the Extended Chandra Deep Field-South (ECDFS) and a field near the ecliptic, centered at (RA, DEC) = (53.16, -28.10) and (320.0, -15.0), respectively. For each region, we include all `deep_coadds` from tracts within 5 degrees of the field center.
+
+The angular displacement of sources is calculated relative to their expected positions and projected onto the directions parallel and perpendicular to the parallactic angle. We examine both components as a function of source `g-i` color; the perpendicular component serves as a control for effects not aligned with the expected DCR direction.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{figures/dp2_dcrHexbin_vertical.png}
+    \caption{DCR measurements for the ECDFS and ecliptic fields in LSSTCam data. For each field, the angular displacement of sources is measured relative to their expected positions and projected onto directions parallel and perpendicular to the parallactic angle. The binned source density is shown as a function of
+    $g-i$ color and angular displacement, revealing a color-dependent correlation along the parallel direction with no corresponding trend along the perpendicular direction, indicating the presence of DCR in the LSSTCam data. The coadd with the highest DCR metric is used for each field.}
+    \label{fig:dcr}
+\end{figure}
+
+The coadd with the highest DCR metric is selected for each field. The ECDFS coadd contains 7 visit images, spanning an airmass range of 1.02-1.36 with a mean of 1.14, while the ecliptic coadd contains 8 visit images spanning 1.05-1.70 with a mean airmass of 1.26. As shown in Figure~\ref{fig:dcr}, both fields exhibit a color-dependent displacement parallel to the parallactic angle, with no corresponding trend in the perpendicular component. The color dependence rules out a simple camera-dependent offset and is consistent with the DCR signature previously identified in LSSTComCam. This effect is being addressed through the development of DCR-specific templates and coadds designed to mitigate the observed offset in future data products.
