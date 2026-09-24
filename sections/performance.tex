@@ -6,16 +6,16 @@ A detailed analysis of the validation of DP2 will be provided at the time of its
 \subsection{Astrometry}
 Astrometric performance is characterized by measuring internal consistency as well as accuracy with respect to an external reference, in this case the Gaia DR3 catalog.
 Metrics are calculated using isolated stars with magnitude between $17$ and $21.5$.
-For this set of objects, we find that the median offset from Gaia is within $2$~mas for the vast majority of DP2 visits.
-This offset is believed to be caused by color-dependent selection effects in our metric calculation, and is expected to be lower once differential chromatic refraction is included in the astrometric model.
+For this set of objects, we find that the median offset from Gaia is within $2$~mas in about $85\%$ of tracts and within $5$~mas for about $99\%$ of tracts.
+Any offset within this margin is believed to be caused by color-dependent selection effects in our metric calculation, and is expected to be lower once differential chromatic refraction is included in the astrometric model.
 
-Internal consistency was improved significantly by including the Gaussian processes turbulence correction.
-This can be seen by looking at the ``AMx" metrics, which show the median over a field of the standard deviation in the separation across all visits between objects at a given distance.
-Figure~\ref{fig: amx} shows this metric for objects at $5$~arcmin separations and at $200$~arcmin separations, which shows that not only is DP2 reaching the design goal of repeatability below $10$~mas in many regions of the sky, but we are achieving almost the same repeatability at $200$~arcmin separations, for which $10$~mas is actually the stretch goal.
+Internal consistency was improved significantly relative to DP1 by including the Gaussian processes turbulence correction.
+The degree of internal consistency can be seen by looking at the ``AMx" metrics, which show the median over a field of the standard deviation in the separation across all visits between objects at a given distance.
+Figure~\ref{fig: amx} shows this metric for objects at $5$~arcmin separations and at $200$~arcmin separations. The top panel show that DP2 is reaching the design goal of repeatability below $10$~mas in many regions of the sky. Furthermore, we are achieving almost the same repeatability at $200$~arcmin separations, for which $10$~mas is actually the stretch goal.
 
 \begin{figure}
 \includegraphics[width=\columnwidth]{figures/dp2_am1_am3.png}
-\caption{Median repeatability across all DP2 i-band visits for objects at $5$~arcmin (top panel) and $200$~arcmin (bottom panel). The difference in sky coverage is due to the fact that some regions of the sky do not have a sufficient number of objects separated by $200$~arcmin.}
+\caption{Whole sky plots showing the per-healpix median of the standard deviation in the separation across all i-band visits between objects at a given distance from each other, which are called the ``AMx'' metrics.  Lower values indicate a high degree of astrometric consistency between visits. The top panel shows the values for objects separated by $5$~arcmin, while the bottom shows the values for objects at $200$~arcmin, demonstrating that in many areas of the sky we are achieving the $10$~mas design goal for AM1 and the $10$~mas \textit{stretch} goal for AM3. The difference in sky coverage is due to the fact that some regions of the sky do not have a sufficient number of objects separated by $200$~arcmin.}
 \label{fig: amx}
 \end{figure}
 
