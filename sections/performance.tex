@@ -39,6 +39,22 @@ We are currently working on algorithms to allow us to process crowded fields and
 For users wanting a clean sample of objects that are not blended in the partially deconvolved image, meaning objects that are either fully isolated or that overlap neighbors only in the observed image, we recommend selecting objects with \texttt{deblend\_blendNChild} equal to zero or with \texttt{detect\_isIsolated} set.
 
 \subsection{Isolated Star Stellar Motions}
-Due to the short time span of the DP2 observations, the precision of the proper motion and parallax measurements is highly driven by the external reference catalog, Gaia DR3, which is included in the stellar motions calculation where possible. The majority of isolated stars with magnitudes below about $21$ are in the Gaia catalog: for these objects, the proper motion uncertainty is on the scale of a few mas. For fainter objects for which Gaia is not available, on the other hand, even well-sampled objects have proper motion uncertainties on the order of $10-20$~mas, going higher as signal to noise, sampling frequency, and the time span sampled go down. Regardless, for the majority of tracts, the time spanned between the first and last visits included in DP2 is less than $100$~days, meaning that proper motion and parallax measurements should be treated as a guideline for what will be available in future data releases, rather than a starting point for serious analyses. 
+Due to the short time span of the DP2 observations, the precision of the proper motion and parallax measurements is highly driven by the external reference catalog, Gaia DR3, which is included in the stellar motions calculation where possible. The majority of isolated stars with magnitudes below about $21$ are in the Gaia catalog: for these objects, the proper motion uncertainty is on the scale of a few mas. For fainter objects for which Gaia is not available, on the other hand, even well-sampled objects have proper motion uncertainties on the order of $10-20$~mas, going higher as signal to noise, sampling frequency, and the time span sampled go down. Regardless, for the majority of tracts, the time spanned between the first and last visits included in DP2 is less than $100$~days, meaning that proper motion and parallax measurements should be treated as a guideline for what will be available in future data releases, rather than a starting point for serious analyses.
 
 
+
+\subsection{Solar System Performance}\label{sec:drp-variabletransient-solar-association}
+There are 299,343 ssObjects (i.e. objects measured at least once by Rubin) in DP2, representing almost 20\% of the known solar system.
+136,608 objects are observed at least once in each `griz` band, but it is important to note that the non-simultaneous observations with different filters adds scatter from an object's light curve into the measurement of individual objects' colors.
+This can eventually be overcome by per-object light curve fitting, but most objects in DP2 have unreliable colors, and the per-band HErr measurements under-predict objects' unmodeled variability, as visible in the substantial tail of per-band Chi2/dof distribution.
+
+There are 8.1 million diaSources associated to solar system objects in DP2, representing about 2\% of all MPC measurements.
+There is a persistent $\sim30$mas bias between DP2 astrometric measurements and ephemeris positions of MPC orbits.
+When Rubin astrometry was compared instead to orbits fit only to Gaia astrometry, the $\sim30$ mas bias disappeared.
+After substantial investigation and discussion with both the MPC and JPL, we concluded that the bias is $\textbf{not}$ in Rubin astrometry (to $\le$~1mas), but in the orbit catalog.
+While $30$ mas is small, the median astrometric uncertainty on a DP2 diaSource associated with an ssSource is just 56 mas, making $30$ mas a substantial offset in the context of Rubin precision.
+
+The cross-band colors of the ssObjects are broadly plausible for an asteroid sample:
+the medians are approximately $g-r=0.58$, $r-i=0.18$, and $i-z=-0.01$~mag.
+The tails are driven by sparse fits: of 721 objects with $|g-r|>3$~mag, 716
+have only two to five $g$ observations and none has more than ten.
