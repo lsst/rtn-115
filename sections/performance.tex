@@ -2,6 +2,23 @@
 \label{sec:performance}
 For information regarding the performance and known issues of the data contained in the Early DP2 release, we refer to the Data Quality, Image Artifacts, and Known Issues sections of the Release Documentation at \url{https://dp2.lsst.io}.
 A detailed analysis of the validation of DP2 will be provided at the time of its release (expected in the \dptworeleasedate range).
+
+\subsection{Astrometry}
+Astrometric performance is characterized by measuring internal consistency as well as accuracy with respect to an external reference, in this case the Gaia DR3 catalog.
+Metrics are calculated using isolated stars with magnitude between $17$ and $21.5$.
+For this set of objects, we find that the median offset from Gaia is within $2$~mas in about $85\%$ of tracts and within $5$~mas for about $99\%$ of tracts.
+Any offset within this margin is believed to be caused by color-dependent selection effects in our metric calculation, and is expected to be lower once differential chromatic refraction is included in the astrometric model.
+
+Internal consistency was improved significantly relative to DP1 by including the Gaussian processes turbulence correction.
+The degree of internal consistency can be seen by looking at the ``AMx" metrics, which show the median over a field of the standard deviation in the separation across all visits between objects at a given distance.
+Figure~\ref{fig: amx} shows this metric for objects at $5$~arcmin separations and at $200$~arcmin separations. The top panel show that DP2 is reaching the design goal of repeatability below $10$~mas in many regions of the sky. Furthermore, we are achieving almost the same repeatability at $200$~arcmin separations, for which $10$~mas is actually the stretch goal.
+
+\begin{figure}
+\includegraphics[width=\columnwidth]{figures/dp2_am1_am3.png}
+\caption{Whole sky plots showing the per-healpix median of the standard deviation in the separation across all i-band visits between objects at a given distance from each other, which are called the ``AMx'' metrics.  Lower values indicate a high degree of astrometric consistency between visits. The top panel shows the values for objects separated by $5$~arcmin, while the bottom shows the values for objects at $200$~arcmin, demonstrating that in many areas of the sky we are achieving the $10$~mas design goal for AM1 and the $10$~mas \textit{stretch} goal for AM3. The difference in sky coverage is due to the fact that some regions of the sky do not have a sufficient number of objects separated by $200$~arcmin.}
+\label{fig: amx}
+\end{figure}
+
 \subsection{Deblending}
 As mentioned in \secref{sec:drp-multivisit-detection}, a new feature of DP2 processing is the introduction of a partial deconvolution step prior to deblending.
 Including this step significantly decreases the number of blends.
@@ -20,3 +37,8 @@ The biggest failure modes are resolved grand-design spirals, which are shredded 
 The deblender's primary limitation is its memory usage, which in crowded fields can become large, and for DP2 forced us to skip deblending near the galactic plane and a few other dense regions.
 We are currently working on algorithms to allow us to process crowded fields and expect most fields to be successfully processed in future releases.
 For users wanting a clean sample of objects that are not blended in the partially deconvolved image, meaning objects that are either fully isolated or that overlap neighbors only in the observed image, we recommend selecting objects with \texttt{deblend\_blendNChild} equal to zero or with \texttt{detect\_isIsolated} set.
+
+\subsection{Isolated Star Stellar Motions}
+Due to the short time span of the DP2 observations, the precision of the proper motion and parallax measurements is highly driven by the external reference catalog, Gaia DR3, which is included in the stellar motions calculation where possible. The majority of isolated stars with magnitudes below about $21$ are in the Gaia catalog: for these objects, the proper motion uncertainty is on the scale of a few mas. For fainter objects for which Gaia is not available, on the other hand, even well-sampled objects have proper motion uncertainties on the order of $10-20$~mas, going higher as signal to noise, sampling frequency, and the time span sampled go down. Regardless, for the majority of tracts, the time spanned between the first and last visits included in DP2 is less than $100$~days, meaning that proper motion and parallax measurements should be treated as a guideline for what will be available in future data releases, rather than a starting point for serious analyses. 
+
+
