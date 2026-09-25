@@ -194,7 +194,7 @@ Artifact rejection uses both direct (where no PSF matching is performed) and PSF
 A sigma-clipped mean of the \gls{PSF}-matched warps serves as a static sky model, against which individual warps are differenced to identify significant positive and negative residuals.
 Candidate artifact regions are classified as \gls{transient} if they appear in fewer than a small percentage of the total number of exposures, with the threshold based on the number of visits
 % These masks are also saved as the \texttt{compare\_warp\_artifact\_mask} dataset.
-Note: note released as data product in DP2
+% Note: note released as data product in DP2
 
 In \gls{DP2}, the coadded images are cell-based (\secref{sssec:coadds}), using the \texttt{lsst\_cells\_v2} skymap.
 Coadds are built as weighted averages of the input warps.
