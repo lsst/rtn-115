@@ -11,13 +11,29 @@ Any offset within this margin is believed to be caused by color-dependent select
 
 Internal consistency was improved significantly relative to DP1 by including the Gaussian processes turbulence correction.
 The degree of internal consistency can be seen by looking at the ``AMx" metrics, which show the median over a field of the standard deviation in the separation across all visits between objects at a given distance.
-Figure~\ref{fig: amx} shows this metric for objects at $5$~arcmin separations and at $200$~arcmin separations. The top panel show that DP2 is reaching the design goal of repeatability below $10$~mas in many regions of the sky. Furthermore, we are achieving almost the same repeatability at $200$~arcmin separations, for which $10$~mas is actually the stretch goal.
+Figure~\ref{fig: amx} shows this metric for objects at $5$~arcmin separations and at $200$~arcmin separations.
+The top panel show that DP2 is reaching the design goal of repeatability below $10$~mas in many regions of the sky.
+Furthermore, we are achieving almost the same repeatability at $200$~arcmin separations, for which $10$~mas is actually the stretch goal.
 
 \begin{figure}
 \includegraphics[width=\columnwidth]{figures/dp2_am1_am3.png}
-\caption{Whole sky plots showing the per-healpix median of the standard deviation in the separation across all i-band visits between objects at a given distance from each other, which are called the ``AMx'' metrics.  Lower values indicate a high degree of astrometric consistency between visits. The top panel shows the values for objects separated by $5$~arcmin, while the bottom shows the values for objects at $200$~arcmin, demonstrating that in many areas of the sky we are achieving the $10$~mas design goal for AM1 and the $10$~mas \textit{stretch} goal for AM3. The difference in sky coverage is due to the fact that some regions of the sky do not have a sufficient number of objects separated by $200$~arcmin.}
+\caption{Whole sky plots showing the per-healpix median of the standard deviation in the separation across all $i$-band visits between objects at a given distance from each other, which are called the ``AMx'' metrics.  Lower values indicate a high degree of astrometric consistency between visits. The top panel shows the values for objects separated by $5$~arcmin, while the bottom shows the values for objects at $200$~arcmin, demonstrating that in many areas of the sky we are achieving the $10$~mas design goal for AM1 and the $10$~mas \textit{stretch} goal for AM3. The difference in sky coverage is due to the fact that some regions of the sky do not have a sufficient number of objects separated by $200$~arcmin.}
 \label{fig: amx}
 \end{figure}
+
+\subsubsection{PSF accuracy}
+
+A full analysis of the PSF characterization of the Rubin Observatory data is currently being written \citep[][]{RTN-126}, so here
+we present only the key findings.
+One of the key findings is that the PSF shape correlates with variations in height across the focal plane (see \citealt[][]{RTN-108} for more details).
+This explains why ITL sensors, which exhibit a curved shape, are more difficult to model than E2V's flat sensors, and why a fourth-order model is justified, as noted previously in the \gls{DP1} paper.
+As described in \citet[][]{SITCOMTN-174}, the LSSTCam PSF is chromatic (i.e., wavelength-dependent) and appears to be compatible with \gls{DCR}.
+As shown in \citet[][]{SITCOMTN-174}, we are able to model it in the same spirit as the DES Y6 PSF analysis, but this was not enabled during DP2 processing because the connections to the downstream processes were not in place.
+In addition, DP2 has an order of magnitude more visits than previous processing campaigns, revealing a new variety of PSF-related issues, including annealing patterns in E2V sensors — visible in the u- and $g$-band stacks — and fringing in the z- and y-bands.
+All are expected to arise from background subtraction.
+Moreover, PSF residuals in DP2 show structure that correlates with stellar density, with the largest biases appearing in the plane of the Milky Way, the LMC, and the SMC.
+This stellar-density dependence also explains the observed differences in PSF residuals between bands, since more crowded bands show larger residuals.
+The underlying cause is again believed to be related to background subtraction in dense fields.
 
 \subsection{Deblending}
 As mentioned in \secref{sec:drp-multivisit-detection}, a new feature of DP2 processing is the introduction of a partial deconvolution step prior to deblending.
@@ -29,7 +45,7 @@ Approximately 10\% of objects come from blends with more than 5 children.
 \begin{figure*}[htb]
   \centering
   \includegraphics[width=\linewidth]{figures/sample_blend}
-  \caption{Example multi-object blend. The top row shows the observed multi-band image (panel a) followed by the scarlet lite models of the four brightest sources (panels b through e). The bottom row shows the residual image when the scarlet lite models are subtracted from the observation (panel f) followed by the flux-conserved models (panels g through j), created by using the scarlet lite models as templates to re-distribute flux from the observation so that the total flux is conserved. The flux-conserved models, injected in a noise-replaced image, are what the science pipelines use for measurement.}
+  \caption{Example multi-object blend. The top row shows the observed multiband image (panel a) followed by the scarlet lite models of the four brightest sources (panels b through e). The bottom row shows the residual image when the scarlet lite models are subtracted from the observation (panel f) followed by the flux-conserved models (panels g through j), created by using the scarlet lite models as templates to re-distribute flux from the observation so that the total flux is conserved. The flux-conserved models, injected in a noise-replaced image, are what the science pipelines use for measurement.}
   \label{fig:sample_blend}
 \end{figure*}
 
@@ -39,7 +55,10 @@ We are currently working on algorithms to allow us to process crowded fields and
 For users wanting a clean sample of objects that are not blended in the partially deconvolved image, meaning objects that are either fully isolated or that overlap neighbors only in the observed image, we recommend selecting objects with \texttt{deblend\_blendNChild} equal to zero or with \texttt{detect\_isIsolated} set.
 
 \subsection{Isolated Star Stellar Motions}
-Due to the short time span of the DP2 observations, the precision of the proper motion and parallax measurements is highly driven by the external reference catalog, Gaia DR3, which is included in the stellar motions calculation where possible. The majority of isolated stars with magnitudes below about $21$ are in the Gaia catalog: for these objects, the proper motion uncertainty is on the scale of a few mas. For fainter objects for which Gaia is not available, on the other hand, even well-sampled objects have proper motion uncertainties on the order of $10-20$~mas, going higher as signal to noise, sampling frequency, and the time span sampled go down. Regardless, for the majority of tracts, the time spanned between the first and last visits included in DP2 is less than $100$~days, meaning that proper motion and parallax measurements should be treated as a guideline for what will be available in future data releases, rather than a starting point for serious analyses.
+Due to the short time span of the DP2 observations, the precision of the proper motion and parallax measurements is highly driven by the external reference catalog, Gaia DR3, which is included in the stellar motions calculation where possible.
+The majority of isolated stars with magnitudes below about $21$ are in the Gaia catalog: for these objects, the proper motion uncertainty is on the scale of a few mas.
+For fainter objects for which Gaia is not available, on the other hand, even well-sampled objects have proper motion uncertainties on the order of $10-20$~mas, going higher as signal to noise, sampling frequency, and the time span sampled go down.
+Regardless, for the majority of tracts, the time spanned between the first and last visits included in DP2 is less than $100$~days, meaning that proper motion and parallax measurements should be treated as a guideline for what will be available in future Data Releases, rather than a starting point for serious analyses.
 
 
 
