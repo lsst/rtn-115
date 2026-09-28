@@ -3,8 +3,8 @@
 In this section we describe the data products that are included in DP2.
 Data rights holders can access all of these data products via one or more of the data services outlined in \secref{sec:data_services}.
 For programmatic reasons, the precise names of the data product can differ slightly depending on which data service is being used to retrieve them.
-For this reason, we use descriptive names throughout this section and provide their equivalent names used in the data services in \tabref{tab:datasetnames}.
-We note that some data products are not available in all data services; such cases are indicated in \tabref{tab:datasetnames}.
+For this reason, we use descriptive names throughout this section and provide their equivalent names used in the data services in \tabref{tab:DP2_datasetnames}.
+We note that some data products are not available in all data services; such cases are indicated in \tabref{tab:DP2_datasetnames}.
 
 \input{tables/datasetnames}
 
@@ -287,10 +287,10 @@ The artificial shears are in four different directions: 1p is along the image x-
 
 Two measurement algorithms (\textit{gauss} and \textit{pgauss}) are run on each of the five different counterfactuals, one for measuring shapes and the other for fluxes.
 The first approach is to fit a single \gls{2D} gaussian jointly across the $r$-, $i$-, and $z$-band deep coadd images, with the ellipticity components in the image x-y (\texttt{gauss\_g1}) and diagonal (\texttt{gauss\_g2}) directions reported in the catalog.
-The second approach measures \gls{2D} gaussian-weighted moments on single band ($r$, $i$, $z$) images separately, calculates the weighted sum of the raw moments across those three bands (weighted by inverse-variance), then reports the ellipticity components of that weighted sum in the image x-y (\texttt{pgauss\_g1}) and diagonal (\texttt{pgauss\_g2}) directions.
+The second approach measures \gls{2D} gaussian-weighted moments and is used to measure fluxes in the $g$, $r$, $i$, and $z$ bands (e.g., \texttt{r\_pgaussFlux}); it does not provide ellipticity measurements.
 There is one row per object detected in each counterfactual, meaning a given object could result in up to five rows, depending on how many of the counterfactuals it is detected in at a significance of $>5\sigma$.\footnote{It is feasible for a marginal $5\sigma$ object in one counterfactual to be just below the $5\sigma$ detection threshold in another counterfactual.}
 
-In addition to the gaussian shape measurements and their auto-covariances, the Object Shear table also contains object positional information, fluxes measured from the gaussian fits ($r$, $i$ and $z$ bands) and gaussian moments ($g$, $r$, $i$ and $z$ bands), \gls{PSF} shapes reported in the same x-y and diagonal directions as objects, a range of different flags.
+In addition to the gaussian shape measurements and their covariances, the Object Shear table also contains object positional information, fluxes measured from both the gaussian fits and the gaussian moments ($g$, $r$, $i$ and $z$ bands), \gls{PSF} shapes reported in the same x-y and diagonal directions as objects, a range of different flags.
 Each entry in the Object Shear catalog also has a unique identification number (\texttt{shearObjectId}), that uniquely identifies a given detection in a given counterfactual.
 The \gls{Object} Shear catalog contains \nshearobjects rows.
 
@@ -417,6 +417,11 @@ The skymap data product can be used, for example, to identify the tract and \gls
 
 A description of the \texttt{lsst\_cells\_v2}, in terms of the numbers and sizes of its tracts and patches, is given at the start of this section.
 
+\subsubsection{Coadd Patches}
+The Coadd Patches table lists, for each \gls{patch} in the skymap covered by \gls{DP2}, its \gls{tract} and \gls{patch} IDs, central coordinates, and the region of sky it covers.
+It can be used to identify which patches, and hence which coadds, cover a given position on the sky.
+It is only available via the Qserv database (\secref{sssec:qserv}).
+
 \subsubsection{Standard Passbands}
 \label{sssec:std_passbands}
 %\figref{fig:comcam_standard_bandpasses} shows the full-system throughput of the six \gls{LSSTCam} filters.
@@ -431,9 +436,10 @@ When combined with the corresponding Object catalog and Deep Coadd image, this d
 There is one Object Scarlet Models dataset per \gls{patch} that has coverage in DP2, and they are only available via the Data Butler.
 
 \subsubsection{Deep Coadd Input Summary}
-The Deep Coadd Input Summary table contains the visit and detector IDs of all the \gls{Visit} Images that were selected and coadded to produce a given Deep Coadd image.
-Also included in the table are the relative weight of each Visit Image, inversely proportional to its variance, and the number of pixels it contributed to the Deep Coadd, since a given Visit Image may only partially cover a \gls{patch}.
-There is one Deep Coadd Input Summary per \gls{tract} that has coverage in DP2, and they are only available via the Data Butler.
+The Deep Coadd Input Summary table contains the visit and detector IDs of all the \gls{Visit} Images that were selected and coadded to produce each Deep Coadd image.
+Also included in the table are the relative weight of each Visit Image, inversely proportional to its variance, and the number of pixels it contributed to a Deep Coadd, since a given Visit Image may only partially cover a \gls{patch}.
+There is a single Deep Coadd Input Summary table for the whole of \gls{DP2}, containing one row per contributing Visit Image per \gls{patch} (i.e., one row per unique combination of \gls{tract}, \gls{patch}, visit, and detector).
+It is only available via the Data Butler.
 
 \subsubsection{Compare Warp Artifact Mask}
 The Compare Warp Artifact Masks are the mask planes of the individual warped \gls{Visit} Images, in which pixels affected by transient artifacts, such as satellite trails and cosmic rays, are flagged in the \texttt{CLIPPED} plane and excluded from the Deep Coadds.
@@ -442,7 +448,7 @@ There is one Compare Warp Artifact Mask per \gls{Visit} per \gls{patch}, and the
 
 \subsubsection{Camera}
 The Camera describes the geometry of \gls{LSSTCam}, i.e., the positions and orientations of the detectors in the focal plane, the layout and readout geometry of each detector's amplifiers, and a nominal model of the optical distortion.
-It is used throughout processing to map pixels on each detector to positions in the focal plane, for example when assembling the amplifier segments of each detector during \gls{ISR} and when constructing the initial \gls{WCS} of each exposure.
+It is used throughout processing to map pixels on each detector to positions in the focal plane, for example when constructing the initial \gls{WCS} of each exposure.
 While of limited use as a standalone data product, the Camera is a required input to a number of processing steps.
 It is therefore largely provided to enable users to rerun selected processing tasks on subsets of DP2.
 There is a single Camera for \gls{DP2}, and it is only available via the Data Butler.
@@ -456,6 +462,10 @@ There is a single FGCM Lookup Table for \gls{DP2}, and it is only available via 
 The Pretrained Model Package contains the architecture and trained weights of the convolutional neural network used to assign a reliability (i.e., real/bogus) score to each \gls{DIA} source (\secref{sec:drp-variabletransient-artifact}; \citealt[][]{DMTN-337}).
 The same model was used for both \gls{DP1} and \gls{DP2}.
 There is a single Pretrained Model Package for \gls{DP2}, and it is only available via the Data Butler.
+
+\subsubsection{Run Provenance}
+The Run Provenance dataset information regarding the DP2 processing itself: the inputs, outputs, configurations and logs of every processing task.
+It is only available via the Data Butler.
 
 \subsubsection{Calibration datasets}
 \label{sssec:calibration_images}
@@ -471,9 +481,9 @@ The final flat frames, one per band per detector, that are generated by combinin
 The Brighter Fatter Effect is caused by the build-up of charge deflecting subsequent photo-electrons into neighbouring pixels, resulting in brighter objects appearing larger than they otherwise would. The Brighter Fatter Kernel (see \secref{sec:drp-singlevisit-calibrationisr}) is used to correct this effect during \gls{ISR}. 
 
 \paragraph{Crosstalk}
-The crosstalk matrices, one per detector, that quantify how much of the signal read out through each amplifier leaks into the other amplifiers. They are used during \gls{ISR} to remove the faint artifacts that bright sources in one amplifier segment induce in the others.
+The crosstalk matrices, one per detector, that quantify how much of the signal read out through each amplifier leaks into the other amplifiers of the same detector. They are used during \gls{ISR} to remove the faint artifacts that bright sources in one amplifier segment induce in the others.
 \paragraph{Charge Transfer Inefficiency}
-The deferred-charge calibrations, one per detector, that contain a per-amplifier model of charge transfer inefficiency (\gls{CTI}): the incomplete transfer of charge towards the readout amplifiers, which causes some charge to be trapped and later released as faint trails behind sources. They are used during \gls{ISR} to remove these trails.
+The deferred-charge calibrations, one per detector, that contain a per-amplifier model of serial charge transfer inefficiency (\gls{CTI}): the incomplete transfer of charge towards the readout amplifiers, which causes some charge to be trapped and later released as faint trails behind sources. They are used during \gls{ISR} to remove these trails.
 \paragraph{Defects}
 The defect mask, one per detector, that flags pixels and columns as unusable for science.
 Defects are identified as outliers in the pixel value distributions of dark and flat-field images, using either individual or combined frames.

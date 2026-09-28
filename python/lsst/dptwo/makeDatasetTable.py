@@ -2,7 +2,11 @@ from lsst.dptwo.utils.tables import make_simple_table
 import pandas as pd
 
 ROWS = [
+    ("Raw Images", "--", "\\texttt{raw}"),
+    ("Visit Images", "--", "\\texttt{visit\_image}"),
     ("Deep Coadd", "--", "\\texttt{deep\_coadd}"),
+    ("Template Coadd", "--", "\\texttt{template\_coadd}"),
+    ("Difference Image", "--", "\\texttt{difference\_image}"),
     ("Object", "dp2.Object", "\\texttt{object}"),
     (
         "Isolated Star Stellar Motions",
@@ -19,8 +23,11 @@ ROWS = [
     ),
     ("DIA Object", "dp2.DiaObject", "\\texttt{dia\_object}"),
     ("DIA Source", "dp2.DiaSource", "\\texttt{dia\_source}"),
+    ("Solar System Source", "dp2.SSSource", "\\texttt{ss\_source}"),
     ("Solar System Object", "dp2.SSObject", "\\texttt{ss\_object}"),
     ("MPC Orbit", "dp2.mpc\_orbits", "--"),
+    ("Current Identifications", "dp2.current\_identifications", "--"),
+    ("Numbered Identifications", "dp2.numbered\_identifications", "--"),
     ("Calibration Reference Catalog", "--", "\\texttt{the\_monster\_20250219}"),
     (
         "Survey Property Maps",
@@ -29,22 +36,34 @@ ROWS = [
     ),
     ("HiPS Maps", "--", "--"),
     ("Skymap", "--", "\\texttt{skyMap}"),
+    ("Coadd Patches", "dp2.CoaddPatches", "--"),
     ("Standard Passbands", "--", "\\texttt{standard\_passband}"),
     ("Object Scarlet Models", "--", "\\texttt{object\_scarlet\_models}"),
     ("Deep Coadd Input Summary", "--", "\\texttt{deep\_coadd\_input\_summary}"),
+    ("Compare Warp Artifact Mask", "--", "\\texttt{compare\_warp\_artifact\_mask}"),
+    ("Camera", "--", "\\texttt{camera}"),
+    ("FGCM Lookup Table", "--", "\\texttt{fgcmLookUpTable}"),
+    ("Pretrained Model Package", "--", "\\texttt{pretrainedModelPackage}"),
+    ("Run Provenance", "--", "\\texttt{run\_provenance}"),
+    (
+        "Calibration datasets",
+        "--",
+        "\\texttt{bias}, \\texttt{dark}, \\texttt{flat}, \\texttt{bfk}, "
+        "\\texttt{crosstalk}, \\texttt{cti}, \\texttt{defects}, \\texttt{linearizer}, \\texttt{ptc}",
+    ),
     ("Visit", "dp2.Visit", "\\texttt{visit\_table}"),
     ("Visit Detector", "dp2.VisitDetector", "\\texttt{visit\_detector\_table}"),
     ("Visit Summary", "--", "\\texttt{visit\_summary}"),
 ]
 
 CAPTION = """
-Summary of dataset types released in EDP2, together with the names by which they are referred to
-within the QServ database and the Data Butler.
+Summary of dataset types released in DP2, together with the names by which they are referred to
+within the Qserv database and the Data Butler.
 """
 
 data = {
     "Dataset Type": [row[0] for row in ROWS],
-    "QServe Name": [row[1] for row in ROWS],
+    "Qserv Name": [row[1] for row in ROWS],
     "Butler Name": [row[2] for row in ROWS],
 }
 df = pd.DataFrame(data)

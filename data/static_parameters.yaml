@@ -220,7 +220,6 @@ templatecoadd:
 surveypropertymaps:
   parameters:
     - name: nsurveypropertymaps
-      value: forteen
-      unit: mag
+      value: fourteen
     - name: ndrpinputvisits
       value: 21067
