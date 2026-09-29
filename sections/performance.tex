@@ -110,7 +110,7 @@ We therefore use the proportion of pixels flagged as \texttt{NOT\_DEBLENDED} as 
 \begin{figure*}[htb]
   \centering
   \includegraphics[width=\linewidth]{figures/dp2_crowdedFields_matchedSourcesToRefCat.png}
-  \caption{Reference-source match ratio across the DP2 survey footprint. For each tract/patch, the color scale denotes the fraction of reference sources successfully matched to LSST detections. Regions with no matched sources are shown in black, and the Galactic plane is indicated by the solid black curve. Low match ratios are concentrated along the Galactic plane.}
+  \caption{Reference-source match ratio across the DP2 survey footprint. For each tract/patch, the color scale denotes the fraction of reference sources successfully matched to LSST detections. Regions with no matched sources are shown in black, and the Galactic plane is indicated by the solid black curve. Low match ratios are concentrated along the Galactic plane. \textbf{Note:} There is a known bug that leads to the empty tracts in this figure; this will be addressed prior to submission to the journal.}
   \label{fig:crowded_fields_matched_sources}
 \end{figure*}
 
@@ -119,7 +119,7 @@ This fraction, however, obscures the highly localized nature of crowded fields w
 Specifically, 1,750 of 2,174 total tracts (i.e., 80.5\%) have less than 1\% of their pixels flagged as \texttt{NOT\_DEBLENDED}.
 Of the remaining 424 (i.e., 19.5\%) tracts , 90\% are found within 14.5 degrees of the Galactic plane where the stellar densities are the highest.
 The concentration of processing failures in these regions is further illustrated by the fraction of reference sources successfully matched to LSST detections within each tract and patch.
-Figure~\ref{fig:crowded_fields_matched_sources} shows this match ratio across the survey footprint.
+\figref{fig:crowded_fields_matched_sources} shows this match ratio across the survey footprint.
 The lowest match ratios, including tracts and patches with no successful matches, occur almost entirely along the Galactic plane, indicating that these unmatched sources are associated with failures of the standard LSST processing in these densely populated fields.
 Away from the Galactic plane, match ratios remain uniformly high.
 Thus, although crowded fields constitute a substantial fraction of the total flagged pixels, the associated processing challenges are concentrated predominantly in a relatively small region of the survey footprint near the Galactic plane.
