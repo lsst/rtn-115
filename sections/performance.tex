@@ -108,6 +108,76 @@ The deblender's primary limitation is its memory usage, which in crowded fields 
 We are currently working on algorithms to allow us to process crowded fields and expect most fields to be successfully processed in future releases.
 For users wanting a clean sample of objects that are not blended in the partially deconvolved image, meaning objects that are either fully isolated or that overlap neighbors only in the observed image, we recommend selecting objects with \texttt{deblend\_blendNChild} equal to zero or with \texttt{detect\_isIsolated} set.
 
+\subsection{Coadd Depth, Completeness and Purity}
+
+The depth of coadds can be estimated in several different ways, as well as separately for point and extended objects.
+One method is to simply measure statistics like the median/mean magnitude of objects in a narrow range of significance, i.e. at $5\sigma \pm 0.1\sigma$.
+One drawback of this method is that uncertainties in coadd fluxes are typically underestimated, and by a larger factor for extended objects.
+Nonetheless, it is fairly straightforward to implement this method and correct the error estimation, at least for point sources.
+TODO: This is still listed as a TODO in \secref{sssec:sv_surveys}.
+
+Injecting synthetic objects into real data is another method that was used for DP1.
+However, the switch to cell-based coadds necessitated changes to the injection methodology for DP2 and a large-scale injection campaign has not yet been completed.
+
+\begin{figure}[htb]
+\includegraphics[width=\linewidth]{figures/dp2_ecdfs_euclid_completeness}
+\caption{Completeness and incorrect classification fraction as a function of Euclid $VIS$-band S\'ersic magnitude.
+The ``Incorrect Class'' line shows objects that are matched but classified incorrectly by \texttt{griz\_model\_extendedness}.}
+\label{fig:dp2_ecdfs_euclid_completeness}
+\end{figure}
+
+The third method for measuring completeness is to match objects against comparable or deeper reference catalogs, where higher-resolution data from space-based telescopes is preferred.
+For this method, as for DP1, we use a greedy, probabilistic matching algorithm that matches reference objects in order of descending brightness to the most probable target within a $0\farcs5$ radius.
+
+\figref{fig:dp2_ecdfs_euclid_completeness} shows completeness in the ECDFS field compared to Euclid Q1 \citep{2026A&A...711A...1E,2026A&A...711A...4E}, along with the proportion of objects whose star/galaxy classification disagrees with Euclid.
+Euclid stars are defined solely with a \texttt{mumax\_minus\_mag < -2.6} cut as recommended by \citet{2026A&A...711A..20E}, whereas DP2 stars are selected with \texttt{griz\_model\_extendedness} $< 0.2$.
+Completeness is generally high, peaking above 96.5\% for $20 < \mathrm{mag_{VIS}} < 21$, with a misclassification rate just under 1\%.
+Purity, on the other hand, peaks at bright magnitudes but dips below 93.3\% at the same magnitude range.
+
+Completeness and purity figures are somewhat dependent on the choice of flags to exclude possible spurious detections.
+For Euclid, we select only objects with \texttt{spurious\_prob}$ < 0.2$.
+This cut excludes more objects than the default value of 0.5 recommended by \citet{2026A&A...711A...4E}.
+Visual inspection of the coordinates of Euclid detections with $0.2 <$ \texttt{spurious\_prob} $< 0.5$ revealed that most are clustered around bright stars and their diffraction spikes.
+
+Similar problematic detections are found in the DP2 catalogs, many but not all of which are excluded using \texttt{coord\_flag}.
+Not all of these flagged objects are necessarily spurious detections, but as with Euclid, many cluster around bright stars and have overestimated fluxes due to their footprints including part of the extended wings of the star's PSF.
+Note: The above numbers are from \texttt{/sdf/data/rubin/user/dtaranu/tickets/DM-50135/dp2\_ecdfs\_plots\_DP2\_v30\_0\_8\_all/euclid\_q1\_lsst\_cells\_v2\_ecdfs\_vis\_completeness\_metrics.csv}, not eyeballing the plot.
+
+\subsection{Galaxy Photometry and Sizes}
+
+\begin{figure}[htb]
+\includegraphics[width=\linewidth]{figures/dp2_ecdfs_sersic_sizes}
+\caption{S\'ersic major-axis effective radii as a function of S\'ersic $i$-band magnitude for the ECDFS field. Red points are classified galaxies with \texttt{griz\_model\_extendedness} $> 0.2$, and the hex binned density transitions to a scatter plot at the 0.5 and 99.5 percentiles in size.}
+\label{fig:dp2_ecdfs_sersic_sizes}
+\end{figure}
+
+One of the main improvements in DP2 galaxy measurements is the use of an exponential fit to initialize the multiband S\'ersic fits.
+\figref{fig:dp2_ecdfs_sersic_sizes} shows the distribution of S\'ersic size as a function of S\'ersic $i$-band magnitude in ECDFS.
+While there are still some overly large galaxy outliers, the proportion is fairly small.
+The 99.5th percentile size increases slightly from 18th to 22nd magnitude, where the outliers are most problematic, but falls for fainter objects.
+This is likely partly due to improved deblending as well - the Gaussian model in \gls{ShearObject}, which does limited masking of neighbors rather than multi-object modelling, has a considerably larger fraction of ``superspreaders''. TODO: Not sure if we want to be more quantitative about this; I can produce figures but it may be TMI.
+
+Using \texttt{griz\_model\_extendedness}, the S\'ersic sizes of stars are also consistently smaller than galaxies until 25th magnitude.
+At 24th magnitude, however, the number counts of stars drop precipitously, as the classifier's completeness drops to maintain purity.
+The cause of the significantly non-zero sizes of stars is not entirely understood, but the median sizes are consistent with other forward modelling algorithms, including from CModel's exponential fits (which use an independent double shapelet PSF model) and from the Gaussian model in \gls{ShearObject}.
+
+\begin{figure}[htb]
+\includegraphics[width=\linewidth]{figures/dp2_ecdfs_sersic_size_ratio_euclid}
+\includegraphics[width=\linewidth]{figures/dp2_cosmos_sersic_size_ratio_cosmos2025}
+\caption{S\'ersic size ratios for galaxies in ECDFS and COSMOS, as measured and classified in Euclid Q1 and COSMOS2025, respectively.}
+\label{fig:dp2_sersic_size_ratios}
+\end{figure}
+
+\figref{fig:dp2_sersic_size_ratios} shows the ratio of S\'ersic sizes measured in DP2 with two space-based catalogs - Euclid Q1 in ECDFS and COSMOS2025 \citep{2025A&A...704A.339S} in COSMOS.
+In both cases, the median size ratio remains fairly consistent to about 24th magnitude (filter dependent), and the scatter is remarkably small for ECDFS/Euclid especially.
+There is a shallow slope in the median such that bright galaxies have underestimated sizes.
+This is likely due to a combination of reasons, most notably the known background oversubtraction which is less likely to be an issue in space-based data.
+Faint galaxies have substantially overestimated sizes, unsurprisingly, since by $i=25$ median effective radii (from COSMOS2025) drop to about $0\farcs22$ - barely larger than the LSSTCam pixel size.
+
+One as-yet unexplained feature is the systematic offset between DP2 and Euclid Q1 sizes, which is also seen in EDFS.
+The Euclid VIS band covers most of the same wavelength range as the $griz$ filters combined, and so this seems unlikely to be solely due to a mismatch in wavelength coverage.
+By contrast, the  S\'ersic parameters measured in COSMOS2025 are from four JWST NIRCAM filters (F115W, F150W, F277W, F444W), only the bluest of which even overlaps partially with the $y$ band.
+
 \subsection{Isolated Star Stellar Motions}
 Due to the short time span of the DP2 observations, the precision of the proper motion and parallax measurements is highly driven by the external reference catalog, Gaia DR3, which is included in the stellar motions calculation where possible.
 The majority of isolated stars with magnitudes below about $21$ are in the Gaia catalog: for these objects, the proper motion uncertainty is on the scale of a few mas.
