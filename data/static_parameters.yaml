@@ -74,7 +74,7 @@ drone:
       value: mid-2028
 
     # Placeholder -- to replace all below with computation from the data
-    # Formatting needs to be reviewed
+    # COSMOS values from table dp2_ddf_m5_coadded_depth
     - name: bestpsfwhm
       value: 1.05
       unit: arcsec
@@ -118,22 +118,22 @@ drone:
       value: 00
       unit: mag
     - name: udepthcosmos
-      value: 26.0
+      value: 25.9
       unit: mag
     - name: gdepthcosmos
       value: 26.8
       unit: mag
     - name: rdepthcosmos
-      value: 26.3
+      value: 26.5
       unit: mag
     - name: idepthcosmos
       value: 26.1
       unit: mag
     - name: zdepthcosmos
-      value: 25.3
+      value: 25.2
       unit: mag
     - name: ydepthcosmos
-      value: 23.9
+      value: 23.8
       unit: mag
     - name: nsinglevisitsimages
       value: 4000
