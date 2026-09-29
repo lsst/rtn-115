@@ -36,7 +36,7 @@ lsst:
       unit: PB
     - name: wfdarea
       value: 18000
-      unit: square degrees
+      unit: deg2
 
 lsstcamsvcampaign:
   parameters:
