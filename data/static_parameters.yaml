@@ -73,11 +73,6 @@ drone:
     - name: dronedate
       value: mid-2028
 
-drone:
-  parameters:
-    - name: dronedate
-      value: mid-2028
-
     # Placeholder -- to replace all below with computation from the data
     # Formatting needs to be reviewed
     - name: bestpsfwhm
@@ -91,13 +86,13 @@ drone:
       unit: arcsec
     - name: coaddedarea
       value: 3,000
-      unit: square degrees
+      unit: deg2
     - name: dptwoarea
       value: 15,000
-      unit: square degrees
+      unit: deg2
     - name: totalarea
       value: 15,000
-      unit: square degrees
+      unit: deg2
     - name: nextendedobjects
       value: X
     - name: nsolarsystemobjects
