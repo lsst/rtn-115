@@ -1,15 +1,9 @@
 \section{Performance Characterization and Known Issues}
 \label{sec:performance}
-\begin{figure*}[htb!]
-\plotone{dp2_stellar_loci}
-\caption{Blah}
-\label{fig:dp2_stellar_loci}
-\end{figure*}
 
 For information regarding the performance and known issues of the data contained in the Early DP2 release, we refer to the Data Quality, Image Artifacts, and Known Issues sections of the Release Documentation at \url{https://dp2.lsst.io}.
 A detailed analysis of the validation of DP2 will be provided at the time of its release (expected in the \dptworeleasedate range).
 
-<<<<<<< HEAD
 \subsection{Astrometry}
 Astrometric performance is characterized by measuring internal consistency as well as accuracy with respect to an external reference, in this case the Gaia DR3 catalog.
 Metrics are calculated using isolated stars with magnitude between $17$ and $21.5$.
@@ -28,6 +22,32 @@ Furthermore, we are achieving almost the same repeatability at $200$~arcmin sepa
 \label{fig: amx}
 \end{figure}
 
+\subsection{Stellar Photometry}
+A key means of verifying the quality of the photometry, and in particular its absolute flux scale, is to compare it to an external photometric catalog.
+Such a comparison is, however, far from straightforward, not least because any external catalog will also have its own calibration systematics.
+Further, outside the deep fields, any comparison would be restricted to relatively bright stars and would therefore not be representative of the full DP2 depth.
+A proper treatment of these limitations is beyond the scope of this paper, and is left to a dedicated future paper on photometric performance.
+Instead, we assess the internal consistency of the DP2 photometry using the repeatability of per-visit measurements and the stellar loci measured on the Deep Coadds.
+Both are differential measures (i.e., between visits or between bands), so they test the relative photometric calibration but are insensitive to any error in the absolute flux scale.
+
+Since most of the DP2 footprint was observed multiple times, the repeatability of photometric measurements of the same star across visits provides a test of the consistency, and hence reliability, of the per-visit photometric calibration.
+We measure this repeatability using the PSF photometry of bright (SNR~$>200$), isolated, unresolved objects, the vast majority of which are stars.
+To keep the calculation computationally feasible, it is performed per tract: for each star with at least three measurements from the visits covering a given tract, we calculate the standard deviation of those measurements, and then take the median over all stars in the tract.
+This corresponds to the PA1 metric defined in the LSST Science Requirements Document \citep[][]{LPM-17}.
+Following recalibration using the \gls{FGCM} fits, the median PA1 values across all tracts with coverage are 9.1, 7.1, 6.8, 5.9, 5.8, and 6.2~mmag in the $ugrizy$ bands, respectively, meeting the minimum specifications of the Science Requirements Document.
+
+\begin{figure*}[htb!]
+\plotone{dp2_stellar_loci}
+\caption{Stellar loci measured on the Deep Coadds using PSF magnitudes from the \gls{DP2} Object catalog.
+From left to right, the $gri$, $riz$, and $ugr$ loci are shown for random subsets of bright ($i$-band SNR~$>200$; $grzy < 22.5$~mag), isolated, unresolved objects at Galactic latitude $|b|>20^\circ$, the latter to limit the effects of dust reddening; the $ugr$ panel additionally requires $u$-band SNR~$>50$.
+The first two panels each contain 253,926 objects, and the third contains 41,968.
+The color scale is logarithmic, with lighter colors indicating a higher density of objects, and is set independently for each panel; bins containing fewer than twenty objects are shown as individual points.}
+\label{fig:dp2_stellar_loci}
+\end{figure*}
+
+\figref{fig:dp2_stellar_loci} shows the $ugriz$ stellar loci of unresolved objects in the Deep Coadds, selected using the Object table's \texttt{extendedness} parameter (\secref{sec:drp-multivisit-detection}).
+The tightness of these loci indicates the good quality of the band-to-band relative photometry in the Deep Coadds.
+
 \subsection{Differential Chromatic Refraction}
 \gls{DCR} is the wavelength-dependent astrometric displacement arising from atmospheric refraction.
 The displacement is directed along the parallactic angle and increases toward shorter wavelengths, producing a color-dependent angular offset the size of which differs between bands.
@@ -39,12 +59,12 @@ The extent of any displacement due to DCR is dependent on airmass, meaning that 
 For each visit, we calculate the angular displacement of sources relative to their positions their positions in the matched reference catalog and projected onto the directions parallel and perpendicular to the parallactic angle.
 We examine both components as a function of source $g-i$ color; the perpendicular component serves as a control for effects not aligned with the expected DCR direction.
 
-\begin{figure}[ht]
+\begin{figure*}[tbp]
     \centering
-    \includegraphics[width=\textwidth]{figures/dp2_dcrHexbin_vertical.png}
-    \caption{DCR measurements for the ECDFS (left) and ecliptic fields (right) in LSSTCam data. For each field, the angular displacement of sources is measured relative to their positions in the matched reference catalog and projected onto directions parallel and perpendicular to the parallactic angle. The binned source density is shown as a function of $g − i$ color and angular displacement, revealing a color-dependent correlation along the parallel direction. This, and t he lack of a corresponding trend along the perpendicular direction, indicates the presence of DCR in the LSSTCam data. While we consider all Deep Coadds within five degrees of each field center for our analysis, for display purposes we only plot the DCR values from all matcthed sources in the coadd with the highest overall DCR metric.
+    \includegraphics[width=\textwidth]{figures/dp2_dcrHexbin_horizontal.png}
+    \caption{DCR measurements for the ECDFS (left) and ecliptic fields (right) in LSSTCam data. For each field, the angular displacement of sources is measured relative to their positions in the matched reference catalog and projected onto directions parallel and perpendicular to the parallactic angle. The binned source density is shown as a function of $g-i$ color and angular displacement, with linear (top) and logarithmic (bottom) color scales, revealing a color-dependent correlation along the parallel direction. This, and the lack of a corresponding trend along the perpendicular direction, indicates the presence of DCR in the LSSTCam data. While we consider all Deep Coadds within five degrees of each field center for our analysis, for display purposes we only plot the DCR values from all matched sources in the coadd with the highest overall DCR metric.
     \label{fig:dcr}}
-\end{figure}
+\end{figure*}
 
 When displaying the resulting DCR effect, the coadd with the highest DCR metric is selected for each field.
 In the case of the ECDFS, that specific coadd contains 7 visit images, spanning an airmass range of 1.02-1.36 with a mean of 1.14.
@@ -136,29 +156,3 @@ Robust processing of these fields is therefore essential to fully realizing the 
 To address this challenge, a dedicated crowded-field processing pipeline is currently under development.
 Early results are promising: regions that appear as merged detections in the standard pipeline can instead be successfully deblended into their constituent sources, enabling individual detection and measurement.
 The pipeline is currently undergoing testing, with integration into the LSST Science Pipelines for general use targeted within the next year.
-=======
-\subsection{Stellar Photometry}
-Since most of the DP2 footprint area was observed multiple times, we can use the multiple photometric measurements of the same star to assess the consistency, and hence reliability, of the per-visit photometric calibration. 
-This photometric repeatability is measured by calculating the standard deviation of multiple measurements of the same unresolved object (the vast majority of which will be stars) across all visits that observed it.
-We only use bright (i.e., SNR$>200$), isolated, unresolved objects (i.e., bright, isolated stars) to perform this measurement.
-To make this calculation computationally feasible, however, photometric repeatability is measured at the tract-level: the same set of stars are identified in each visit that cover a given tract.
-For each star, the standard deviation of the multiple photometric measurements across all visits is measured.
-A star must have at least three measurements in order for the standard deviation to be calculated.
-We then calculate the median standard deviation over all stars in a tract to obtain a single value for the photometric repeatability within that tract.
-This is referred to as ``PA1'' \citep[][]{LPM-17}.    
-Following recalibration using the \gls{FGCM} fits, the photometric repeatability is excellent: across all tracts with coverage, the median PA1 values for the $ugrizy$ bands are 9.1, 7.1, 6.8, 5.9, 5.8, and 6.2, mmag respectively.
-
-We turn to stellar loci in $ugriz$ to assess the quality of the photometry of Deep Coadds; these are shown in \figref{fig:coadd_stellar_loci}.
-Unresolved objects are selected using the Object table's extendedness parameter.
-This parameter is a measure of the difference between the PSF flux and the CModel flux; a large value (\todo{quantify!}) inidicates a substantial difference betweem the CModel fit and the PSF model, which is taken as implying that the object is resolved.
-The narrowness \todo{quantify!} of the stellar loci are testament to the quality of the photometry measured in the Deep Coadds.
-
-Neither the repeatability nor the stellar locus tests described above are sensitive to errors in the absolute flux scale, since both are differential measures (i.e., between visits or between bands) in which any common offsets will cancel.
-As a simple check of absolute calibration, we compare DP2 photometry to \gls{Gaia}\todo{confirm which Gaia data product/release}, finding a median offset of \todo{quantify, per band} and a scatter of \todo{quantify, per band} in the \todo{bands} bands.
-This comparison should, however, be interpreted with caution.
-Gaia's own photometry carries calibration systematics of its own -- most notably chromaticity-related biases in the BP/RP spectra used to synthesize magnitudes in the LSST passbands, which are known to be more significant for faint and red sources -- so agreement (or disagreement) with Gaia cannot be uncritically attributed to DP2.
-The comparison is also restricted to the relatively bright, mostly unsaturated stars in the magnitude range where Gaia and LSST overlap, and is therefore not representative of the full DP2 depth.
-Furthermore, converting Gaia spectra into the LSST passbands is itself a synthetic-photometry exercise, so this test is better described as a comparison between two calibration systems than as a validation against an independent physical standard.
-A more thorough assessment of DP2's absolute photometric calibration -- including a proper treatment of these systematics, alongside complementary tests such as recovery of the fluxes of sources injected into the images at known brightness -- is left to a dedicated future paper on photometric performance.
-
->>>>>>> d486102 (Add rough photometry performance)
