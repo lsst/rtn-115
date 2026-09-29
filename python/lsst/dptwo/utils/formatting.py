@@ -68,8 +68,8 @@ def num2word(num: int) -> str:
 
 
 _UNIT_TO_LATEX = {
-    "deg2": "deg$^{\\rm 2}$",
-    "deg2m2": "deg$^{\\rm 2}$\\,m$^{\\rm 2}$",
+    "deg2": "deg$^2$",
+    "deg2m2": "deg$^2$\\,m$^2$",
     "inverse pixels": "pixel$^{-1}$",
 }
 
