@@ -258,7 +258,8 @@ class DcrEffect:
         # Calculate the differential refraction
         print("Calculate Differential Refraction (Blackbody)")
         self.differentialRefractionBlackbody = self.computeDifferentialRefraction(self.effectiveWavelength,
-                                                                                  refWavelength[0])
+                                                                                  refWavelength[0],
+                                                                                  finalMatchedDf['elevation'])
 
         # Save results
         print("Append Calculated Values to Final Table")
@@ -432,10 +433,10 @@ class DcrEffect:
 
         parallacticAngle = calculateImageParallacticAngle(visitInfo, wcs)
 
-        dx = refX - srcX
-        dy = refY - srcY
+        dx = srcX - refX
+        dy = srcY - refY
         amplitude = [np.sqrt(x**2 + y**2)*wcs.getPixelScale() for (x, y) in zip(dx, dy)]  # as an Angle
-        angle = [lsst.geom.Angle(np.arctan2(y, x) + (np.pi / 2)) for (x, y) in zip(dx, dy)]
+        angle = [lsst.geom.Angle(np.arctan2(x, y)) for (x, y) in zip(dx, dy)]
         perpendicular = [
             amp * np.sin(float(ang - parallacticAngle))
             for (amp, ang) in zip(amplitude, angle)
@@ -450,6 +451,7 @@ class DcrEffect:
 
         astrometry["perpendicular"] = [p.asArcseconds() for p in perpendicular]
         astrometry["parallel"] = [p.asArcseconds() for p in parallel]
+        astrometry["elevation"] = elevation.asDegrees()
 
         return astrometry
 
@@ -572,7 +574,7 @@ class DcrEffect:
 
         return refStart - refractionRef
 
-    def computeDifferentialRefraction(self, wavelengths, referenceWavelength):
+    def computeDifferentialRefraction(self, wavelengths, referenceWavelength, elevations):
         """Compute the expected shift in apparent position due to
         wavelength-dependent atmospheric refraction, the differential chromatic
         refraction offset, for each source based on its effective and
@@ -586,18 +588,19 @@ class DcrEffect:
         referenceWavelength : `float`
             Reference wavelength derived from the average blackbody
             temperatures.
+        elevations : `list` of `float`
+            Elevation of the visit for each source, in degrees.
 
         Returns
         -------
         dRefraction : `numpy.array`
             Array of differential refraction values for each source.
         """
-        refractionRef = refraction(referenceWavelength, self.elevation, self.observatory)
-
         dRefraction = np.array([
-            self.diffRefraction(w, self.elevation, self.observatory,
-                                refractionRef=refractionRef).asArcseconds()
-            for w in wavelengths
+            self.diffRefraction(w, el*lsst.geom.degrees, self.observatory,
+                                refractionRef=refraction(referenceWavelength, el*lsst.geom.degrees,
+                                                         self.observatory)).asArcseconds()
+            for w, el in zip(wavelengths, elevations)
         ])
         return dRefraction
 
