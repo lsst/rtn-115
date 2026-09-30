@@ -165,7 +165,7 @@ There are a total of \ndifferenceimages Difference Images in DP2, one for each V
 
 \subsection{Catalogs}
 \label{ssec:catalogs}
-Catalogs contain data for detections in the images described in \secref{ssec:scienceimages}, except the \texttt{Calibration} catalog, which contains reference data obtained from previous surveys.
+Catalogs contain data for detections in the images described in \secref{ssec:scienceimages}, except the Calibration catalog, which contains reference data obtained from previous surveys.
 Observatory-produced \gls{metadata} tables are described in \secref{ssec:metadata}.
 Rubin adopts a naming convention in which  the term ``object" refers to an astrophysical object, whereas the term ``source" refers to a single-\gls{epoch} detection of that object.
 As such, sources are associated with detections in single-epoch \gls{Visit} Images and Difference Images, whereas objects are associated with detections in multiepoch coadds.
@@ -224,10 +224,10 @@ The objects reported in the \gls{Object} catalog have also undergone deblending;
 As with the Source catalog, the criterion for inclusion in the \gls{Object} catalog is a $>5\sigma$ detection in one of the Deep Coadds prior to deblending, yet the positions and fluxes of objects are reported postdeblending.
 Hence, it is possible for the Object catalog to contain objects whose \gls{flux}-to-error ratios are less than five in all bands.
 
-In addition to the general information mentioned above (i.e., IDs, positions, fluxes, and flags), the \texttt{Object} catalog also includes basic \gls{shape} and extendedness information.
+In addition to the general information mentioned above (i.e., IDs, positions, fluxes, and flags), the Object catalog also includes basic \gls{shape} and extendedness information.
 While they may be included in future Data Releases, no photometric redshifts, Petrosian magnitudes \citep[][]{1976ApJ...209L...1P}, proper motions or periodicity information are included in the DP2 object catalogs.
 
-The \texttt{Object} catalog contains data for \nobjects objects in \gls{DP2}.
+The Object catalog contains data for \nobjects objects in \gls{DP2}.
 
 \subsubsection{DIA Object}
 \label{sssec:diaobject}
@@ -251,7 +251,7 @@ Unless there is strong justification to do otherwise, we recommend using the for
 This is because contamination from even non-varying neighbouring sources can introduce an apparent variation \texttt{psfFlux} flux due to changes in the PSF between visits.
 In contrast, \texttt{psfDiffFlux} is less sensitive to contamination from neighboring sources, as non-varying sources are subtracted-out in difference images.
   
-In addition to forced photometry \gls{PSF} fluxes, a number of Boolean flags are also included in the \texttt{Forced Source catalog}.
+In addition to forced photometry \gls{PSF} fluxes, a number of Boolean flags are also included in the Forced Source catalog.
 
 The Forced \gls{Source} catalog contains a total of \nforcedsources entries across the \nobjects unique objects.
 
@@ -428,7 +428,7 @@ It is only available via the Qserv database (\secref{sssec:qserv}).
 %\figref{fig:comcam_standard_bandpasses} shows the full-system throughput of the six \gls{LSSTCam} filters.
 The corresponding transmission curves are provided as a \gls{DP2} data product.
 These datasets tabulate the full-system transmission of the six \gls{LSSTCam} filters as a function of wavelength and were used as a reference for the \gls{LSSTCam} DP2 photometry.
-The \texttt{standard\_passband} dataset is keyed by band and is stored in Astropy table format.
+The Standard Passband dataset is keyed by band and is stored in Astropy table format.
 
 \subsubsection{Object Scarlet Models}
 The \gls{Object} Scarlet Models dataset stores the scarlet models fit to each deblended detection in the Deep Coadd images.
@@ -504,23 +504,23 @@ The photon transfer curves (\glspl{PTC}), one per detector, that describe how th
 
 \subsection{Metadata}
 \label{ssec:metadata}
-\subsubsection{Visit}
+\subsubsection{Visit catalog}
 \label{sssec:visitcatalog}
-The \texttt{Visit} catalog contains technical data for each visit collected at the time of observation, such as telescope pointing, \gls{camera} rotation, airmass, exposure start and end time, and total exposure time.
-Some of the information contained within the \texttt{Visit} catalog is also contained in the Visit Detector catalog described below (e.g., exposure time), although the latter also includes information produced by the processing pipelines at the per-detector level, such as the \gls{PSF} size and limiting magnitudes of a given Visit Image.
+The Visit catalog contains technical data for each visit collected at the time of observation, such as telescope pointing, \gls{camera} rotation, airmass, exposure start and end time, and total exposure time.
+Some of the information contained within the Visit catalog is also contained in the Visit Detector catalog described below (e.g., exposure time), although the latter also includes information produced by the processing pipelines at the per-detector level, such as the \gls{PSF} size and limiting magnitudes of a given Visit Image.
 
-The \gls{Visit} catalog contains \nvisitrows entries.
+The Visit catalog contains \nvisitrows entries.
 
-\subsubsection{Visit Detector}
+\subsubsection{Visit Detector catalog}
 \label{sssec:visitdetector}
-The \gls{Visit} Detector catalog contains summary information for all \gls{Visit} Images in DP2.
+The Visit Detector catalog contains summary information for all Visit Images in DP2.
 In addition to technical information, such as the on-sky coordinates of the central pixel and measured pixel scale, the Visit Detector catalog contains a range of data quality measurements, such as whole-image summary statistics for the \gls{PSF} size, zero-point and 5$\sigma$ depth, sky background, sky noise, and the quality of astrometric solution.
-It provides an efficient method to access the properties of a \gls{Visit} Image without needing to access the image data.
-When combined with the data contained in the \gls{Visit} table described above, it provides a full picture of the telescope pointing and sky conditions at the time of observation.
+It provides an efficient method to access the properties of a Visit Image without needing to access the image data.
+When combined with the data contained in the Visit table described above, it provides a full picture of the telescope pointing and sky conditions at the time of observation.
 
-The \gls{Visit} Detector catalog contains \nvisitdetectorrows entries.
+The Visit Detector catalog contains \nvisitdetectorrows entries.
 
 \subsubsection{Visit Summary}
 \label{sssec:visitsummary}
-The \gls{Visit} Summary table contains the same information as the \gls{Visit} Detector catalog, but only for a single visit.
-There is one \gls{Visit} Summary table per visit (meaning the \gls{Visit} Detector table is the collation of all the \gls{Visit} Summary tables), and they are only available via the Data Butler.
+The Visit Summary table contains the same information as the Visit Detector catalog, but only for a single visit.
+There is one Visit Summary table per visit (meaning the Visit Detector table is the collation of all the Visit Summary tables), and they are only available via the Data Butler.
