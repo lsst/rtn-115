@@ -151,11 +151,18 @@ Observations were typically acquired in sequences of at least 10 visits per band
 Several of these fields, including \gls{COSMOS}, M49, the Prawn Nebula region, and Rubin\_SV\_225\_-40, received substantial numbers of visits and are among the most deeply observed regions in \gls{DP2}.
 The \gls{COSMOS} field was first observed as part of the small-field campaign but was not accessible during the main \gls{SV} survey period; additional observations were later acquired during the Early Operations phase.
 
-A summary of the data collected during the small-field surveys, including visit counts and median delivered image quality expressed as the \gls{PSF} \gls{FWHM}, is provided in \tabref{tab:dp2_sf_visits}
+%A summary of the data collected during the small-field surveys, including visit counts and median delivered image quality expressed as the \gls{PSF} \gls{FWHM}, is provided in \tabref{tab:DP2_ddf_m5_depths}
+%
+%
+%
+%\input{tables/dp2_sf_visits}
+
+\tabref{tab:dp2_sf_m5_depths} reports the 5$\sigma$ point--source depths for coadded images per field and per band, where coverage in a band is nonzero,
+% together with the expected 10 yr LSST depths derived from the baseline simulated survey \citep[][]{2022ApJS..258....1B}.
 
 
 
-\input{tables/dp2_sf_visits}
+\input{tables/dp2_sf_m5_depths}
 
 % SV commissioning surveys
 \subsubsection{Science Validation Surveys}
@@ -174,6 +181,8 @@ As a result, median visit counts and coadded depth increase substantially toward
 %\tabref{tab:sv_wide_observations}  provides the median numbers of visits and estimated m\_5 coadded depths within each of the subsets of the wide SV area.
 %\input{tables/dp2_wfd_visits}
 
+
+
 % Deep survey
 The Deep Survey targeted four of the five planned \gls{LSST} \gls{DDF}s:\gls{ECDFS}, \gls{EDFS} (fields A and B), ELAISS1, and \gls{COSMOS}.
 The \gls{FBS} interleaved \gls{DDF} observations with the wide survey, scheduling visits to each field according to the prescribed \gls{DDF} observing cadence.
@@ -181,9 +190,13 @@ ELAISS1 received the largest number of visits, 539 across all six $ugrizy$ bands
 \gls{COSMOS} was not accessible during the \gls{SV} period as described above.
 The remaining \glspl{DDF} were observed primarily in $griz$, as the $u$ and $y$ filters were unavailable after 2025-08-10 due to a hardware issue with the filter exchanger.
 The dither pattern for the \glspl{DDF} evolved during the campaign; early observations used only small translational dithers with no intra-night rotation, while later observations introduced both translational and rotational intra-night dithers.
-\tabref{tab:dp2_ddf_visits}  provides the median numbers of visits within each of the subsets of the wide SV area.
+%\tabref{tab:dp2_ddf_visits}  provides the median numbers of visits within each of the subsets of the wide SV area.
+%
+%\input{tables/dp2_ddf_visits}
 
-\input{tables/dp2_ddf_visits}
+\tabref{tab:dp2_ddf_m5_depths} reports the 5$\sigma$ point--source depths for coadded images per field and per band, where coverage in a band is nonzero.
+
+\input{tables/dp2_ddf_m5_depths}
 
 % Early ops operations
 \subsubsection{Early Operations Observations}
@@ -199,16 +212,17 @@ The $i$ band was preferred  due to its high throughput and suitability for diffe
 A concentrated block of $i$-band observations in late October 2025 reflected deliberate \gls{AOS} engineering tests that held the filter fixed to isolate optical state changes from filter-induced perturbations, producing the prominent $i$-band coverage regions visible in
 \figref{fig:dp2_sky}.
 Pre-\gls{LSST} visits not overlapping existing \gls{SV} survey regions were not combined into coadds but are included in the \gls{DP2} visit dataset.
+\todo{Say something about the non-coadded area}
 
 % Describe the processing if the science program observations
 \subsection{Data Processing}
 \label{ssec:data processing}
 %
 The Rubin \gls{DMS} is responsible for the acquisition, transfer, archiving, processing, and distribution of all data produced by the observatory.
-It operates as a fully automated end-to-end system, ingesting raw pixels from the \gls{LSSTCam} focal plane within seconds of shutter close and delivering science-ready data products to a global community of researchers within 120 secs.
+It operates as an automated end-to-end system with minimal human intervention,  ingesting raw pixels from the \gls{LSSTCam} focal plane within seconds of shutter close and delivering science-ready data products to a global community of researchers within 120 secs of shutter close.
 
 The data products in \gls{DP2} are the result of \gls{DRP} (\secref{sec:drp}), which reprocesses the full accumulated image archive to produce the deep, well-calibrated data products that form the basis of each Data Release,  and are delivered to the community via the \gls{RSP} (\secref{sec:data_services}).
-During the \gls{LSSTCam} commissioning campaign, the \gls{DMS} was operated at full scale for the first time, transferring, archiving, and processing all \gls{LSSTCam} images and validating the end-to-end data flow from summit to \gls{RSP}.
+During the \gls{LSSTCam} commissioning campaign, the \gls{DMS} was operated at full scale for the first time, transferring, archiving, and processing all \gls{LSSTCam} images,  and validating the end-to-end data flow from summit to \gls{RSP}.
 
 % Includes rapid analysis and quick look
 \subsubsection{Data Acquisition, Transfer and Archive}
@@ -218,7 +232,7 @@ Uncompressed, a full science exposure totals $\sim$\,8.2\,GB; after compression,
 
 At the summit, each exposure is processed in near real time by the Rapid Analysis pipeline, performing \gls{ISR} (\secref{sec:drp-singlevisit-calibrationisr}) and source detection (\secref{sec:drp-singlevisit}) on a 30--60 second timescale to provide quick-look image diagnostics and support real-time \gls{AOS} assessment.
 The resulting per-visit quality metrics formed the basis of the visit quality characterisations used to define the \gls{DP2} coadd inputs.
-Summary visit and detector-level metadata are available to users as \gls{DP2} data products (\secref{ssec:metadata}) and are also available in an opsim-format SQLite database ()\secref{sssec:opsim}).
+Summary visit and detector-level metadata are available to users as \gls{DP2} data products (\secref{ssec:metadata}) and are also available in an opsim-format SQLite database \secref{sssec:opsim}).
 
 \subsubsection{LSST Science Pipelines}
 \label{ssec:pipelines}
