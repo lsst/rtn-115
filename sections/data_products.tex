@@ -280,9 +280,9 @@ Every entry in the Isolated Star Stellar Motion catalog has a unique identificat
 
 The Isolated Star Stellar Motions catalog contains \nisolatedstars entries.
 
-\subsubsection{Object Shear}
+\subsubsection{Shear Object}
 \label{sssec:objectshear}
-The Object Shear catalog contains object \gls{shape} measurements in five different shear steps or ``counterfactual'' images: one in which no shear (\texttt{ns}) has been applied, and four in which an artificial linear shear has been introduced to the image (\texttt{1p, 1m, 2p, 2m}).
+The Shear Object catalog contains object \gls{shape} measurements in five different shear steps or ``counterfactual'' images: one in which no shear (\texttt{ns}) has been applied, and four in which an artificial linear shear has been introduced to the image (\texttt{1p, 1m, 2p, 2m}).
 The artificial shears are in four different directions: 1p is along the image x-direction, 1m is along the y-direction, 2p is along the 45 degree diagonal, 2m is along the 135 degree diagonal.
 
 Two measurement algorithms (\textit{gauss} and \textit{pgauss}) are run on each of the five different counterfactuals, one for measuring shapes and the other for fluxes.
@@ -290,9 +290,9 @@ The first approach is to fit a single \gls{2D} gaussian jointly across the $r$-,
 The second approach measures \gls{2D} gaussian-weighted moments and is used to measure fluxes in the $g$, $r$, $i$, and $z$ bands (e.g., \texttt{r\_pgaussFlux}); it does not provide ellipticity measurements.
 There is one row per object detected in each counterfactual, meaning a given object could result in up to five rows, depending on how many of the counterfactuals it is detected in at a significance of $>5\sigma$.\footnote{It is feasible for a marginal $5\sigma$ object in one counterfactual to be just below the $5\sigma$ detection threshold in another counterfactual.}
 
-In addition to the gaussian shape measurements and their covariances, the Object Shear table also contains object positional information, fluxes measured from both the gaussian fits and the gaussian moments ($g$, $r$, $i$ and $z$ bands), \gls{PSF} shapes reported in the same x-y and diagonal directions as objects, a range of different flags.
-Each entry in the Object Shear catalog also has a unique identification number (\texttt{shearObjectId}), that uniquely identifies a given detection in a given counterfactual.
-The \gls{Object} Shear catalog contains \nshearobjects rows.
+In addition to the gaussian shape measurements and their covariances, the Shear Object table also contains object positional information, fluxes measured from both the gaussian fits and the gaussian moments ($g$, $r$, $i$ and $z$ bands), \gls{PSF} shapes reported in the same x-y and diagonal directions as objects, a range of different flags.
+Each entry in the Shear Object catalog also has a unique identification number (\texttt{shearObjectId}), that uniquely identifies a given detection in a given counterfactual.
+The Shear Object catalog contains \nshearobjects rows.
 
 \subsubsection{Solar System Source}
 \label{sssec:SSSource}
