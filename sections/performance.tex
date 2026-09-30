@@ -53,7 +53,8 @@ The tightness of these loci indicates the good quality of the band-to-band relat
 \gls{DCR} is the wavelength-dependent astrometric displacement arising from atmospheric refraction.
 The displacement is directed along the parallactic angle and increases toward shorter wavelengths, producing a color-dependent angular offset the size of which differs between bands.
 
-The presence of DCR in LSSTComCam data was previously discussed in the \gls{DP1} release paper \citep[][]{2026AJ....171..360V}. Here, we characterize the effect in LSSTCam data using two representative sky regions: the Extended Chandra Deep Field-South (ECDFS) centered at (R.A., decl.) = (53.16, -28.10) and a field near the ecliptic centred at (R.A., decl.) = (320.0, -15.0), respectively.
+The presence of DCR in LSSTComCam data was previously discussed in the \gls{DP1} release paper \citep[][]{2026AJ....171..360V}.
+Here, we characterize the effect in LSSTCam data using two representative sky regions: the Extended Chandra Deep Field-South (ECDFS) centered at (R.A., decl.) = (53.16, -28.10) and a field near the ecliptic centred at (R.A., decl.) = (320.0, -15.0), respectively.
 For each region, we consider all Deep Coadd images from tracts within 5 degrees of the field center.
 
 The extent of any displacement due to DCR is dependent on airmass, meaning that for a patch it changes at the per-visit level.  
@@ -113,21 +114,24 @@ The majority of isolated stars with magnitudes below about $21$ are in the Gaia 
 For fainter objects for which Gaia is not available, on the other hand, even well-sampled objects have proper motion uncertainties on the order of $10-20$~mas, going higher as signal to noise, sampling frequency, and the time span sampled go down.
 Regardless, for the majority of tracts, the time spanned between the first and last visits included in DP2 is less than $100$~days, meaning that proper motion and parallax measurements should be treated as a guideline for what will be available in future Data Releases, rather than a starting point for serious analyses.
 
-\subsection{Solar System Performance}\label{sec:drp-variabletransient-solar-association}
-There are 299,343 ssObjects (i.e. objects measured at least once by Rubin) in DP2, representing almost 20\% of the known solar system.
-136,608 objects are observed at least once in each `griz` band, but it is important to note that the non-simultaneous observations with different filters adds scatter from an object's light curve into the measurement of individual objects' colors.
-This can eventually be overcome by per-object light curve fitting, but most objects in DP2 have unreliable colors, and the per-band HErr measurements under-predict objects' unmodeled variability, as visible in the substantial tail of per-band Chi2/dof distribution.
+\subsection{Solar System}\label{sec:drp-variabletransient-solar-association}
+There are 299,343 ssObjects (i.e., objects measured at least once by Rubin) in DP2, representing almost 20\% of the known solar system.
+Although 136,608 objects are observed at least once in each $griz$ band, detailed analysis of asteroid colors would be premature with DP2.
+Observations with different filters are not simultaneous, meaning the objects' rotational flux variations add scatter to the measurement of their colors. 
+Given sufficient data, this can be overcome by fitting a rotational light curve for each individual object.
+However, most objects in DP2 have far too few measurements for a light-curve fit.
+Hence, individual colors and H magnitudes are uncertain at the level of rotational flux variations, which are typically much larger than the nominal uncertainty \texttt{HErr}, since the latter accounts only for the errors on instantaneous flux measurements.
 
-There are 8.1 million diaSources associated to solar system objects in DP2, representing about 2\% of all MPC measurements.
-There is a persistent $\sim30$mas bias between DP2 astrometric measurements and ephemeris positions of MPC orbits.
-When Rubin astrometry was compared instead to orbits fit only to Gaia astrometry, the $\sim30$ mas bias disappeared.
-After substantial investigation and discussion with both the MPC and JPL, we concluded that the bias is $\textbf{not}$ in Rubin astrometry (to $\le$~1mas), but in the orbit catalog.
-While $30$ mas is small, the median astrometric uncertainty on a DP2 diaSource associated with an ssSource is just 56 mas, making $30$ mas a substantial offset in the context of Rubin precision.
+The ensemble colors of the ssObjects are broadly plausible for an asteroid sample: median $g-r \sim 0.58$, $r-i \sim 0.18$, and $i-z \sim -0.01$~mag.
+Implausible outliers are rare ($\sim 0.25$\% of all color measurements) and likely result from sparse phase fits heavily affected by individual photometric outliers.
+These photometric outliers may result from self-subtraction when the template images are shallow and contain flux from the asteroid.
+Like the problem of insufficient measurements for rotational light-curve solutions, this issue of shallow templates causing self-subtraction and occasional photometric outliers should naturally disappear over future Data Releases based on larger numbers of input images.
 
-The cross-band colors of the ssObjects are broadly plausible for an asteroid sample:
-the medians are approximately $g-r=0.58$, $r-i=0.18$, and $i-z=-0.01$~mag.
-The tails are driven by sparse fits: of 721 objects with $|g-r|>3$~mag, 716
-have only two to five $g$ observations and none has more than ten.
+There are 8.1 million diaSources associated with solar system objects in DP2, representing about 2\% of all MPC measurements.
+There is a persistent $\sim30$~mas bias between DP2 astrometric measurements and ephemeris positions of MPC orbits.
+When Rubin astrometry was compared instead to orbits fit only to Gaia astrometry, the $\sim30$~mas bias disappeared.
+After substantial investigation and discussion with both the MPC and JPL, we concluded that the bias is \textbf{not} in Rubin astrometry (to $\le$~1~mas), but in the orbit catalog.
+While $30$~mas is small, the median astrometric uncertainty on a DP2 diaSource associated with an ssSource is just 56~mas, making $30$~mas a substantial offset in the context of Rubin precision, thus highlighting the extent to which Rubin astrometry can improve asteroid orbits over time.
 
 \subsection{Crowded Fields}
 Crowded fields represent a key challenge for the LSST Science Pipelines, pushing the current limits of source detection, deblending, and photometry.
@@ -163,7 +167,7 @@ The pipeline is currently undergoing testing, with integration into the LSST Sci
 \caption{Distribution of \texttt{gauss\_g1} (blue shaded histogram) and \texttt{gauss\_g2} (orange shaded histogram) values for the \gls{ShearObject} catalog's no-shear subcatalog; overlapping histograms appear as gray shading.
 The mean values of \texttt{gauss\_g1} and \texttt{gauss\_g2} are marked as colored vertical dashed lines (see legend); the black dashed line indicates zero.
 Over large areas such as those covered by DP2, the mean shear should be zero.
-While small, the mean shears are significantly non-zero.
+While small, the mean shears are significantly nonzero.
 We currently attribute this offset to objects in the tails of the distribution, which are typically associated with bright stars and nearby galaxies.
 }
 \label{fig:dp2_object_shear_mean}
@@ -173,7 +177,7 @@ It contains the lensing shear measured as ellipticity on the no-shear counterfac
 A full validation of the Shear Object catalog is beyond the scope of this paper and will be the focus of follow-up studies.
 Nevertheless, a basic check is possible by exploiting the expectation that over large areas such as those covered by DP2, the mean shear of the no-shear counterfactual should be zero.
 We therefore measure the mean \texttt{gauss\_g1} of detections in the no-shear counterfactual, after excluding any with a flag set or with \texttt{is\_primary=False}.
-In doing so, we obtain a mean \texttt{gauss\_g1} value that, while small, is significantly non-zero.
+In doing so, we obtain a mean \texttt{gauss\_g1} value that, while small, is significantly nonzero.
 This offset persists when we restrict to the best detections (\texttt{mfrac<0.1} and \texttt{gauss\_snr>10}) and when we apply inverse-variance weights to downweight fainter detections.
 Following further investigation, we attribute this offset to objects in the tails of the \texttt{gauss\_g1} distribution, which, from visual inspection, are typically bright stars and nearby galaxies.
 Such objects may therefore need to be masked out by hand prior to any shear analysis.
