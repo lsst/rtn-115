@@ -13,6 +13,8 @@ dependencies = [
     "numpy",
     "pandas",
     "scipy",
+    "statsmodels",
+    "matplotlib",
     "lsst-daf-butler",
     "greenlet==3.5.2",
     "lsst-utils",
