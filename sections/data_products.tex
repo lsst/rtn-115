@@ -46,6 +46,7 @@ In the case of DP2 Deep Coadds, there are {\ncellx$\times$\ncelly} cells per \gl
 There is no overlap between neighboring cells.
 
 \subsection{Science Images}
+\todo{Where XXX is shown as the number of datasets, this is because the code to calculate this was crashing on the \texttt{data-int} RSP. This will be fixed.}
 \label{ssec:scienceimages}
 Science images are images taken with the intent of scientific analysis of astronomical objects, as opposed to \gls{calibration} images (e.g., bias, darks, flats) or engineering images, which serve to calibrate or test the instrument and telescope regardless of whether they happen to be pointed at the night sky.
 \gls{DP2} provides all images in the acquisition and processing chain, from the raw, unprocessed science and calibration images through to fully calibrated visit images, coadds, and template images.
@@ -69,6 +70,7 @@ These sections are evident in the Raw Images.
 Despite \gls{LSSTCam} containing detectors from two different vendors, all Raw Images have the same dimensions: \nrawpixx $\times$ \nrawpixy pixels.
 However, the two types of detectors have slightly different numbers of overscan and pre-scan pixels, meaning the number of exposed pixels differs between detector type.
 This difference is reflected in the dimensions of the \gls{Visit} Images (\secref{sssec:visitimages}), which have had the prescan and overscan regions removed during data processing.
+
 There are a total of \nraws Raw Images in DP2.
 %In terms of on-disk size, a single raw image file is typically around {\bf \color{red} rawhddsize}.
 
@@ -85,6 +87,7 @@ Unlike raw images, \gls{Visit} Images consist of three image planes: a science i
 The science image is the processed exposed image, whereas the variance image persists the uncertainty associated with the value of the corresponding pixel in the science image.
 The mask image indicates pixels that are flagged for various different reasons, such as saturated pixels, pixels associated with detected sources, bad pixels, etc.
 All three images contain the same number of pixels in each dimension.
+
 There are a total of \nvisitimages Visit Images in DP2.
 
 \subsubsection{Coadds}
@@ -285,7 +288,7 @@ The artificial shears are in four different directions: 1p is along the image x-
 
 Two measurement algorithms (\textit{gauss} and \textit{pgauss}) are run on each of the five different counterfactuals, one for measuring shapes and the other for fluxes.
 The first approach is to fit a single \gls{2D} gaussian jointly across the $r$-, $i$-, and $z$-band deep coadd images, with the ellipticity components in the image x-y (\texttt{gauss\_g1}) and diagonal (\texttt{gauss\_g2}) directions reported in the catalog.
-The second approach measures \gls{2D} gaussian-weighted moments and is used to measure fluxes in the $g$, $r$, $i$, and $z$ bands (e.g., \texttt{r\_pgaussFlux}); it does not provide ellipticity measurements.
+The second approach measures \gls{2D} gaussian-weighted moments in the $g$, $r$, $i$, and $z$ bands (e.g., \texttt{r\_pgaussFlux}). Like the \gls{GAaP} fluxes in the Object catalog, these are designed to provide consistent colors across bands rather than total fluxes; the second approach does not provide ellipticity measurements.
 There is one row per object detected in each counterfactual, meaning a given object could result in up to five rows, depending on how many of the counterfactuals it is detected in at a significance of $>5\sigma$.\footnote{It is feasible for a marginal $5\sigma$ object in one counterfactual to be just below the $5\sigma$ detection threshold in another counterfactual.}
 
 In addition to the gaussian shape measurements and their covariances, the Shear Object table also contains object positional information, fluxes measured from both the gaussian fits and the gaussian moments ($g$, $r$, $i$ and $z$ bands), \gls{PSF} shapes reported in the same x-y and diagonal directions as objects, a range of different flags.
