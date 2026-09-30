@@ -114,7 +114,7 @@ The depth of coadds can be estimated in several different ways, as well as separ
 One method is to simply measure statistics like the median/mean magnitude of objects in a narrow range of significance, i.e. at $5\sigma \pm 0.1\sigma$.
 One drawback of this method is that uncertainties in coadd fluxes are typically underestimated, and by a larger factor for extended objects.
 Nonetheless, it is fairly straightforward to implement this method and correct the error estimation, at least for point sources.
-TODO: This is still listed as a TODO in \secref{sssec:sv_surveys}.
+\todo{This is still listed as a TODO in \secref{sssec:sv_surveys}.}
 
 Injecting synthetic objects into real data is another method that was used for DP1.
 However, the switch to cell-based coadds necessitated changes to the injection methodology for DP2 and a large-scale injection campaign has not yet been completed.
@@ -156,7 +156,7 @@ One of the main improvements in DP2 galaxy measurements is the use of an exponen
 While there are still some overly large galaxy outliers, the proportion is fairly small.
 The 99.5th percentile size increases slightly from 18th to 22nd magnitude, where the outliers are most problematic, but falls for fainter objects.
 This is likely partly due to improved deblending as well - the Gaussian model in \gls{ShearObject}, which does limited masking of neighbors rather than multi-object modelling, has a considerably larger fraction of ``superspreaders''.
-TODO: Not sure if we want to be more quantitative about this; I can produce figures but it may be TMI.
+\todo{Not sure if we want to be more quantitative about this; I can produce figures but it may be TMI.}
 
 Using \texttt{griz\_model\_extendedness}, the S\'ersic sizes of stars are also consistently smaller than galaxies until 25th magnitude.
 At 24th magnitude, however, the number counts of stars drop precipitously, as the classifier's completeness drops to maintain purity.
@@ -288,5 +288,5 @@ We consider a selection of $i$-band images from the deep ECDFS field for this in
 We inject both ``hosted'' and ``hostless'' synthetic sources, i.e., point sources embedded in a host galaxy and isolated point sources, each with randomly sampled size and brightness.
 The hosted sources additionally have randomly selected positions within their host galaxy and position angles.
 
-\textit{TODO: Bruno and Meredith are working on this fake injection campaign and will write up results soon.
+\todo{Bruno and Meredith are working on this fake injection campaign and will write up results soon.
 We should be able to generate 2--3 figures similar to DP1~\citep[][]{rtn-095} Figures 37, 38, and 39.}
