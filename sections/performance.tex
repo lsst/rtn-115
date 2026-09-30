@@ -161,7 +161,7 @@ The pipeline is currently undergoing testing, with integration into the LSST Sci
 \begin{figure*}[htb!]
 \plotone{dp2_object_shear_mean}
 \caption{Distribution of \texttt{gauss\_g1} (blue shaded histogram) and \texttt{gauss\_g2} (orange shaded histogram) values for the \gls{ShearObject} catalog's no-shear subcatalog; overlapping histograms appear as gray shading.
-The mean values of \texttt{guass\_g1} and \texttt{guass\_g2} are marked as colored vertical dashed lines (see legend); the black dashed line indicates zero.
+The mean values of \texttt{gauss\_g1} and \texttt{gauss\_g2} are marked as colored vertical dashed lines (see legend); the black dashed line indicates zero.
 Over large areas such as those covered by DP2, the mean shear should be zero.
 While small, the mean shears are significantly non-zero.
 We currently attribute this offset to objects in the tails of the distribution, which are typically associated with bright stars and nearby galaxies.
@@ -180,6 +180,14 @@ Such objects may therefore need to be masked out by hand prior to any shear anal
 
 Further validation of the Shear Object catalog can be performed by matching the no-shear catalog to the \gls{Object} catalog.
 We stress that this is suitable for validation only; matching reintroduces the selection biases that metadetection is designed to remove, so the Shear Object subcatalogs must not be matched to one another or to the Object catalog in any shear analysis.
-For this check, we compare the \texttt{pgauss} fluxes of the no-shear catalog to the \gls{GAaP} fluxes in the \gls{Object} catalog.
+For this check, we compare the \texttt{pgauss} $g-i$ color of the no-shear catalog to the \gls{GAaP} $g-i$ colors in the \gls{Object} catalog.
 As these are designed to measure comparable quantities, we expect the two to largely agree, so any major disagreement would point to a problem with one of the two measurements.
-This comparison, shown in \figref{fig:XXX}, reveals a high level of agreement \todo{quantify}.
+This comparison, shown in \figref{fig:dp2_shear_pgauss_gaap}, reveals good agreement for $r \lesssim 23$, with a median offset (GAaP $-$ \texttt{pgauss}) of $\sim -20$~mmag; at fainter magnitudes, both the offset and the scatter increase.
+
+\begin{figure}[htbp]
+\plotone{dp2_shear_pgauss_gaap}
+\caption{Comparison of $g-i$ colors measured with the \texttt{pgauss} algorithm in the no-shear \gls{ShearObject} catalog and with 1\farcs0 \gls{GAaP} photometry in the matched \gls{Object} catalog, as a function of $r$-band \texttt{pgauss} magnitude.
+The main panel shows the color difference (GAaP $-$ \texttt{pgauss}) in mmag, with the density of objects shown as shaded hexagonal bins and individual objects shown as points in sparsely populated regions.
+The solid black line shows the running median and the dashed lines show the running $\sigma_{\rm MAD}$; the dotted line marks zero difference.
+The top and right panels show the distributions of $r$-band magnitude and color difference, respectively. \label{fig:dp2_shear_pgauss_gaap}}
+\end{figure}
