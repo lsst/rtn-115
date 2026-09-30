@@ -98,7 +98,10 @@ Following \gls{background} subtraction, the median and standard deviation of all
 
 \subsection{Calibration} \label{sec:drp-calibration}
 
-\alex{Add an intro paragraph here on star selection for calibration (PSF modeling, photometric calibration, and astrometric calibration), reworded from the DP1 description of detecting stars per post-ISR image at $5\sigma$ and associating repeat detections into a consistent isolated-star sample.}
+Calibration of the data consists of estimation and modeling of the point-spread function (PSF), photometric calibration, and astrometric calibration.
+Calibration is performed using repeatedly detected isolated sources in visit images, detected using a 5$\sigma$ threshold on the post-ISR images with the background subtracted.
+Initial astrometric and photometric solutions are derived using only the Calibration Reference Catalog (\secref{sssec:referencecatalog}).
+Approximate solutions for source positions, fluxes, and PSF shapes are iteratively refined into the final astrometric, photometric, and PSF models described in the following sections.
 
 \subsubsection{PSF Modeling} \label{sec:drp-calibration-psfmodeling}
 
@@ -117,15 +120,10 @@ Previous comparisons have shown that Piff outperforms PSFEx by delivering an unb
 
 In the initial \gls{PSF} modeling pass, PSFEx is run with a pixel basis and
 a second-order polynomial interpolation on each \gls{CCD}.
-For the final modeling,
-Piff uses its PixelGrid with a fourth-order polynomial interpolation per
+For the final modeling, Piff uses its \texttt{PixelGrid} with a fourth-order polynomial interpolation per
 \gls{CCD}—except in the $u$-band, where star counts are too low to constrain a
 fourth-order fit, so a second-order polynomial is used instead.
-Both are
-working in pixel coordinates.
-
-\alex{Reword this paragraph so that it is not word-for-word from the DP1 paper.}
-%Choices of polynomial order, overall PSF-modeling performance, and known issues are discussed in \secref{sec:performance}.
+Both fits are performed in pixel coordinates.
 
 
 \subsubsection{Astrometric Calibration} \label{sec:drp-calibration-astrometry}
@@ -166,8 +164,7 @@ These were taken in a grid with 159 positions, at 5 incidence angles from 13.8 t
 We performed an averaging procedure to get the approximate appropriate throughput for the \gls{LSSTCam} beam as it intersects the filter at the central location of each detector.
 For the \gls{LSSTCam} detector \gls{QE} curves, we start with per-raft measurements of the QE performed at \gls{BNL} and \gls{SLAC} at 10 to 25 wavelength steps.
 These preliminary scans were then normalized relative to each other at 750 nm.
-However, there are still some per-raft systematic differences seen, particularly in the u and y bands.
-\alex{Follow up with Eli on the origin of this---likely temperature differences between testing campaigns.}
+However, there are still some per-raft systematic differences seen, particularly in the u- and y-bands.
 In the future we will use the in-dome tunable laser system and the \gls{CBP} for improved filter and detector throughputs.
 
 The FGCM atmosphere model, provided by MODTRAN~\citep[][]{1999SPIE.3756..348B}, generates a look-up table of atmospheric throughput as a function of zenith distance at Cerro Pach\'on, accounting for absorption and scattering by molecular constituents of the atmosphere (including O2 and O3), absorption by water vapor, and Mie scattering by airborne aerosol particulates.
@@ -304,12 +301,10 @@ No cuts were applied on reliability for the \gls{DP2} \texttt{DIASource} catalog
 
 \subsubsection{Light Curves} \label{sec:drp-variabletransient-lightcurves}
 
-\alex{Check and record the light curves section---nothing to do here yet.}
-
-As with DP1, multiepoch forced photometry is performed on both the \gls{Visit} Images and the difference images.
-For users interested in light curve construction, we recommend using the \gls{forced photometry} performed on the difference-images (the \texttt{psfDiffFlux} column of the ForcedSource table), since this measurement isolates the time-variable component of the flux and is unaffected by contamination from non-varying nearby sources.
-Forced photometry carried out directly on the \gls{Visit} Images, by contrast, may pick up flux from blended or nearby static objects, and the severity of this contamination depends on the seeing.
-The centroids adopted for this multiepoch \gls{forced photometry} step are drawn either from coadd-based object positions or from the DIAObjects, which are constructed from the DIASources associated from detections in the difference images.
+Light curves are compiled from multiepoch forced photometry performed on both the \gls{Visit} Images and the difference images.
+The \gls{forced photometry} performed on the difference-images (the \texttt{psfDiffFlux} column of the ForcedSource table) measures only the time-variable component of the flux without contamination from static nearby sources.
+Forced photometry carried out directly on the \gls{Visit} Images can pick up flux from blended or nearby static objects, and the severity of this contamination depends on the seeing.
+The centroids of objects with multi-epoch \gls{forced photometry} are drawn either from coadd-based object positions or from the DIAObjects, which are constructed from the DIASources associated from detections in the difference images.
 
 \subsection{Solar System}
 \subsubsection{Source Association}
