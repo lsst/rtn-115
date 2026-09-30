@@ -78,6 +78,27 @@ class CopyeditRuleTestCase(unittest.TestCase):
     def test_sim_thin_space_already_correct(self) -> None:
         self.assertEqual(self._hits("sim-thin-space", r"$\sim$\,~27"), 0)
 
+    def test_sim_math_mode_bare(self) -> None:
+        self.assertEqual(
+            self._apply("sim-math-mode", r"about \sim8 visits"),
+            r"about $\sim$8 visits",
+        )
+
+    def test_sim_math_mode_inside_math_untouched(self) -> None:
+        # \sim already inside an inline math expression must not be re-wrapped.
+        text = r"median $g-r \sim 0.58$, $r-i \sim 0.18$, and $i-z \sim -0.01$~mag."
+        self.assertEqual(self._hits("sim-math-mode", text), 0)
+
+    def test_sim_all_rules_leave_inline_math_alone(self) -> None:
+        # Regression test: the full rule set previously turned
+        # "$g-r \sim 0.58$" into broken nested math "$g-r $\sim$\,0.58$".
+        text = r"median $g-r \sim 0.58$, $r-i \sim 0.18$, and $i-z \sim -0.01$~mag."
+        result = text
+        for rule in self.rules.values():
+            if not rule["audit_only"]:
+                result, _ = apply_rule(result, rule)
+        self.assertEqual(result, text)
+
     # --- dataset ---------------------------------------------------------
 
     def test_dataset(self) -> None:

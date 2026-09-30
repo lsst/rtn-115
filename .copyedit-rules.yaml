@@ -298,8 +298,11 @@ rules:
     # ASCII whitespace between \sim and the digit so all spacing variants are
     # caught. The lookbehind excludes \sim that is already inside $\sim$.
     # Must run before sim-digit-thin-space so $..$ wrapping is in place.
+    # skip_inside_math: \sim already inside $...$ (e.g. "$g-r \sim 0.58$") must
+    # not be wrapped again, which would produce broken nested math.
     pattern: '(?<!\$)\\sim(?=(?:\\,|~|\s)*\d)'
     replacement: '$\\sim$'
+    skip_inside_math: true
     note: 'Bare \sim used as "approximately" must be in math mode: "\sim8" → "$\sim$8".'
 
   - name: sim-outside-math
@@ -309,6 +312,7 @@ rules:
     # Negative lookahead (?!\$) avoids matching display math ($$…$$).
     pattern: '(?<!\$)\\sim\$(?!\$)'
     replacement: '$\\sim\\,'
+    skip_inside_math: true
     note: 'Merge \sim into the following $…$: \sim$3,000\,deg^2$ → $\sim\,3,000\,deg^2$.'
 
   - name: sim-thin-space

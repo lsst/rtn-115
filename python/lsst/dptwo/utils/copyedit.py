@@ -21,6 +21,10 @@ def load_rules(path: Path) -> list[dict]:
                                      this expression are excluded from the rule
                                      (used to leave LaTeX section/caption titles
                                      alone while still rewriting body prose).
+      skip_inside_math            -- optional bool. If true, matches that start
+                                     inside inline math ($...$) are left alone
+                                     (e.g. so "\\sim" in "$g-r \\sim 0.58$" is not
+                                     re-wrapped in $...$).
     """
     data = yaml.safe_load(path.read_text()) or {}
     out: list[dict] = []
@@ -34,6 +38,7 @@ def load_rules(path: Path) -> list[dict]:
                 "note": r.get("note", ""),
                 "audit_only": bool(r.get("audit_only", False)),
                 "skip_lines_matching": re.compile(skip) if skip else None,
+                "skip_inside_math": bool(r.get("skip_inside_math", False)),
             }
         )
     return out
@@ -57,9 +62,27 @@ def _in_skip(pos: int, ranges: list[tuple[int, int]]) -> bool:
     return any(s <= pos < e for s, e in ranges)
 
 
+def _math_ranges(text: str) -> list[tuple[int, int]]:
+    """Return (start, end) ranges of the *contents* of inline math ``$...$``.
+
+    Unescaped ``$`` signs are paired in order; escaped ``\\$`` is ignored. The
+    delimiters themselves are excluded, so a match starting at a ``$`` is not
+    considered to be inside math.
+    """
+    dollars = [m.start() for m in re.finditer(r"(?<!\\)\$", text)]
+    return [(dollars[i] + 1, dollars[i + 1]) for i in range(0, len(dollars) - 1, 2)]
+
+
+def _all_skip_ranges(text: str, rule: dict) -> list[tuple[int, int]]:
+    ranges = _skip_ranges(text, rule["skip_lines_matching"])
+    if rule.get("skip_inside_math"):
+        ranges += _math_ranges(text)
+    return ranges
+
+
 def find_matches(text: str, rule: dict) -> list[re.Match]:
     """All matches of ``rule['pattern']`` outside any skip range."""
-    skip_ranges = _skip_ranges(text, rule["skip_lines_matching"])
+    skip_ranges = _all_skip_ranges(text, rule)
     return [
         m
         for m in rule["pattern"].finditer(text)
@@ -69,7 +92,7 @@ def find_matches(text: str, rule: dict) -> list[re.Match]:
 
 def apply_rule(text: str, rule: dict) -> tuple[str, int]:
     """Return ``(new_text, count)``. Skipped matches are left as-is."""
-    skip_ranges = _skip_ranges(text, rule["skip_lines_matching"])
+    skip_ranges = _all_skip_ranges(text, rule)
     counter = [0]
 
     def replace(m: re.Match) -> str:
