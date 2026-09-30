@@ -44,6 +44,10 @@ lsstcamsvcampaign:
       value: "2025-04-16"
     - name: svcampaignenddate
       value: "2025-09-21"
+    - name: svwfdsevenfiftystart
+      value: "2025-08-18"
+    - name: svwfdthreehundredstart
+      value: "2025-09-20"
 
 dpone:
   parameters:
