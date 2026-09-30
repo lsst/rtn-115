@@ -281,7 +281,11 @@ def imageDatasets(params: DP2Parameters) -> DP2Parameters:
     """
     log.info("Adding image dataset stats...")
 
+    # Only the dataset type (the key) is currently used by imageStats(); the
+    # data IDs are placeholders for the (commented-out) per-image stats.
     datasets = {
+        "raw": {},
+        "visit_image": {},
         "deep_coadd": {
             "band": "i",
             "skymap": "lsst_cells_v2",
@@ -294,6 +298,7 @@ def imageDatasets(params: DP2Parameters) -> DP2Parameters:
             "tract": 9813,
             "patch": 50,
         },
+        "difference_image": {},
     }
     for dataset in datasets.items():
         params = imageStats(params, dataset)

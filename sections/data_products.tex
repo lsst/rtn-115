@@ -69,14 +69,11 @@ These sections are evident in the Raw Images.
 Despite \gls{LSSTCam} containing detectors from two different vendors, all Raw Images have the same dimensions: \nrawpixx $\times$ \nrawpixy pixels.
 However, the two types of detectors have slightly different numbers of overscan and pre-scan pixels, meaning the number of exposed pixels differs between detector type.
 This difference is reflected in the dimensions of the \gls{Visit} Images (\secref{sssec:visitimages}), which have had the prescan and overscan regions removed during data processing.
+There are a total of \nraws Raw Images in DP2.
 %In terms of on-disk size, a single raw image file is typically around {\bf \color{red} rawhddsize}.
 
 \subsubsection{Visit Images}
 \label{sssec:visitimages}
-{\bf Note:} Visit Images are NOT included in \gls{EDP2}, but we describe them here as it provides useful context for the dataset types that are included in \gls{EDP2}.
-\gls{Visit} Images will be included in DP2; the number of \gls{Visit} Images in DP2 will be provided at that time.
-\vspace{3mm}
-
 \gls{Visit} Images are the first scientifically useful images to be produced by the science processing pipeline.
 They are the result of removing instrument signatures from the raw input images, followed by multiple rounds of background subtraction and photometric and astrometric \gls{calibration} (see \secref{sec:drp}).
 There is one \gls{Visit} Image for every raw input image that successfully passed through the first stage of the science processing pipelines.
@@ -88,6 +85,7 @@ Unlike raw images, \gls{Visit} Images consist of three image planes: a science i
 The science image is the processed exposed image, whereas the variance image persists the uncertainty associated with the value of the corresponding pixel in the science image.
 The mask image indicates pixels that are flagged for various different reasons, such as saturated pixels, pixels associated with detected sources, bad pixels, etc.
 All three images contain the same number of pixels in each dimension.
+There are a total of \nvisitimages Visit Images in DP2.
 
 \subsubsection{Coadds}
 \label{sssec:coadds}
@@ -143,7 +141,7 @@ These per-detector selection criteria are summarised in \tabref{tab:deepcoadd_de
 In addition to the selection criteria, another key difference between Deep and Template Coadds is that the latter are not cell-based.
 %Of the {\bf \color{red} npvi} in DP2, {\bf \color{red} ntemplatecoaddpvi} are selected to be used to create Template Coadds.
 
-In total, there are \ntemplatecoadds Template Coadds in DP2.
+There are a total of \ntemplatecoadds Template Coadds in DP2.
 
 \subsubsection{Difference Image}
 \label{sssec:difference_image}
@@ -154,9 +152,9 @@ In practice, however, many spurious sources remain due to unavoidably imprecise 
 Once a detection algorithm has been used to identify sources in the Difference Images, a real/bogus classifier attempts to distinguigh real from spurious sources.
 The outcome of the real/bogus classifier is included in the DIA Source catalog (\secref{sssec:DIASource}).
 
-In total, there are \textbf{ndifferenceimages} in DP2, one for each Visit Image.
-
 Like Visit Images, Difference Images also consist of three image planes: a science image plane, a variance plane, and a mask plane (see \secref{sssec:visitimages} for a description of each plane).
+
+There are a total of \ndifferenceimages Difference Images in DP2, one for each Visit Image.
 
 % \paragraph{Pretty Coadds}
 % Are these only going to be accessible via the HiPS viewer?
@@ -309,7 +307,7 @@ State vectors are equatorial and evaluated at the light-emission (retarded) time
 The \texttt{ephVmag} field is an approximate predicted Johnson $V$ magnitude derived from the input catalog photometric parameters.
 It is not a prediction in the Rubin band of the associated detection, so comparisons to the measured $ugrizy$ photometry include both object color and phase-model differences.
 
-The solar system \gls{Source} catalog contains \nsolarsystemsources solar system source rows for \nssobjects distinct objects.
+The Solar System Source catalog contains \nsolarsystemsources rows for \nssobjects distinct objects.
 
 
 \subsubsection{Solar System Object}
