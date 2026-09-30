@@ -95,8 +95,8 @@ def make_simple_table(
     table_lines.append(f"\\begin{{{environment}}}{{{column_spec}}}")
     table_lines.append(r"\tablewidth{0pt}")
 
-    table_lines.append(f"\\tablecaption{{{caption}}}")
-    table_lines.append(f"\\label{{{label}}}")
+    # The label must sit inside the caption block for AASTeX deluxetables.
+    table_lines.append(f"\\tablecaption{{{caption}\\label{{{label}}}}}")
 
     # Table header
     header_cols = (
