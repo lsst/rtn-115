@@ -129,14 +129,14 @@ The ``Incorrect Class'' line shows objects that are matched but classified incor
 The third method for measuring completeness is to match objects against comparable or deeper reference catalogs, where higher-resolution data from space-based telescopes is preferred.
 For this method, as for DP1, we use a greedy, probabilistic matching algorithm that matches reference objects in order of descending brightness to the most probable target within a $0\farcs5$ radius.
 
-\figref{fig:dp2_ecdfs_euclid_completeness} shows completeness in the ECDFS field compared to Euclid Q1 \citep{2026A&A...711A...1E,2026A&A...711A...4E}, along with the proportion of objects whose star/galaxy classification disagrees with Euclid.
-Euclid stars are defined solely with a \texttt{mumax\_minus\_mag < -2.6} cut as recommended by \citet{2026A&A...711A..20E}, whereas DP2 stars are selected with \texttt{griz\_model\_extendedness} $< 0.2$.
+\figref{fig:dp2_ecdfs_euclid_completeness} shows completeness in the ECDFS field compared to Euclid Q1 \citep[][]{2026A&A...711A...1E,2026A&A...711A...4E}, along with the proportion of objects whose star/galaxy classification disagrees with Euclid.
+Euclid stars are defined solely with a \texttt{mumax\_minus\_mag < -2.6} cut as recommended by \citet[][]{2026A&A...711A..20E}, whereas DP2 stars are selected with \texttt{griz\_model\_extendedness} $< 0.2$.
 Completeness is generally high, peaking above 96.5\% for $20 < \mathrm{mag_{VIS}} < 21$, with a misclassification rate just under 1\%.
 Purity, on the other hand, peaks at bright magnitudes but dips below 93.3\% at the same magnitude range.
 
 Completeness and purity figures are somewhat dependent on the choice of flags to exclude possible spurious detections.
 For Euclid, we select only objects with \texttt{spurious\_prob}$ < 0.2$.
-This cut excludes more objects than the default value of 0.5 recommended by \citet{2026A&A...711A...4E}.
+This cut excludes more objects than the default value of 0.5 recommended by \citet[][]{2026A&A...711A...4E}.
 Visual inspection of the coordinates of Euclid detections with $0.2 <$ \texttt{spurious\_prob} $< 0.5$ revealed that most are clustered around bright stars and their diffraction spikes.
 
 Similar problematic detections are found in the DP2 catalogs, many but not all of which are excluded using \texttt{coord\_flag}.
@@ -155,11 +155,12 @@ One of the main improvements in DP2 galaxy measurements is the use of an exponen
 \figref{fig:dp2_ecdfs_sersic_sizes} shows the distribution of S\'ersic size as a function of S\'ersic $i$-band magnitude in ECDFS.
 While there are still some overly large galaxy outliers, the proportion is fairly small.
 The 99.5th percentile size increases slightly from 18th to 22nd magnitude, where the outliers are most problematic, but falls for fainter objects.
-This is likely partly due to improved deblending as well - the Gaussian model in \gls{ShearObject}, which does limited masking of neighbors rather than multi-object modelling, has a considerably larger fraction of ``superspreaders''. TODO: Not sure if we want to be more quantitative about this; I can produce figures but it may be TMI.
+This is likely partly due to improved deblending as well - the Gaussian model in \gls{ShearObject}, which does limited masking of neighbors rather than multi-object modelling, has a considerably larger fraction of ``superspreaders''.
+TODO: Not sure if we want to be more quantitative about this; I can produce figures but it may be TMI.
 
 Using \texttt{griz\_model\_extendedness}, the S\'ersic sizes of stars are also consistently smaller than galaxies until 25th magnitude.
 At 24th magnitude, however, the number counts of stars drop precipitously, as the classifier's completeness drops to maintain purity.
-The cause of the significantly non-zero sizes of stars is not entirely understood, but the median sizes are consistent with other forward modelling algorithms, including from CModel's exponential fits (which use an independent double shapelet PSF model) and from the Gaussian model in \gls{ShearObject}.
+The cause of the significantly nonzero sizes of stars is not entirely understood, but the median sizes are consistent with other forward modelling algorithms, including from CModel's exponential fits (which use an independent double shapelet PSF model) and from the Gaussian model in \gls{ShearObject}.
 
 \begin{figure}[htb]
 \includegraphics[width=\linewidth]{figures/dp2_ecdfs_sersic_size_ratio_euclid}
@@ -168,7 +169,7 @@ The cause of the significantly non-zero sizes of stars is not entirely understoo
 \label{fig:dp2_sersic_size_ratios}
 \end{figure}
 
-\figref{fig:dp2_sersic_size_ratios} shows the ratio of S\'ersic sizes measured in DP2 with two space-based catalogs - Euclid Q1 in ECDFS and COSMOS2025 \citep{2025A&A...704A.339S} in COSMOS.
+\figref{fig:dp2_sersic_size_ratios} shows the ratio of S\'ersic sizes measured in DP2 with two space-based catalogs - Euclid Q1 in ECDFS and COSMOS2025 \citep[][]{2025A&A...704A.339S} in COSMOS.
 In both cases, the median size ratio remains fairly consistent to about 24th magnitude (filter dependent), and the scatter is remarkably small for ECDFS/Euclid especially.
 There is a shallow slope in the median such that bright galaxies have underestimated sizes.
 This is likely due to a combination of reasons, most notably the known background oversubtraction which is less likely to be an issue in space-based data.
@@ -192,7 +193,7 @@ Given sufficient data, this can be overcome by fitting a rotational light curve 
 However, most objects in DP2 have far too few measurements for a light-curve fit.
 Hence, individual colors and H magnitudes are uncertain at the level of rotational flux variations, which are typically much larger than the nominal uncertainty \texttt{HErr}, since the latter accounts only for the errors on instantaneous flux measurements.
 
-The ensemble colors of the ssObjects are broadly plausible for an asteroid sample: median $g-r \sim 0.58$, $r-i \sim 0.18$, and $i-z \sim -0.01$~mag.
+The ensemble colors of the ssObjects are broadly plausible for an asteroid sample: median $g-r $\sim$\,0.58$, $r-i $\sim$\,0.18$, and $i-z \sim -0.01$~mag.
 Implausible outliers are rare ($\sim 0.25$\% of all color measurements) and likely result from sparse phase fits heavily affected by individual photometric outliers.
 These photometric outliers may result from self-subtraction when the template images are shallow and contain flux from the asteroid.
 Like the problem of insufficient measurements for rotational light-curve solutions, this issue of shallow templates causing self-subtraction and occasional photometric outliers should naturally disappear over future Data Releases based on larger numbers of input images.
