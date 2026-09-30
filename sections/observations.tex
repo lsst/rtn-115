@@ -1,0 +1,114 @@
+\section{Science Program Observations}
+\label{sec:science_program}
+%
+The science program observations acquired during Rubin commissioning, which form the basis of \gls{DP2}, spanned three distinct phases.
+The first comprised small-field observations acquired shortly after the \gls{LSSTCam} First Photon milestone in support of the Rubin First Look event (\ref{ssec:small_fields}).
+The second was the commissioning-era \gls{SV} survey campaigns, which ran from \svcampaignstartdate to \svcampaignenddate (\ref{ssec:sv_surveys}).
+The end of the \gls{SV} campaign was followed by a four-week engineering downtime, after which the observatory was formally handed over from the Construction project to Rubin Operations on \startoperations.
+The third phase comprises pre-\gls{LSST} Early Operations observations from that date through the \gls{DP2} cutoff date of \dptwoenddate (\ref{ssec:early_ops}).
+Early Operations observations continued for approximately six months after the \gls{DP2} cutoff, until the start of the \gls{LSST} on \lsststartdate.
+All science program observations were scheduled by the \gls{FBS}, which selected visits adaptively to balance sky coverage, filter distribution, airmass, and lunar phase constraints \citep[][]{2026SPIE14151E..0XJ}.
+Because the program was conducted while the system was still being commissioned and optimized, visit acquisition was driven by engineering and commissioning priorities rather than by a scientifically optimized observing strategy.
+Engineering observations are not included in \gls{DP2}.
+
+\figref{fig:dp2_mjd_cumulative} shows the cumulative distribution of visit MJD for all \gls{DP2} visits, combined across all filters.
+Notable dates are indicated: the \gls{DP2} start date, \dptwostartdate; the end of the \gls{DP2} data collection window, \dptwoenddate; a phase of rapid data acquisition (July 1--25, 2025); and the end of the engineering shutdown, when observations resumed at the start of Operations, \startoperations.
+The sky distribution of \gls{DP2} visits is shown in \figref{fig:dp2_sky}.
+The observation cadence during \gls{DP2} differs significantly from that of the planned \gls{LSST}.
+Rather than following the cadence intended for the full survey, visit acquisition during this period was driven by engineering and commissioning priorities.
+As a result, the distribution of visits in time reflects the sequence of commissioning activities and engineering interventions rather than a scientifically-optimized observing strategy.
+\begin{figure}[hbt!]
+\plotone{dp2_visit_mjd_cumulative}
+\caption{Cumulative distribution of visit MJD for all \gls{DP2} visits, combined across all filters. Vertical dotted lines mark notable dates: the \gls{DP2} start date, \dptwostartdate; the end of the data collection window, \dptwoenddate; a phase of rapid data acquisition (July 1--25, 2025); and the end of the engineering shutdown, when observations resumed \startoperations}
+\label{fig:dp2_mjd_cumulative}
+\end{figure}
+
+\begin{figure*}[hbt!]
+\plotone{dp2_sky_coverage}
+\caption{Sky distribution of \gls{DP2} visits across the three components of the observing program. Small-field survey areas are marked with black circles and \glspl{DDF} with violet squares. The \gls{SV} wide survey covers \coaddedarea tracing the ecliptic plane, with visit density increasing toward the 300\,deg$^2$ core. Pre-\gls{LSST} Early Operations observations appear as sparser, predominantly $i$-band coverage, extending across a larger area of the \gls{LSST} footprint.}
+\label{fig:dp2_sky}
+\end{figure*}
+
+Data collected between the end of the \gls{DP2} observing window on \dptwoenddate and the formal start of the \gls{LSST} on \lsststartdate will be processed and made available to \gls{LSST} data rights holders through the same \gls{RSP} services.
+The format and timing of that release are still to be determined; planning will begin once \gls{DP2} has been delivered \citep[][]{RTN-011}
+
+% Small fields
+\subsection{Small-Field Observations}
+\label{ssec:small_fields}
+%
+Several small fields were observed prior to the start of the \gls{SV} surveys, with some observations overlapping the early portion of the \gls{SV} survey period.
+All small-field observations, including those from the First Look campaign, are included in \gls{DP2}.
+Observations were typically acquired in sequences of at least 10 visits per bandpass, cycling through the available filters, with field selection guided by commissioning priorities and community input.
+Several of these fields, including \gls{COSMOS}, M49, the Prawn Nebula region, and Rubin\_SV\_225\_-40, received substantial numbers of visits and are among the most deeply observed regions in \gls{DP2}.
+The \gls{COSMOS} field was first observed as part of the small-field campaign but was not accessible during the main \gls{SV} survey period; additional observations were later acquired during the Early Operations phase.
+
+\tabref{tab:dp2_sf_m5_depths} reports the 5$\sigma$ point--source depths for coadded images per field and per band, where coverage in a band is nonzero.
+% together with the expected 10 yr LSST depths derived from the baseline simulated survey \citep[][]{2022ApJS..258....1B}.
+
+\input{tables/dp2_sf_m5_depths}
+
+%%%%%  SV commissioning surveys
+\subsection{Science Validation Surveys}
+\label{ssec:sv_surveys}
+%
+The \gls{SV} surveys began on \svcampaignstartdate and comprised two interleaved components within a single \gls{FBS} configuration, a wide survey and a deep survey.
+
+\subsubsection{The Wide Survey}
+The Wide Survey initially covered a $\sim$\,3,000\,deg$^2$ footprint tracing the ecliptic plane from the dense regions of the Galactic Bulge through low-dust regions of the planned \gls{LSST} \gls{WFD} footprint.
+Approximately halfway through the \gls{SV} period, on \svwfdsevenfiftystart{}, the footprint was consolidated to $\sim$\,750\,deg$^2$ and observed in the $griz$ bands only.
+This reduced footprint is a $10\degr$-wide band centred on the ecliptic, defined by ecliptic longitude $285\degr < \lambda < 360\degr$ and ecliptic latitude $|\beta| < 5\degr$.
+On \svwfdthreehundredstart{}, in the final week of commissioning, the footprint was further reduced to the $\sim$\,300\,deg$^2$ area covered by newly deployed templates ($300\degr <$ R.A. $< 324\degr$, $-26\degr <$ decl. $< -10\degr$, and $\beta < 5\degr$), to concentrate visits and reach the depth required for difference imaging tests.
+As a result, median visit counts and coadded depth increase substantially toward the inner regions of the footprint.
+
+\tabref{tab:dp2_sv_wide_footprints} provides a description of the WFD areas observed during the campaign.
+
+\input{tables/dp2_sv_wide_footprints}
+
+\tabref{tab:dp2_sv_wide_m5_depths} provides the estimated $m_5$ coadded depths within each of the subsets of the wide SV area.
+
+\input{tables/dp2_sv_wide_m5_depths}
+
+%%%% Deep survey
+\subsubsection{The Deep Survey}
+The Deep Survey targeted four of the five planned \gls{LSST} \gls{DDF}s: \gls{ECDFS}, \gls{EDFS} (fields A and B), ELAISS1, and \gls{COSMOS}.
+The \gls{FBS} interleaved \gls{DDF} observations with the wide survey, scheduling visits to each field according to the prescribed \gls{DDF} observing cadence.
+ELAISS1 received the largest number of visits, 539 across all six $ugrizy$ bands, and is the only \gls{DDF} observed in all bands during the \gls{SV} survey.
+\gls{COSMOS} was not accessible during the \gls{SV} period as described above.
+The remaining \glspl{DDF} were observed primarily in $griz$, as the $u$ and $y$ filters were unavailable after 2025-08-10 due to a hardware issue with the filter exchanger.
+The dither pattern for the \glspl{DDF} evolved during the campaign; early observations used only small translational dithers with no intra-night rotation, while later observations introduced both translational and rotational intra-night dithers.
+
+\tabref{tab:dp2_ddf_m5_depths} reports the 5$\sigma$ point--source depths for coadded images per field and per band, where coverage in a band is nonzero.
+
+\input{tables/dp2_ddf_m5_depths}
+
+% Early ops
+% TODO Say something about the non-coadded area -- e.g median five sigma depth
+\subsection{Early Operations Observations}
+\label{ssec:early_ops}
+%
+Following the transition to Operations on \startoperations, \gls{FBS}-driven observations resumed during the Early Operations optimization period.
+Observations during this period, which ran from \startoperations through \dptwoenddate, were a mixture of engineering activities and \gls{FBS}-driven survey observations aimed at improving image quality and survey speed in preparation for the start of the \gls{LSST}, and building difference-imaging templates across the full \gls{LSST} footprint.
+
+The pre-\gls{LSST} observations are characterised by a lower and less regular cadence than the \gls{SV} surveys, reflecting frequent engineering interruptions.
+The \gls{FBS} was configured with a single-visit template tier as a scheduling priority, and on any given night would typically concentrate observations in a single band rather than interleaving filters, to maximise sky coverage for template building.
+The $i$ band was preferred due to its high throughput and suitability for difference imaging.
+A concentrated block of $i$-band observations in late October 2025 reflected deliberate \gls{AOS} engineering tests that held the filter fixed to isolate optical state changes from filter-induced perturbations, producing the prominent $i$-band coverage regions visible in \figref{fig:dp2_sky}.
+Pre-\gls{LSST} visits not overlapping existing \gls{SV} survey regions were not combined into coadds but are included in the \gls{DP2} visit dataset.
+
+% Image Quality
+\subsection{Delivered Image Quality}
+\label{ssec:image_quality}
+%
+The delivered image quality at Rubin Observatory reflects contributions from the atmosphere, dome environment, telescope optics, \gls{AOS}, and LSSTCam.
+The design specification for the median delivered \gls{PSF} \gls{FWHM}, referenced to zenith at 550\,nm, is 0\farcs7 \citep[][]{LPM-17}, corresponding to the measured median atmospheric seeing of 0\farcs72 at Cerro Pach\'on \citep[][]{SOTN-004} added in quadrature with a total system contribution of 0\farcs35 \citep[][]{SOTN-004}.
+During the period covered by the \gls{DP2} dataset, the system had not yet consistently met this design specification \citep[][]{SOTN-004, SITCOMTN-170}.
+The primary excess contributions are from the optical system, including residual \gls{AOS} errors and mirror thermal gradients, as well as from dome seeing.
+The current total system contribution to \gls{PSF} \gls{FWHM} is approximately 0\farcs55--0\farcs60, compared to the design allocation of 0\farcs40.
+At the median survey airmass of 1.2, an atmospheric contribution of 0\farcs72 at zenith corresponds to $\sim$\,0\farcs80; combined in quadrature with the current system contribution, this is consistent with the observed median delivered image quality of $\sim$\,1\farcs0 \gls{PSF} \gls{FWHM} in the $riz$ bands during the \gls{DP2} observations \citep[][]{RTN-122}.
+
+\figref{fig:delivered_image_quality} shows the cumulative distribution of the median PSF FWHM (in arcseconds) per visit computed across all detectors, for each band.
+\begin{figure}[hbt!]
+\plotone{dp2_median_per_visit_psf_fwhm_ecdf}
+\caption{Cumulative distribution of the median per-visit seeing (PSF FWHM) per band. All regions included.}
+\label{fig:delivered_image_quality}
+\end{figure}

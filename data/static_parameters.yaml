@@ -36,7 +36,7 @@ lsst:
       unit: PB
     - name: wfdarea
       value: 18000
-      unit: square degrees
+      unit: deg2
 
 lsstcamsvcampaign:
   parameters:
@@ -44,6 +44,10 @@ lsstcamsvcampaign:
       value: "2025-04-16"
     - name: svcampaignenddate
       value: "2025-09-21"
+    - name: svwfdsevenfiftystart
+      value: "2025-08-18"
+    - name: svwfdthreehundredstart
+      value: "2025-09-20"
 
 dpone:
   parameters:
@@ -73,13 +77,8 @@ drone:
     - name: dronedate
       value: mid-2028
 
-drone:
-  parameters:
-    - name: dronedate
-      value: mid-2028
-
     # Placeholder -- to replace all below with computation from the data
-    # Formatting needs to be reviewed
+    # COSMOS values from table dp2_ddf_m5_coadded_depth
     - name: bestpsfwhm
       value: 1.05
       unit: arcsec
@@ -91,13 +90,13 @@ drone:
       unit: arcsec
     - name: coaddedarea
       value: 3,000
-      unit: square degrees
+      unit: deg2
     - name: dptwoarea
       value: 15,000
-      unit: square degrees
+      unit: deg2
     - name: totalarea
       value: 15,000
-      unit: square degrees
+      unit: deg2
     - name: nextendedobjects
       value: X
     - name: nsolarsystemobjects
@@ -123,22 +122,22 @@ drone:
       value: 00
       unit: mag
     - name: udepthcosmos
-      value: 26.0
+      value: 25.9
       unit: mag
     - name: gdepthcosmos
       value: 26.8
       unit: mag
     - name: rdepthcosmos
-      value: 26.3
+      value: 26.5
       unit: mag
     - name: idepthcosmos
       value: 26.1
       unit: mag
     - name: zdepthcosmos
-      value: 25.3
+      value: 25.2
       unit: mag
     - name: ydepthcosmos
-      value: 23.9
+      value: 23.8
       unit: mag
     - name: nsinglevisitsimages
       value: 4000

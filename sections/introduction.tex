@@ -1,13 +1,13 @@
 \section{Introduction}
 \label{sec:introduction}
 
-The \gls{NSF}--\gls{DOE} Vera C. Rubin Observatory is a ground-based, wide-field optical-near-infrared facility on Cerro Pachón in northern Chile, built to carry out the \gls{LSST} \citep[][]{2019ApJ...873..111I}.
+The \gls{NSF}--\gls{DOE} Vera C. Rubin Observatory is a ground-based, wide-field optical-near-infrared facility on Cerro Pach\'on in northern Chile, built to carry out the \gls{LSST} \citep[][]{2019ApJ...873..111I}.
 The observatory is named in honor of Vera C. Rubin, whose observations in the latter half of the 20th century established the first compelling empirical case for dark matter \citep[][]{1970ApJ...159..379R, 1980ApJ...238..471R}.
 Its 10-yr survey will image the entire visible southern sky every 3--4 nights, reaching a coadded depth of $\sim$\,~27\,mag in the $r$-band across an \wfdarea footprint \citep[][]{2022ApJS..258....1B}.
 
 At the heart of the facility is the \lsstcampixels-gigapixel \gls{LSSTCam}, mounted on the \primarymirrordiameter (\effectiveaperture effective aperture) Simonyi Survey Telescope \citep[][]{2024SPIE13094E..09S}.
 Together they deliver an instantaneous field of view of \rubinfov in six broadband filters, $ugrizy$ (320--1050\,nm), with seeing-limited image quality.
-The system's \'{e}tendue of \rubinetendue exceeds that of any previous optical facility by over an order of magnitude, enabling the rapid, deep, all-sky cadence that underpins Rubin's four core science themes: the nature of dark energy and dark matter; a census of the solar system; the transient and variable optical sky; and the structure of the Milky Way \citep[][]{2019ApJ...873..111I}.
+The system's \'{e}tendue of \rubinetendue exceeds that of any previous optical facility by over an order of magnitude, enabling the rapid, deep, all-sky cadence that underpins the LSST's four core science themes: the nature of dark energy and dark matter; a census of the solar system; the transient and variable optical sky; and the structure of the Milky Way \citep[][]{2019ApJ...873..111I}.
 An automated \gls{Data Management System} processes tens of terabytes of images per night to produce science-ready data products within minutes of each observation for a global community of scientists.
 
 This paper presents Rubin's third Data Preview, \gls{DP2} \citep[][]{10.71929/rubin/2570308}, and the first to be based entirely on \gls{LSSTCam} data.
@@ -47,12 +47,12 @@ Delivery of the Prompt Data Products follows the same logic.
 The \gls{PPDB}, Rubin's real-time catalog of transient, variable, and moving-object detections, does not depend on \gls{USDF}--Google Cloud bandwidth and is therefore prioritized as the second Early-Operations delivery milestone, following EDP2 and preceding the full \gls{DP2} release, expected in the Sep--Oct 2026 range.
 Prompt images (raw images, Processed Visit Images, and difference images), which do require that bandwidth, have been deprioritized relative to EDP2 and the \gls{PPDB} and are expected to become available only in the Oct--Dec 2026 range, following both.
 
-\gls{DP2}, like all Rubin Data Previews and Data Releases, is subject to a 2 yr proprietary period; during this time access is restricted to \gls{LSST} data rights holders \citep[][]{rdo-013} via the \gls{RSP} \citep[][]{LSE-319}, Rubin's cloud-based data science platform \citep[][]{LSE-319}.
+\gls{DP2}, like all Rubin Data Previews and Data Releases, is subject to a 2 yr proprietary period; during this time access is restricted to Rubin data rights holders \citep[][]{rdo-013} via the \gls{RSP} \citep[][]{LSE-319}, Rubin's cloud-based data science platform \citep[][]{LSE-319}.
 After the proprietary period, \gls{DP2} will be made public, though access through Rubin \gls{DAC}s in the US and Chile will remain limited to data rights holders \citep[][]{rdo-013}.
 Alternative public access mechanisms have not yet been finalized.
 
 The structure of this paper is as follows.
-Section~\ref{sec:commissioning} describes the observatory system and its status at the close of commissioning, the fields included in \gls{DP2}, and the observing strategy employed.
+Section~\ref{sec:commissioning} describes the observatory system and its status during commissioning, the fields included in \gls{DP2}, and the observing strategy employed.
 Section~\ref{sec:data_products} summarizes the data products in the release.
 The processing pipelines are described in Section~\ref{sec:drp}, followed by data validation and performance characterization in Section~\ref{sec:performance}.
 Section~\ref{sec:data_services} describes the \gls{RSP}.
