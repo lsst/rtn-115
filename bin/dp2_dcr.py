@@ -137,7 +137,7 @@ class DcrEffect:
         self.skymap = skymap
         self.repo = repo
         self.collections = collections
-    
+
         self.butler = Butler(
             repo, instrument=instrument, collections=collections, skymap=skymap
         )
@@ -155,7 +155,7 @@ class DcrEffect:
             center_pt.offset(bearing * lsst.geom.degrees, radius_deg * lsst.geom.degrees)
             for bearing in np.linspace(0, 360, n_boundary, endpoint=False)
         ]
-        
+
         # Interior grid samples: fill the disk, not just its edge, so tracts that
         # are fully interior (and don't happen to touch a boundary sample) still
         # get picked up.
@@ -167,9 +167,9 @@ class DcrEffect:
                     bearing = np.degrees(np.arctan2(dx, dy)) % 360
                     sep = np.hypot(dx, dy)
                     interior_pts.append(center_pt.offset(bearing * lsst.geom.degrees, sep * lsst.geom.degrees))
-        
+
         coord_list = [center_pt] + boundary_pts + interior_pts
-        
+
         tract_patch_list = skymap_obj.findTractPatchList(coord_list)
         tract_ids = sorted(tractInfo.getId() for tractInfo, _ in tract_patch_list)
         print("Tracts found:", tract_ids)
@@ -181,14 +181,15 @@ class DcrEffect:
             "deep_coadd",
             collections=self.collections,
             instrument=self.instrument,
+            skymap=self.skymap,
             band="g",
-            where=f"tract IN ({tract_clause}) AND skymap={self.skymap}",
+            where=f"tract IN ({tract_clause})",
             find_first=False,
             limit=None,
         )
         print(f"{len(tract_ids)} tracts -> {len(datareferences)} deep_coadd refs")
         print(f"Number of datareferences: {len(datareferences)}")
-        
+
         print("Calculating dcrMetrics, dcrVisits, and dcrAirmasses")
         dcrMetrics, dcrVisits, dcrAirmasses, dcrVisitNumber = self.calculateExpectedDcr(datareferences)
 
