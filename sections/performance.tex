@@ -268,13 +268,25 @@ The top and right panels show the distributions of $r$-band magnitude and color 
 \end{figure}
 
 \subsection{Difference Imaging}
-DP2 includes over 12,000 visits with \texttt{DIASources}. As discussed in \ref{sssec:DIASource}, deblending is not yet implemented. Per \ref{sec:drp-variabletransient-artifact}, reliability scores are calculated for each of these, but no cuts are applied. As a result, the majority of \texttt{DIASources} have low reliability scores ($< 0.5$) and are not astrophysical in origin. Common causes of low-reliability \texttt{DIASources} include low-quality Template Coadds (e.g., single visit self-subtractions) and poorly constrained background sky levels due to scattered light or crowded fields.
+DP2 includes over 12,000 visits with \texttt{DIASources}.
+As discussed in \ref{sssec:DIASource}, deblending is not yet implemented.
+Per \ref{sec:drp-variabletransient-artifact}, reliability scores are calculated for each of these, but no cuts are applied.
+As a result, the majority of \texttt{DIASources} have low reliability scores ($< 0.5$) and are not astrophysical in origin.
+Common causes of low-reliability \texttt{DIASources} include low-quality Template Coadds (e.g., single visit self-subtractions) and poorly constrained background sky levels due to scattered light or crowded fields.
 
-In some circumstances, spurious \texttt{DIASources} can appear in a grid pattern reminiscent of the gaps between detectors on the focal plane. This can occur when Template Coadds have a sudden change in PSF size. This discontinuity cannot be well represented with a smooth matching kernel during difference imaging source measurement, and a too-large PSF can produce spurious positive flux \texttt{DIASources} in the narrow grid strips where the PSF is small. There is presently no flag or column to identify these, but we expect it to be less prevalent for Template Coadds that are deeper (i.e., those with larger numbers of overlapping input visits).
+In some circumstances, spurious \texttt{DIASources} can appear in a grid pattern reminiscent of the gaps between detectors on the focal plane.
+This can occur when Template Coadds have a sudden change in PSF size.
+This discontinuity cannot be well represented with a smooth matching kernel during difference imaging source measurement, and a too-large PSF can produce spurious positive flux \texttt{DIASources} in the narrow grid strips where the PSF is small.
+There is presently no flag or column to identify these, but we expect it to be less prevalent for Template Coadds that are deeper (i.e., those with larger numbers of overlapping input visits).
 
-Most of the visits with \texttt{DIASources} in DP2 have fewer than 2000 \texttt{DIASources} with reliability > 0.5. The outliers with excess ``reliable'' \texttt{DIASources} include: (1) a handful of visits listed in the Release Documentation Known Issues when the telescope was moving while the shutter was open, (2) visits affected by the template PSF discontinuity problem described above, and (3) visits in crowded and/or nebulous fields where it is challenging to robustly measure the background flux level.
+Most of the visits with \texttt{DIASources} in DP2 have fewer than 2000 \texttt{DIASources} with reliability > 0.5.
+The outliers with excess ``reliable'' \texttt{DIASources} include: (1) a handful of visits listed in the Release Documentation Known Issues when the telescope was moving while the shutter was open, (2) visits affected by the template PSF discontinuity problem described above, and (3) visits in crowded and/or nebulous fields where it is challenging to robustly measure the background flux level.
 
 \subsubsection{Detection completeness}
-Following the approach in DP1~\citep[][]{rtn-095}, we assess the performance of difference imaging by injecting synthetic sources into a subset of DP2 science images, carrying out difference imaging, and measuring properties of the recovered detected synthetic sources. We consider a selection of $i$-band images from the deep ECDFS field for this investigation. We inject both ``hosted'' and ``hostless'' synthetic sources, i.e., point sources embedded in a host galaxy and isolated point sources, each with randomly sampled size and brightness. The hosted sources additionally have randomly selected positions within their host galaxy and position angles.
+Following the approach in DP1~\citep[][]{rtn-095}, we assess the performance of difference imaging by injecting synthetic sources into a subset of DP2 science images, carrying out difference imaging, and measuring properties of the recovered detected synthetic sources.
+We consider a selection of $i$-band images from the deep ECDFS field for this investigation.
+We inject both ``hosted'' and ``hostless'' synthetic sources, i.e., point sources embedded in a host galaxy and isolated point sources, each with randomly sampled size and brightness.
+The hosted sources additionally have randomly selected positions within their host galaxy and position angles.
 
-\textit{TODO: Bruno and Meredith are working on this fake injection campaign and will write up results soon. We should be able to generate 2--3 figures similar to DP1~\citep[][]{rtn-095} Figures 37, 38, and 39.}
+\textit{TODO: Bruno and Meredith are working on this fake injection campaign and will write up results soon.
+We should be able to generate 2--3 figures similar to DP1~\citep[][]{rtn-095} Figures 37, 38, and 39.}
