@@ -158,7 +158,7 @@ To address this challenge, a dedicated crowded-field processing pipeline is curr
 Early results are promising: regions that appear as merged detections in the standard pipeline can instead be successfully deblended into their constituent sources, enabling individual detection and measurement.
 The pipeline is currently undergoing testing, with integration into the LSST Science Pipelines for general use targeted within the next year.
 \subsection{Shear Object catalog}
-\begin{figure*}[htb!]
+\begin{figure}[htb!]
 \plotone{dp2_object_shear_mean}
 \caption{Distribution of \texttt{gauss\_g1} (blue shaded histogram) and \texttt{gauss\_g2} (orange shaded histogram) values for the \gls{ShearObject} catalog's no-shear subcatalog; overlapping histograms appear as gray shading.
 The mean values of \texttt{gauss\_g1} and \texttt{gauss\_g2} are marked as colored vertical dashed lines (see legend); the black dashed line indicates zero.
@@ -167,7 +167,7 @@ While small, the mean shears are significantly non-zero.
 We currently attribute this offset to objects in the tails of the distribution, which are typically associated with bright stars and nearby galaxies.
 }
 \label{fig:dp2_object_shear_mean}
-\end{figure*}
+\end{figure}
 As described in \secref{sssec:objectshear} and \secref{sec:drp-multivisit-shearobject}, the \gls{ShearObject} catalog is produced by running the metadetection algorithm on the coadded images.
 It contains the lensing shear measured as ellipticity on the no-shear counterfactual, plus four subcatalogs from the counterfactuals in which a linear shear has been artificially applied; the latter are used to compute the shear response and selection biases.
 A full validation of the Shear Object catalog is beyond the scope of this paper and will be the focus of follow-up studies.
