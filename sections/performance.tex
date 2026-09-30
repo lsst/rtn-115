@@ -2,7 +2,7 @@
 \label{sec:performance}
 
 In this section, we present a characterization of the performance of the \gls{DP2} data products, and highlight known issues, as understood at the time of publication.
-The analyses presented here are intended to provide an overview of the data quality rather than a comprehensive validation; where appropriate, more detailed analyses are deferred to dedicated future papers.
+The analyses presented here provide an overview of the data quality rather than a comprehensive validation; where appropriate, more detailed analyses are deferred to dedicated future papers.
 Further information on the performance and known issues of \gls{DP2} can be found in the Data Quality, Image Artifacts, and Known Issues sections of the Release Documentation at \url{https://dp2.lsst.io}, which will continue to be updated as our understanding of the data and its nuances improves.
 
 \todo{We are awaiting the subsection on sensor anomolies.}
@@ -26,7 +26,7 @@ Furthermore, we are achieving almost the same repeatability at $200$~arcmin sepa
 \end{figure}
 
 \subsection{Stellar Photometry}
-A key means of verifying the quality of the photometry, and in particular its absolute flux scale, is to compare it to an external photometric catalog.
+Comparison with an external photometric catalog is a key test of photometric quality, particularly of the absolute flux scale.
 Such a comparison is, however, far from straightforward, not least because any external catalog will also have its own calibration systematics.
 Further, outside the deep fields, any comparison would be restricted to relatively bright stars and would therefore not be representative of the full DP2 depth.
 A proper treatment of these limitations is beyond the scope of this paper, and is left to a dedicated future paper on photometric performance.
@@ -143,7 +143,6 @@ Visual inspection of the coordinates of Euclid detections with $0.2 <$ \texttt{s
 
 Similar problematic detections are found in the DP2 catalogs, many but not all of which are excluded using \texttt{coord\_flag}.
 Not all of these flagged objects are necessarily spurious detections, but as with Euclid, many cluster around bright stars and have overestimated fluxes due to their footprints including part of the extended wings of the star's PSF.
-Note: The above numbers are from \texttt{/sdf/data/rubin/user/dtaranu/tickets/DM-50135/dp2\_ecdfs\_plots\_DP2\_v30\_0\_8\_all/euclid\_q1\_lsst\_cells\_v2\_ecdfs\_vis\_completeness\_metrics.csv}, not eyeballing the plot.
 
 \subsection{Galaxy Photometry and Sizes}
 
@@ -157,7 +156,7 @@ One of the main improvements in DP2 galaxy measurements is the use of an exponen
 \figref{fig:dp2_ecdfs_sersic_sizes} shows the distribution of S\'ersic size as a function of S\'ersic $i$-band magnitude in ECDFS.
 While there are still some overly large galaxy outliers, the proportion is fairly small.
 The 99.5th percentile size increases slightly from 18th to 22nd magnitude, where the outliers are most problematic, but falls for fainter objects.
-This is likely partly due to improved deblending as well - the Gaussian model in \gls{ShearObject}, which does limited masking of neighbors rather than multi-object modelling, has a considerably larger fraction of ``superspreaders''.
+This is likely partly due to improved deblending as well; the Gaussian model in \gls{ShearObject}, which does limited masking of neighbors rather than multi-object modelling, has a considerably larger fraction of ``superspreaders''.
 \todo{Not sure if we want to be more quantitative about this; I can produce figures but it may be TMI.}
 
 Using \texttt{griz\_model\_extendedness}, the S\'ersic sizes of stars are also consistently smaller than galaxies until 25th magnitude.
