@@ -7,7 +7,7 @@
 # 
 # After running the `dp2_dcr.py` script twice (once for the ECDFS field and the other for the ecliptic), you can use the following code to take the resulting catalogs and make the combined (side-by-side vertical/horizontal) hexbin plot for the DP2 paper (rtn-115).
 
-# In[1]:
+# In[ ]:
 
 
 import io
@@ -20,21 +20,21 @@ from lsst.utils.plotting import stars_cmap, accent_color
 from unittest import mock
 
 
-# In[2]:
+# In[ ]:
 
 
 ecdfs_data = pd.read_csv('ecdfs-finalMatchedDf.csv')
 ecdfs_data
 
 
-# In[3]:
+# In[ ]:
 
 
 ecliptic_data = pd.read_csv('ecliptic-finalMatchedDf.csv')
 ecliptic_data
 
 
-# In[4]:
+# In[ ]:
 
 
 ecdfs_differential_refraction = ecdfs_data['differentialRefractionBlackbody']
@@ -48,10 +48,10 @@ ecliptic_perpendicular = ecliptic_data['perpendicular']
 ecliptic_magnitude = ecliptic_data['g-i mag']
 
 
-# In[5]:
+# In[ ]:
 
 
-def hexbinDp1Paper(differential_refraction, parallel, perpendicular, magnitude, title_label, cmap=stars_cmap(),
+def hexbinDp1Paper(differential_refraction, parallel, perpendicular, magnitude, title_label, cmap=stars_cmap(single_color=True),
                    accentColor=accent_color()):
     """Generate a hexbin plot illustrating the differential chromatic
     refraction (DCR) effect as seen in the input dataset. This visualization is
@@ -76,56 +76,13 @@ def hexbinDp1Paper(differential_refraction, parallel, perpendicular, magnitude, 
     accentColor : `string`, optional
         Accent color used for zero angular offset comparison line in plot.
     """
-    fig, ax = plt.subplots(ncols=2, nrows=2, sharey=True)
+    fig, ax = plt.subplots(ncols=2, nrows=1, sharey=True)
     plt.subplots_adjust(hspace=0, wspace=0, left=0.12, bottom=0.15)
 
     xlim = differential_refraction.min(), differential_refraction.max()
     ylim = magnitude.min(), magnitude.max()
-    hb = ax[0, 0].hexbin(
-        parallel, magnitude, gridsize=50, cmap=cmap, mincnt=1
-    )
-    ax[0, 0].set(xlim=xlim, ylim=ylim)
-    ax[0, 0].set_title("Parallel", fontsize=15)
-    ax[0, 0].axvline(x=0, color=accentColor, linestyle="--")
-    ax[0, 0].tick_params("x", labelbottom=False)
 
-    ax[0, 0].text(
-        0.01, 0.4, r"MagAB (g-i)", rotation="vertical", transform=fig.transFigure
-    )
-    ax[0, 0].text(0.35, 0.05, r"Angular Offset (arcsec)", transform=fig.transFigure)
-
-    hb = ax[0, 1].hexbin(
-        perpendicular,
-        magnitude,
-        gridsize=50,
-        cmap=cmap,
-        mincnt=1,
-    )
-    ax[0, 1].set(xlim=xlim, ylim=ylim)
-    ax[0, 1].set_title("Perpendicular", fontsize=15)
-    ax[0, 1].axvline(x=0, color=accentColor, linestyle="--")
-    ax[0, 1].tick_params("x", labelbottom=False)
-
-    label = "Number of Sources"
-    axBbox = ax[0, 1].get_position()
-    cax = fig.add_axes([axBbox.x1, axBbox.y0, 0.04, axBbox.y1 - axBbox.y0])
-    fig.colorbar(hb, cax=cax)
-    text = cax.text(
-        0.5,
-        0.5,
-        label,
-        color="k",
-        rotation="vertical",
-        transform=cax.transAxes,
-        ha="center",
-        va="center",
-        fontsize=10,
-    )
-    text.set_path_effects(
-        [pathEffects.Stroke(linewidth=3, foreground="w"), pathEffects.Normal()]
-    )
-
-    hb = ax[1, 0].hexbin(
+    hb = ax[0].hexbin(
         parallel,
         magnitude,
         gridsize=50,
@@ -133,10 +90,15 @@ def hexbinDp1Paper(differential_refraction, parallel, perpendicular, magnitude, 
         cmap=cmap,
         mincnt=1,
     )
-    ax[1, 0].set(xlim=xlim, ylim=ylim)
-    ax[1, 0].axvline(x=0, color=accentColor, linestyle="--")
+    ax[0].set(xlim=xlim, ylim=ylim)
+    ax[0].axvline(x=0, color=accentColor, linestyle="--")
+    ax[0].set_title("Parallel", fontsize=15)
+    ax[0].text(
+        0.01, 0.4, r"MagAB (g-i)", rotation="vertical", transform=fig.transFigure
+    )
+    ax[0].text(0.35, 0.05, r"Angular Offset (arcsec)", transform=fig.transFigure)
 
-    hb = ax[1, 1].hexbin(
+    hb = ax[1].hexbin(
         perpendicular,
         magnitude,
         gridsize=50,
@@ -144,10 +106,11 @@ def hexbinDp1Paper(differential_refraction, parallel, perpendicular, magnitude, 
         cmap=cmap,
         mincnt=1,
     )
-    ax[1, 1].set(xlim=xlim, ylim=ylim)
-    ax[1, 1].axvline(x=0, color=accentColor, linestyle="--")
+    ax[1].set(xlim=xlim, ylim=ylim)
+    ax[1].axvline(x=0, color=accentColor, linestyle="--")
+    ax[1].set_title("Perpendicular", fontsize=15)
     label2 = "Log(Number of Sources)"
-    axBbox = ax[1, 1].get_position()
+    axBbox = ax[1].get_position()
     cax = fig.add_axes([axBbox.x1, axBbox.y0, 0.04, axBbox.y1 - axBbox.y0])
     fig.colorbar(hb, cax=cax)
     text = cax.text(
@@ -170,7 +133,7 @@ def hexbinDp1Paper(differential_refraction, parallel, perpendicular, magnitude, 
     plt.show()
 
 
-# In[6]:
+# In[ ]:
 
 
 def render(*args, **kwargs):
@@ -185,9 +148,9 @@ def render(*args, **kwargs):
     return mpimg.imread(buf)
 
 imgA = render(ecdfs_differential_refraction, ecdfs_parallel, ecdfs_perpendicular, ecdfs_magnitude, 'ECDFS',
-              cmap=stars_cmap(), accentColor=accent_color())
+              cmap=stars_cmap(single_color=True), accentColor=accent_color())
 imgB = render(ecliptic_differential_refraction, ecliptic_parallel, ecliptic_perpendicular, ecliptic_magnitude, 'Ecliptic',
-              cmap=stars_cmap(), accentColor=accent_color())
+              cmap=stars_cmap(single_color=True), accentColor=accent_color())
 
 # fig, axs = plt.subplots(1, 2, figsize=(16, 7)) # for horizontal plot
 fig, axs = plt.subplots(2, 1, figsize=(7, 7)) # for vertical plot
@@ -198,4 +161,10 @@ fig.tight_layout()
 # plt.savefig("dp2_dcr_horizontal.png")
 plt.savefig("dp2_dcr_vertical.png")
 plt.show()
+
+
+# In[ ]:
+
+
+
 
