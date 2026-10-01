@@ -101,6 +101,8 @@ As a result, the structure of the datasets is the same for each type: each coadd
 Up to two different \gls{background} models are included in the coadd datasets: the \gls{background} that was subtracted to create the final coadd and, in the case of the $gri$ band Deep Coadds, a \gls{background} that can be added-back to create ``Visualization Coadds'' which, while not recommended for science, can be useful for visualization.
 Each coadd also contains a position-dependent \gls{PSF} model, WCS information, plus various other metadata.
 
+\input{tables/deepcoaddselection}
+
 The same skymap was used for each type of coadd in DP2, meaning they all cover the same on-sky area, including some overlap with their neighbouring coadds (see the introduction to this section).
 A single coadd, irrespective of type, contains \npatchpixx$\times$\npatchpixy equal-sized square pixels, including overlap; each pixel is \coaddpixsize on each side.
 There are up to six coadds of each type per \gls{patch} - one for each of the six LSSTCam bands.
@@ -127,8 +129,6 @@ Once the selected Visit Images have been warped and coadded, a further coadd-lev
 This background is estimated from the iteratively $3\sigma$-clipped mean of the unmasked pixels (i.e., excluding detected sources) in $128\times128$ pixel bins, which is then interpolated to full resolution using an Akima spline.
 
 There are a total of \ndeepcoadds Deep Coadds in \gls{DP2}.
-
-\input{tables/deepcoaddselection}
 
 \paragraph{Template Coadds}
 Template Coadds are created, principally, to act as reference images in the process of image subtraction to produce Difference Images (see \secref{sssec:difference_image}).
