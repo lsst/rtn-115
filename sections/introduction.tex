@@ -35,17 +35,15 @@ Unlike the systematic, rolling revisit pattern that will characterize the \gls{L
 The Science Validation survey footprint was repeatedly re-scoped over the course of the science validation campaign due to the competing demands of engineering tests and filter availability, which was constrained by hardware issues for part of the campaign.
 Visit counts and time sampling therefore vary substantially and idiosyncratically from field to field, and \gls{DP2} should not be read as a preview of \gls{LSST}'s eventual survey cadence, revisit statistics, or depth-accumulation pattern.
 
-\gls{DP2} is being delivered in two phases across the \dptwodeliverywindow window.
-The first phase, Early \gls{DP2} (EDP2), comprises the deep coadd images and all associated catalogs, including new cell-based coadds and the first releases of the \gls{ShearObject} (\secref{sec:drp-multivisit-shearobject}, \secref{sssec:objectshear}) shape-measurement catalog and the Isolated Star Stellar Motions catalog (\secref{sssec:isolatedstarstellarmotions}).
-EDP2 is targeted for \edptworeleasedate.
-The second phase, \gls{DP2}, adds the visit-level single-epoch and difference images, completing the full release, and is expected in the \dptworeleasedate range.
-Data products delivered as \gls{EDP2} will be incorporated into \gls{DP2} unchanged, without additional reprocessing \citep[][]{RTN-011}.
+\gls{DP2} was delivered in two phases across the \dptwodeliverywindow window.
+The first phase, Early \gls{DP2} (EDP2), comprised the deep coadd images and all associated catalogs, including new cell-based coadds and the first releases of the \gls{ShearObject} (\secref{sec:drp-multivisit-shearobject}, \secref{sssec:objectshear}) shape-measurement catalog and the Isolated Star Stellar Motions catalog (\secref{sssec:isolatedstarstellarmotions}).
+EDP2 was released on \edptworeleasedate.
+% To update when we have the release date
+The second phase, \gls{DP2}, added the visit-level single-epoch and difference images, completing the full release, and is expected in the \dptworeleasedate range.
+Data products delivered as \gls{EDP2} were incorporated into \gls{DP2} unchanged, without additional reprocessing.
 This phased delivery follows directly from Rubin's hybrid cloud architecture \citep[][]{2024SPIE13101E..2BO}, in which science data products are stored at the \gls{USDF} and served to users via the US \gls{DAC} in Google Cloud.
-Deep coadd images and catalogs are hosted directly in Google Cloud and are therefore unaffected by hybrid-cloud readiness, allowing them to ship as \gls{EDP2}.
-Visit-level images, however, must be streamed from the \gls{USDF}, and the necessary capacity is not yet fully in place, introducing timing uncertainty for the second phase.
-Delivery of the Prompt Data Products follows the same logic.
-The \gls{PPDB}, Rubin's real-time catalog of transient, variable, and moving-object detections, does not depend on \gls{USDF}--Google Cloud bandwidth and is therefore prioritized as the second Early-Operations delivery milestone, following EDP2 and preceding the full \gls{DP2} release, expected in the Sep--Oct 2026 range.
-Prompt images (raw images, Processed Visit Images, and difference images), which do require that bandwidth, have been deprioritized relative to EDP2 and the \gls{PPDB} and are expected to become available only in the Oct--Dec 2026 range, following both.
+Deep coadd images and catalogs are hosted directly in Google Cloud and so do not depend on hybrid-cloud readiness, which allowed them to be released as \gls{EDP2}.
+Visit-level images, however, must be streamed from the \gls{USDF}, and the capacity to do so was not fully in place at the time of the EDP2 release, so they were released later as part of full \gls{DP2}.
 
 \gls{DP2}, like all Rubin Data Previews and Data Releases, is subject to a 2 yr proprietary period; during this time access is restricted to Rubin data rights holders \citep[][]{rdo-013} via the \gls{RSP} \citep[][]{LSE-319}, Rubin's cloud-based data science platform \citep[][]{LSE-319}.
 After the proprietary period, \gls{DP2} will be made public, though access through Rubin \gls{DAC}s in the US and Chile will remain limited to data rights holders \citep[][]{rdo-013}.
