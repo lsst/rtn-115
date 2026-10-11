@@ -96,7 +96,7 @@ There are a total of \nvisitimages Visit Images in DP2.
 \label{sssec:coadds}
 Visit Images covering the same \gls{patch} of sky (as defined by the skymap) in the same band are combined to form coadd images.
 Two different types of coadd images are included in DP2: Deep Coadds and Template Coadds,
-Each type of coadd image are produced via the same general process (\secref{sec:drp-multivisit-coaddition}):  Visit Images are selected by \gls{patch}, band, and image quality, warped onto a common pixel grid, and combined as a weighted mean with inverse-variance weights (\secref{sec:drp-multivisit-coaddition}).
+Each type of coadd image is produced via the same general process (\secref{sec:drp-multivisit-coaddition}):  Visit Images are selected by \gls{patch}, band, and image quality, warped onto a common pixel grid, and combined as a weighted mean with inverse-variance weights (\secref{sec:drp-multivisit-coaddition}).
 The main differences that distinguish each type of coadd are the selection of the \glspl{Visit Image}, and that Deep Coadds are cell-based in DP2 (see the introduction of this this section), whereas Template Coadds are not.
 As a result, the structure of the datasets is the same for each type: each coadd contains three planes corresponding to the science image plane (i.e., the coadd image), the variance plane, and the mask plane, with all three containing the same number of pixels in each dimension.
 Up to two different \gls{background} models are included in the coadd datasets: the \gls{background} that was subtracted to create the final coadd and, in the case of the $gri$ band Deep Coadds, a \gls{background} that can be added-back to create ``Visualization Coadds'' which, while not recommended for science, can be useful for visualization.
