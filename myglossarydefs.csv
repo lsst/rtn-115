@@ -5,3 +5,4 @@ scarlet lite,"The lightweight version of the scarlet algorithm, optimized for mu
 ShearObject,"An object with measurements using the metadetection algorithm, or the catalog thereof",DM,,,G
 ITL,University of Arizona's Imaging Technology Laboratory,Camera,,,A
 NIST,National Institute of Standards and Technology,Calibration,,,A
+Visit Image,"A single-detector image from one exposure that has had instrumental signatures removed and has been background-subtracted and astrometrically and photometrically calibrated; also known as a Processed Visit Image (PVI)",DM,,,G

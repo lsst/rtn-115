@@ -18,7 +18,7 @@ This image is in discretized analog-to-digital units (ADU, or counts) and contai
 This step aims to remove any artifacts that are not of astrophysical origin and produce science-ready, single-visit exposures in floating-point electron units with complete pixel masks.
 
 The \gls{ISR} \gls{pipeline} is built on a physical model of the detectors and readout electronics, in which each artifact is tied to a specific point in the photon-transfer chain and is corrected using calibrations from dedicated campaigns conducted during the day or on cloudy nights. \figref{fig:isr_signal_chain} shows this model of the detector and readout components and the effects each imparts on the measured image.
-ISR works backward through the chain, undoing these effects in the reverse of the order in which they were imprinted.
+ISR works broadly backward through the chain, undoing most of these effects in approximately the reverse of the order in which they were imprinted.
 Detector response and performance vary across the focal plane (see \secref{ssec:lsstcam}), and each detector must be calibrated individually.
 
 A detailed description of the DP2 ISR procedures and the calibration products they consume can be found in \citep[][]{RTN-117}.
@@ -172,13 +172,14 @@ To anchor the overall system throughput and set the ``absolute'' calibration, th
 
 \subsection{Multi-Visit Processing} \label{sec:drp-multivisit}
 \subsubsection{Input Data Selection} \label{sec:drp-multivisit-inputselection}
-As described in \secref{ssec:lsstcam}, detectors 0, 20, 27, 65, 123, 161, 168, 188 are excluded from the Deep Coadd images as they are strongly affected by vignetting.
+As described in \secref{ssec:lsstcam}, detectors 0, 20, 27, 65, 123, 161, 168, 188 are excluded from all \gls{DP2} processing as they are strongly affected by vignetting.
 Detector 122 was turned off for the entire \gls{DP2} data-taking campaign and is therefore absent from all single-visit and coadded data products.
 Only exposures with mean seeing better than 1\farcs7 \gls{FWHM} and transparency better than 0.75 are included in the Deep Coadd images.
 Exposures with poor \gls{PSF} modeling, identified using internal diagnostics and algorithm processing flags, are also excluded from the Deep Coadd images to prevent contamination of the coadds with unreliable \gls{PSF} estimates.
+Additional per-detector PSF-quality cuts are listed in \tabref{tab:deepcoadd_detector_selection}.
 
 \subsubsection{Coaddition} \label{sec:drp-multivisit-coaddition}
-The single \gls{Visit} Images that pass the selection criteria above are warped onto the coadd pixel grid using Lanczos3 kernel and scaled to have units of \texttt{nJy} (zeropoint of 31.4).
+The single \glspl{Visit Image} that pass the selection criteria above are warped onto the coadd pixel grid using Lanczos3 kernel and scaled to have units of \texttt{nJy} (zeropoint of 31.4).
 Artifacts are identified and masked in a manner similar to \gls{DP1} before coaddition.
 We apply the artifact rejection procedure described in \cite[][]{DMTN-080}, which identifies and masks features such as satellite trails, optical ghosts, and cosmic rays.
 It operates on a time series of PSF-matched images resampled onto a coadd pixel grid (``warps'') and leverages their temporal behavior to distinguish persistent astrophysical sources from \gls{transient} artifacts.
@@ -211,7 +212,7 @@ The processing proceeds as follows: peaks are first detected in single-band \gls
 The basic methodology for detection is largely unchanged from the description in \citet[][]{2018PASJ...70S...5B}, which we summarize here.
 To detect peaks, each image is convolved by a circular Gaussian approximation to the measured \gls{PSF} to make a significance image.
 A \gls{footprint} is a contiguous region of pixels above the detection threshold, which is set to detect isolated point sources above $5\sigma$ significance.
-Footprints can have multiple peaks, which are defined as pixels with values higher than all 8 neighbours (local maxima within a $3 \times 3$ box).
+Footprints can have multiple peaks, which are defined as pixels with values higher than all 8 neighbors (local maxima within a $3 \times 3$ box).
 Note that even for an isolated object, the significance of a detection is not precisely the same as the signal-to-noise from subsequent \gls{PSF} model fluxes.
 
 Pixels within footprints are marked with the \texttt{DETECTED} bit mask.
@@ -228,7 +229,7 @@ After merging, probable spurious peaks detected in only one band are removed.
 
 Deblending is performed by the \texttt{ScarletLite} python package.
 \texttt{ScarletLite} is an optimized implementation of the \texttt{scarlet} \citep[][]{2018A&C....24..129M} deblending algorithm with the assumption that the input images are aligned to the same pixel grid at a fixed resolution, as is the case in coadds.
-Prior to deblending, a new addition in \gls{DP2} is a per-band partial deconvolution of the input coadds to a common $\sigma=0.8$ pixel integrated circular Gaussian PSF.
+Prior to deblending, a new addition in \gls{DP2} is a per-band partial deconvolution of the input coadds to a common $\sigma=0.8$ pixel integrated circular Gaussian kernel.
 This allows us to sub-divide large parent blends (\gls{footprint}s) into multiple smaller blends that are only connected by the wings of the \gls{PSF}.
 These smaller sub-blends and the initialization of galaxy morphologies from the partially deconvolved images improves numerical convergence and performance, both in the goodness-of-fit of the final models and in memory usage and runtime.
 Users will notice that this has improved our coverage\footnote{We define ``coverage'' in this context as the fraction of each field with usable measurements.} in crowded fields from \gls{DP1}; however, in the densest fields, an entire patch can still be a single blend and must be skipped due to excessive memory requirements.
@@ -246,7 +247,7 @@ Most algorithms have their free measurements reported in the final object table,
 A variety of flux measurements are provided, including aperture fluxes, Kron \citep[][]{1980ApJS...43..305K}, and Gaussian-Aperture-and-PSF \citep[\gls{GAaP};][]{2008A&A...482.1053K, DMTN-190} fluxes for consistent galaxy colors.
 Forward \gls{PSF} model and Composite model (CModel) magnitudes \citep[][]{2004AJ....128..502A, 2018PASJ...70S...5B} are provided for each band.
 
-\gls{MultiProFit} \citep[][]{DMTN-312} performs multiband forward modelling.
+\gls{MultiProFit} \citep[][]{DMTN-312} performs multiband forward modeling.
 Beginning in DP2, an \gls{exponential profile} is fit first and used to initialize a subsequent S\'ersic model \citep[][]{1963BAAA....6...41S, 1968adga.book.....S} fit, which improves convergence and reduces the prevalence of S\'ersic fits with unrealistically large effective radii.
 Both exponential and S\'ersic model fits have free centroids, which serve as alternative, multiband \gls{astrometry} for objects.
 The \gls{Object} table now includes uncertainties on the fitted ellipse parameters for both models (the x- and y-axis effective radii and correlation parameter $\rho$).
@@ -299,17 +300,17 @@ No cuts were applied on reliability for the \gls{DP2} \texttt{DIASource} catalog
 
 \subsubsection{Light Curves} \label{sec:drp-variabletransient-lightcurves}
 
-Light curves are compiled from multiepoch forced photometry performed on both the \gls{Visit} Images and the difference images.
+Light curves are compiled from multiepoch forced photometry performed on both the \glspl{Visit Image} and the difference images.
 The \gls{forced photometry} performed on the difference-images (the \texttt{psfDiffFlux} column of the ForcedSource table) measures only the time-variable component of the flux without contamination from static nearby sources.
-Forced photometry carried out directly on the \gls{Visit} Images can pick up flux from blended or nearby static objects, and the severity of this contamination depends on the seeing.
+Forced photometry carried out directly on the \glspl{Visit Image} can pick up flux from blended or nearby static objects, and the severity of this contamination depends on the seeing.
 The centroids of objects with multi-epoch \gls{forced photometry} are drawn either from coadd-based object positions or from the DIAObjects, which are constructed from the DIASources associated from detections in the difference images.
 
 \subsection{Solar System}
 \subsubsection{Source Association}
 \label{sec:ss-association}
 
-The solar system association input was a 2025 March 13 snapshot of the MPC Orbit database\footnote{Small bodies discovered after 2025 March 13---including those found in Rubin data---are therefore absent from the solar system \gls{Source} catalog \secref{sssec:SSSource}}, limited to objects whose observational arcs exceeded two days.
-Associations were made independently for each detector and visit using positions predicted by Sorcha \citep[][]{2025AJ....170..100M,2025AJ....170...97H} at the visit epoch from this orbit catalog.
+The solar system association input was a 2025 March 13 snapshot of the MPC Orbit database\footnote{Small bodies discovered after 2025 March 13---including those found in Rubin data---are therefore absent from the Solar System Source catalog \secref{sssec:SSSource}}, limited to objects whose observational arcs exceeded two days.
+Associations were made independently for each detector and visit using positions predicted by \texttt{Sorcha} \citep[][]{2025AJ....170..100M,2025AJ....170...97H} at the visit epoch from this orbit catalog.
 Predicted objects were first restricted to the detector \gls{footprint}.
 Measured \gls{DIA} Source (\secref{sssec:DIASource}) coordinates were represented as unit vectors on the celestial sphere and stored in a $k$-d tree.
 For each predicted position, the \gls{algorithm} identified the nearest detection within $1\arcsec$.
@@ -322,10 +323,10 @@ Detection-level reliability information requires reference to the \gls{DIA} Sour
 
 \subsubsection{Photometry and Phase Curves}
 
-The solar system \gls{Object} photometric fields were derived independently in each of the $ugrizy$ bands from PSF fluxes in the associated detections.
+The Solar System Object photometric fields were derived independently in each of the $ugrizy$ bands from PSF fluxes in the associated detections.
 For a \gls{flux} $f$ in nJy, the conversion used was $m_{\rm AB}=31.4-2.5\log_{10}f$, with magnitude uncertainty $1.085736\,\sigma_f/f$.
 Non-positive fluxes therefore yield non-finite magnitudes and were removed before fitting.
-Apparent magnitudes were reduced to unit heliocentric and topocentric distance using $m(1,1,\alpha)=m-5\log_{10}(r\Delta)$, where $r$ and $\Delta$ are in \gls{au}.
+Apparent magnitudes were reduced to unit heliocentric and topocentric distance using $m(1,1,\alpha)=m-5\log_{10}(r\Delta)$, where $r$ and $\Delta$ are in au.
 
 The reduced magnitudes were described with the $H,G_{12}$ phase function of \citet[][]{2010Icar..209..542M}.
 The \gls{DP2} processing fixed $G_{12}=0.5$ and fit only the absolute magnitude $H$, since the short observing interval and limited phase-angle coverage do not generally support a stable two-parameter fit.

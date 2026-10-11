@@ -57,7 +57,7 @@ The tightness of these loci indicates the good quality of the band-to-band relat
 The displacement is directed along the parallactic angle and increases toward shorter wavelengths, producing a color-dependent angular offset the size of which differs between bands.
 
 The presence of DCR in LSSTComCam data was previously discussed in the \gls{DP1} release paper \citep[][]{2026AJ....171..360V}.
-Here, we characterize the effect in LSSTCam data using two representative sky regions: the Extended Chandra Deep Field-South (ECDFS) centered at (R.A., decl.) = (53.16, -28.10) and a field near the ecliptic (Rubin\_SV\_320\_-15) centred at (R.A., decl.) = (320.0, -15.0), respectively.
+Here, we characterize the effect in LSSTCam data using two representative sky regions: the Extended Chandra Deep Field-South (ECDFS) centered at (R.A., decl.) = (53.16, -28.10) and a field near the ecliptic (Rubin\_SV\_320\_-15) centered at (R.A., decl.) = (320.0, -15.0), respectively.
 For each region, we consider all Deep Coadd images from tracts within 5 degrees of the field center.
 
 The extent of any displacement due to DCR is dependent on airmass, meaning that for a patch it changes at the per-visit level.  
@@ -134,7 +134,7 @@ For this method, as for DP1, we use a greedy, probabilistic matching algorithm t
 
 \figref{fig:dp2_ecdfs_euclid_completeness} shows completeness in the ECDFS field compared to Euclid Q1 \citep[][]{2026A&A...711A...1E,2026A&A...711A...4E}, along with the proportion of objects whose star/galaxy classification disagrees with Euclid.
 Euclid stars are defined solely with a \texttt{mumax\_minus\_mag < -2.6} cut as recommended by \citet[][]{2026A&A...711A..20E}, whereas DP2 stars are selected with \texttt{griz\_model\_extendedness} $< 0.2$.
-Completeness is generally high, peaking above 96.5\% for $20 < \mathrm{mag_{VIS}} < 21$, with a misclassification rate just under 1\%.
+Completeness peaks above 96.5\% for $20 < \mathrm{mag_{VIS}} < 21$, with a misclassification rate just under 1\%.
 Purity, on the other hand, peaks at bright magnitudes but dips below 93.3\% at the same magnitude range.
 
 Completeness and purity figures are dependent on the choice of flags to exclude spurious detections.
@@ -157,7 +157,7 @@ One of the main improvements in DP2 galaxy measurements is the use of an exponen
 \figref{fig:dp2_ecdfs_sersic_sizes} shows the distribution of S\'ersic size as a function of S\'ersic $i$-band magnitude in ECDFS.
 While there are still some overly large galaxy outliers, the proportion is fairly small.
 The 99.5th percentile size increases slightly from 18th to 22nd magnitude, where the outliers are most problematic, but falls for fainter objects.
-This is likely partly due to improved deblending as well; the Gaussian model in \gls{ShearObject}, which does limited masking of neighbors rather than multi-object modelling, has a considerably larger fraction of ``superspreaders''.
+This is likely partly due to improved deblending as well; the Gaussian model in \gls{ShearObject}, which does limited masking of neighbors rather than multi-object modeling, has a considerably larger fraction of ``superspreaders''.
 \todo{Not sure if we want to be more quantitative about this; I can produce figures but it may be TMI.}
 
 \begin{figure}[tpb]
@@ -169,9 +169,9 @@ This is likely partly due to improved deblending as well; the Gaussian model in 
 
 Using \texttt{griz\_model\_extendedness}, the S\'ersic sizes of stars are also consistently smaller than galaxies until 25th magnitude.
 At 24th magnitude, however, the number counts of stars drop precipitously, as the classifier's completeness drops to maintain purity.
-The cause of the significantly nonzero sizes of stars is not entirely understood, but the median sizes are consistent with other forward modelling algorithms, including from CModel's exponential fits (which use an independent double shapelet PSF model) and from the Gaussian model in \gls{ShearObject}.
+The cause of the significantly nonzero sizes of stars is not entirely understood, but the median sizes are consistent with other forward modeling algorithms, including from CModel's exponential fits (which use an independent double shapelet PSF model) and from the Gaussian model in \gls{ShearObject}.
 
-\figref{fig:dp2_sersic_size_ratios} shows the ratio of S\'ersic sizes measured in DP2 with two space-based catalogs - Euclid Q1 in ECDFS and COSMOS2025 \citep[][]{2025A&A...704A.339S} in COSMOS.
+\figref{fig:dp2_sersic_size_ratios} shows the ratio of S\'ersic sizes measured in DP2 with two space-based catalogs - Euclid Q1 in ECDFS and COSMOS2025 \citep[][]{2025A&A...704A.339S}, whose sizes are measured from JWST/NIRCam imaging, in COSMOS.
 In both cases, the median size ratio remains fairly consistent to about 24th magnitude (filter dependent), and the scatter is remarkably small for ECDFS/Euclid especially.
 There is a shallow slope in the median such that bright galaxies have underestimated sizes.
 This is likely due to a combination of reasons, most notably the known background oversubtraction which is less likely to be an issue in space-based data.
@@ -238,7 +238,7 @@ The concentration of processing failures in these regions is further illustrated
 \figref{fig:crowded_fields_matched_sources} shows this match ratio across the survey footprint.
 The lowest match ratios, including tracts and patches with no successful matches, occur almost entirely along the Galactic plane, indicating that these unmatched sources are associated with failures of the standard LSST processing in these densely populated fields.
 Away from the Galactic plane, match ratios remain uniformly high.
-Thus, although crowded fields constitute a substantial fraction of the total flagged pixels, the associated processing challenges are concentrated predominantly in a relatively small region of the survey footprint near the Galactic plane.
+Thus, although crowded fields constitute a substantial fraction of the total flagged pixels, the associated processing challenges are concentrated predominantly within $\sim$15\degr\ of the Galactic plane.
 
 \begin{figure}[htbp]
 \plotone{dp2_shear_pgauss_gaap}
