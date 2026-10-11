@@ -2,7 +2,7 @@
 \label{sec:commissioning}
 
 This section describes the components of the Rubin Observatory system and their integration status during the period in which the \gls{DP2} data were acquired.
-Throughout this period the observatory remained under construction: several key components were incomplete, and the performance of the system as a whole was still being characterized.
+Throughout this period the observatory remained under construction: several key components were incomplete, and the performance of the system as a whole was still being characterized and optimized.
 The state of the Simonyi Survey Telescope, \gls{LSSTCam} and its filter complement, and the calibration system is described first, followed by the data acquisition and processing infrastructure and the delivered image quality.
 Dedicated engineering campaigns were carried out to test individual system components and to verify their integration into the full system.
 These campaigns continued as needed throughout the dedicated \gls{SV} campaign period described in \S\ref{sec:science_program}.
@@ -10,8 +10,8 @@ These campaigns continued as needed throughout the dedicated \gls{SV} campaign p
 \subsection{Simonyi Survey Telescope}
 \label{ssec:simonyi}
 %
-The Simonyi Survey Telescope \citep[][]{2024SPIE13094E..09S}  features a compact three-mirror design incorporating an 8.4-meter primary--tertiary mirror (\gls{M1M3}) fabricated from a single borosilicate monolith, and a 3.5 m secondary mirror (M2).
-This compact \gls{configuration} supports a wide 3.5\degree  field of view while enabling exceptional pointing stability, with slew-and-settle times under 5 seconds.
+The Simonyi Survey Telescope \citep[][]{2024SPIE13094E..09S}  features a compact three-mirror design incorporating an 8.4-meter primary--tertiary mirror (\glsunset{M1M3}\gls{M1M3}) fabricated from a single borosilicate monolith, and a 3.5 m secondary mirror (M2).
+This compact \gls{configuration} supports a wide 3.5\degree\ field of view while enabling exceptional pointing stability, with slew-and-settle times under 5 seconds.
 
 To achieve the scientific goals of the 10-yr \gls{LSST}, the observatory must maintain high image quality across the full field of view \citep[][]{2008arXiv0805.2366I}.
 This is accomplished through the \gls{AOS} \citep[][]{2015ApOpt..54.9045X, 2024ApJ...974..108M}, which corrects, between successive exposures, wavefront distortions caused by optical misalignments and mirror surface deformations, primarily driven by gravitational and thermal loads.
@@ -33,11 +33,11 @@ The quantitative impact on delivered image quality is characterised in \S\ref{ss
 \label{ssec:lsstcam}
 %
 \gls{LSSTCam} \citep[][]{10.1117/12.3018987, 10.71929/rubin/2571927} is a 3.2-gigapixel mosaic camera with a \rubinfov instantaneous field of view.
-Its focal plane comprises 25 modular rafts arranged in a 5$\xspace\times\xspace$5 grid: 21 science rafts, each containing nine 4K$\xspace\times\xspace$4K \gls{CCD} sensors, and 4 corner rafts each housing two wavefront sensors and two guider sensors, for a total of 205 sensors: 189 science, 8 wavefront, and 8 guider.
+Its focal plane comprises 25 modular rafts arranged in a 5$\xspace\times\xspace$5 grid: 21 science rafts, each containing nine $\sim$4k$\times$4k \gls{CCD} sensors, and 4 corner rafts each housing two wavefront sensors and two guider sensors, for a total of 205 sensors: 189 science, 8 wavefront, and 8 guider.
 
-\gls{LSSTCam} employs sensors from two vendors: \gls{E2V} sensors populate the central science rafts, and \gls{ITL} sensors populate the peripheral science rafts.
+\gls{LSSTCam} employs sensors from two vendors: \gls{E2V} sensors populate the central science rafts, and sensors from the \gls{ITL} populate the peripheral science rafts.
 Each sensor is subdivided into 16 amplifiers, each reading 512$\xspace\times\xspace$2048 pixels in parallel.
-\figref{fig:lsstcam_schematic} shows the \gls{LSSTCam} focal plane layout, viewed from above looking down through the camera lenses, including the placement and numbering scheme of sensors (``S'') and amplifiers (``C''); a full description is given in \citet[][]{2025JATIS..11a1209P, ctn-001}.
+\figref{fig:lsstcam_schematic} shows the \gls{LSSTCam} focal plane layout, viewed from above looking down through the camera lenses, including the placement and numbering scheme of sensors (``S'') and amplifiers (``C''); a full description is given in \citet[][]{2025JATIS..11a1209P} and \citet[][]{ctn-001}.
 \begin{figure*}[htb!]
 \plotone{LSSTCam_focal_plane}
 \caption{\gls{LSSTCam} focal plane layout, showing the placement and numbering scheme of sensors (``S'') and amplifiers (``C''). The view is from above, looking through the \gls{LSSTCam} lenses onto the focal plane. Each sensor contains 16 amplifiers. Each raft is composed of a 3$\xspace\times\xspace$3 array of sensors. The detector number for each sensor is indicated in parentheses.}
@@ -73,7 +73,7 @@ The detector quantum efficiency is likewise the focal-plane average over all the
 \gls{ITL} and \gls{E2V} sensors are not identical: \gls{ITL} devices have somewhat higher quantum efficiency in the red, so the focal-plane-averaged \gls{LSSTCam} response is marginally lower than the all-\gls{ITL} response used for \gls{LSSTComCam}.
 This chromatic difference is most apparent in the $g$ band, visible even by eye as a two-tone effect across the focal plane.
 $u$-band throughput is dominated by the atmosphere and filter rather than the detector, and the redder bands are comparatively insensitive to the vendor difference.
-In absolute terms the \gls{ITL}/\gls{E2V} difference is small, much smaller than, for example, the difference between \gls{LSSTCam} and other instruments such as \gls{DECam}, since the two vendors' filters are essentially the same design.
+In absolute terms the \gls{ITL}/\gls{E2V} difference is small, much smaller than, for example, the difference between \gls{LSSTCam} and other instruments such as \gls{DECam} \citep[][]{2015AJ....150..150F}, since the two vendors' filters are essentially the same design.
 It is nonetheless large enough to matter for millimagnitude-level photometric \gls{calibration}.
 
 Individual per-detector quantum-efficiency curves have not yet been released.
@@ -81,8 +81,7 @@ The standard \gls{passband} distributed with \gls{DP2} is therefore the focal-pl
 The full-system throughput of the six \gls{LSSTCam} filters is shown in \figref{fig:lsstcam_standard_bandpasses} and the corresponding transmission curves are provided as a \gls{DP2} data product(\secref{sssec:std_passbands}).
 \begin{figure}[htb!]
 \plotone{dp2_lsstcam_std_bandpasses}
-\caption{\gls{LSSTCam} standard bandpasses, illustrating full-shown
-stem throughput.
+\caption{\gls{LSSTCam} standard bandpasses, illustrating full-system throughput.
 The bandpasses include a standard atmosphere at an airmass of 1.2, telescope optics, \gls{camera} surfaces, and mean \gls{ITL} and \gls{E2V} detector quantum efficiency.
 The corresponding transmission curves are provided as a \gls{DP2} data product.}
 \label{fig:lsstcam_standard_bandpasses}
@@ -115,7 +114,7 @@ The full suite of calibration and throughput data products included in \gls{DP2}
 \label{ssec:data processing}
 %
 The Rubin \gls{DMS} is responsible for the acquisition, transfer, archiving, processing, and distribution of all data produced by the observatory.
-It operates as an automated end-to-end system with minimal human intervention,  ingesting raw pixels from the \gls{LSSTCam} focal plane within seconds of shutter close and delivering science-ready data products to a global community of researchers within 120 secs of shutter close.
+It operates as an automated end-to-end system with minimal human intervention,  ingesting raw pixels from the \gls{LSSTCam} focal plane within seconds of shutter close and delivering science-ready data products to a global community of researchers within 120\,s of shutter close.
 
 The data products in \gls{DP2} are the result of \gls{DRP} (\secref{sec:drp}), which reprocesses the full accumulated image archive to produce the deep, well-calibrated data products that form the basis of each Data Release,  and are delivered to the community via the \gls{RSP} (\secref{sec:data_services}).
 During the \gls{LSSTCam} commissioning campaign, the \gls{DMS} was operated at full scale for the first time, transferring, archiving, and processing all \gls{LSSTCam} images,  and validating the end-to-end data flow from summit to \gls{RSP}.
@@ -123,12 +122,12 @@ During the \gls{LSSTCam} commissioning campaign, the \gls{DMS} was operated at f
 % Includes rapid analysis and quick look
 \subsubsection{Data Acquisition, Transfer and Archive}
 \label{ssec:dataacq}
-Following each exposure, the \gls{DAQ} system at the summit stores the raw image data as a set of 205 files per exposure: 189 science sensors\footnote{Only 188 science sensor files were generated per exposure  as sensor R30/S12 was non-operational throughout; see \S\ref{ssec:lsstcam}.}, 8 wavefront sensors, and 8 guiding sensors on the \gls{LSSTCam} focal plane.
-Uncompressed, a full science exposure totals $\sim$\,8.2\,GB; after compression, $\sim$\,4\,GB.
+Following each exposure, the \gls{DAQ} at the summit stores the raw image data as a set of 205 files per exposure: 189 science sensors\footnote{Only 188 science sensor files were generated per exposure  as sensor R30/S12 was non-operational throughout; see \S\ref{ssec:lsstcam}.}, 8 wavefront sensors, and 8 guiding sensors on the \gls{LSSTCam} focal plane.
+Uncompressed, a full science exposure totals $\sim$\,8.2\,GB, which is reduced to $\sim$\,4\,GB after compression.
 
-At the summit, each exposure is processed in near real time by the Rapid Analysis pipeline, performing \gls{ISR} (\secref{sec:drp-singlevisit-calibrationisr}) and source detection (\secref{sec:drp-singlevisit}) on a 30--60 second timescale to provide quick-look image diagnostics and support real-time \gls{AOS} assessment.
+At the summit, each exposure is processed in near real time by the Rapid Analysis pipeline, performing \gls{ISR} (\secref{sec:drp-singlevisit-calibrationisr}) and source detection (\secref{sec:drp-singlevisit}) on a 30--60\,s timescale to provide quick-look image diagnostics and support real-time \gls{AOS} assessment.
 The resulting per-visit quality metrics formed the basis of the visit quality characterisations used to define the \gls{DP2} coadd inputs.
-Summary visit and detector-level metadata are available to users as \gls{DP2} data products (\secref{ssec:metadata}) and are also available in an opsim-format SQLite database \secref{sssec:opsim}).
+Summary visit and detector-level metadata are available to users as \gls{DP2} data products (\secref{ssec:metadata}) and are also available in an opsim-format SQLite database (\secref{sssec:opsim}).
 
 \subsubsection{LSST Science Pipelines}
 \label{ssec:pipelines}
