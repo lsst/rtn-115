@@ -13,14 +13,14 @@ Engineering observations are not scientifically useful and are not included in \
 
 
 \figref{fig:dp2_mjd_cumulative} shows the cumulative distribution of visit MJD for all \gls{DP2} visits, combined across all filters.
-Notable dates are indicated: the \gls{DP2} start date, \dptwostartdate; the end of the \gls{DP2} data collection window, \dptwoenddate; a phase of rapid data acquisition (July 1--25, 2025); and the end of the engineering shutdown, when observations resumed at the start of Operations, \startoperations.
+Notable dates are indicated: the \gls{DP2} start date, \dptwostartdate; the end of the \gls{DP2} data collection window, \dptwoenddate; a phase of rapid data acquisition (2025-07-01 to 2025-07-25); and the end of the engineering shutdown, when observations resumed at the start of Operations, \startoperations.
 The sky distribution of \gls{DP2} visits is shown in \figref{fig:dp2_sky}.
 The observation cadence during \gls{DP2} differs significantly from that of the planned \gls{LSST}.
 Rather than following the cadence intended for the full survey, visit acquisition during this period was driven by engineering and commissioning priorities.
 As a result, the distribution of visits in time reflects the sequence of commissioning activities and engineering interventions rather than a scientifically-optimized observing strategy.
 \begin{figure}[hbt!]
 \plotone{dp2_visit_mjd_cumulative}
-\caption{Cumulative distribution of visit MJD for all \gls{DP2} visits, combined across all filters. Vertical dotted lines mark notable dates: the \gls{DP2} start date, \dptwostartdate; the end of the data collection window, \dptwoenddate; a phase of rapid data acquisition (July 1--25, 2025); and the end of the engineering shutdown, when observations resumed \startoperations}
+\caption{Cumulative distribution of visit MJD for all \gls{DP2} visits, combined across all filters. Vertical dotted lines mark notable dates: the \gls{DP2} start date, \dptwostartdate; the end of the data collection window, \dptwoenddate; a phase of rapid data acquisition (2025-07-01 to 2025-07-25); and the end of the engineering shutdown, when observations resumed \startoperations}
 \label{fig:dp2_mjd_cumulative}
 \end{figure}
 
@@ -43,7 +43,7 @@ Observations were typically acquired in sequences of at least 10 visits per band
 Several of these fields, including \gls{COSMOS}, M49, the Prawn Nebula region, and Rubin\_SV\_225\_-40, received substantial numbers of visits and are among the most deeply observed regions in \gls{DP2}.
 The \gls{COSMOS} field was first observed as part of the small-field campaign but was not accessible during the main \gls{SV} survey period; additional observations were later acquired during the Early Operations phase.
 
-\tabref{tab:dp2_sf_m5_depths} reports the 5$\sigma$ point--source depths for coadded images per field and per band, where coverage in a band is nonzero.
+\tabref{tab:dp2_sf_m5_depths} reports the 5$\sigma$ depths for point-like sources in coadded images per field and per band, where coverage in a band is nonzero.
 % together with the expected 10 yr LSST depths derived from the baseline simulated survey \citep[][]{2022ApJS..258....1B}.
 
 \input{tables/dp2_sf_m5_depths}
@@ -55,9 +55,9 @@ The \gls{COSMOS} field was first observed as part of the small-field campaign bu
 The \gls{SV} surveys began on \svcampaignstartdate and comprised two interleaved components within a single \gls{FBS} configuration, a wide survey and a deep survey.
 
 \subsubsection{The Wide Survey}
-The Wide Survey initially covered a $\sim$\,3,000\,deg$^2$ footprint tracing the ecliptic plane from the dense regions of the Galactic Bulge through low-dust regions of the planned \gls{LSST} \gls{WFD} footprint.
+The Wide Survey initially targeted a $\sim$\,3,000\,deg$^2$ footprint tracing the ecliptic plane from the dense regions of the Galactic Bulge through low-dust regions of the planned \gls{LSST} \gls{WFD} footprint.
 Approximately halfway through the \gls{SV} period, on \svwfdsevenfiftystart{}, the footprint was consolidated to $\sim$\,750\,deg$^2$ and observed in the $griz$ bands only.
-This reduced footprint is a $10\degr$-wide band centred on the ecliptic, defined by ecliptic longitude $285\degr < \lambda < 360\degr$ and ecliptic latitude $|\beta| < 5\degr$.
+This reduced footprint is a $10\degr$-wide band centered on the ecliptic, defined by ecliptic longitude $285\degr < \lambda < 360\degr$ and ecliptic latitude $|\beta| < 5\degr$.
 On \svwfdthreehundredstart{}, in the final week of commissioning, the footprint was further reduced to the $\sim$\,300\,deg$^2$ area covered by newly deployed templates ($300\degr <$ R.A. $< 324\degr$, $-26\degr <$ decl. $< -10\degr$, and $\beta < 5\degr$), to concentrate visits and reach the depth required for difference imaging tests.
 As a result, median visit counts and coadded depth increase substantially toward the inner regions of the footprint.
 
@@ -65,7 +65,7 @@ As a result, median visit counts and coadded depth increase substantially toward
 
 \input{tables/dp2_sv_wide_footprints}
 
-\tabref{tab:dp2_sv_wide_m5_depths} provides the estimated $m_5$ coadded depths within each of the subsets of the wide SV area.
+\tabref{tab:dp2_sv_wide_m5_depths} provides the estimated $m_5$ (5$\sigma$ point-source limiting magnitude; \citealt[][]{SMTN-002, DMTN-296}) coadded depths within each of the subsets of the wide SV area.
 
 \input{tables/dp2_sv_wide_m5_depths}
 
@@ -75,10 +75,10 @@ The Deep Survey targeted four of the five planned \gls{LSST} \gls{DDF}s: \gls{EC
 The \gls{FBS} interleaved \gls{DDF} observations with the wide survey, scheduling visits to each field according to the prescribed \gls{DDF} observing cadence.
 ELAISS1 received the largest number of visits, 539 across all six $ugrizy$ bands, and is the only \gls{DDF} observed in all bands during the \gls{SV} survey.
 \gls{COSMOS} was not accessible during the \gls{SV} period as described above.
-The remaining \glspl{DDF} were observed primarily in $griz$, as the $u$ and $y$ filters were unavailable after 2025-08-10 due to a hardware issue with the filter exchanger.
+The remaining \glspl{DDF} were observed primarily in $griz$, since the $u$ and $y$ filters were unavailable after 2025-08-10 due to a hardware issue with the filter exchanger.
 The dither pattern for the \glspl{DDF} evolved during the campaign; early observations used only small translational dithers with no intra-night rotation, while later observations introduced both translational and rotational intra-night dithers.
 
-\tabref{tab:dp2_ddf_m5_depths} reports the 5$\sigma$ point--source depths for coadded images per field and per band, where coverage in a band is nonzero.
+\tabref{tab:dp2_ddf_m5_depths} reports the 5$\sigma$ depths for point-like sources in coadded images per field and per band, where coverage in a band is nonzero.
 
 \input{tables/dp2_ddf_m5_depths}
 
@@ -90,8 +90,8 @@ The dither pattern for the \glspl{DDF} evolved during the campaign; early observ
 Following the transition to Operations on \startoperations, \gls{FBS}-driven observations resumed during the Early Operations optimization period.
 Observations during this period, which ran from \startoperations through \dptwoenddate, were a mixture of engineering activities and \gls{FBS}-driven survey observations aimed at improving image quality and survey speed in preparation for the start of the \gls{LSST}, and building difference-imaging templates across the full \gls{LSST} footprint.
 
-The pre-\gls{LSST} observations are characterised by a lower and less regular cadence than the \gls{SV} surveys, reflecting frequent engineering interruptions.
-The \gls{FBS} was configured with a single-visit template tier as a scheduling priority, and on any given night would typically concentrate observations in a single band rather than interleaving filters, to maximise sky coverage for template building.
+The pre-\gls{LSST} observations are characterized by a lower and less regular cadence than the \gls{SV} surveys, reflecting frequent engineering interruptions.
+The \gls{FBS} was configured with a single-visit template tier as a scheduling priority, and on any given night would typically concentrate observations in a single band rather than interleaving filters, to maximize sky coverage for template building.
 The $i$ band was preferred due to its high throughput and suitability for difference imaging.
 A concentrated block of $i$-band observations in late October 2025 reflected deliberate \gls{AOS} engineering tests that held the filter fixed to isolate optical state changes from filter-induced perturbations, producing the prominent $i$-band coverage regions visible in \figref{fig:dp2_sky}.
 Pre-\gls{LSST} visits not overlapping existing \gls{SV} survey regions were not combined into coadds but are included in the \gls{DP2} visit dataset.
