@@ -116,11 +116,11 @@ For users wanting a clean sample of objects that are not blended in the partiall
 
 The depth of coadds can be estimated in several different ways, as well as separately for point and extended objects.
 One method is to simply measure statistics like the median/mean magnitude of objects in a narrow range of significance, i.e. at $5\sigma \pm 0.1\sigma$.
-One drawback of this method is that uncertainties in coadd fluxes are typically underestimated, and by a larger factor for extended objects.
-Nonetheless, it is fairly straightforward to implement this method and correct the error estimation, at least for point sources.
+A drawback of this method is that uncertainties in coadd fluxes are typically underestimated, and by a larger factor for extended objects.
 
 Injecting synthetic objects into real data is another method that was used for DP1.
 However, the switch to cell-based coadds necessitated changes to the injection methodology for DP2 and a large-scale injection campaign has not yet been completed.
+Preliminary analysis of injection into the central tract of the COSMOS \gls{DDF} yields about 70\% completeness for point sources at $r=26.5$, the 5$\sigma$ point--source limit reported in \tabref{tab:dp2_ddf_m5_depths}.
 
 \begin{figure}[tpb]
 \includegraphics[width=\linewidth]{figures/dp2_ecdfs_euclid_completeness}
@@ -137,13 +137,14 @@ Euclid stars are defined solely with a \texttt{mumax\_minus\_mag < -2.6} cut as 
 Completeness is generally high, peaking above 96.5\% for $20 < \mathrm{mag_{VIS}} < 21$, with a misclassification rate just under 1\%.
 Purity, on the other hand, peaks at bright magnitudes but dips below 93.3\% at the same magnitude range.
 
-Completeness and purity figures are somewhat dependent on the choice of flags to exclude possible spurious detections.
+Completeness and purity figures depend on the choice of flags to exclude possible spurious detections.
 For Euclid, we select only objects with \texttt{spurious\_prob}$ < 0.2$.
 This cut excludes more objects than the default value of 0.5 recommended by \citet[][]{2026A&A...711A...4E}.
 Visual inspection of the coordinates of Euclid detections with $0.2 <$ \texttt{spurious\_prob} $< 0.5$ revealed that most are clustered around bright stars and their diffraction spikes.
 
 Similar problematic detections are found in the DP2 catalogs, many but not all of which are excluded using \texttt{coord\_flag}.
 Not all of these flagged objects are necessarily spurious detections, but as with Euclid, many cluster around bright stars and have overestimated fluxes due to their footprints including part of the extended wings of the star's PSF.
+These complications generally make estimates of completeness and purity from matching to real catalogs more pessimistic compared to equivalent quantities from source injection.
 
 \subsection{Galaxy Photometry and Sizes}
 
