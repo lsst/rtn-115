@@ -401,28 +401,29 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
     )
 
     coadd = butler.get(refs[0])
-    bbox = coadd.bbox
-    sky_projection = coadd.sky_projection
+    bbox = coadd.getBBox()
+    coaddWcs = coadd.getWcs()
 
-    corner_00 = sky_projection.pixel_to_sky(x=bbox.x.min, y=bbox.y.min)
-    corner_01 = sky_projection.pixel_to_sky(x=bbox.x.min + 1, y=bbox.y.min)
-    corner_x1 = sky_projection.pixel_to_sky(x=bbox.x.stop, y=bbox.y.min)
-    corner_y1 = sky_projection.pixel_to_sky(x=bbox.x.min, y=bbox.y.stop)
+    xMin, yMin = bbox.getMinX(), bbox.getMinY()
+    xStop, yStop = bbox.getMaxX() + 1, bbox.getMaxY() + 1
 
-    fovx = corner_00.separation(corner_x1).degree
-    fovy = corner_00.separation(corner_y1).degree
+    corner_00 = coaddWcs.pixelToSky(xMin, yMin)
+    corner_01 = coaddWcs.pixelToSky(xMin + 1, yMin)
+    corner_x1 = coaddWcs.pixelToSky(xStop, yMin)
+    corner_y1 = coaddWcs.pixelToSky(xMin, yStop)
+
+    fovx = corner_00.separation(corner_x1).asDegrees()
+    fovy = corner_00.separation(corner_y1).asDegrees()
     params = addParameter(
-        params, "patcharea", f"{fovx.item() * fovy.item():.3f}", unit="deg$^{\\rm 2}$"
+        params, "patcharea", f"{fovx * fovy:.3f}", unit="deg$^{\\rm 2}$"
     )
 
-    npatchpixx = bbox.x.size
-    npatchpixy = bbox.y.size
-    coaddpixsize = corner_00.separation(corner_01).arcsec
+    npatchpixx = bbox.getWidth()
+    npatchpixy = bbox.getHeight()
+    coaddpixsize = corner_00.separation(corner_01).asArcseconds()
     params = addParameter(params, "npatchpixx", npatchpixx)
     params = addParameter(params, "npatchpixy", npatchpixy)
-    params = addParameter(
-        params, "coaddpixsize", coaddpixsize.item(), unit="\\arcsec", sig=2
-    )
+    params = addParameter(params, "coaddpixsize", coaddpixsize, unit="\\arcsec", sig=2)
 
     wcs = tract.getWcs()
     patchInfo = tract.getPatchInfo((5, 5))
