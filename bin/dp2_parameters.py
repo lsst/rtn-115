@@ -886,13 +886,14 @@ if __name__ == "__main__":
     if not args.static_only:
         from lsst.daf.butler import Butler
         from lsst.rsp import get_tap_service
-        from pyvo.dal.exceptions import DALServiceError
+        from pyvo.dal.exceptions import DALFormatError, DALServiceError
 
-        service = get_tap_service("tap")
+        service = None
         try:
+            service = get_tap_service("tap")
             query = "SELECT * FROM tap_schema.tables WHERE tap_schema.tables.schema_name = 'dp2'"
             dp2_available = len(service.search(query)) > 0
-        except DALServiceError:
+        except (DALServiceError, DALFormatError):
             warnings.warn("TAP service unavailable, skipping TAP-dependent steps.")
             dp2_available = False
 
@@ -902,9 +903,9 @@ if __name__ == "__main__":
         skymapName = "lsst_cells_v2"
 
         butler = Butler(
-            "dp2",
+            "dp2_prep",
             instrument=instrument,
-            collections=["LSSTCam/runs/DRP/DP2", "skymaps"],
+            collections=["LSSTCam/runs/DRP/w_2026_39/DM-56219", "skymaps"],
             skymap=skymapName,
         )
         registry = butler.registry
