@@ -218,7 +218,9 @@ def observingQuality(params: DP2Parameters) -> DP2Parameters:
 
 
 def imageStats(params: DP2Parameters, imageId: tuple) -> DP2Parameters:
-    """Add count, file size, pixel dimensions, plate scale, and FOV for one dataset type.
+    """Add the number of instances of an image dataset. This can be
+    expanded for more image stats, such a number of pixels, field-
+    of-view, etc.
 
     Parameters
     ----------
@@ -233,36 +235,11 @@ def imageStats(params: DP2Parameters, imageId: tuple) -> DP2Parameters:
         Updated parameter store.
     """
     imageType = imageId[0]
-    # imageDataId = imageId[1]
     imageName = imageType.replace("_", "")
 
     refs = list(registry.queryDatasets(imageType))
     params = addParameter(params, f"n{imageName}s", len(list(refs)))
 
-    # ref = list(registry.queryDatasets(imageType, dataId=imageDataId))[0]
-    # filepath = butler.getURI(ref)
-
-    # Filesize not currently working:
-    # roughFileSize = round(os.path.getsize(filepath.path) / 1e6, 2)
-    # params = addParameter(params, f"{imageName}hdd", f"{roughFileSize:.0f}", unit="MB")
-
-    # image = butler.get(ref)
-    # params = addParameter(params, f"n{imageName}pixx", image.bbox.shape.x)
-    # params = addParameter(params, f"n{imageName}pixy", image.bbox.shape.y)
-
-    # platescale = image.getWcs().getPixelScale().asArcseconds()
-    # params = addParameter(
-    #     params, f"{imageName}platescale", f"{platescale:.1f}", unit="\\arcsec per pixel"
-    # )
-
-    # fovx = image.getDimensions().x * image.getWcs().getPixelScale().asDegrees()
-    # fovy = image.getDimensions().y * image.getWcs().getPixelScale().asDegrees()
-    # params = addParameter(params, f"{imageName}fovx", f"{fovx:.2f}", unit="\\degree")
-    # params = addParameter(params, f"{imageName}fovy", f"{fovy:.2f}", unit="\\degree")
-    # area = fovx * fovy
-    # params = addParameter(
-    #     params, f"{imageName}fov", f"{area:.3f}", unit="deg$^{\\rm 2}$"
-    # )
     return params
 
 
@@ -281,43 +258,21 @@ def imageDatasets(params: DP2Parameters) -> DP2Parameters:
     """
     log.info("Adding image dataset stats...")
 
-    # Only the dataset type (the key) is currently used by imageStats(); the
-    # data IDs are placeholders for the (commented-out) per-image stats.
     datasets = {
         "raw": {},
         "visit_image": {},
-        "deep_coadd": {
-            "band": "i",
-            "skymap": "lsst_cells_v2",
-            "tract": 9813,
-            "patch": 50,
-        },
-        "template_coadd": {
-            "band": "i",
-            "skymap": "lsst_cells_v2",
-            "tract": 9813,
-            "patch": 50,
-        },
+        "deep_coadd": {},
+        "template_coadd": {},
         "difference_image": {},
     }
     for dataset in datasets.items():
         params = imageStats(params, dataset)
 
-    # params = addParameter(
-    #     params,
-    #     "ndeepcoaddpixtotal",
-    #     params.values["ndeepcoaddpixx"] * params.values["ndeepcoaddpixy"] / 1e6,
-    #     sig=3,
-    #     unit="million",
-    # )
     return params
 
 
-def nRaws(params: DP2Parameters) -> DP2Parameters:
-    """Add the number of exposures, raw images, and active detectors.
-
-    Note: nraws and nexposures will populated for DP2. They are not
-    included in EPD2.
+def nDetectors(params: DP2Parameters) -> DP2Parameters:
+    """Add the number of active detectors.
 
     Parameters
     ----------
@@ -329,14 +284,13 @@ def nRaws(params: DP2Parameters) -> DP2Parameters:
     params : `DP2Parameters`
         Updated parameter store.
     """
-    log.info("Adding number of exposures and raws...")
-    # params = addParameter(params, "nexposures")
+    log.info("Adding the number of active exposures...")
 
     visit_detector_table = butler.get("visit_detector_table")
     params = addParameter(
         params, "nactivedetectors", len(set(visit_detector_table["detector"]))
     )
-    # params = addParameter(params, "nraws", )
+
     return params
 
 
@@ -917,7 +871,6 @@ if __name__ == "__main__":
         data_params = observingQuality(data_params)
         data_params = imageDatasets(data_params)
         data_params = skymapData(data_params)
-        data_params = nRaws(data_params)
         # data_params = coaddSelectionCriteria(data_params)
         # data_params = surveyPropertyMaps(data_params)
         # data_params = nCatalogDatasets(data_params)

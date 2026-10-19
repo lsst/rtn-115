@@ -175,6 +175,15 @@ detectors:
       value: 64
     - name: poverscan # Parallel overscan
       value: 48
+    - name: namps
+      value: 16
+    - name: namppix
+      value: 1
+      unit: megapixel
+    - name: tread
+      value: 2
+      unit: second
+
 
 # TODO: Raw and PVI dimensions to be auto-generated for DP2 version
 raw:
@@ -198,6 +207,11 @@ pvi:
       value: 4072
     - name: nitlpixy
       value: 4000
+
+calib:
+  parameters:
+    - name: ninputbias
+      value: 20
 
 deepcoadd:
   parameters:
