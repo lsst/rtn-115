@@ -871,6 +871,7 @@ if __name__ == "__main__":
         data_params = observingQuality(data_params)
         data_params = imageDatasets(data_params)
         data_params = skymapData(data_params)
+        data_params = nDetectors(data_params)
         # data_params = coaddSelectionCriteria(data_params)
         # data_params = surveyPropertyMaps(data_params)
         # data_params = nCatalogDatasets(data_params)
