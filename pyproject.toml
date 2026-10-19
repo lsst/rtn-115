@@ -25,6 +25,9 @@ dependencies = [
     "fsspec",
     "shapely",
     "psycopg[binary]>=3.3.6",
+    "rich",
+    "httpx2",
+    "starlink-pyast",
 ]
 
 [build-system]

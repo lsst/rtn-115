@@ -355,26 +355,47 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
     )
 
     coadd = butler.get(refs[0])
-    bbox = coadd.getBBox()
-    coaddWcs = coadd.getWcs()
+    if hasattr(coadd, "getBBox"):
+        # afw Exposure
+        bbox = coadd.getBBox()
+        coaddWcs = coadd.getWcs()
 
-    xMin, yMin = bbox.getMinX(), bbox.getMinY()
-    xStop, yStop = bbox.getMaxX() + 1, bbox.getMaxY() + 1
+        xMin, yMin = bbox.getMinX(), bbox.getMinY()
+        xStop, yStop = bbox.getMaxX() + 1, bbox.getMaxY() + 1
 
-    corner_00 = coaddWcs.pixelToSky(xMin, yMin)
-    corner_01 = coaddWcs.pixelToSky(xMin + 1, yMin)
-    corner_x1 = coaddWcs.pixelToSky(xStop, yMin)
-    corner_y1 = coaddWcs.pixelToSky(xMin, yStop)
+        corner_00 = coaddWcs.pixelToSky(xMin, yMin)
+        corner_01 = coaddWcs.pixelToSky(xMin + 1, yMin)
+        corner_x1 = coaddWcs.pixelToSky(xStop, yMin)
+        corner_y1 = coaddWcs.pixelToSky(xMin, yStop)
 
-    fovx = corner_00.separation(corner_x1).asDegrees()
-    fovy = corner_00.separation(corner_y1).asDegrees()
+        fovx = corner_00.separation(corner_x1).asDegrees()
+        fovy = corner_00.separation(corner_y1).asDegrees()
+        coaddpixsize = corner_00.separation(corner_01).asArcseconds()
+        npatchpixx = bbox.getWidth()
+        npatchpixy = bbox.getHeight()
+    else:
+        # lsst.images CellCoadd
+        bbox = coadd.bbox
+        projection = coadd.sky_projection
+
+        xMin, yMin = bbox.x.min, bbox.y.min
+        xStop, yStop = bbox.x.max + 1, bbox.y.max + 1
+
+        corner_00 = projection.pixel_to_sky(x=xMin, y=yMin)
+        corner_01 = projection.pixel_to_sky(x=xMin + 1, y=yMin)
+        corner_x1 = projection.pixel_to_sky(x=xStop, y=yMin)
+        corner_y1 = projection.pixel_to_sky(x=xMin, y=yStop)
+
+        fovx = corner_00.separation(corner_x1).deg
+        fovy = corner_00.separation(corner_y1).deg
+        
+        coaddpixsize = corner_00.separation(corner_01).arcsec
+        npatchpixx = xStop - xMin
+        npatchpixy = yStop - yMin
+    
     params = addParameter(
         params, "patcharea", f"{fovx * fovy:.3f}", unit="deg$^{\\rm 2}$"
     )
-
-    npatchpixx = bbox.getWidth()
-    npatchpixy = bbox.getHeight()
-    coaddpixsize = corner_00.separation(corner_01).asArcseconds()
     params = addParameter(params, "npatchpixx", npatchpixx)
     params = addParameter(params, "npatchpixy", npatchpixy)
     params = addParameter(params, "coaddpixsize", coaddpixsize, unit="\\arcsec", sig=2)
@@ -857,10 +878,18 @@ if __name__ == "__main__":
         instrument = "LSSTCam"
         skymapName = "lsst_cells_v2"
 
+        # For quick testing on SLAC:
+        small_repo = "dp2_prep" 
+        small_collection = "LSSTCam/runs/DRP/w_2026_39/DM-56219" # 
+        
+        # For full DP2 dataset on data-int:
+        full_repo = "dp2"
+        full_collection = "dp2"
+        
         butler = Butler(
-            "dp2_prep",
+            full_repo,
             instrument=instrument,
-            collections=["LSSTCam/runs/DRP/w_2026_39/DM-56219", "skymaps"],
+            collections=[full_collection, "skymaps"],
             skymap=skymapName,
         )
         registry = butler.registry
