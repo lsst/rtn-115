@@ -22,6 +22,7 @@ import math
 import sys
 from collections import OrderedDict
 from collections.abc import Iterable, Mapping
+from numbers import Integral
 from pathlib import Path
 from typing import Any
 
@@ -136,6 +137,10 @@ class DP2Parameters:
     def _format_value(value: Any) -> str:
         if isinstance(value, float):
             return f"{value:.3f}".rstrip("0").rstrip(".")
+        if isinstance(value, Integral) and not isinstance(value, bool):
+            # ApJ style: separators only from five digits, as ``{,}`` for math mode.
+            if abs(value) >= 10000:
+                return f"{int(value):,}".replace(",", "{,}")
         return str(value)
 
     @staticmethod
