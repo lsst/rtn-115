@@ -388,11 +388,11 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
 
         fovx = corner_00.separation(corner_x1).deg
         fovy = corner_00.separation(corner_y1).deg
-        
+
         coaddpixsize = corner_00.separation(corner_01).arcsec
         npatchpixx = xStop - xMin
         npatchpixy = yStop - yMin
-    
+
     params = addParameter(
         params, "patcharea", f"{fovx * fovy:.3f}", unit="deg$^{\\rm 2}$"
     )
@@ -637,6 +637,16 @@ def catalogCounts(params: DP2Parameters) -> DP2Parameters:
         "nsolarsystemsources": ("dp2.SSSource", 1e6, "million", 2),
         "nvisitrows": ("dp2.Visit", 1, None, None),
         "nvisitdetectorrows": ("dp2.VisitDetector", 1e6, "million", 2),
+        "nisolatedstellarmotions": (
+            "dp2.IsolatedStarStellarMotions",
+            1e6,
+            "million",
+            2,
+        ),
+        "nmpcorbits": ("dp2.mpc_orbits", 1e6, "million", 2),
+        "ncurrentidentifications": ("dp2.current_identifications", 1e6, "million", 2),
+        "nnumberedidentifications": ("dp2.numbered_identifications", 1, None, None),
+        "ncoaddpatchesrows": ("dp2.CoaddPatches", 1, None, None),
     }
     for paramName, (tableName, scale, unit, sig) in tables.items():
         log.info("Adding %s from %s...", paramName, tableName)
@@ -879,13 +889,13 @@ if __name__ == "__main__":
         skymapName = "lsst_cells_v2"
 
         # For quick testing on SLAC:
-        small_repo = "dp2_prep" 
-        small_collection = "LSSTCam/runs/DRP/w_2026_39/DM-56219" # 
-        
+        small_repo = "dp2_prep"
+        small_collection = "LSSTCam/runs/DRP/w_2026_39/DM-56219"  #
+
         # For full DP2 dataset on data-int:
         full_repo = "dp2"
         full_collection = "dp2"
-        
+
         butler = Butler(
             full_repo,
             instrument=instrument,
