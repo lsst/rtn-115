@@ -479,15 +479,7 @@ def nCatalogDatasets(params: DP2Parameters) -> DP2Parameters:
     from lsst.dptwo.utils.formatting import num2word
 
     for name, dataset in [
-        ("nsourcecatalogs", "source"),
-        ("nobjectcatalogs", "object"),
-        ("ndiaobjectcatalogs", "dia_object"),
-        ("ndiasourcecatalogs", "dia_source"),
-        ("nsolarsystemsourcecatalogs", "ss_source"),
-        ("nvisitsummarytables", "visit_table"),
-        ("nvisitdetectorsummarytables", "visit_detector_table"),
-        ("nobjectforcedcatalogs", "object_forced_source"),
-        ("ndiaobjectforcedcatalogs", "dia_object_forced_source"),
+        ("ncalrefcat", "the_monster_20250219"),
     ]:
         refs = list(registry.queryDatasets(dataset))
         params = addParameter(params, name, num2word(len(refs)).lower())
@@ -540,10 +532,17 @@ def misc(params: DP2Parameters) -> DP2Parameters:
     params : `DP2Parameters`
         Updated parameter store.
     """
-    log.info("Adding misc data...")
+    #log.info("Adding misc data...")
+    #params = addParameter(
+    #    params, "nsfpfails", params.values["nraws"] - params.values["nvisitimages"]
+    #)
+    log.info("Adding htm7 shard area...")
     params = addParameter(
-        params, "nsfpfails", params.values["nraws"] - params.values["nvisitimages"]
-    )
+            params,
+            "shardarea", (4. * 180.**2) / (np.pi * params.values["ncalrefcat"]),
+            sig=2,
+            unit="deg$^{\\rm 2}$",
+        )
     return params
 
 
@@ -906,18 +905,18 @@ if __name__ == "__main__":
         skymap = butler.get("skyMap", skymap=skymapName)
 
         data_params = DP2Parameters()
-        data_params = observingCampaign(data_params)
-        data_params = observingQuality(data_params)
-        data_params = imageDatasets(data_params)
-        data_params = skymapData(data_params)
-        data_params = nDetectors(data_params)
+        # data_params = observingCampaign(data_params)
+        # data_params = observingQuality(data_params)
+        # data_params = imageDatasets(data_params)
+        # data_params = skymapData(data_params)
+        # data_params = nDetectors(data_params)
         # data_params = coaddSelectionCriteria(data_params)
         # data_params = surveyPropertyMaps(data_params)
-        # data_params = nCatalogDatasets(data_params)
+        data_params = nCatalogDatasets(data_params)
         # data_params = tableLengths(data_params)
         # data_params = misc(data_params)
 
-        data_params = catalogCounts(data_params)
+        # data_params = catalogCounts(data_params)
 
         # data_params = nSSObjects(data_params)
         # data_params = nStarsGals(data_params)
