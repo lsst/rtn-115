@@ -462,8 +462,10 @@ def surveyPropertyMaps(params: DP2Parameters) -> DP2Parameters:
     return addParameter(params, "nsurveypropertymaps", len(allSurveyPropMaps))
 
 
-def nCatalogDatasets(params: DP2Parameters) -> DP2Parameters:
-    """Add the number of datasets (as words) for each catalog type.
+def nDatasets(params: DP2Parameters) -> DP2Parameters:
+    """Add the number of instances (as words) of various non-image dataset
+    types contained within the Data Butler. Image datasets are dealt with
+    by the ``imageDatasets'' function.
 
     Parameters
     ----------
@@ -475,11 +477,13 @@ def nCatalogDatasets(params: DP2Parameters) -> DP2Parameters:
     params : `DP2Parameters`
         Updated parameter store.
     """
-    log.info("Adding catalog dataset stats...")
+    log.info("Adding butler dataset stats...")
     from lsst.dptwo.utils.formatting import num2word
 
     for name, dataset in [
         ("ncalrefcat", "the_monster_20250219"),
+        ("nstandardpassbands", "standard_passband"),
+        ("nobjectscarletmodels", "object_scarlet_models"),
     ]:
         refs = list(registry.queryDatasets(dataset))
         params = addParameter(params, name, num2word(len(refs)).lower())
@@ -539,7 +543,7 @@ def misc(params: DP2Parameters) -> DP2Parameters:
     log.info("Adding htm7 shard area...")
     params = addParameter(
             params,
-            "shardarea", (4. * 180.**2) / (np.pi * params.values["ncalrefcat"]),
+            "shardarea", (4. * 180.**2) / (np.pi * int(params.values["ncalrefcat"])),
             sig=2,
             unit="deg$^{\\rm 2}$",
         )
@@ -912,9 +916,9 @@ if __name__ == "__main__":
         # data_params = nDetectors(data_params)
         # data_params = coaddSelectionCriteria(data_params)
         # data_params = surveyPropertyMaps(data_params)
-        data_params = nCatalogDatasets(data_params)
+        data_params = nDatasets(data_params)
         # data_params = tableLengths(data_params)
-        # data_params = misc(data_params)
+        data_params = misc(data_params)
 
         # data_params = catalogCounts(data_params)
 
