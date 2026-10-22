@@ -486,7 +486,11 @@ def nDatasets(params: DP2Parameters) -> DP2Parameters:
         ("nobjectscarletmodels", "object_scarlet_models"),
     ]:
         refs = list(registry.queryDatasets(dataset))
-        params = addParameter(params, name, num2word(len(refs)).lower())
+        try:
+            params = addParameter(params, name, num2word(len(refs)).lower())
+        except AttributeError:
+            params = addParameter(params, name, len(refs))
+    
     return params
 
 
