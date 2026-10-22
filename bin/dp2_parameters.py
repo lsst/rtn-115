@@ -491,7 +491,7 @@ def nDatasets(params: DP2Parameters) -> DP2Parameters:
 
 
 def tableLengths(params: DP2Parameters) -> DP2Parameters:
-    """Add row counts for visit summary, visit-detector summary, and SS catalog tables.
+    """Add row counts for butler-stored tables.
 
     Parameters
     ----------
@@ -504,21 +504,18 @@ def tableLengths(params: DP2Parameters) -> DP2Parameters:
         Updated parameter store.
     """
     log.info("Adding table lengths...")
-    refs = list(registry.queryDatasets("visit_table"))
-    table = butler.get(refs[0])
-    params = addParameter(params, "nvisitsummaries", len(table))
-
-    refs = list(registry.queryDatasets("visit_detector_table"))
-    table = butler.get(refs[0])
-    params = addParameter(params, "nvisitdetectorsummaries", len(table))
-
-    refs = list(registry.queryDatasets("ss_source"))
-    catalog = butler.get(refs[0])
-    params = addParameter(params, "nsolarsystemsources", len(catalog))
-
-    refs = list(registry.queryDatasets("ss_object"))
-    catalog = butler.get(refs[0])
-    params = addParameter(params, "nsolarsystemobjects", len(catalog))
+    for name, dataset, divisor, unit, sig in [
+        ("ndeepcoaddinputsummaryrows", "deep_coadd_input_summary", 1e6, "million", 2),
+    ]:
+        refs = list(registry.queryDatasets(dataset))
+        if len(refs) != 1:
+            log.error(f"""
+                      To be included in tableLengths, the number of instances 
+                      of {dataset} must be exactly 1.
+                      """)        
+        table = butler.get(refs[0])
+        params = addParameter(params, name, len(table)/divisor, sig=sig, unit=unit)
+    
     return params
 
 
