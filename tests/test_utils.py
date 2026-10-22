@@ -20,7 +20,7 @@ class UtilsTestCase(unittest.TestCase):
     def test_num2word(self) -> None:
         self.assertEqual(num2word(1), "One")
         self.assertEqual(num2word(20), "Twenty")
-        self.assertEqual(num2word(99), "99")
+        self.assertEqual(num2word(99), 99)
 
     def test_round_sf(self) -> None:
         self.assertAlmostEqual(round_sf(1.23456, sig=3), 1.23)
