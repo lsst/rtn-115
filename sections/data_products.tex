@@ -291,6 +291,7 @@ There is one row per object detected in each counterfactual, meaning a given obj
 
 In addition to the gaussian shape measurements and their covariances, the Shear Object table also contains object positional information, fluxes measured from both the gaussian fits and the gaussian moments ($g$, $r$, $i$ and $z$ bands), \gls{PSF} shapes reported in the same x-y and diagonal directions as objects, a range of different flags.
 Each entry in the Shear Object catalog also has a unique identification number (\texttt{shearObjectId}), that uniquely identifies a given detection in a given counterfactual.
+
 The Shear Object catalog contains \nshearobjects rows.
 
 \subsubsection{Solar System Source}
@@ -344,6 +345,8 @@ a readable and direct join key among the Solar System Source, Solar System Objec
 For query performance, users should nevertheless prever to use integer
 identifiers such as \texttt{ssObjectId} to link catalogs wherever those identifiers are available, and use \texttt{designation} for readability or when an appropriate integer identifier is unavailable.
 
+The MPC Orbit, Current Identifications and Numbered Identifications catalogs contain \nmpcorbits, \ncurrentidentifications and \nnumberedidentifications entries, respectively.
+
 \subsubsection{Calibration Reference Catalog}
 \label{sssec:referencecatalog}
 The Calibration Reference Catalog is used to perform astrometric and photometric \gls{calibration}.
@@ -361,6 +364,10 @@ All sources from the input catalogs are matched to \gls{Gaia} \gls{DR3} sources 
 
 After collating the input catalogs and transforming the fluxes to the standard DES and \gls{SDSS} bandpasses, the catalog was used to identify sources within a specific region of the sky.
 This process generated a set of standard columns containing positional and \gls{flux} information, along with their associated uncertainties.
+
+Once the catalog was generated, it was converted into the format required by the LSST Science Pipelines by following the instructions on \url{https://pipelines.lsst.io}.
+As part of the conversion process the full catalog is sharded into \ncalrefcat htm7 trixels, with each shard covering area of roughly \shardarea.
+The sharded Calibration Reference Catalog is only available via the Data \gls{Butler} (\secref{sssec:data_butler}). 
 
 % \subsubsection{Object Parent}
 %% Not included in (E)DP2.
@@ -416,55 +423,61 @@ The skymap data product can be used, for example, to identify the tract and \gls
 
 A description of the \texttt{lsst\_cells\_v2}, in terms of the numbers and sizes of its tracts and patches, is given at the start of this section.
 
+The skymap is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
+
 \subsubsection{Coadd Patches}
 The Coadd Patches table lists, for each \gls{patch} in the skymap covered by \gls{DP2}, its \gls{tract} and \gls{patch} IDs, central coordinates, and the region of sky it covers.
 It can be used to identify which patches, and hence which coadds, cover a given position on the sky.
-It is only available via the Qserv database (\secref{sssec:qserv}).
+The Coadd Patches table contains \ncoaddpatchesrows entries, i.e., one per covered patch in DP2, and is only available via the Qserv database (\secref{sssec:qserv}).
 
 \subsubsection{Standard Passbands}
 \label{sssec:std_passbands}
 \figref{fig:lsstcam_standard_bandpasses} shows the full-system throughput of the six \gls{LSSTCam} filters.
 The corresponding transmission curves are provided as a \gls{DP2} data product.
 These datasets tabulate the full-system transmission of the six \gls{LSSTCam} filters as a function of wavelength and were used as a reference for the \gls{LSSTCam} DP2 photometry.
-The Standard Passband dataset is keyed by band and is stored in Astropy table format.
+
+There are \nstandardpassbands Standard Passband datasets in \gls{DP2}, keyed by band; they are only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Object Scarlet Models}
 The \gls{Object} Scarlet Models dataset stores the scarlet models fit to each deblended detection in the Deep Coadd images.
 Each model captures an object's spatial profile (morphology) together with its per-band \gls{flux} values, as assigned by the deblender when separating it from its blended neighbours.
 When combined with the corresponding Object catalog and Deep Coadd image, this dataset enables the reconstruction of the \gls{deblend} model to see how a specific detection was deblended.
-There is one Object Scarlet Models dataset per \gls{patch} that has coverage in DP2, and they are only available via the Data Butler.
+There is one Object Scarlet Models dataset per \gls{patch} that has deep coadd coverage in at least one band in DP2, corresponding to \nobjectscarletmodels datasets.
+Object Scarlet Models are only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Deep Coadd Input Summary}
 The Deep Coadd Input Summary table contains the visit and detector IDs of all the \gls{Visit} Images that were selected and coadded to produce each Deep Coadd image.
-Also included in the table are the relative weight of each Visit Image, inversely proportional to its variance, and the number of pixels it contributed to a Deep Coadd, since a given Visit Image may only partially cover a \gls{patch}.
-There is a single Deep Coadd Input Summary table for the whole of \gls{DP2}, containing one row per contributing Visit Image per \gls{patch} (i.e., one row per unique combination of \gls{tract}, \gls{patch}, visit, and detector).
-It is only available via the Data Butler.
+Also included in the table is the relative weight of each Visit Image, inversely proportional to its variance, and the number of pixels it contributed to a Deep Coadd, since a given Visit Image may only partially cover a \gls{patch}.
+There is a single Deep Coadd Input Summary table for the whole of \gls{DP2}.
+It contains \ndeepcoaddinputsummaryrows rows, corresonding to one row per contributing Visit Image per \gls{patch} (i.e., one row per unique combination of \gls{tract}, \gls{patch}, visit, and detector).
+It is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Compare Warp Artifact Mask}
 The Compare Warp Artifact Masks are the mask planes of the individual warped \gls{Visit} Images, in which pixels affected by transient artifacts, such as satellite trails and cosmic rays, are flagged in the \texttt{CLIPPED} plane and excluded from the Deep Coadds.
 They are generated by the artifact rejection procedure described in \secref{sec:drp-multivisit-coaddition}.
-There is one Compare Warp Artifact Mask per \gls{Visit} per \gls{patch}, and they are only available via the Data Butler.
+There are \ncomparewarpartifactmasks Compare Warp Artifact Masks in \gls{DP2}: one per \gls{Visit} per \gls{patch}.
+They are only available via the Data Butler.
 
 \subsubsection{Camera}
-The Camera describes the geometry of \gls{LSSTCam}, i.e., the positions and orientations of the detectors in the focal plane, the layout and readout geometry of each detector's amplifiers, and a nominal model of the optical distortion.
+The Camera data product describes the geometry of \gls{LSSTCam}, i.e., the positions and orientations of the detectors in the focal plane, the layout and readout geometry of each detector's amplifiers, and a nominal model of the optical distortion.
 It is used throughout processing to map pixels on each detector to positions in the focal plane, for example when constructing the initial \gls{WCS} of each exposure.
 While of limited use as a standalone data product, the Camera is a required input to a number of processing steps.
 It is therefore largely provided to enable users to rerun selected processing tasks on subsets of DP2.
-There is a single Camera for \gls{DP2}, and it is only available via the Data Butler.
+There is a single Camera data product for \gls{DP2}, and it is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{FGCM Lookup Table}
 The FGCM Lookup Table contains pre-computed integrals of the combined atmospheric and instrumental throughput in each band over the expected range of atmospheric conditions.
 It is generated from the MODTRAN atmosphere model and the measured filter and detector throughputs (\secref{sec:drp-calibration-photometry}), in the same processing step that produces the Standard Passbands (\secref{sssec:std_passbands}), and it allows the \gls{FGCM} photometric calibration to rapidly compute throughput and chromatic corrections for stars of different colors.
-There is a single FGCM Lookup Table for \gls{DP2}, and it is only available via the Data Butler.
+There is a single FGCM Lookup Table for \gls{DP2} containing \nfgcmrows, and it is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Pretrained Model Package}
 The Pretrained Model Package contains the architecture and trained weights of the convolutional neural network used to assign a reliability (i.e., real/bogus) score to each \gls{DIA} source (\secref{sec:drp-variabletransient-artifact}; \citealt[][]{DMTN-337}).
 The same model was used for both \gls{DP1} and \gls{DP2}.
-There is a single Pretrained Model Package for \gls{DP2}, and it is only available via the Data Butler.
+There is a single Pretrained Model Package for \gls{DP2}, and it is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Run Provenance}
 The Run Provenance dataset information regarding the DP2 processing itself: the inputs, outputs, configurations and logs of every processing task.
-It is only available via the Data Butler.
+It is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Calibration datasets}
 \label{sssec:calibration_images}
