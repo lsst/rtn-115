@@ -484,6 +484,7 @@ def nDatasets(params: DP2Parameters) -> DP2Parameters:
         ("ncalrefcat", "the_monster_20250219"),
         ("nstandardpassbands", "standard_passband"),
         ("nobjectscarletmodels", "object_scarlet_models"),
+        ("ncomparewarpartifactmasks", "compare_warp_artifact_mask")
     ]:
         refs = list(registry.queryDatasets(dataset))
         try:
@@ -510,6 +511,7 @@ def tableLengths(params: DP2Parameters) -> DP2Parameters:
     log.info("Adding table lengths...")
     for name, dataset, divisor, unit, sig in [
         ("ndeepcoaddinputsummaryrows", "deep_coadd_input_summary", 1e6, "million", 2),
+        ("nfgcmrows", "fgcmLookUpTable", 1e6, "million", 2),
     ]:
         refs = list(registry.queryDatasets(dataset))
         if len(refs) != 1:
