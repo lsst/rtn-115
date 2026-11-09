@@ -403,8 +403,10 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
     wcs = tract.getWcs()
     patchInfo = tract.getPatchInfo((5, 5))
     patchOverlap = (
-        patchInfo.getOuterBBox().getWidth() - patchInfo.getInnerBBox().getWidth()
-    ) * wcs.getPixelScale().asArcseconds()
+        (patchInfo.getOuterBBox().getWidth() - patchInfo.getInnerBBox().getWidth())
+        * wcs.getPixelScale().asArcseconds()
+        * 0.5
+    )
     params = addParameter(
         params, "patchoverlap", f"{patchOverlap:.1f}", unit="\\arcsec"
     )
@@ -484,14 +486,14 @@ def nDatasets(params: DP2Parameters) -> DP2Parameters:
         ("ncalrefcat", "the_monster_20250219"),
         ("nstandardpassbands", "standard_passband"),
         ("nobjectscarletmodels", "object_scarlet_models"),
-        ("ncomparewarpartifactmasks", "compare_warp_artifact_mask")
+        ("ncomparewarpartifactmasks", "compare_warp_artifact_mask"),
     ]:
         refs = list(registry.queryDatasets(dataset))
         try:
             params = addParameter(params, name, num2word(len(refs)).lower())
         except AttributeError:
             params = addParameter(params, name, len(refs))
-    
+
     return params
 
 
@@ -516,12 +518,12 @@ def tableLengths(params: DP2Parameters) -> DP2Parameters:
         refs = list(registry.queryDatasets(dataset))
         if len(refs) != 1:
             log.error(f"""
-                      To be included in tableLengths, the number of instances 
+                      To be included in tableLengths, the number of instances
                       of {dataset} must be exactly 1.
-                      """)        
+                      """)
         table = butler.get(refs[0])
-        params = addParameter(params, name, len(table)/divisor, sig=sig, unit=unit)
-    
+        params = addParameter(params, name, len(table) / divisor, sig=sig, unit=unit)
+
     return params
 
 
@@ -539,17 +541,18 @@ def misc(params: DP2Parameters) -> DP2Parameters:
     params : `DP2Parameters`
         Updated parameter store.
     """
-    #log.info("Adding misc data...")
-    #params = addParameter(
+    # log.info("Adding misc data...")
+    # params = addParameter(
     #    params, "nsfpfails", params.values["nraws"] - params.values["nvisitimages"]
-    #)
+    # )
     log.info("Adding htm7 shard area...")
     params = addParameter(
-            params,
-            "shardarea", (4. * 180.**2) / (np.pi * int(params.values["ncalrefcat"])),
-            sig=2,
-            unit="deg$^{\\rm 2}$",
-        )
+        params,
+        "shardarea",
+        (4.0 * 180.0**2) / (np.pi * int(params.values["ncalrefcat"])),
+        sig=2,
+        unit="deg$^{\\rm 2}$",
+    )
     return params
 
 
