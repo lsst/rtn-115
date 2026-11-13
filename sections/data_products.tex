@@ -30,7 +30,7 @@ The skymap that was generated for \gls{DP2} processing contains a total of \ntra
 Each DP2 \gls{tract} covers approximately \tractarea, and contains \npatchx $\times$ \npatchy patches, both the same as for the DP1 skymap.
 Tracts are defined to have equal area, and so the amount by which neighboring tracts overlap varies with decl., with tracts near the celestial poles overlapping more than those near the celestial equator.
 The minimum overlap between tracts is \tractoverlap.
-Within a \gls{tract}, the overlap between neighboring patches is a constant \patchoverlap, i.e., each \gls{patch} extends 30\farcs0 beyond its uniquely covered region on every side.
+Within a \gls{tract}, the overlap with its neighboring patches is a constant \patchoverlap on each side, i.e., each \gls{patch} extends \patchoverlap beyond its uniquely covered region on every side.
 As a result, each \gls{patch} covers an area of \patcharea, which is larger than the tract area divided by the number of patches in a tract.
 Excluding the overlap region, the area covered uniquely by a single \gls{patch} is \patchareanooverlap.
 
