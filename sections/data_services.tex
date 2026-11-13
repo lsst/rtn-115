@@ -86,7 +86,7 @@ SIAv2 is a \gls{REST}-based protocol designed for the discovery and retrieval of
 It allows, for instance, querying all images in a given band over a defined sky region and time period.
 
 Users identify an image or observation of interest and query the service.
-The result set includes \gls{metadata} about the image, such as the sky position, time, or band, and a data-access URL, which includes an IVOA Identifier uniquely identifying the dataset \citep[][]{DMTN-302}, allowing the dataset to be retrieved or a cutout requested via \gls{SODA} \citep[SODA;][]{2017ivoa.spec.0517B}.
+The result set includes \gls{metadata} about the image, such as the sky position, time, or band, and a data-access URL, which includes an IVOA Identifier uniquely identifying the dataset \citep[][]{DMTN-302}, allowing the dataset to be retrieved or a cutout requested via \gls{SODA} \citep[][]{2017ivoa.spec.0517B}.
 
 \vspace{0.1cm}
 \item \textbf{Image Cutout Service}: The Rubin Cutout Service \citep[][]{SQR-063, SQR-093} is based on the IVOA SODA standard \citep[][]{2017ivoa.spec.0517B}.
@@ -128,7 +128,7 @@ For a DP2 deep coadd on a \gls{patch} of sky, the dimensions would be the \gls{t
 In contrast, the \texttt{visit\_table} and \texttt{visit\_detector\_table} catalogs described in \secref{sec:data_products} have only the instrument dimension, since each is a single table covering all visits (or all visit-detector combinations) for a given instrument; retrieving either therefore requires only \texttt{dataId=\{'instrument': 'LSSTCam'\}}.
 The \texttt{visit\_summary} catalog, by contrast, is keyed on band, instrument, \texttt{day\_obs}, \texttt{physical\_filter}, and visit, e.g., \texttt{dataId=\{'instrument': 'LSSTCam', 'visit': 2025071100074, 'band': 'g', 'physical\_filter': 'g\_6', 'day\_obs': 20250711\}}, and contains one row per detector for that visit.
 
-As for \gls{DP1}, the \gls{EDP2} Butler repository containing the catalogs and coadds described in \secref{sec:data_products} is hosted in the Google Cloud using an \gls{S3}-compatible store for datasets and AlloyDB, a PostgreSQL-compatible database for the Registry.
+As for \gls{DP1}, the \gls{DP2} Butler repository containing the catalogs and coadds described in \secref{sec:data_products} is hosted in the Google Cloud using an \gls{S3}-compatible store for datasets and AlloyDB, a PostgreSQL-compatible database for the Registry.
 
 \subsubsection{Remote Programmatic Access}
 \label{sssec:remote_api}
@@ -145,7 +145,7 @@ Additionally, it supports remote development, allowing for more flexible workflo
 The Portal Aspect provides an interactive web-based environment for exploratory data discovery, filtering, querying, and visualization of both image and catalog data, without requiring programming expertise.
 It enables users to access and analyze large datasets via tools for catalog queries, image browsing, time-series inspection, and crossmatching.
 
-The Portal is built on \gls{Firefly} \citep[][]{2019ASPC..521...32W}, a web application framework developed by the Infrared Processing and Analysis Center.
+The Portal is built on \gls{Firefly} \citep[][]{2019ASPC..521...32W}, a web application framework developed by the Infrared Processing and Analysis Center (IPAC).
 \gls{Firefly} provides interactive capabilities such as customizable table views, image overlays, multipanel visualizations, and synchronized displays linking catalog and image data.
 
 Designed to support both exploratory data access and detailed scientific investigation, the Portal delivers an intuitive user experience, allowing users to visually analyze data while retaining access to underlying metadata and query controls.
@@ -183,7 +183,7 @@ While \gls{DP1} was small enough that Qserv's full capabilities were not strictl
 \subsubsection{OpSim}
 \label{sssec:opsim}
 %
-\gls{DP2} provides an opsim-format SQLite database of visit-level observational metadata for the visits included in \gls{DP2}, downloadable from \url{https://s3df.slac.stanford.edu/data/rubin/sim-data/prelsst/dp2_visits.db}, with additional documentation available at \url{https://survey-strategy.lsst.io/progress/prelsst/prelsst_dp2.html\#visit-database}.
+\gls{DP2} provides an opsim-format SQLite database of visit-level observational metadata for the visits included in \gls{DP2}, available for download,\footnote{\url{https://s3df.slac.stanford.edu/data/rubin/sim-data/prelsst/dp2_visits.db}} with additional documentation available online.\footnote{\url{https://survey-strategy.lsst.io/progress/prelsst/prelsst_dp2.html\#visit-database}}
 Like the Visit catalog descibed in \secref{sssec:visitcatalog}, this database contains visit-level entries, but it has no equivalent of the Visit Detector catalog described in \secref{sssec:visitdetector} and so provides no per-detector information.
 Its quantities (e.g., PSF FWHM, 5$\sigma$ point-source depth) are drawn from the real-time Rapid Analysis QuickLook processing, \citep[][]{} performed on the summit rather than from \gls{DRP} processing.
 Values may therefore differ somewhat from the corresponding \gls{DRP}-derived quantities in the Butler \texttt{visit\_table}.

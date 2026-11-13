@@ -5,7 +5,7 @@ The \gls{NSF}--\gls{DOE} Vera C. Rubin Observatory is a ground-based, wide-field
 The observatory is named in honor of Vera C. Rubin, whose observations in the latter half of the 20th century established the first compelling empirical case for dark matter \citep[][]{1970ApJ...159..379R, 1980ApJ...238..471R}.
 Its 10-yr survey will image the entire visible southern sky every 3--4 nights, reaching a coadded depth of $\sim$\,~27\,mag in the $r$-band across an \wfdarea footprint \citep[][]{2022ApJS..258....1B}.
 
-At the heart of the facility is the \lsstcampixels-gigapixel \gls{LSSTCam}, mounted on the \primarymirrordiameter (\effectiveaperture effective aperture) Simonyi Survey Telescope \citep[][]{2024SPIE13094E..09S}.
+At the heart of the facility is the 3.2-gigapixel \gls{LSSTCam}, mounted on the \primarymirrordiameter (\effectiveaperture effective aperture) Simonyi Survey Telescope \citep[][]{2024SPIE13094E..09S}.
 Together they deliver an instantaneous field of view of \rubinfov in six broadband filters, $ugrizy$ (320--1050\,nm), with seeing-limited image quality.
 The system's \'{e}tendue of \rubinetendue exceeds that of any previous optical facility by over an order of magnitude, enabling the rapid, deep, all-sky cadence that underpins the LSST's four core science themes: the nature of dark energy and dark matter; a census of the solar system; the transient and variable optical sky; and the structure of the Milky Way \citep[][]{2019ApJ...873..111I}.
 An automated \gls{Data Management System} processes tens of terabytes of images per night to produce science-ready data products within minutes of each observation for a global community of scientists.
@@ -20,15 +20,15 @@ Two earlier Data Previews preceded \gls{DP2} as part of the Rubin Early Science 
 \gls{DP1} \citep[][]{10.71929/rubin/2570308} delivered the first data products derived from on-sky observations using science-grade exposures acquired with \gls{LSSTComCam} \citep[][]{2022SPIE12184E..0JS,2020SPIE11447E..0LS,2018SPIE10700E..3DH, 10.71929/rubin/2561361}; a 144-megapixel, single-raft instrument used during early commissioning prior to the installation of \gls{LSSTCam} on the Simonyi Survey Telescope.
 \gls{DP2} supersedes both in scope, fidelity, and scientific depth.
 
-\gls{DP2} contains \nexposures science-grade exposures acquired over \svcampaignnnights nights between \svcampaignstartdate and \svcampaignenddate, covering a total sky area of \totalarea across \nfields fields.
+\gls{DP2} contains \nexposures science-grade exposures acquired primarily over \svcampaignnnights nights between \svcampaignstartdate and \svcampaignenddate, covering a total sky area of \totalarea across \nfields fields.
 The data products include raw and calibrated single-epoch images, coadded images, difference images, source detection catalogs, and a range of derived data products.
-The release totals approximately \edptwosize and contains around \nobjects distinct astronomical objects.
+The release totals approximately \edptwosize and contains $\sim$\nobjects distinct astronomical objects.
 Full release documentation is available at \url{https://dp2.lsst.io}.
 
-Because \gls{DP2} is drawn from a commissioning and early-operations data rather than from the more uniform and  systematic \gls{LSST}, its images and derived products reflect a system that was still being commissioned and tuned.
+Because \gls{DP2} is drawn from commissioning and early-operations data rather than from the more uniform and  systematic \gls{LSST}, its images and derived products reflect a system that was still being commissioned and tuned.
 \gls{LSSTCam}'s greater scale and complexity relative to \gls{LSSTComCam} introduced systematics with no direct counterpart in \gls{DP1}.
 For much of the campaign the \gls{AOS} closed loop converged on a slightly mis-calibrated focus target, imprinting a spatially varying defocus across the focal plane that was only corrected on sky in December 2025 and that remains visible in the point-spread function (PSF) of a large fraction of \gls{DP2} exposures.
-Delivered image quality and PSF ellipticity did not consistently meet \gls{LSST} design requirements in wide-area survey-mode observations by the close of commissioning; and stray- and scattered-light artifacts, sky-background systematics in crowded fields, and a chromatic PSF dependence\footnote{\gls{LSSTCam} has no atmospheric dispersion corrector} were identified and only partially mitigated in \gls{DP2} processing.
+Delivered image quality and PSF ellipticity did not consistently meet \gls{LSST} design requirements in wide-area survey-mode observations by the close of commissioning; and stray- and scattered-light artifacts, sky-background systematics in crowded fields, and a chromatic PSF dependence\footnote{\gls{LSSTCam} has no atmospheric dispersion corrector.} were identified and only partially mitigated in \gls{DP2} processing.
 These effects, their diagnosis, and the mitigations applied are described in \secref{sec:commissioning} and \secref{sec:performance}.
 
 Unlike the systematic, rolling revisit pattern that will characterize the \gls{LSST}, \gls{DP2}'s observing cadence is opportunistic: fields and filters were prioritized to serve \gls{AOS} and Science Pipelines commissioning rather than to build a representative time series.
@@ -50,7 +50,7 @@ After the proprietary period, \gls{DP2} will be made public, though access throu
 Alternative public access mechanisms have not yet been finalized.
 
 The structure of this paper is as follows.
-Section~\ref{sec:commissioning} describes the observatory system and its status during commissioning, and section~\ref{sec:science_program} describes  the fields included in \gls{DP2}, and the observing strategy employed.
+Section~\ref{sec:commissioning} describes the observatory system and its status during commissioning, and Section~\ref{sec:science_program} describes  the fields included in \gls{DP2}, and the observing strategy employed.
 Section~\ref{sec:data_products} summarizes the data products in the release.
 The processing pipelines are described in Section~\ref{sec:drp}, followed by data validation and performance characterization in Section~\ref{sec:performance}.
 Section~\ref{sec:data_services} describes the \gls{RSP}.
