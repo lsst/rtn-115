@@ -27,12 +27,14 @@ As with \gls{DP1}, the LSST science pipelines use a skymap to structure how proc
 The skymap divides the sky into a series of equal-area tracts, which are then subdivided into a number of patches.
 The tracts are arranged in rings of constant decl., starting at the southern pole and having an index number that increases first by increasing R.A. and then by increasing decl.
 The skymap that was generated for \gls{DP2} processing contains a total of \ntracts tracts spanning the whole sky, \ncoveredtracts of which were covered during the science validation observing campaign, including the small field surveys.
-Each DP2 \gls{tract} covers approximately \tractarea, and contains \npatchx $\times$ \npatchy patches, both the same as for the DP1 skymap.
+Each DP2 \gls{tract} is a square of side length $\sim$\tractside and covers approximately \tractarea.
+Each tract contains \npatchx $\times$ \npatchy patches.
+The number and dimensions of the tracts and patches is the same as that used in \gls{DP1}.
 Tracts are defined to have equal area, and so the amount by which neighboring tracts overlap varies with decl., with tracts near the celestial poles overlapping more than those near the celestial equator.
 The minimum overlap between tracts is \tractoverlap.
-Within a \gls{tract}, the overlap with its neighboring patches is a constant \patchoverlap on each side, i.e., each \gls{patch} extends \patchoverlap beyond its uniquely covered region on every side.
+Within a \gls{tract}, the overlap between neighboring patches is a constant \patchoverlap on each side, i.e., each \gls{patch} extends \patchoverlap beyond its uniquely covered region on every side.
 As a result, each \gls{patch} covers an area of \patcharea, which is larger than the tract area divided by the number of patches in a tract.
-Excluding the overlap region, the area covered uniquely by a single \gls{patch} is \patchareanooverlap.
+Excluding overlap, a patch has a side length of \patchside, meaning the area covered uniquely by a single \gls{patch} is \patchareanooverlap.
 
 Although the tract and \gls{patch} configuration is unchanged between \gls{DP1} and \gls{DP2}, the two skymaps differ at the cell level for Deep Coadds.
 Patches are further subdivided into cells for the sole purpose of enabling the construction of cell-based coadds with a continuous \gls{PSF} (\secref{sssec:coadds}).
