@@ -322,6 +322,12 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
         (vertex[0].asDegrees() % 360 - 180, vertex[1].asDegrees())
         for vertex in tract.getVertexList()
     ]
+    tractSide = haversine(
+        verticesInDegrees[0][::-1], verticesInDegrees[1][::-1], unit=Unit.DEGREES
+    )
+    params = addParameter(
+        params, "tractside", f"{tractSide:.1f}", unit="deg"
+    )
     tractArea = haversine(
         verticesInDegrees[0][::-1], verticesInDegrees[1][::-1], unit=Unit.DEGREES
     ) * haversine(
@@ -342,6 +348,10 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
     params = addParameter(params, "npatchy", numYPatches)
     params = addParameter(params, "npatch", numPatches)
 
+    patchSide_px, _ = tract.patch_inner_dimensions
+    patchSide = patchSide_px * tract.wcs.getPixelScale().asArcminutes()
+    params = addParameter(params, "patchside", f"{patchSide:.1f}", unit="\\arcmin")
+    
     patchArea = tractArea / numPatches
     params = addParameter(
         params, "patchareanooverlap", f"{patchArea:.3f}", unit="deg$^{\\rm 2}$"
@@ -918,13 +928,13 @@ if __name__ == "__main__":
         # data_params = observingCampaign(data_params)
         # data_params = observingQuality(data_params)
         # data_params = imageDatasets(data_params)
-        # data_params = skymapData(data_params)
+        data_params = skymapData(data_params)
         # data_params = nDetectors(data_params)
         # data_params = coaddSelectionCriteria(data_params)
         # data_params = surveyPropertyMaps(data_params)
-        data_params = nDatasets(data_params)
+        # data_params = nDatasets(data_params)
         # data_params = tableLengths(data_params)
-        data_params = misc(data_params)
+        # data_params = misc(data_params)
 
         # data_params = catalogCounts(data_params)
 
