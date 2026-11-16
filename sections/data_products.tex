@@ -177,7 +177,7 @@ Fluxes are preferred for multiepoch observations, as they can be averaged across
 Additionally, \gls{flux} measurements on difference images (\secref{ssec:scienceimages}) are computed relative to a template and can therefore be negative, particularly for faint sources in the presence of noise.
 
 The \gls{DP2} catalogs each vary in terms of their specific columns but most contain: one or more unique identification numbers, positional information, multiple types of flux measurements (e.g., aperture fluxes, \gls{PSF} fluxes, Gaussian fluxes, etc.), and a series of Boolean flags indicating characteristics such as saturation or cosmic-ray contamination for each source or object.
-The solar system catalogs SSObject and SSSource deviate from this general structure in that they instead contain orbital parameters for all known asteroids.
+The solar system catalogs SSObject and SSSource deviate from this general structure in that they instead contain asteroid-specific information for observed solar system objects.
 
 Where applicable, quantities are prefixed with the band in which they were measured, and all measured properties are reported with their associated 1$\sigma$ uncertainties.
 For example, \texttt{g\_ra} and \texttt{g\_raErr} in the \gls{Object} catalog refer to R.A. and its uncertainty, measured in the $g$ band.
@@ -303,7 +303,8 @@ The Shear Object catalog contains \nshearobjects entries.
 
 \subsubsection{Solar System Source}
 \label{sssec:SSSource}
-The Solar System Source catalog contains one row per associated detection and links measured DIA Source photometry and \gls{astrometry} to a predicted object in the Solar System Object catalog.
+The Solar System Source catalog is derived from the Rubin observations.
+It contains one row per associated detection and links measured DIA Source photometry and \gls{astrometry} to a predicted object in the Solar System Object catalog.
 As entries in the Solar System Source catalog stem from the \gls{DIA} Source catalog, they have all been detected at $>5\sigma$ significance in at least one band.
 
 The \texttt{diaSourceId} can be used to identify corresponding detections in the \gls{DIA} Source catalog; each \texttt{diaSourceId} occurs at most once in the Solar System Source catalog.
@@ -320,8 +321,9 @@ The Solar System Source catalog contains \nsolarsystemsources entries for \nssob
 
 \subsubsection{Solar System Object}
 \label{sssec:SSObject}
-The \gls{Solar System Object} catalog contains one entry per object and summarizes its observations, per-band photometric properties, including absolute magnitudes, and selected orbit-derived quantities.
-The Solar System Object catalog contains \nssobjects entries; one entry for each distinct object.
+Like the Solar System Source catalog, the \gls{Solar System Object} catalog is also derived from Rubin observations.
+It contains one row per object and summarizes its observations, per-band photometric properties, including absolute magnitudes, and selected orbit-derived quantities.
+The Solar System Object catalog contains \nssobjects entries; one entry for each distinct observed object.
 There are 17,528 objects with a single associated detection, 31,873 with at most two, 212,181 with at least ten, and 7,293 with at least 100.
 The main belt dominates the distance and rate distributions, but the catalog includes 35 objects observed beyond 50\,au, 765 source records at topocentric distances below 0.1\,au, and 2,105 records with predicted rates above
 $1\mathrm{\,\gls{deg}\,day^{-1}}$.
