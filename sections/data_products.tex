@@ -88,7 +88,7 @@ As such, there are up to \nactivedetectors \glspl{Visit Image} for each of the e
 During \gls{ISR}, the science processing \gls{pipeline} removes the overscan regions from the input raw images.
 The \glspl{Visit Image} therefore only contain the pixels that were exposed during the observation: \nitlpixx $\times$ \nitlpixy pixels in the case of the \gls{ITL} detectors, and \netvpixx $\times$ \netvpixy pixels in the case of the \gls{E2V} detectors.
 Unlike raw images, \glspl{Visit Image} consist of three image planes: a science image plane, a variance plane, and a mask plane.
-The science image is the processed exposed image, whereas the variance image persists the uncertainty associated with the value of the corresponding pixel in the science image.
+The science image plane is the processed exposed image, whereas the variance plane persists the uncertainty associated with the value of the corresponding pixel in the science image plane; the pixel values of both planes are reported in units of nJy.
 The mask image indicates pixels that are flagged for various different reasons, such as saturated pixels, pixels associated with detected sources, bad pixels, etc.
 All three image planes contain the same number of pixels in each dimension.
 
@@ -101,6 +101,7 @@ Two different types of coadd images are included in DP2: Deep Coadds and Templat
 Each type of coadd image is produced via the same general process (\secref{sec:drp-multivisit-coaddition}):  Visit Images are selected by \gls{patch}, band, and image quality, warped onto a common pixel grid, and combined as a weighted mean with inverse-variance weights (\secref{sec:drp-multivisit-coaddition}).
 The main differences that distinguish each type of coadd are the selection of the \glspl{Visit Image}, and that Deep Coadds are cell-based in DP2 (see the introduction of this this section), whereas Template Coadds are not.
 As a result, the structure of the datasets is the same for each type: each coadd contains three planes corresponding to the science image plane (i.e., the coadd image), the variance plane, and the mask plane, with all three containing the same number of pixels in each dimension.
+The pixel values of the science image and variance planes are reported in units of nJy.
 Up to two different \gls{background} models are included in the coadd datasets: the \gls{background} that was subtracted to create the final coadd and, in the case of the $gri$ band Deep Coadds, a \gls{background} that can be added-back to create ``Visualization Coadds'' which, while not recommended for science, can be useful for visualization.
 Each coadd also contains a position-dependent \gls{PSF} model, WCS information, plus various other metadata.
 
@@ -158,6 +159,7 @@ A detection algorithm is used to identify sources in Difference Images and a rea
 The outcome of the real/bogus classifier is included in the DIA Source catalog (\secref{sssec:DIASource}).
 
 Like Visit Images, Difference Images also consist of three image planes: a science image plane, a variance plane, and a mask plane (see \secref{sssec:visitimages} for a description of each plane).
+The pixel values of the science image and variance planes are reported in units of nJy.
 
 There are a total of \ndifferenceimages Difference Images in DP2, one for each Visit Image.
 
