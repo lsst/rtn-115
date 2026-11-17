@@ -60,14 +60,14 @@ The presence of DCR in LSSTComCam data was previously discussed in the \gls{DP1}
 Here, we characterize the effect in LSSTCam data using two representative sky regions: the Extended Chandra Deep Field-South (ECDFS) centered at (R.A., decl.) = (53.16, -28.10) and a field near the ecliptic centred at (R.A., decl.) = (320.0, -15.0), respectively.
 For each region, we consider all Deep Coadd images from tracts within 5 degrees of the field center.
 
-The extent of any displacement due to DCR is dependent on airmass, meaning that for a patch it changes at the per-visit level.  
+The extent of any displacement due to DCR is dependent on airmass, meaning that for a patch it changes at the per-visit level.
 For each visit, we calculate the angular displacement of sources relative to their positions their positions in the matched reference catalog and projected onto the directions parallel and perpendicular to the parallactic angle.
 We examine both components as a function of source $g-i$ color; the perpendicular component serves as a control for effects not aligned with the expected DCR direction.
 
 \begin{figure}[tbp]
     \centering
     \includegraphics[width=\columnwidth]{figures/dp2_dcr_vertical.png}
-    \caption{Differential Chromatic Refraction (DCR) measurements for the ECDFS (top) and ecliptic fields (bottom) in LSSTCam data. For each field, the angular displacement of sources is measured relative to their positions in the matched reference catalog and projected onto directions parallel and perpendicular to the parallactic angle. The binned source density (see colorbar) is shown as a function of $g-i$ color and angular displacement, revealing a color-dependent correlation along the parallel direction. This, and the lack of a corresponding trend along the perpendicular direction, indicates the presence of DCR in the LSSTCam data. While we consider all Deep Coadds within five degrees of each field center for our analysis, for display purposes we only plot the DCR values from all matched sources in the coadd with the highest overall DCR metric. \textbf{Note:} We are aware the axis labels etc are too small. This will be addressed.  
+    \caption{Differential Chromatic Refraction (DCR) measurements for the ECDFS (top) and ecliptic fields (bottom) in LSSTCam data. For each field, the angular displacement of sources is measured relative to their positions in the matched reference catalog and projected onto directions parallel and perpendicular to the parallactic angle. The binned source density (see colorbar) is shown as a function of $g-i$ color and angular displacement, revealing a color-dependent correlation along the parallel direction. This, and the lack of a corresponding trend along the perpendicular direction, indicates the presence of DCR in the LSSTCam data. While we consider all Deep Coadds within five degrees of each field center for our analysis, for display purposes we only plot the DCR values from all matched sources in the coadd with the highest overall DCR metric. \textbf{Note:} We are aware the axis labels etc are too small. This will be addressed.
     \label{fig:dcr}}
 \end{figure}
 
@@ -197,7 +197,7 @@ Regardless, for the majority of tracts, the time spanned between the first and l
 \subsection{Solar System}\label{sec:drp-variabletransient-solar-association}
 There are 299,343 ssObjects (i.e., objects measured at least once by Rubin) in DP2, representing almost 20\% of the known solar system.
 Although 136,608 objects are observed at least once in each $griz$ band, detailed analysis of asteroid colors would be premature with DP2.
-Observations with different filters are not simultaneous, meaning the objects' rotational flux variations add scatter to the measurement of their colors. 
+Observations with different filters are not simultaneous, meaning the objects' rotational flux variations add scatter to the measurement of their colors.
 Given sufficient data, this can be overcome by fitting a rotational light curve for each individual object.
 However, most objects in DP2 have far too few measurements for a light-curve fit.
 Hence, individual colors and H magnitudes are uncertain at the level of rotational flux variations, which are typically much larger than the nominal uncertainty \texttt{HErr}, since the latter accounts only for the errors on instantaneous flux measurements.
@@ -288,10 +288,27 @@ Most of the visits with \texttt{DIASources} in DP2 have fewer than 2000 \texttt{
 The outliers with excess ``reliable'' \texttt{DIASources} include: (1) a handful of visits listed in the Release Documentation Known Issues when the telescope was moving while the shutter was open, (2) visits affected by the template PSF discontinuity problem described above, and (3) visits in crowded and/or nebulous fields where it is challenging to robustly measure the background flux level.
 
 \subsubsection{DIA Source detection completeness}
-Following the approach in DP1~\citep[][]{rtn-095}, we assess the performance of difference imaging by injecting synthetic sources into a subset of DP2 science images, carrying out difference imaging, and measuring properties of the recovered detected synthetic sources.
-We consider a selection of $i$-band images from the deep ECDFS field for this investigation.
+Following and extending the approach in DP1~\citep[][]{rtn-095}, we assess the performance of difference imaging by injecting synthetic sources into a subset of DP2 science images, carrying out difference imaging, and measuring properties of the recovered detected synthetic sources.
+We consider a subset of visits across the entire DP2 sky in all six filter bands for this investigation.
 We inject both ``hosted'' and ``hostless'' synthetic sources, i.e., point sources embedded in a host galaxy and isolated point sources, each with randomly sampled size and brightness.
 The hosted sources additionally have randomly selected positions within their host galaxy and position angles.
+All the synthetic sources have randomly selected brightnesses and are injected into both template coadd images and single visit images.
+Some of them are injected into the same sky coordinate location across multiple visits with variable brightnesses.
+Overall, we inject approximately 70,000 synthetic sources into XXX DP2 visits and calculate recovery statistics.
 
-\todo{Bruno and Meredith are working on this fake injection campaign and will write up results soon.
-We should be able to generate 2--3 figures similar to DP1~\citep[][]{rtn-095} Figures 37, 38, and 39.}
+Figure XXX shows completeness curves for the full injected and recovered samples, categorized by whether the synthetic source was injected into just the template, just the visit, or was a variable source injected into multiple visits.
+Figure YYY shows the same completeness calculation as Figure XXX, but now the results are categorized by whether the synthetic sources are hosted or hostless in nature.
+All panels in Figures XXX and YYY show two completeness curves: one with all injected synthetic sources, and one with two known sources of problems removed, which we describe below.
+
+Our initial completeness analysis showed there were many high-SNR synthetic sources that were not recovered.
+We examined numerous indiviual unrecovered DiaSources to determine common underlying causes, and found two prominent ones.
+First, in situations where a synthetic source was injected into a template image relatively close to where an unrelated synthetic source was injected into a visit image, the resulting difference image creates a blended footprint that can appear as one extended source or like a lopsided dipole.
+Because deblending is not yet implemented in difference imaging (see \ref{sssec:DIASource}), one of the two injected synthetic sources is not recovered in this scenario.
+Second, in situations where a synthetic source was injected close to an image region with certain pixel flags (e.g., SATURATED, SPIKE), they are not recovered.
+This is intentional, because many sources close to such masked regions are bogus detections originating from subtraction artifacts.
+To identify affected sources, we define a seven-arcsecond wide region around all injected synthetic DiaSources, and note whether any of the pixels in the region had any pixel flags set.
+If any of the pixels in this buffer region have one or more of INTERPOLATED, SATURATED, BAD, SATURATED_TEMPLATE, or SPIKE set, we exclude the injected synthetic source from the recovery analysis.
+
+When both of these causes of failed injected synthetic source recovery --- blending overlaps and pixel flag adjacency --- are accounted for, the completeness curves improve dramatically, which can be seen in Figures XXX and YYY.
+
+\todo{Bruno to add figures, fill in XXX and YYY values, and revise text as needed.}
