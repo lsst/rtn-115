@@ -315,10 +315,30 @@ Most of the visits with \texttt{DIASources} in DP2 have fewer than 2000 \texttt{
 The outliers with excess ``reliable'' \texttt{DIASources} include: (1) a handful of visits listed in the Release Documentation Known Issues when the telescope was moving while the shutter was open, (2) visits affected by the template PSF discontinuity problem described above, and (3) visits in crowded and/or nebulous fields where it is challenging to robustly measure the background flux level.
 
 \subsubsection{DIA Source detection completeness}
-Following the approach in DP1~\citep[][]{rtn-095}, we assess the performance of difference imaging by injecting synthetic sources into a subset of DP2 science images, carrying out difference imaging, and measuring properties of the recovered detected synthetic sources.
-We consider a selection of $i$-band images from the deep ECDFS field for this investigation.
+Following and extending the approach in DP1~\citep[][]{rtn-095}, we assess the performance of difference imaging by injecting synthetic sources into a subset of DP2 science images, carrying out difference imaging, and measuring properties of the recovered detected synthetic sources.
+We consider a subset of visits across the entire DP2 sky in all six filter bands for this investigation.
 We inject both ``hosted'' and ``hostless'' synthetic sources, i.e., point sources embedded in a host galaxy and isolated point sources, each with randomly sampled size and brightness.
 The hosted sources additionally have randomly selected positions within their host galaxy and position angles.
+All the synthetic sources have randomly selected brightnesses and are injected into both template coadd images and single visit images.
+Some of them are injected into the same sky coordinate location across multiple visits with variable brightnesses.
+Overall, we inject approximately 70,000 synthetic sources into XXX DP2 visits and calculate recovery statistics.
+
+Figure XXX shows completeness curves for the full injected and recovered samples, categorized by whether the synthetic source was injected into just the template, just the visit, or was a variable source injected into multiple visits.
+Figure YYY shows the same completeness calculation as Figure XXX, but now the results are categorized by whether the synthetic sources are hosted or hostless in nature.
+All panels in Figures XXX and YYY show two completeness curves: one with all injected synthetic sources, and one with two known sources of problems removed, which we describe below.
+
+Our initial completeness analysis showed there were many high-SNR synthetic sources that were not recovered.
+We examined numerous indiviual unrecovered DiaSources to determine common underlying causes, and found two prominent ones.
+First, in situations where a synthetic source was injected into a template image relatively close to where an unrelated synthetic source was injected into a visit image, the resulting difference image creates a blended footprint that can appear as one extended source or like a lopsided dipole.
+Because deblending is not yet implemented in difference imaging (see \ref{sssec:DIASource}), one of the two injected synthetic sources is not recovered in this scenario.
+Second, in situations where a synthetic source was injected close to an image region with certain pixel flags (e.g., SATURATED, SPIKE), they are not recovered.
+This is intentional, because many sources close to such masked regions are bogus detections originating from subtraction artifacts.
+To identify affected sources, we define a seven-arcsecond wide region around all injected synthetic DiaSources, and note whether any of the pixels in the region had any pixel flags set.
+If any of the pixels in this buffer region have one or more of INTERPOLATED, SATURATED, BAD, SATURATED_TEMPLATE, or SPIKE set, we exclude the injected synthetic source from the recovery analysis.
+
+When both of these causes of failed injected synthetic source recovery --- blending overlaps and pixel flag adjacency --- are accounted for, the completeness curves improve dramatically, which can be seen in Figures XXX and YYY.
+
+\todo{Bruno to add figures, fill in XXX and YYY values, and revise text as needed.}
 
 %\todo{Bruno and Meredith are working on this fake injection campaign and will write up results soon.
 %We should be able to generate 2--3 figures similar to DP1~\citep[][]{rtn-095} Figures 37, 38, and 39.}
