@@ -364,7 +364,7 @@ For the \textit{u} band, the input catalogs were (in order of decreasing priorit
 These \gls{SLR} estimates were used to boost the number of $u$-band reference sources, as otherwise the source density from the $u$-band input catalogs is too low to be useful for the \gls{LSST}.
 
 Throughout, the Calibration Reference Catalog uses the \gls{DES} bandpasses for the \textit{grizy} bands and the \gls{SDSS} bandpass for the \textit{u}-band; color transformations derived from high-quality sources were used to convert fluxes from the various input catalogs (some of which did not use the \gls{DES} or SDSS bandpasses) to the respective bandpasses.
-All sources from the input catalogs are matched to \gls{Gaia} \gls{DR3} sources for robust astrometric information, selecting only isolated sources (i.e., no neighbors within 1\arcsec).
+All sources from the input catalogs are matched to \gls{Gaia} \gls{DR3} sources for robust astrometric information (including parallax and proper motions) selecting only isolated sources (i.e., no neighbors within 1\arcsec).
 
 After collating the input catalogs and transforming the fluxes to the standard DES and \gls{SDSS} bandpasses, the catalog was used to identify sources within a specific region of the sky.
 This process generated a set of standard columns containing positional and \gls{flux} information, along with their associated uncertainties.
