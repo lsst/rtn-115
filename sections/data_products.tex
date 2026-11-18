@@ -294,12 +294,12 @@ Two measurement algorithms (\textit{gauss} and \textit{pgauss}) are run on each 
 The first approach is to fit a single \gls{2D} Gaussian jointly across the $r$-, $i$-, and $z$-band deep coadd images, with the ellipticity components in the image x-y (\texttt{gauss\_g1}) and diagonal (\texttt{gauss\_g2}) directions reported in the catalog.
 The second approach measures \gls{2D} Gaussian-weighted moments in the $g$, $r$, $i$, and $z$ bands (e.g., \texttt{r\_pgaussFlux}).
 Like the \gls{GAaP} fluxes in the Object catalog, these are designed to provide consistent colors across bands rather than total fluxes; the second approach does not provide ellipticity measurements.
-There is one row per object detected in each counterfactual, meaning a given object could result in up to five rows, depending on how many of the counterfactuals it is detected in at a significance of $>5\sigma$.\footnote{It is feasible for a marginal $5\sigma$ object in one counterfactual to be just below the $5\sigma$ detection threshold in another counterfactual.}
+There is one entry per object detected in each counterfactual, meaning a given object could result in up to five entries, depending on how many of the counterfactuals it is detected in at a significance of $>5\sigma$.\footnote{It is feasible for a marginal $5\sigma$ object in one counterfactual to be just below the $5\sigma$ detection threshold in another counterfactual.}
 
 In addition to the Gaussian shape measurements and their covariances, the Shear Object table also contains object positional information, fluxes measured from both the Gaussian fits and the Gaussian moments ($g$, $r$, $i$ and $z$ bands), \gls{PSF} shapes reported in the same x-y and diagonal directions as objects, a range of different flags.
 Each entry in the Shear Object catalog also has a unique identification number (\texttt{shearObjectId}), that uniquely identifies a given detection in a given counterfactual.
 
-The Shear Object catalog contains \nshearobjects rows.
+The Shear Object catalog contains \nshearobjects entries.
 
 \subsubsection{Solar System Source}
 \label{sssec:SSSource}
@@ -315,12 +315,12 @@ State vectors are equatorial and evaluated at the light-emission (retarded) time
 The \texttt{ephVmag} field is an approximate predicted Johnson $V$ magnitude derived from the input catalog photometric parameters.
 It is not a prediction in the Rubin band of the associated detection, so comparisons to the measured $ugrizy$ photometry include both object color and phase-model differences.
 
-The Solar System Source catalog contains \nsolarsystemsources rows for \nssobjects distinct objects.
+The Solar System Source catalog contains \nsolarsystemsources entries for \nssobjects distinct objects.
 
 
 \subsubsection{Solar System Object}
 \label{sssec:SSObject}
-The \gls{Solar System Object} catalog contains one row per object and summarizes its observations, per-band photometric properties, including absolute magnitudes, and selected orbit-derived quantities.
+The \gls{Solar System Object} catalog contains one entry per object and summarizes its observations, per-band photometric properties, including absolute magnitudes, and selected orbit-derived quantities.
 The Solar System Object catalog contains \nssobjects entries; one entry for each distinct object.
 There are 17,528 objects with a single associated detection, 31,873 with at most two, 212,181 with at least ten, and 7,293 with at least 100.
 The main belt dominates the distance and rate distributions, but the catalog includes 35 objects observed beyond 50\,au, 765 source records at topocentric distances below 0.1\,au, and 2,105 records with predicted rates above
@@ -339,16 +339,10 @@ The former includes both self-mappings ($A=A$) and links among aliases ($A=B$); 
 The \gls{MPC} Orbits catalog available at ingestion did not contain comets.
 Because the predictions used for association were generated from that snapshot, no comets were available to be associated with \gls{DP2} detections and none occur in the delivered Solar System Source or Solar System Object catalogs.
 
-In the Solar System Source, Solar System Object, and \gls{MPC} Orbits catalogs,
-\texttt{designation} denotes the unpacked primary provisional designation of
-the object.
-This was added to the delivered \gls{MPS} Orbits copy
-as an end-user convenience; there it is identical, row by row, to
-\texttt{unpacked\_primary\_provisional\_designation}.
-It therefore provides
-a readable and direct join key among the Solar System Source, Solar System Object, \gls{MPC} Orbits catalogs, without requiring users to unpack \gls{MPC} designations.
-For query performance, users should nevertheless prever to use integer
-identifiers such as \texttt{ssObjectId} to link catalogs wherever those identifiers are available, and use \texttt{designation} for readability or when an appropriate integer identifier is unavailable.
+In the Solar System Source, Solar System Object, and \gls{MPC} Orbits catalogs, \texttt{designation} denotes the unpacked primary provisional designation of the object.
+This was added to the delivered \gls{MPS} Orbits copy as an end-user convenience; there it is identical, row by row, to \texttt{unpacked\_primary\_provisional\_designation}.
+It therefore provides a readable and direct join key among the Solar System Source, Solar System Object, \gls{MPC} Orbits catalogs, without requiring users to unpack \gls{MPC} designations.
+For query performance, users should nevertheless prever to use integer identifiers such as \texttt{ssObjectId} to link catalogs wherever those identifiers are available, and use \texttt{designation} for readability or when an appropriate integer identifier is unavailable.
 
 The MPC Orbit, Current Identifications and Numbered Identifications catalogs contain \nmpcorbits, \ncurrentidentifications and \nnumberedidentifications entries, respectively.
 
@@ -372,7 +366,7 @@ This process generated a set of standard columns containing positional and \gls{
 
 Once the catalog was generated, it was converted into the format required by the LSST Science Pipelines by following the instructions on \url{https://pipelines.lsst.io}.
 As part of the conversion process the full catalog is sharded into \ncalrefcat htm7 trixels, with each shard covering area of roughly \shardarea.
-The sharded Calibration Reference Catalog is only available via the Data \gls{Butler} (\secref{sssec:data_butler}). 
+The sharded Calibration Reference Catalog is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 % \subsubsection{Object Parent}
 %% Not included in (E)DP2.
@@ -454,7 +448,7 @@ Object Scarlet Models are only available via the Data \gls{Butler} (\secref{ssse
 The Deep Coadd Input Summary table contains the visit and detector IDs of all the \gls{Visit} Images that were selected and coadded to produce each Deep Coadd image.
 Also included in the table is the relative weight of each Visit Image, inversely proportional to its variance, and the number of pixels it contributed to a Deep Coadd, since a given Visit Image may only partially cover a \gls{patch}.
 There is a single Deep Coadd Input Summary table for the whole of \gls{DP2}.
-It contains \ndeepcoaddinputsummaryrows rows, corresonding to one row per contributing Visit Image per \gls{patch} (i.e., one row per unique combination of \gls{tract}, \gls{patch}, visit, and detector).
+It contains \ndeepcoaddinputsummaryrows entries, corresonding to one entry per contributing Visit Image per \gls{patch} (i.e., one entry per unique combination of \gls{tract}, \gls{patch}, visit, and detector).
 It is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Compare Warp Artifact Mask}
@@ -473,7 +467,7 @@ There is a single Camera data product for \gls{DP2}, and it is only available vi
 \subsubsection{FGCM Lookup Table}
 The FGCM Lookup Table contains pre-computed integrals of the combined atmospheric and instrumental throughput in each band over the expected range of atmospheric conditions.
 It is generated from the MODTRAN atmosphere model and the measured filter and detector throughputs (\secref{sec:drp-calibration-photometry}), in the same processing step that produces the Standard Passbands (\secref{sssec:std_passbands}), and it allows the \gls{FGCM} photometric calibration to rapidly compute throughput and chromatic corrections for stars of different colors.
-There is a single FGCM Lookup Table for \gls{DP2} containing \nfgcmrows, and it is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
+There is a single FGCM Lookup Table for \gls{DP2} containing \nfgcmrows entries, and it is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Pretrained Model Package}
 The Pretrained Model Package contains the architecture and trained weights of the convolutional neural network used to assign a reliability (i.e., real/bogus) score to each \gls{DIA} source (\secref{sec:drp-variabletransient-artifact}; \citealt[][]{DMTN-337}).
