@@ -473,7 +473,7 @@ There is a single Camera data product for \gls{DP2}, and it is only available vi
 \subsubsection{FGCM Lookup Table}
 The FGCM Lookup Table contains pre-computed integrals of the combined atmospheric and instrumental throughput in each band over the expected range of atmospheric conditions.
 It is generated from the MODTRAN atmosphere model and the measured filter and detector throughputs (\secref{sec:drp-calibration-photometry}), in the same processing step that produces the Standard Passbands (\secref{sssec:std_passbands}), and it allows the \gls{FGCM} photometric calibration to rapidly compute throughput and chromatic corrections for stars of different colors.
-There is a single FGCM Lookup Table for \gls{DP2} containing \nfgcmrows, and it is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
+There is a single FGCM Lookup Table for \gls{DP2}, and it is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Pretrained Model Package}
 The Pretrained Model Package contains the architecture and trained weights of the convolutional neural network used to assign a reliability (i.e., real/bogus) score to each \gls{DIA} source (\secref{sec:drp-variabletransient-artifact}; \citealt[][]{DMTN-337}).
