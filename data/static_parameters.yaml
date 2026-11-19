@@ -64,11 +64,11 @@ dptwo:
     - name: sciencepipelinesurl
       value: '\url{https://pipelines.lsst.io/v/v30\_0\_8}'
     - name: dptwodeliverywindow
-      value: Jul--Dec 2026
+      value: July--December 2026
     - name: edptworeleasedate
       value: 2026-07-27
     - name: dptworeleasedate
-      value: Oct--Dec 2026
+      value: October--December 2026
     - name: edptwosize
       value: 59.15
       unit: TB
