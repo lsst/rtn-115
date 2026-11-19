@@ -32,11 +32,11 @@ The quantitative impact on delivered image quality is characterized in \S\ref{ss
 \subsection{LSSTCam}
 \label{ssec:lsstcam}
 %
-\gls{LSSTCam} \citep[][]{10.1117/12.3018987, 10.71929/rubin/2571927} is a 3.2-gigapixel mosaic camera with a \rubinfov instantaneous field of view.
+\gls{LSSTCam} \citep[][]{10.71929/rubin/2571927} is a 3.2-gigapixel mosaic camera with a \rubinfov instantaneous field of view.
 Its focal plane comprises 25 modular rafts arranged in a 5$\xspace\times\xspace$5 grid: 21 science rafts, each containing nine $\sim$4k$\times$4k \gls{CCD} sensors, and 4 corner rafts each housing two wavefront sensors and two guider sensors, for a total of 205 sensors: 189 science, 8 wavefront, and 8 guider.
 
 \gls{LSSTCam} employs sensors from two vendors: \gls{E2V} sensors populate the central science rafts, and sensors from the \gls{ITL} populate the peripheral science rafts.
-Each sensor is subdivided into 16 amplifiers that are read out in parallel.
+Each sensor is subdivided into 16 amplifiers read out in parallel, with amplifier dimensions of 512$\times$2002 pixels for \gls{E2V} and 509$\times$2000 pixels for \gls{ITL}.
 \figref{fig:lsstcam_schematic} shows the \gls{LSSTCam} focal plane layout, viewed from above looking down through the camera lenses, including the placement and numbering scheme of sensors (``S'') and amplifiers (``C''); a full description is given in \citet[][]{2025JATIS..11a1209P} and \citet[][]{ctn-001}.
 \begin{figure*}[htb!]
 \plotone{LSSTCam_focal_plane}
