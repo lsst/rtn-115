@@ -16,9 +16,11 @@ Further information on the performance and known issues of \gls{DP2} can be foun
 
 \subsection{Astrometry}
 Astrometric performance is characterized by measuring internal consistency as well as accuracy with respect to an external reference, in this case the Gaia DR3 catalog.
-Metrics are calculated using isolated stars with magnitude between $17$ and $21.5$.
+Per-band metrics are calculated using isolated stars with magnitude between $17$ and $21.5$ in each band.\footnote{While object position does not change with band, object selection is band-specific.}
 For this set of objects, we find that the median offset from Gaia is within $2$~mas in about $85\%$ of tracts and within $5$~mas for about $99\%$ of tracts.
-Any offset within this margin is believed to be caused by color-dependent selection effects in our metric calculation, and is expected to be lower once differential chromatic refraction is included in the astrometric model.
+Note that this calculation is not an independent estimate, since the Gaia stars are also used to compute the WCS.
+Given that the number of stars used verify the astrometric solution far exceed the number that were used to derive it, we do not expect this to have a major effect on our results; a completely independent calculation is planned for future analyses
+Any offset within the aforementioned numerical margins is believed to be caused by color-dependent selection effects in our metric calculation, and is expected to be lower once differential chromatic refraction is included in the astrometric model.
 
 Internal consistency was improved significantly relative to DP1 by including the Gaussian processes turbulence correction.
 The degree of internal consistency can be seen by looking at the ``AMx" metrics, which show the median over a field of the standard deviation in the separation across all visits between objects at a given distance.
@@ -39,6 +41,7 @@ We measure this repeatability using the PSF photometry of bright (SNR~$>200$), i
 To keep the calculation computationally feasible, it is performed per tract: for each star with at least three measurements from the visits covering a given tract, we calculate the standard deviation of those measurements, and then take the median over all stars in the tract.
 This corresponds to the PA1 metric defined in the LSST Science Requirements Document \citep[][]{LPM-17}.
 Following recalibration using the \gls{FGCM} fits, the median PA1 values across all tracts with coverage are 9.1, 7.1, 6.8, 5.9, 5.8, and 6.2~mmag in the $ugrizy$ bands, respectively, meeting the minimum specifications of the Science Requirements Document.
+\todo{The FGCM zero point errors will be added to give context to how much they are contributing to these PA1 values.}
 
 \begin{figure*}[htb!]
 \plotone{dp2_stellar_loci}
@@ -175,7 +178,7 @@ The cause of the significantly nonzero sizes of stars is not entirely understood
 In both cases, the median size ratio remains fairly consistent to about 24th magnitude (filter dependent), and the scatter is remarkably small for ECDFS/Euclid especially.
 There is a shallow slope in the median such that bright galaxies have underestimated sizes.
 This is likely due to a combination of reasons, most notably the known background oversubtraction which is less likely to be an issue in space-based data.
-Faint galaxies have substantially overestimated sizes, unsurprisingly, since by $i=25$ median effective radii (from COSMOS2025) drop to about $0\farcs22$ - barely larger than the LSSTCam pixel size.
+Faint galaxies have substantially overestimated sizes; by $i=25$ median effective radii (from COSMOS2025) drop to about $0\farcs22$, which is barely larger than the LSSTCam pixel size.
 
 One as-yet unexplained feature is the systematic offset between DP2 and Euclid Q1 sizes, which is seen in both the ECDFS and EDFS fields.
 The Euclid VIS band covers most of the same wavelength range as the $griz$ filters combined, and so this seems unlikely to be solely due to a mismatch in wavelength coverage.
