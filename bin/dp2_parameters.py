@@ -218,7 +218,9 @@ def observingQuality(params: DP2Parameters) -> DP2Parameters:
 
 
 def imageStats(params: DP2Parameters, imageId: tuple) -> DP2Parameters:
-    """Add count, file size, pixel dimensions, plate scale, and FOV for one dataset type.
+    """Add the number of instances of an image dataset. This can be
+    expanded for more image stats, such a number of pixels, field-
+    of-view, etc.
 
     Parameters
     ----------
@@ -233,36 +235,11 @@ def imageStats(params: DP2Parameters, imageId: tuple) -> DP2Parameters:
         Updated parameter store.
     """
     imageType = imageId[0]
-    # imageDataId = imageId[1]
     imageName = imageType.replace("_", "")
 
     refs = list(registry.queryDatasets(imageType))
     params = addParameter(params, f"n{imageName}s", len(list(refs)))
 
-    # ref = list(registry.queryDatasets(imageType, dataId=imageDataId))[0]
-    # filepath = butler.getURI(ref)
-
-    # Filesize not currently working:
-    # roughFileSize = round(os.path.getsize(filepath.path) / 1e6, 2)
-    # params = addParameter(params, f"{imageName}hdd", f"{roughFileSize:.0f}", unit="MB")
-
-    # image = butler.get(ref)
-    # params = addParameter(params, f"n{imageName}pixx", image.bbox.shape.x)
-    # params = addParameter(params, f"n{imageName}pixy", image.bbox.shape.y)
-
-    # platescale = image.getWcs().getPixelScale().asArcseconds()
-    # params = addParameter(
-    #     params, f"{imageName}platescale", f"{platescale:.1f}", unit="\\arcsec per pixel"
-    # )
-
-    # fovx = image.getDimensions().x * image.getWcs().getPixelScale().asDegrees()
-    # fovy = image.getDimensions().y * image.getWcs().getPixelScale().asDegrees()
-    # params = addParameter(params, f"{imageName}fovx", f"{fovx:.2f}", unit="\\degree")
-    # params = addParameter(params, f"{imageName}fovy", f"{fovy:.2f}", unit="\\degree")
-    # area = fovx * fovy
-    # params = addParameter(
-    #     params, f"{imageName}fov", f"{area:.3f}", unit="deg$^{\\rm 2}$"
-    # )
     return params
 
 
@@ -281,43 +258,21 @@ def imageDatasets(params: DP2Parameters) -> DP2Parameters:
     """
     log.info("Adding image dataset stats...")
 
-    # Only the dataset type (the key) is currently used by imageStats(); the
-    # data IDs are placeholders for the (commented-out) per-image stats.
     datasets = {
         "raw": {},
         "visit_image": {},
-        "deep_coadd": {
-            "band": "i",
-            "skymap": "lsst_cells_v2",
-            "tract": 9813,
-            "patch": 50,
-        },
-        "template_coadd": {
-            "band": "i",
-            "skymap": "lsst_cells_v2",
-            "tract": 9813,
-            "patch": 50,
-        },
+        "deep_coadd": {},
+        "template_coadd": {},
         "difference_image": {},
     }
     for dataset in datasets.items():
         params = imageStats(params, dataset)
 
-    # params = addParameter(
-    #     params,
-    #     "ndeepcoaddpixtotal",
-    #     params.values["ndeepcoaddpixx"] * params.values["ndeepcoaddpixy"] / 1e6,
-    #     sig=3,
-    #     unit="million",
-    # )
     return params
 
 
-def nRaws(params: DP2Parameters) -> DP2Parameters:
-    """Add the number of exposures, raw images, and active detectors.
-
-    Note: nraws and nexposures will populated for DP2. They are not
-    included in EPD2.
+def nDetectors(params: DP2Parameters) -> DP2Parameters:
+    """Add the number of active detectors.
 
     Parameters
     ----------
@@ -329,14 +284,13 @@ def nRaws(params: DP2Parameters) -> DP2Parameters:
     params : `DP2Parameters`
         Updated parameter store.
     """
-    log.info("Adding number of exposures and raws...")
-    # params = addParameter(params, "nexposures")
+    log.info("Adding the number of active exposures...")
 
     visit_detector_table = butler.get("visit_detector_table")
     params = addParameter(
         params, "nactivedetectors", len(set(visit_detector_table["detector"]))
     )
-    # params = addParameter(params, "nraws", )
+
     return params
 
 
@@ -368,6 +322,12 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
         (vertex[0].asDegrees() % 360 - 180, vertex[1].asDegrees())
         for vertex in tract.getVertexList()
     ]
+    tractSide = haversine(
+        verticesInDegrees[0][::-1], verticesInDegrees[1][::-1], unit=Unit.DEGREES
+    )
+    params = addParameter(
+        params, "tractside", f"{tractSide:.1f}", unit="deg"
+    )
     tractArea = haversine(
         verticesInDegrees[0][::-1], verticesInDegrees[1][::-1], unit=Unit.DEGREES
     ) * haversine(
@@ -388,6 +348,10 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
     params = addParameter(params, "npatchy", numYPatches)
     params = addParameter(params, "npatch", numPatches)
 
+    patchSide_px, _ = tract.patch_inner_dimensions
+    patchSide = patchSide_px * tract.wcs.getPixelScale().asArcminutes()
+    params = addParameter(params, "patchside", f"{patchSide:.1f}", unit="\\arcmin")
+    
     patchArea = tractArea / numPatches
     params = addParameter(
         params, "patchareanooverlap", f"{patchArea:.3f}", unit="deg$^{\\rm 2}$"
@@ -401,34 +365,58 @@ def skymapData(params: DP2Parameters) -> DP2Parameters:
     )
 
     coadd = butler.get(refs[0])
-    bbox = coadd.bbox
-    sky_projection = coadd.sky_projection
+    if hasattr(coadd, "getBBox"):
+        # afw Exposure
+        bbox = coadd.getBBox()
+        coaddWcs = coadd.getWcs()
 
-    corner_00 = sky_projection.pixel_to_sky(x=bbox.x.min, y=bbox.y.min)
-    corner_01 = sky_projection.pixel_to_sky(x=bbox.x.min + 1, y=bbox.y.min)
-    corner_x1 = sky_projection.pixel_to_sky(x=bbox.x.stop, y=bbox.y.min)
-    corner_y1 = sky_projection.pixel_to_sky(x=bbox.x.min, y=bbox.y.stop)
+        xMin, yMin = bbox.getMinX(), bbox.getMinY()
+        xStop, yStop = bbox.getMaxX() + 1, bbox.getMaxY() + 1
 
-    fovx = corner_00.separation(corner_x1).degree
-    fovy = corner_00.separation(corner_y1).degree
+        corner_00 = coaddWcs.pixelToSky(xMin, yMin)
+        corner_01 = coaddWcs.pixelToSky(xMin + 1, yMin)
+        corner_x1 = coaddWcs.pixelToSky(xStop, yMin)
+        corner_y1 = coaddWcs.pixelToSky(xMin, yStop)
+
+        fovx = corner_00.separation(corner_x1).asDegrees()
+        fovy = corner_00.separation(corner_y1).asDegrees()
+        coaddpixsize = corner_00.separation(corner_01).asArcseconds()
+        npatchpixx = bbox.getWidth()
+        npatchpixy = bbox.getHeight()
+    else:
+        # lsst.images CellCoadd
+        bbox = coadd.bbox
+        projection = coadd.sky_projection
+
+        xMin, yMin = bbox.x.min, bbox.y.min
+        xStop, yStop = bbox.x.max + 1, bbox.y.max + 1
+
+        corner_00 = projection.pixel_to_sky(x=xMin, y=yMin)
+        corner_01 = projection.pixel_to_sky(x=xMin + 1, y=yMin)
+        corner_x1 = projection.pixel_to_sky(x=xStop, y=yMin)
+        corner_y1 = projection.pixel_to_sky(x=xMin, y=yStop)
+
+        fovx = corner_00.separation(corner_x1).deg
+        fovy = corner_00.separation(corner_y1).deg
+
+        coaddpixsize = corner_00.separation(corner_01).arcsec
+        npatchpixx = xStop - xMin
+        npatchpixy = yStop - yMin
+
     params = addParameter(
-        params, "patcharea", f"{fovx.item() * fovy.item():.3f}", unit="deg$^{\\rm 2}$"
+        params, "patcharea", f"{fovx * fovy:.3f}", unit="deg$^{\\rm 2}$"
     )
-
-    npatchpixx = bbox.x.size
-    npatchpixy = bbox.y.size
-    coaddpixsize = corner_00.separation(corner_01).arcsec
     params = addParameter(params, "npatchpixx", npatchpixx)
     params = addParameter(params, "npatchpixy", npatchpixy)
-    params = addParameter(
-        params, "coaddpixsize", coaddpixsize.item(), unit="\\arcsec", sig=2
-    )
+    params = addParameter(params, "coaddpixsize", coaddpixsize, unit="\\arcsec", sig=2)
 
     wcs = tract.getWcs()
     patchInfo = tract.getPatchInfo((5, 5))
     patchOverlap = (
-        patchInfo.getOuterBBox().getWidth() - patchInfo.getInnerBBox().getWidth()
-    ) * wcs.getPixelScale().asArcseconds()
+        (patchInfo.getOuterBBox().getWidth() - patchInfo.getInnerBBox().getWidth())
+        * wcs.getPixelScale().asArcseconds()
+        * 0.5
+    )
     params = addParameter(
         params, "patchoverlap", f"{patchOverlap:.1f}", unit="\\arcsec"
     )
@@ -486,8 +474,10 @@ def surveyPropertyMaps(params: DP2Parameters) -> DP2Parameters:
     return addParameter(params, "nsurveypropertymaps", len(allSurveyPropMaps))
 
 
-def nCatalogDatasets(params: DP2Parameters) -> DP2Parameters:
-    """Add the number of datasets (as words) for each catalog type.
+def nDatasets(params: DP2Parameters) -> DP2Parameters:
+    """Add the number of instances (as words) of various non-image dataset
+    types contained within the Data Butler. Image datasets are dealt with
+    by the ``imageDatasets'' function.
 
     Parameters
     ----------
@@ -499,27 +489,26 @@ def nCatalogDatasets(params: DP2Parameters) -> DP2Parameters:
     params : `DP2Parameters`
         Updated parameter store.
     """
-    log.info("Adding catalog dataset stats...")
+    log.info("Adding butler dataset stats...")
     from lsst.dptwo.utils.formatting import num2word
 
     for name, dataset in [
-        ("nsourcecatalogs", "source"),
-        ("nobjectcatalogs", "object"),
-        ("ndiaobjectcatalogs", "dia_object"),
-        ("ndiasourcecatalogs", "dia_source"),
-        ("nsolarsystemsourcecatalogs", "ss_source"),
-        ("nvisitsummarytables", "visit_table"),
-        ("nvisitdetectorsummarytables", "visit_detector_table"),
-        ("nobjectforcedcatalogs", "object_forced_source"),
-        ("ndiaobjectforcedcatalogs", "dia_object_forced_source"),
+        ("ncalrefcat", "the_monster_20250219"),
+        ("nstandardpassbands", "standard_passband"),
+        ("nobjectscarletmodels", "object_scarlet_models"),
+        ("ncomparewarpartifactmasks", "compare_warp_artifact_mask"),
     ]:
         refs = list(registry.queryDatasets(dataset))
-        params = addParameter(params, name, num2word(len(refs)).lower())
+        try:
+            params = addParameter(params, name, num2word(len(refs)).lower())
+        except AttributeError:
+            params = addParameter(params, name, len(refs))
+
     return params
 
 
 def tableLengths(params: DP2Parameters) -> DP2Parameters:
-    """Add row counts for visit summary, visit-detector summary, and SS catalog tables.
+    """Add row counts for butler-stored tables.
 
     Parameters
     ----------
@@ -532,21 +521,19 @@ def tableLengths(params: DP2Parameters) -> DP2Parameters:
         Updated parameter store.
     """
     log.info("Adding table lengths...")
-    refs = list(registry.queryDatasets("visit_table"))
-    table = butler.get(refs[0])
-    params = addParameter(params, "nvisitsummaries", len(table))
+    for name, dataset, divisor, unit, sig in [
+        ("ndeepcoaddinputsummaryrows", "deep_coadd_input_summary", 1e6, "million", 2),
+        ("nfgcmrows", "fgcmLookUpTable", 1e6, "million", 2),
+    ]:
+        refs = list(registry.queryDatasets(dataset))
+        if len(refs) != 1:
+            log.error(f"""
+                      To be included in tableLengths, the number of instances
+                      of {dataset} must be exactly 1.
+                      """)
+        table = butler.get(refs[0])
+        params = addParameter(params, name, len(table) / divisor, sig=sig, unit=unit)
 
-    refs = list(registry.queryDatasets("visit_detector_table"))
-    table = butler.get(refs[0])
-    params = addParameter(params, "nvisitdetectorsummaries", len(table))
-
-    refs = list(registry.queryDatasets("ss_source"))
-    catalog = butler.get(refs[0])
-    params = addParameter(params, "nsolarsystemsources", len(catalog))
-
-    refs = list(registry.queryDatasets("ss_object"))
-    catalog = butler.get(refs[0])
-    params = addParameter(params, "nsolarsystemobjects", len(catalog))
     return params
 
 
@@ -564,9 +551,17 @@ def misc(params: DP2Parameters) -> DP2Parameters:
     params : `DP2Parameters`
         Updated parameter store.
     """
-    log.info("Adding misc data...")
+    # log.info("Adding misc data...")
+    # params = addParameter(
+    #    params, "nsfpfails", params.values["nraws"] - params.values["nvisitimages"]
+    # )
+    log.info("Adding htm7 shard area...")
     params = addParameter(
-        params, "nsfpfails", params.values["nraws"] - params.values["nvisitimages"]
+        params,
+        "shardarea",
+        (4.0 * 180.0**2) / (np.pi * int(params.values["ncalrefcat"])),
+        sig=2,
+        unit="deg$^{\\rm 2}$",
     )
     return params
 
@@ -661,6 +656,16 @@ def catalogCounts(params: DP2Parameters) -> DP2Parameters:
         "nsolarsystemsources": ("dp2.SSSource", 1e6, "million", 2),
         "nvisitrows": ("dp2.Visit", 1, None, None),
         "nvisitdetectorrows": ("dp2.VisitDetector", 1e6, "million", 2),
+        "nisolatedstellarmotions": (
+            "dp2.IsolatedStarStellarMotions",
+            1e6,
+            "million",
+            2,
+        ),
+        "nmpcorbits": ("dp2.mpc_orbits", 1e6, "million", 2),
+        "ncurrentidentifications": ("dp2.current_identifications", 1e6, "million", 2),
+        "nnumberedidentifications": ("dp2.numbered_identifications", 1, None, None),
+        "ncoaddpatchesrows": ("dp2.CoaddPatches", 1, None, None),
     }
     for paramName, (tableName, scale, unit, sig) in tables.items():
         log.info("Adding %s from %s...", paramName, tableName)
@@ -886,13 +891,14 @@ if __name__ == "__main__":
     if not args.static_only:
         from lsst.daf.butler import Butler
         from lsst.rsp import get_tap_service
-        from pyvo.dal.exceptions import DALServiceError
+        from pyvo.dal.exceptions import DALFormatError, DALServiceError
 
-        service = get_tap_service("tap")
+        service = None
         try:
+            service = get_tap_service("tap")
             query = "SELECT * FROM tap_schema.tables WHERE tap_schema.tables.schema_name = 'dp2'"
             dp2_available = len(service.search(query)) > 0
-        except DALServiceError:
+        except (DALServiceError, DALFormatError):
             warnings.warn("TAP service unavailable, skipping TAP-dependent steps.")
             dp2_available = False
 
@@ -901,28 +907,36 @@ if __name__ == "__main__":
         instrument = "LSSTCam"
         skymapName = "lsst_cells_v2"
 
+        # For quick testing on SLAC:
+        small_repo = "dp2_prep"
+        small_collection = "LSSTCam/runs/DRP/w_2026_39/DM-56219"  #
+
+        # For full DP2 dataset on data-int:
+        full_repo = "dp2"
+        full_collection = "dp2"
+
         butler = Butler(
-            "dp2",
+            full_repo,
             instrument=instrument,
-            collections=["LSSTCam/runs/DRP/DP2", "skymaps"],
+            collections=[full_collection, "skymaps"],
             skymap=skymapName,
         )
         registry = butler.registry
         skymap = butler.get("skyMap", skymap=skymapName)
 
         data_params = DP2Parameters()
-        data_params = observingCampaign(data_params)
-        data_params = observingQuality(data_params)
-        data_params = imageDatasets(data_params)
+        # data_params = observingCampaign(data_params)
+        # data_params = observingQuality(data_params)
+        # data_params = imageDatasets(data_params)
         data_params = skymapData(data_params)
-        data_params = nRaws(data_params)
+        # data_params = nDetectors(data_params)
         # data_params = coaddSelectionCriteria(data_params)
         # data_params = surveyPropertyMaps(data_params)
-        # data_params = nCatalogDatasets(data_params)
+        # data_params = nDatasets(data_params)
         # data_params = tableLengths(data_params)
         # data_params = misc(data_params)
 
-        data_params = catalogCounts(data_params)
+        # data_params = catalogCounts(data_params)
 
         # data_params = nSSObjects(data_params)
         # data_params = nStarsGals(data_params)

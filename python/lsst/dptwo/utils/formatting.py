@@ -32,7 +32,7 @@ def custom_float(value: Any) -> Any:
     return value
 
 
-def num2word(num: int) -> str:
+def num2word(num: int) -> str | int:
     """Convert selected integers to English words."""
     num_to_word = {
         0: "Zero",
@@ -64,7 +64,7 @@ def num2word(num: int) -> str:
         80: "Eighty",
         90: "Ninety",
     }
-    return num_to_word.get(num, str(num))
+    return num_to_word.get(num, num)
 
 
 _UNIT_TO_LATEX = {
