@@ -317,26 +317,49 @@ The outliers with excess ``reliable'' \texttt{DIASources} include: (1) a handful
 \subsubsection{DIA Source detection completeness}
 Following and extending the approach in DP1~\citep[][]{rtn-095}, we assess the performance of difference imaging by injecting synthetic sources into a subset of DP2 science images, carrying out difference imaging, and measuring properties of the recovered detected synthetic sources.
 We consider a subset of visits across the entire DP2 sky in all six filter bands for this investigation.
-We inject both ``hosted'' and ``hostless'' synthetic sources, i.e., point sources embedded in a host galaxy and isolated point sources, each with randomly sampled size and brightness.
-The hosted sources additionally have randomly selected positions within their host galaxy and position angles.
-All the synthetic sources have randomly selected brightnesses and are injected into both template coadd images and single visit images.
-Some of them are injected into the same sky coordinate location across multiple visits with variable brightnesses.
-Overall, we inject approximately 70,000 synthetic sources into XXX DP2 visits and calculate recovery statistics.
+We first create a catalog of synthetic sources, which we then inject into the science images and process through the difference imaging pipeline.
+%
+In this sample we include sources that are both ``hosted'' and ``hostless'' synthetic sources, i.e., point sources embedded in a host galaxy and isolated point sources, each with randomly sampled location and brightness.
+%
+The hosted sources additionally have randomly selected positions within their host galaxy and position angles, as well as brightnesses that are randomly selected relative to the host galaxy brightness.
+%
+A fraction of these sources are "template" injections, meaning they are injected into the template coadd image and thus when obtaining the difference image they appear with negative flux.
+%
+There is also a fraction of "variable source" injections, meaning they are injected both into the template and visit images, but with different random brightnesses, so that they can appear both with negative flux and with positive flux in the difference image.
+%
+Overall, we inject approximately 300,000 synthetic sources into 1990 DP2 visits, and calculate recovery statistics.
+%
+After injection we run a forced phtoometry stage on the locations of our synthetic sources, in order to obtain an empirical estimate of the SNR of each injected source, and also to clean the sample of synthetic sources of those that had flags like \texttt{BAD}, \texttt{SATURATED}, or \texttt{SPIKE} set in the pixels of the injected source. This is the "nominal" sample of injected synthetic sources.
+%
+We perform a double mutual match of the injected synthetic sources to the detected \texttt{DIASources}, and determine which injected sources were successfully recovered, using a $0\farcs5$ matching radius.
 
-Figure XXX shows completeness curves for the full injected and recovered samples, categorized by whether the synthetic source was injected into just the template, just the visit, or was a variable source injected into multiple visits.
-Figure YYY shows the same completeness calculation as Figure XXX, but now the results are categorized by whether the synthetic sources are hosted or hostless in nature.
-All panels in Figures XXX and YYY show two completeness curves: one with all injected synthetic sources, and one with two known sources of problems removed, which we describe below.
+Figure \ref{fig:dp2_completeness_by_source_type} shows completeness curves for the full injected and recovered samples, categorized by whether the synthetic source was injected into just the template, just the visit, or was a variable source injected into multiple visits.
+%
+\begin{figure*}[htbp]
+\centering
+\includegraphics[width=0.9\linewidth]{figures/dp2_dia_fakes_completeness.pdf}
+\caption{Completeness curves for synthetic sources injected into DP2 images, categorized by whether the synthetic source was injected into just the template, just the visit, or was a variable source injected into multiple visits. The curves show the fraction of injected synthetic sources that were recovered as a function of injected SNR. The dashed lines show the completeness curves after removing two known and understood causes of failed recovery: blending overlaps and pixel flag adjacency.}
+\label{fig:dp2_completeness_by_source_type}
+\end{figure*}
 
+All panels in Fig. \ref{fig:dp2_completeness_by_source_type} show two completeness curves: one with the nominal sample of injected synthetic sources, and one with two known sources of problems removed, which we describe below.
+%
 Our initial completeness analysis showed there were many high-SNR synthetic sources that were not recovered.
 We examined numerous indiviual unrecovered DiaSources to determine common underlying causes, and found two prominent ones.
 First, in situations where a synthetic source was injected into a template image relatively close to where an unrelated synthetic source was injected into a visit image, the resulting difference image creates a blended footprint that can appear as one extended source or like a lopsided dipole.
 Because deblending is not yet implemented in difference imaging (see \ref{sssec:DIASource}), one of the two injected synthetic sources is not recovered in this scenario.
-Second, in situations where a synthetic source was injected close to an image region with certain pixel flags (e.g., SATURATED, SPIKE), they are not recovered.
+Second, in situations where a synthetic source was injected close to an image region with certain pixel flags (e.g., \texttt{SATURATED}, \texttt{SPIKE}), they are not recovered.
 This is intentional, because many sources close to such masked regions are bogus detections originating from subtraction artifacts.
 To identify affected sources, we define a seven-arcsecond wide region around all injected synthetic DiaSources, and note whether any of the pixels in the region had any pixel flags set.
-If any of the pixels in this buffer region have one or more of INTERPOLATED, SATURATED, BAD, SATURATED_TEMPLATE, or SPIKE set, we exclude the injected synthetic source from the recovery analysis.
+If any of the pixels in this buffer region have one or more of \texttt{INTERPOLATED}, \texttt{SATURATED}, \texttt{BAD}, \texttt{SATURATED\_TEMPLATE}, or \texttt{SPIKE} set, we exclude the injected synthetic source from the recovery analysis.
+%
+When both of these causes of failed injected synthetic source recovery --blending overlaps and pixel flag adjacency-- are accounted for, the completeness curves improve dramatically, which can be seen in the dashed lines in Fig. \ref{fig:dp2_completeness_by_source_type}.
 
-When both of these causes of failed injected synthetic source recovery --- blending overlaps and pixel flag adjacency --- are accounted for, the completeness curves improve dramatically, which can be seen in Figures XXX and YYY.
+To charcterize the completeness curves, we fit a logistic function to the completeness as a function of injected SNR, and report the fitted asymptotic completeness $C_{\mathrm{asymptotic}}$, the SNR at 50\% absolute completeness $\mathrm{SNR}_{50}$, and the fitted midpoint at half of $C_{\mathrm{asymptotic}}$ $\mathrm{SNR}_{1/2}$.
+%
+We perform this analysis for each filter, for each source type, and for both the nominal and mask-filtered samples, and report these metrics in Table \ref{tab:fake-completeness}.
+%
+\input{tables/dia_fakes_completeness}
 
 \todo{Bruno to add figures, fill in XXX and YYY values, and revise text as needed.}
 
