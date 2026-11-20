@@ -305,21 +305,21 @@ Although LSSTCam is constructed with some of the best CCD detectors ever made, t
 The standard ``hot'' and ``cold'' pixels seen in other detectors are found on LSSTCam.
 These are single-pixel or few-pixel groups where either the dark current is elevated (resulting in hot pixels) or the quantum efficiency is lower (resulting in cold pixels).
 These pixels are identified by searching the combined dark calibration for bright pixels to find the hot pixels, and searching the combined flat calibration for dark pixels to find the cold pixels.
-In addition, we mark any column that has more than 1000 defect pixels within the amplifier segment as entirely bad.
+In addition, we flag any column that has more than 1000 defect pixels within the amplifier segment as entirely bad.
 These bad columns usually appear as a hot pixel with a trail extending in the vertical direction, as that bad pixel impacts that column as the amplifier is read out.
 The edges of the detectors often have a large number of cold pixels, likely due to edge effects in the electric fields.
 To reduce the randomness of which of these edge pixels get flagged by the automatic detection and which do not, we impose a fixed border 7 pixels wide on the top and bottom edges of the detectors, and 8 pixels wide on the left and right edges.
 
-As discovered as part of commissioning with LSSTComCam for DP1, there are also features we've classified as ``vampire'' pixels.
+As discovered as part of commissioning with \gls{LSSTComCam} for \gls{DP1}, there are also features we've classified as ``vampire'' pixels.
 These appear as a very bright hot pixel surrounded by a mostly circular region of low flux, such that it appears that the hot pixel is draining the charge from this region.
 Although the mechanism of these pixels is not fully understood, the regions appear to conserve charge, so the simple model of the charge being pulled into the central pixel seems reasonable.
 We do not currently have a correction for these features, and so have manually masked these with square defect masks.
-The current set of manual defects is likely an underestimate, so there may be unmasked vampire pixels in DP2.
+The current set of manual defects is likely an underestimate, so there may be unmasked vampire pixels in \gls{DP2}.
 A more complete scan will be done prior to the next Data Release.
 
 Very bright sources can create ``edge bleeds'', where a saturated column exhibits odd behavior as it approaches the edge of the detector where the readout is done.
 On the ITL detectors, this takes the form of a ``trumpet'' where the saturated column spreads out along the x-direction as it approaches the edge, creating a much wider saturated region.
-We have code to detect and mask these trumpet shaped edge bleeds, but from analysis of the DP2 data, it's clear that this code needs further improvement to ensure that all such bleeds get masked.
+We have code to detect and mask these trumpet shaped edge bleeds, but from analysis of the DP2 data, it is clear that this code needs further improvement to ensure that all such bleeds get masked.
 The E2V detectors show a different kind of edge bleed, in which the saturated columns impact the readout for up to the first 350 rows of the image.
 The result of this is that pixels read before the saturated columns are depressed relative to the rest of the detector, and those read after the saturated columns show CTI like smearing of the charge.
 
@@ -335,6 +335,7 @@ We would like to fully characterize these tree rings so we can properly correct 
 Although not formally a ``sensor anomaly,'' there is evidence that the ``comb pattern'' of bright glints at the edge of the detectors is a result of light entering the detector from the side due to small height differences in the installed detectors.
 This feature is observed most often in $y$, or in images with higher background levels.
 This may not be easily corrected, and so an additional detection and edge masking process needs to be created to remove affected areas.
+
 Finally, we have recently identified an unexpected fringing signal in the $z$ and $y$ filters, where the flat correction my imprint a fringe pattern onto the science image.
 This indicates that the calibration system creates images that have a fringe signal, but that the on-sky observations do not.
 Generating a fringe correction to remove this feature will be done prior to the next Data Release.
