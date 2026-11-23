@@ -27,12 +27,14 @@ As with \gls{DP1}, the LSST science pipelines use a skymap to structure how proc
 The skymap divides the sky into a series of equal-area tracts, which are then subdivided into a number of patches.
 The tracts are arranged in rings of constant decl., starting at the southern pole and having an index number that increases first by increasing R.A. and then by increasing decl.
 The skymap that was generated for \gls{DP2} processing contains a total of \ntracts tracts spanning the whole sky, \ncoveredtracts of which were covered during the science validation observing campaign, including the small field surveys.
-Each DP2 \gls{tract} covers approximately \tractarea, and contains \npatchx $\times$ \npatchy patches, both the same as for the DP1 skymap.
+Each DP2 \gls{tract} is a square of side length $\sim$\tractside and covers approximately \tractarea.
+Each tract contains \npatchx $\times$ \npatchy patches.
+The number and dimensions of the tracts and patches is the same as that used in \gls{DP1}.
 Tracts are defined to have equal area, and so the amount by which neighboring tracts overlap varies with decl., with tracts near the celestial poles overlapping more than those near the celestial equator.
 The minimum overlap between tracts is \tractoverlap.
-Within a \gls{tract}, the overlap with its neighboring patches is a constant \patchoverlap on each side, i.e., each \gls{patch} extends \patchoverlap beyond its uniquely covered region on every side.
+Within a \gls{tract}, the overlap between neighboring patches is a constant \patchoverlap on each side, i.e., each \gls{patch} extends \patchoverlap beyond its uniquely covered region on every side.
 As a result, each \gls{patch} covers an area of \patcharea, which is larger than the tract area divided by the number of patches in a tract.
-Excluding the overlap region, the area covered uniquely by a single \gls{patch} is \patchareanooverlap.
+Excluding overlap, a patch has a side length of \patchside, meaning the area covered uniquely by a single \gls{patch} is \patchareanooverlap.
 
 Although the tract and \gls{patch} configuration is unchanged between \gls{DP1} and \gls{DP2}, the two skymaps differ at the cell level for Deep Coadds.
 Patches are further subdivided into cells for the sole purpose of enabling the construction of cell-based coadds with a continuous \gls{PSF} (\secref{sssec:coadds}).
@@ -46,8 +48,6 @@ In the case of DP2 Deep Coadds, there are \ncellx $\times$ \ncelly cells per \gl
 There is no overlap between neighboring cells.
 
 \subsection{Science Images}
-\todo{Where XXX is shown as the number of datasets, this is because the code to calculate this was crashing on the \texttt{data-int} RSP.
-This will be fixed.}
 \label{ssec:scienceimages}
 Science images are images taken with the intent of scientific analysis of astronomical objects, as opposed to \gls{calibration} images (e.g., bias, darks, flats) or engineering images, which serve to calibrate or test the instrument and telescope regardless of whether they happen to be pointed at the night sky.
 \gls{DP2} provides all images in the acquisition and processing chain, from the raw, unprocessed science and calibration images through to fully calibrated visit images, coadds, and template images.
@@ -66,8 +66,8 @@ Each exposure therefore results in up to \nactivedetectors Raw Images (where the
 %The \nexposures exposures taken during {\bf \color{red} XXX} resulted in a total of \nraws raw images, all of which are included in DP2.
 % A breakdown of the number of raw images per field and per band is given in table \tabref{tab:rawbreakdown}.
 
-All \gls{LSSTCam} detectors have 16 amplifier segments, arranged in two rows of eight, each reading out its own $\sim1$ megapixel region in parallel to enable the fast ($\sim2$ second) full focal-plane readout (\secref{ssec:lsstcam}).
-These sections are evident in the Raw Images.
+All \gls{LSSTCam} detectors have \namps amplifier segments, arranged in two rows of eight, each reading out its own $\sim$\namppix region in parallel to enable the fast ($\sim$\tread) full focal-plane readout (\secref{ssec:lsstcam}).
+These segments are evident in the Raw Images.
 Raw Image pixel values are integer \gls{ADU} counts.
 All Raw Images, from both \gls{E2V} and \gls{ITL} sensors, have the same dimensions: \nrawpixx $\times$ \nrawpixy pixels.
 However, the two types have slightly different numbers of overscan and pre-scan pixels, so the number of exposed pixels also differs.
@@ -86,7 +86,7 @@ As such, there are up to \nactivedetectors \glspl{Visit Image} for each of the e
 During \gls{ISR}, the science processing \gls{pipeline} removes the overscan regions from the input raw images.
 The \glspl{Visit Image} therefore only contain the pixels that were exposed during the observation: \nitlpixx $\times$ \nitlpixy pixels in the case of the \gls{ITL} detectors, and \netvpixx $\times$ \netvpixy pixels in the case of the \gls{E2V} detectors.
 Unlike raw images, \glspl{Visit Image} consist of three image planes: a science image plane, a variance plane, and a mask plane.
-The science image is the processed exposed image, whereas the variance image persists the uncertainty associated with the value of the corresponding pixel in the science image.
+The science image plane contains the processed pixel values and the variance plane contains the variance of each corresponding pixel;  values are reported in units of nJy and nJy$^2$ respectively.
 The mask image indicates pixels that are flagged for various different reasons, such as saturated pixels, pixels associated with detected sources, bad pixels, etc.
 All three image planes contain the same number of pixels in each dimension.
 
@@ -99,6 +99,7 @@ Two different types of coadd images are included in DP2: Deep Coadds and Templat
 Each type of coadd image is produced via the same general process (\secref{sec:drp-multivisit-coaddition}):  Visit Images are selected by \gls{patch}, band, and image quality, warped onto a common pixel grid, and combined as a weighted mean with inverse-variance weights (\secref{sec:drp-multivisit-coaddition}).
 The main differences that distinguish each type of coadd are the selection of the \glspl{Visit Image}, and that Deep Coadds are cell-based in DP2 (see the introduction of this this section), whereas Template Coadds are not.
 As a result, the structure of the datasets is the same for each type: each coadd contains three planes corresponding to the science image plane (i.e., the coadd image), the variance plane, and the mask plane, with all three containing the same number of pixels in each dimension.
+The pixel values of the science image and variance planes are reported in units of nJy and nJy$^2$, respectively.
 Up to two different \gls{background} models are included in the coadd datasets: the \gls{background} that was subtracted to create the final coadd and, in the case of the $gri$ band Deep Coadds, a \gls{background} that can be added-back to create ``Visualization Coadds'' which, while not recommended for science, can be useful for visualization.
 Each coadd also contains a position-dependent \gls{PSF} model, WCS information, plus various other metadata.
 
@@ -121,8 +122,8 @@ It is therefore crucial that the mask image plane is consulted when analyzing an
 Deep Coadds are optimized for depth and reach fainter magnitudes than the Template Coadds.
 Two basic selection criteria were used to select visits for inclusion in Deep Coadds.
 The first is seeing-based and selects visits with a mean (over all detectors) \gls{PSF} FWHM$<$\deepcoaddselectionfwhm.
-The second is depth-based and uses the concept of ``effective exposure time'', which is the exposure time that would be needed under nominal conditions to achieve the same signal-to-noise as the visit in question \citep[][]{osti_1250877}.
-The selection uses the transparency component of effective exposure time, and selects visits in which the whole-system transparency was such that the mean (over all detectors) transparency component of the effective exposure time was $>0.75$ times the actual exposure time (corresponding to $\sim0.16$ mag of extinction relative to nominal conditions).
+The second is based on whole-system transmission (including atmospheric transmission), as measured by the difference between the measured zeropoint and the nominal zeropoint expected during photometric conditions at zenith; this is encapsulated in the \texttt{effTimeZeroPointScale} parameter, which is recorded in the Visit Summary tables and the Visit Detector catalog (see \secref{ssec:metadata}).
+We select visits in which the mean (over all detectors) \texttt{effTimeZeroPointScale} is $>0.75$, corresponding to a whole-system transmission of at least $\approx87\%$ ($=\sqrt{0.75}$).
 Following the selection of visits, a second round of selection is applied at the detector (i.e., \gls{Visit Image}) level.
 These per-detector selection criteria are summarized in \tabref{tab:deepcoadd_detector_selection}.
 Together, these selections aim to maximize the depth of the coadd while still ensuring good image quality.
@@ -135,7 +136,7 @@ There are a total of \ndeepcoadds Deep Coadds in \gls{DP2}.
 Template Coadds are created, principally, to act as reference images in the process of image subtraction to produce Difference Images (see \secref{sssec:difference_image}).
 When performing image subtraction, the point spread function (PSF) of the reference image is degraded to match that of the science image.
 The reference image should therefore have as small a \gls{PSF} as possible while being deep enough to not introduce substantial noise during subtraction (i.e., so that the noise budget is dominated by the single visit image, rather than the template coadd).
-Template Coadds include only visits with a  median (over all detectors) PSF FWHM$<$\templatecoaddselectionfwhm and a mean (over all detectors) transparency component of the effective exposure time (see \textit{Deep Coadds} above) $>0.75$ times the actual exposure time.
+Template Coadds include only visits with a  median (over all detectors) PSF FWHM$<$\templatecoaddselectionfwhm and a mean (over all detectors) \texttt{effTimeZeroPointScale} greater than $0.75$ (see \textit{Deep Coadds} above).
 Of the visits that meet these criteria, the \templatecoaddfrac that cover a given patch in a given band with the smallest median PSF are selected for coaddition.
 If that \templatecoaddfrac corresponds to fewer than \mintemplatecoaddvi visits (i.e., there are fewer than \minmultipletemplatecoaddvi visits that cover the region in a given band), then the \mintemplatecoaddvi visits with the smallest median PSFs are selected.
 If there are fewer than \mintemplatecoaddvi visits covering a patch with a given band, then all visits that meet the above PSF FWHM and sky transparency criteria are selected.
@@ -156,6 +157,7 @@ A detection algorithm is used to identify sources in Difference Images and a rea
 The outcome of the real/bogus classifier is included in the DIA Source catalog (\secref{sssec:DIASource}).
 
 Like Visit Images, Difference Images also consist of three image planes: a science image plane, a variance plane, and a mask plane (see \secref{sssec:visitimages} for a description of each plane).
+The pixel values of the science image and variance planes are reported in units of nJy and nJy$^2$, respectively.
 
 There are a total of \ndifferenceimages Difference Images in DP2, one for each Visit Image.
 
@@ -169,12 +171,13 @@ Catalogs contain data for detections in the images described in \secref{ssec:sci
 Observatory-produced \gls{metadata} tables are described in \secref{ssec:metadata}.
 Rubin adopts a naming convention in which  the term ``object" refers to an astrophysical object, whereas the term ``source" refers to a single-\gls{epoch} detection of that object.
 As such, sources are associated with detections in single-epoch \glspl{Visit Image} and Difference Images, whereas objects are associated with detections in multiepoch coadds.
+To avoid duplication in overlap regions (see the introduction to this section), only objects whose centroids are within the inner (i.e., non-overlapping) region of the patch in which it was measured, and which the skymap assigns to that patch's tract (in the case of overlapping tracts) are retained in the user-facing catalogs.
 Photometric quantities in catalogs are stored as fluxes rather than magnitudes, with fluxes measured in nanojanskies (1\xspace nJy = $10^{-35}\xspace$ W$\xspace$m$^{-2}$Hz$^{-1}$).
 Fluxes are preferred for multiepoch observations, as they can be averaged across epochs, unlike magnitudes.
 Additionally, \gls{flux} measurements on difference images (\secref{ssec:scienceimages}) are computed relative to a template and can therefore be negative, particularly for faint sources in the presence of noise.
 
 The \gls{DP2} catalogs each vary in terms of their specific columns but most contain: one or more unique identification numbers, positional information, multiple types of flux measurements (e.g., aperture fluxes, \gls{PSF} fluxes, Gaussian fluxes, etc.), and a series of Boolean flags indicating characteristics such as saturation or cosmic-ray contamination for each source or object.
-The solar system catalogs SSObject and SSSource deviate from this general structure in that they instead contain orbital parameters for all known asteroids.
+The solar system catalogs SSObject and SSSource deviate from this general structure in that they instead contain asteroid-specific information for observed solar system objects.
 
 Where applicable, quantities are prefixed with the band in which they were measured, and all measured properties are reported with their associated 1$\sigma$ uncertainties.
 For example, \texttt{g\_ra} and \texttt{g\_raErr} in the \gls{Object} catalog refer to R.A. and its uncertainty, measured in the $g$ band.
@@ -291,15 +294,17 @@ Two measurement algorithms (\textit{gauss} and \textit{pgauss}) are run on each 
 The first approach is to fit a single \gls{2D} Gaussian jointly across the $r$-, $i$-, and $z$-band deep coadd images, with the ellipticity components in the image x-y (\texttt{gauss\_g1}) and diagonal (\texttt{gauss\_g2}) directions reported in the catalog.
 The second approach measures \gls{2D} Gaussian-weighted moments in the $g$, $r$, $i$, and $z$ bands (e.g., \texttt{r\_pgaussFlux}).
 Like the \gls{GAaP} fluxes in the Object catalog, these are designed to provide consistent colors across bands rather than total fluxes; the second approach does not provide ellipticity measurements.
-There is one row per object detected in each counterfactual, meaning a given object could result in up to five rows, depending on how many of the counterfactuals it is detected in at a significance of $>5\sigma$.\footnote{It is feasible for a marginal $5\sigma$ object in one counterfactual to be just below the $5\sigma$ detection threshold in another counterfactual.}
+There is one entry per object detected in each counterfactual, meaning a given object could result in up to five entries, depending on how many of the counterfactuals it is detected in at a significance of $>5\sigma$.\footnote{It is feasible for a marginal $5\sigma$ object in one counterfactual to be just below the $5\sigma$ detection threshold in another counterfactual.}
 
 In addition to the Gaussian shape measurements and their covariances, the Shear Object table also contains object positional information, fluxes measured from both the Gaussian fits and the Gaussian moments ($g$, $r$, $i$ and $z$ bands), \gls{PSF} shapes reported in the same x-y and diagonal directions as objects, a range of different flags.
 Each entry in the Shear Object catalog also has a unique identification number (\texttt{shearObjectId}), that uniquely identifies a given detection in a given counterfactual.
-The Shear Object catalog contains \nshearobjects rows.
+
+The Shear Object catalog contains \nshearobjects entries.
 
 \subsubsection{Solar System Source}
 \label{sssec:SSSource}
-The Solar System Source catalog contains one row per associated detection and links measured DIA Source photometry and \gls{astrometry} to a predicted object in the Solar System Object catalog.
+The Solar System Source catalog is derived from the Rubin observations.
+It contains one row per associated detection and links measured DIA Source photometry and \gls{astrometry} to a predicted object in the Solar System Object catalog.
 As entries in the Solar System Source catalog stem from the \gls{DIA} Source catalog, they have all been detected at $>5\sigma$ significance in at least one band.
 
 The \texttt{diaSourceId} can be used to identify corresponding detections in the \gls{DIA} Source catalog; each \texttt{diaSourceId} occurs at most once in the Solar System Source catalog.
@@ -311,13 +316,14 @@ State vectors are equatorial and evaluated at the light-emission (retarded) time
 The \texttt{ephVmag} field is an approximate predicted Johnson $V$ magnitude derived from the input catalog photometric parameters.
 It is not a prediction in the Rubin band of the associated detection, so comparisons to the measured $ugrizy$ photometry include both object color and phase-model differences.
 
-The Solar System Source catalog contains \nsolarsystemsources rows for \nssobjects distinct objects.
+The Solar System Source catalog contains \nsolarsystemsources entries for \nssobjects distinct objects.
 
 
 \subsubsection{Solar System Object}
 \label{sssec:SSObject}
-The \gls{Solar System Object} catalog contains one row per object and summarizes its observations, per-band photometric properties, including absolute magnitudes, and selected orbit-derived quantities.
-The Solar System Object catalog contains \nssobjects entries; one entry for each distinct object.
+Like the Solar System Source catalog, the \gls{Solar System Object} catalog is also derived from Rubin observations.
+It contains one row per object and summarizes its observations, per-band photometric properties, including absolute magnitudes, and selected orbit-derived quantities.
+The Solar System Object catalog contains \nssobjects entries; one entry for each distinct observed object.
 There are 17,528 objects with a single associated detection, 31,873 with at most two, 212,181 with at least ten, and 7,293 with at least 100.
 The main belt dominates the distance and rate distributions, but the catalog includes 35 objects observed beyond 50\,au, 765 source records at topocentric distances below 0.1\,au, and 2,105 records with predicted rates above
 $1\mathrm{\,\gls{deg}\,day^{-1}}$.
@@ -335,16 +341,12 @@ The former includes both self-mappings ($A=A$) and links among aliases ($A=B$); 
 The \gls{MPC} Orbits catalog available at ingestion did not contain comets.
 Because the predictions used for association were generated from that snapshot, no comets were available to be associated with \gls{DP2} detections and none occur in the delivered Solar System Source or Solar System Object catalogs.
 
-In the Solar System Source, Solar System Object, and \gls{MPC} Orbits catalogs,
-\texttt{designation} denotes the unpacked primary provisional designation of
-the object.
-This was added to the delivered \gls{MPS} Orbits copy
-as an end-user convenience; there it is identical, row by row, to
-\texttt{unpacked\_primary\_provisional\_designation}.
-It therefore provides
-a readable and direct join key among the Solar System Source, Solar System Object, \gls{MPC} Orbits catalogs, without requiring users to unpack \gls{MPC} designations.
-For query performance, users should nevertheless prever to use integer
-identifiers such as \texttt{ssObjectId} to link catalogs wherever those identifiers are available, and use \texttt{designation} for readability or when an appropriate integer identifier is unavailable.
+In the Solar System Source, Solar System Object, and \gls{MPC} Orbits catalogs, \texttt{designation} denotes the unpacked primary provisional designation of the object.
+This was added to the delivered \gls{MPS} Orbits copy as an end-user convenience; there it is identical, row by row, to \texttt{unpacked\_primary\_provisional\_designation}.
+It therefore provides a readable and direct join key among the Solar System Source, Solar System Object, \gls{MPC} Orbits catalogs, without requiring users to unpack \gls{MPC} designations.
+For query performance, users should nevertheless prever to use integer identifiers such as \texttt{ssObjectId} to link catalogs wherever those identifiers are available, and use \texttt{designation} for readability or when an appropriate integer identifier is unavailable.
+
+The MPC Orbit, Current Identifications and Numbered Identifications catalogs contain \nmpcorbits, \ncurrentidentifications and \nnumberedidentifications entries, respectively.
 
 \subsubsection{Calibration Reference Catalog}
 \label{sssec:referencecatalog}
@@ -359,10 +361,14 @@ For the \textit{u} band, the input catalogs were (in order of decreasing priorit
 These \gls{SLR} estimates were used to boost the number of $u$-band reference sources, as otherwise the source density from the $u$-band input catalogs is too low to be useful for the \gls{LSST}.
 
 Throughout, the Calibration Reference Catalog uses the \gls{DES} bandpasses for the \textit{grizy} bands and the \gls{SDSS} bandpass for the \textit{u}-band; color transformations derived from high-quality sources were used to convert fluxes from the various input catalogs (some of which did not use the \gls{DES} or SDSS bandpasses) to the respective bandpasses.
-All sources from the input catalogs are matched to \gls{Gaia} \gls{DR3} sources for robust astrometric information, selecting only isolated sources (i.e., no neighbors within 1\arcsec).
+All input sources were matched to \gls{Gaia} \gls{DR3} to obtain astrometry, including parallaxes and proper motions, and only isolated sources (no neighbors within 1\arcsec) were retained.
 
 After collating the input catalogs and transforming the fluxes to the standard DES and \gls{SDSS} bandpasses, the catalog was used to identify sources within a specific region of the sky.
 This process generated a set of standard columns containing positional and \gls{flux} information, along with their associated uncertainties.
+
+Once the catalog was generated, it was converted into the format required by the LSST Science Pipelines by following the instructions on \url{https://pipelines.lsst.io}.
+As part of the conversion process the full catalog is sharded into \ncalrefcat htm7 trixels, with each shard covering area of roughly \shardarea.
+The sharded Calibration Reference Catalog is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 % \subsubsection{Object Parent}
 %% Not included in (E)DP2.
@@ -418,55 +424,61 @@ The skymap data product can be used, for example, to identify the tract and \gls
 
 A description of the \texttt{lsst\_cells\_v2}, in terms of the numbers and sizes of its tracts and patches, is given at the start of this section.
 
+The skymap is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
+
 \subsubsection{Coadd Patches}
 The Coadd Patches table lists, for each \gls{patch} in the skymap covered by \gls{DP2}, its \gls{tract} and \gls{patch} IDs, central coordinates, and the region of sky it covers.
 It can be used to identify which patches, and hence which coadds, cover a given position on the sky.
-It is only available via the Qserv database (\secref{sssec:qserv}).
+The Coadd Patches table contains \ncoaddpatchesrows entries, i.e., one per covered patch in DP2, and is only available via the Qserv database (\secref{sssec:qserv}).
 
 \subsubsection{Standard Passbands}
 \label{sssec:std_passbands}
 \figref{fig:lsstcam_standard_bandpasses} shows the full-system throughput of the six \gls{LSSTCam} filters.
 The corresponding transmission curves are provided as a \gls{DP2} data product.
 These datasets tabulate the full-system transmission of the six \gls{LSSTCam} filters as a function of wavelength and were used as a reference for the \gls{LSSTCam} DP2 photometry.
-The Standard Passband dataset is keyed by band and is stored in Astropy table format.
+
+There are \nstandardpassbands Standard Passband datasets in \gls{DP2}, keyed by band; they are only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Object Scarlet Models}
 The \gls{Object} Scarlet Models dataset stores the scarlet models fit to each deblended detection in the Deep Coadd images.
 Each model captures an object's spatial profile (morphology) together with its per-band \gls{flux} values, as assigned by the deblender when separating it from its blended neighbors.
 When combined with the corresponding Object catalog and Deep Coadd image, this dataset enables the reconstruction of the \gls{deblend} model to see how a specific detection was deblended.
-There is one Object Scarlet Models dataset per \gls{patch} that has coverage in DP2, and they are only available via the Data Butler.
+There is one Object Scarlet Models dataset per \gls{patch} that has deep coadd coverage in at least one band in DP2, corresponding to \nobjectscarletmodels datasets.
+Object Scarlet Models are only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Deep Coadd Input Summary}
-The Deep Coadd Input Summary table contains the visit and detector IDs of all the \glspl{Visit Image} that were selected and coadded to produce each Deep Coadd image.
-Also included in the table are the relative weight of each Visit Image, inversely proportional to its variance, and the number of pixels it contributed to a Deep Coadd, since a given Visit Image may only partially cover a \gls{patch}.
-There is a single Deep Coadd Input Summary table for the whole of \gls{DP2}, containing one row per contributing Visit Image per \gls{patch} (i.e., one row per unique combination of \gls{tract}, \gls{patch}, visit, and detector).
-It is only available via the Data Butler.
+The Deep Coadd Input Summary table contains the visit and detector IDs of all the \gls{Visit} Images that were selected and coadded to produce each Deep Coadd image.
+Also included in the table is the relative weight of each Visit Image, inversely proportional to its variance, and the number of pixels it contributed to a Deep Coadd, since a given Visit Image may only partially cover a \gls{patch}.
+There is a single Deep Coadd Input Summary table for the whole of \gls{DP2}.
+It contains \ndeepcoaddinputsummaryrows entries, corresonding to one entry per contributing Visit Image per \gls{patch} (i.e., one entry per unique combination of \gls{tract}, \gls{patch}, visit, and detector).
+It is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Compare Warp Artifact Mask}
 The Compare Warp Artifact Masks are the mask planes of the individual warped \glspl{Visit Image}, in which pixels affected by transient artifacts, such as satellite trails and cosmic rays, are flagged in the \texttt{CLIPPED} plane and excluded from the Deep Coadds.
 They are generated by the artifact rejection procedure described in \secref{sec:drp-multivisit-coaddition}.
-There is one Compare Warp Artifact Mask per \gls{Visit} per \gls{patch}, and they are only available via the Data Butler.
+There are \ncomparewarpartifactmasks Compare Warp Artifact Masks in \gls{DP2}: one per \gls{Visit} per \gls{patch}.
+They are only available via the Data Butler.
 
 \subsubsection{Camera}
-The Camera describes the geometry of \gls{LSSTCam}, i.e., the positions and orientations of the detectors in the focal plane, the layout and readout geometry of each detector's amplifiers, and a nominal model of the optical distortion.
+The Camera data product describes the geometry of \gls{LSSTCam}, i.e., the positions and orientations of the detectors in the focal plane, the layout and readout geometry of each detector's amplifiers, and a nominal model of the optical distortion.
 It is used throughout processing to map pixels on each detector to positions in the focal plane, for example when constructing the initial \gls{WCS} of each exposure.
 While of limited use as a standalone data product, the Camera is a required input to a number of processing steps.
 It is therefore largely provided to enable users to rerun selected processing tasks on subsets of DP2.
-There is a single Camera for \gls{DP2}, and it is only available via the Data Butler.
+There is a single Camera data product for \gls{DP2}, and it is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{FGCM Lookup Table}
 The FGCM Lookup Table contains pre-computed integrals of the combined atmospheric and instrumental throughput in each band over the expected range of atmospheric conditions.
 It is generated from the MODTRAN atmosphere model and the measured filter and detector throughputs (\secref{sec:drp-calibration-photometry}), in the same processing step that produces the Standard Passbands (\secref{sssec:std_passbands}), and it allows the \gls{FGCM} photometric calibration to rapidly compute throughput and chromatic corrections for stars of different colors.
-There is a single FGCM Lookup Table for \gls{DP2}, and it is only available via the Data Butler.
+There is a single FGCM Lookup Table for \gls{DP2}, and it is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Pretrained Model Package}
 The Pretrained Model Package contains the architecture and trained weights of the convolutional neural network used to assign a reliability (i.e., real/bogus) score to each \gls{DIA} source (\secref{sec:drp-variabletransient-artifact}; \citealt[][]{DMTN-337}).
 The same model was used for both \gls{DP1} and \gls{DP2}.
-There is a single Pretrained Model Package for \gls{DP2}, and it is only available via the Data Butler.
+There is a single Pretrained Model Package for \gls{DP2}, and it is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Run Provenance}
 The Run Provenance dataset information regarding the DP2 processing itself: the inputs, outputs, configurations and logs of every processing task.
-It is only available via the Data Butler.
+It is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Calibration datasets}
 \label{sssec:calibration_images}
@@ -474,7 +486,7 @@ A number of datasets used during \gls{ISR} and for calibration are also included
 We anticipate that the vast majority of users will not need to use these datasets, but we include them for transparency and completeness.
 Below, we provide a brief description of each; more detailed descriptions of how they are generated and used can be found in \citet[][]{2025JATIS..11a1209P}.
 \paragraph{Bias}
-The final bias frames, one per detector, that are generated by taking the sigma-clipped per-pixel mean of many (typically around 20) zero-second exposures of the detectors.
+The final bias frames, one per detector, that are generated by taking the sigma-clipped per-pixel mean of many (typically around \ninputbias) zero-second exposures of the detectors.
 They are used during \gls{ISR} to remove the fixed-pattern offset structure inherent to the readout electronics.
 \paragraph{Dark}
 The final dark frames, one per detector, that are generated by taking the sigma-clipped per-pixel mean of many nonzero-length dark images taken with the shutter closed and spanning a range of different integration times.
