@@ -187,7 +187,7 @@ We measure this repeatability using the PSF photometry of bright (SNR~$>200$), i
 To keep the calculation computationally feasible, it is performed per tract: for each star with at least three measurements from the visits covering a given tract, we calculate the standard deviation of those measurements, and then take the median over all stars in the tract.
 This corresponds to the PA1 metric defined in the LSST Science Requirements Document \citep[][]{LPM-17}.
 Following recalibration using the \gls{FGCM} fits, the median PA1 values across all tracts with coverage are 9.1, 7.1, 6.8, 5.9, 5.8, and 6.2~mmag in the $ugrizy$ bands, respectively, meeting the minimum specifications of the Science Requirements Document.
-\todo{The FGCM zero point errors will be added to give context to how much they are contributing to these PA1 values.}
+%\todo{The FGCM zero point errors will be added to give context to how much they are contributing to these PA1 values.}
 
 \figref{fig:dp2_stellar_loci} shows the $ugriz$ stellar loci of unresolved objects in the Deep Coadds, selected using the Object table's \texttt{extendedness} parameter (\secref{sec:drp-multivisit-detection}).
 The tightness of these loci indicates the good quality of the band-to-band relative photometry in the Deep Coadds.
