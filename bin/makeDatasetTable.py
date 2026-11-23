@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from lsst.dptwo.utils.tables import make_simple_table
 import pandas as pd
 
@@ -32,7 +34,7 @@ ROWS = [
     (
         "Survey Property Maps",
         "\\nodata",
-        "\\texttt{deepCoadd\\_<PROPERTY>\\_consolidated\\_map\\_<STATISTIC>}",
+        "\\shortstack[r]{\\texttt{deepCoadd\\_<PROP>}\\\\[2pt]\\texttt{\\_consolidated\\_map\\_<STATISTIC>}}",
     ),
     ("HiPS Maps", "\\nodata", "\\nodata"),
     ("Skymap", "\\nodata", "\\texttt{skyMap}"),
