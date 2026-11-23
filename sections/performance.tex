@@ -5,12 +5,55 @@ In this section, we present a characterization of the performance of the \gls{DP
 The analyses presented here provide an overview of the data quality rather than a comprehensive validation.
 Further information on the performance and known issues of \gls{DP2} can be found in the Data Quality, Image Artifacts, and Known Issues sections of the Release Documentation at \url{https://dp2.lsst.io}, which will continue to be updated as our understanding of the data and its nuances improves.
 
+\subsection{Sensor Anomalies}
+
+Some features in LSSTCam images are not yet fully corrected by the instrument signature removal (ISR) pipeline.
+We describe these artifacts and how we mitigate them.
+Where no mitigation exists yet, we document the artifact here so that users can recognize it in the data.
+
+The standard ``hot'' and ``cold'' pixels seen in other detectors are found on LSSTCam.
+These are single-pixel or few-pixel groups where either the dark current is elevated (resulting in hot pixels) or the quantum efficiency is lower (resulting in cold pixels).
+These pixels are identified by searching the combined dark calibration for bright pixels to find the hot pixels, and searching the combined flat calibration for dark pixels to find the cold pixels.
+In addition, we flag any column that has more than 1000 defect pixels within the amplifier segment as entirely bad.
+These bad columns usually appear as a hot pixel with a trail extending in the vertical direction, as that bad pixel impacts that column as the amplifier is read out.
+The edges of the detectors often have a large number of cold pixels, likely due to edge effects in the electric fields.
+Because automatic detection flags these edge pixels inconsistently, we mask a fixed border 7 pixels wide on the top and bottom edges of each detector, and 8 pixels wide on the left and right edges.
+
+As discovered as part of commissioning with \gls{LSSTComCam} for \gls{DP1}, there are also features we've classified as ``vampire'' pixels.
+These appear as a very bright hot pixel surrounded by a mostly circular region of low flux, such that it appears that the hot pixel is draining the charge from this region.
+Although the mechanism of these pixels is not fully understood, the regions appear to conserve charge, so the simple model of the charge being pulled into the central pixel seems reasonable.
+We do not currently have a correction for these features, and so have manually masked them with square defect masks.
+The current set of manual defects is likely an underestimate, so there may be unmasked vampire pixels in \gls{DP2}.
+A more complete scan will be done prior to the next Data Release.
+
+Very bright sources can create ``edge bleeds'', where a saturated column exhibits odd behavior as it approaches the edge of the detector where the readout is done.
+On the ITL detectors, this takes the form of a ``trumpet'' where the saturated column spreads out along the x-direction as it approaches the edge, creating a much wider saturated region.
+We have code to detect and mask these trumpet shaped edge bleeds, but from analysis of the DP2 data, it is clear that this code needs further improvement to ensure that all such bleeds get masked.
+The E2V detectors show a different kind of edge bleed, in which the saturated columns impact the readout for up to the first 350 rows of the image.
+In these rows, pixels read out before the saturated column (in serial readout order) are depressed relative to the rest of the detector, whereas pixels read out after it show CTI-like charge smearing.
+
+The ITL detectors also show another feature related to saturation: a saturated source that does not extend all the way to the edge can create ``dark dips'' along the saturation trail, where the columns have a lower flux compared to the rest of the detector.
+We have measured scale parameters relating the size of the saturated region to the width of the dip, and use that to construct an appropriately sized mask.
+Lab studies have suggested that these dips are related to the voltage the detectors receive, and so there may be hardware parameters that can be tuned to reduce or eliminate these features.
+
+In addition to these features that we mask, there are some others that do not yet have a mask or correction.
+The E2V midline can glow on some images, but we do not yet mask this.
+There are low-level ``tree rings'' that are related to how the silicon was sliced during the detector manufacturing process.
+These have the effect of slightly changing the effective pixel area, resulting in small scale photmetric and astrometric distortions.
+We would like to fully characterize these tree rings so we can properly correct for them as part of the flat-fielding step.
+Although not formally a ``sensor anomaly,'' there is evidence that the ``comb pattern'' of bright glints at the edge of the detectors is a result of light entering the detector from the side due to small height differences in the installed detectors.
+This feature is observed most often in $y$, or in images with higher background levels.
+This may not be easily corrected, and so an additional detection and edge masking process needs to be created to remove affected areas.
+
+Finally, we identified an unexpected fringing signal in the $z$ and $y$ filters, where the flat correction imprinted a fringe pattern onto the science image.
+This indicates that the calibration system creates images that have a fringe signal, but that the on-sky observations do not.
+Generating a fringe correction to remove this feature will be done prior to the next Data Release.
+
 \begin{figure}
 \includegraphics[width=\columnwidth]{figures/dp2_am1_am3.png}
 \caption{Whole sky maps of the  $i$-band ``AMx'' metrics; the per-healpix median, over object pairs at a given separation, of the standard deviation of each pair's separation across all visits. Lower values indicate a high degree of astrometric consistency between visits. The top panel shows the values for objects separated by $5$~arcmin, while the bottom shows the values for objects at $200$~arcmin, demonstrating that in many areas of the sky we are achieving the $10$~mas design goal for AM1 and the $10$~mas \textit{stretch} goal for AM3. The difference in sky coverage is due to the fact that some regions of the sky do not have a sufficient number of objects separated by $200$~arcmin.}
 \label{fig: amx}
 \end{figure}
-
 
 \subsection{Astrometry}
 Astrometric performance is characterized by measuring internal consistency as well as accuracy with respect to an external reference, in this case the Gaia DR3 catalog.
@@ -26,44 +69,11 @@ Figure~\ref{fig: amx} shows this metric for objects at $5$~arcmin separations an
 The top panel show that DP2 is reaching the design goal of repeatability below $10$~mas in many regions of the sky.
 Furthermore, we are achieving almost the same repeatability at $200$~arcmin separations, for which $10$~mas is actually the stretch goal.
 
-\subsection{Stellar Photometry}
-Comparison with an external photometric catalog is a key test of photometric quality, particularly of the absolute flux scale.
-Such a comparison is, however, far from straightforward, not least because any external catalog will also have its own calibration systematics.
-Further, outside the deep fields, any comparison would be restricted to relatively bright stars and would therefore not be representative of the full DP2 depth.
-A proper treatment of these limitations is beyond the scope of this paper, and is left to a dedicated future paper on photometric performance.
-Instead, we assess the internal consistency of the DP2 photometry using the repeatability of per-visit measurements and the stellar loci measured on the Deep Coadds.
-Both are differential measures (i.e., between visits or between bands), so they test the relative photometric calibration but are insensitive to any error in the absolute flux scale.
-
-Since most of the DP2 footprint was observed multiple times, the repeatability of photometric measurements of the same star across visits provides a test of the consistency, and hence reliability, of the per-visit photometric calibration.
-We measure this repeatability using the PSF photometry of bright (SNR~$>200$), isolated, unresolved objects, the vast majority of which are stars.
-To keep the calculation computationally feasible, it is performed per tract: for each star with at least three measurements from the visits covering a given tract, we calculate the standard deviation of those measurements, and then take the median over all stars in the tract.
-This corresponds to the PA1 metric defined in the LSST Science Requirements Document \citep[][]{LPM-17}.
-Following recalibration using the \gls{FGCM} fits, the median PA1 values across all tracts with coverage are 9.1, 7.1, 6.8, 5.9, 5.8, and 6.2~mmag in the $ugrizy$ bands, respectively, meeting the minimum specifications of the Science Requirements Document.
-\todo{The FGCM zero point errors will be added to give context to how much they are contributing to these PA1 values.}
-
-\begin{figure*}[htb!]
-\plotone{dp2_stellar_loci}
-\caption{Stellar loci measured on the Deep Coadds using PSF magnitudes from the \gls{DP2} Object catalog.
-From left to right, the $gri$, $riz$, and $ugr$ loci are shown for random subsets of bright ($i$-band SNR~$>200$; $grzy < 22.5$~mag), isolated, unresolved objects at Galactic latitude $|b|>20^\circ$, the latter to limit the effects of dust reddening; the $ugr$ panel additionally requires $u$-band SNR~$>50$.
-The first two panels each contain 253,926 objects, and the third contains 41,968.
-The color scale is logarithmic, with lighter colors indicating a higher density of objects, and is set independently for each panel; bins containing fewer than twenty objects are shown as individual points.}
-\label{fig:dp2_stellar_loci}
-\end{figure*}
-
-\figref{fig:dp2_stellar_loci} shows the $ugriz$ stellar loci of unresolved objects in the Deep Coadds, selected using the Object table's \texttt{extendedness} parameter (\secref{sec:drp-multivisit-detection}).
-The tightness of these loci indicates the good quality of the band-to-band relative photometry in the Deep Coadds.
-
-\subsection{Differential Chromatic Refraction}
-\gls{DCR} is the wavelength-dependent astrometric displacement arising from atmospheric refraction.
-The displacement is directed along the parallactic angle and increases toward shorter wavelengths, producing a color-dependent angular offset the size of which differs between bands.
-
-The presence of DCR in LSSTComCam data was previously discussed in the \gls{DP1} release paper \citep[][]{2026AJ....171..360V}.
-Here, we characterize the effect in LSSTCam data using two representative sky regions: the Extended Chandra Deep Field-South (ECDFS) centered at (R.A., decl.) = (53.16, -28.10) and a field near the ecliptic (Rubin\_SV\_320\_-15) centered at (R.A., decl.) = (320.0, -15.0), respectively.
-For each region, we consider all Deep Coadd images from tracts within 5 degrees of the field center.
-
-The extent of any displacement due to DCR is dependent on airmass, meaning that for a patch it changes at the per-visit level.
-For each visit, we calculate the angular displacement of sources relative to their positions their positions in the matched reference catalog and projected onto the directions parallel and perpendicular to the parallactic angle.
-We examine both components as a function of source $g-i$ color; the perpendicular component serves as a control for effects not aligned with the expected DCR direction.
+\subsection{Isolated Star Stellar Motions}
+Due to the short time span of the DP2 observations, the precision of the proper motion and parallax measurements is highly driven by the external reference catalog, Gaia DR3, which is included in the stellar motions calculation where possible.
+The majority of isolated stars with magnitudes below about $21$ are in the Gaia catalog: for these objects, the proper motion uncertainty is on the scale of a few mas.
+For fainter objects for which Gaia is not available, on the other hand, even well-sampled objects have proper motion uncertainties on the order of $10-20$~mas, going higher as signal to noise, sampling frequency, and the time span sampled go down.
+Regardless, for the majority of tracts, the time spanned between the first and last visits included in DP2 is less than $100$~days, meaning that proper motion and parallax measurements should be treated as a guideline for what will be available in future Data Releases, rather than a starting point for serious analyses.
 
 \begin{figure}[tbp]
     \centering
@@ -80,12 +90,32 @@ We examine both components as a function of source $g-i$ color; the perpendicula
 \end{figure*}
 
 
+\subsection{Differential Chromatic Refraction}
+\gls{DCR} is the wavelength-dependent astrometric displacement arising from atmospheric refraction.
+The displacement is directed along the parallactic angle and increases toward shorter wavelengths, producing a color-dependent angular offset the size of which differs between bands.
+
+The presence of DCR in LSSTComCam data was previously discussed in the \gls{DP1} release paper \citep[][]{2026AJ....171..360V}.
+Here, we characterize the effect in LSSTCam data using two representative sky regions: the Extended Chandra Deep Field-South (ECDFS) centered at (R.A., decl.) = (53.16, -28.10) and a field near the ecliptic (Rubin\_SV\_320\_-15) centered at (R.A., decl.) = (320.0, -15.0), respectively.
+For each region, we consider all Deep Coadd images from tracts within 5 degrees of the field center.
+
+The extent of any displacement due to DCR is dependent on airmass, meaning that for a patch it changes at the per-visit level.
+For each visit, we calculate the angular displacement of sources relative to their positions their positions in the matched reference catalog and projected onto the directions parallel and perpendicular to the parallactic angle.
+We examine both components as a function of source $g-i$ color; the perpendicular component serves as a control for effects not aligned with the expected DCR direction.
+
 When displaying the resulting DCR effect, the coadd with the highest DCR metric is selected for each field.
 In the case of the ECDFS, that specific coadd contains 7 visit images, spanning an airmass range of 1.02--1.36 with a mean of 1.14.
 The corresponding ecliptic coadd contains 8 visit images spanning 1.05--1.70 with a mean airmass of 1.26.
 As shown in Figure~\ref{fig:dcr}, both fields exhibit a color-dependent displacement parallel to the parallactic angle, with no corresponding trend in the perpendicular component.
 The color dependence rules out a simple camera-dependent offset and is consistent with the DCR signature previously identified in LSSTComCam.
 This effect is being addressed through the development of DCR-specific templates and coadds designed to mitigate the observed offset in future data products.
+
+\begin{figure*}[tpb]
+  \centering
+  \includegraphics[width=\linewidth]{figures/dp2_crowdedFields_matchedSourcesToRefCat.png}
+  \caption{Reference-source match ratio across the DP2 survey footprint. For each tract/patch, the color scale denotes the fraction of reference sources successfully matched to LSST detections. Regions with no matched sources are shown in black, and the Galactic plane is indicated by the solid black curve. Low match ratios are concentrated along the Galactic plane. \textbf{Note:} There is a known bug that leads to the empty tracts in this figure; this will be addressed prior to submission to the journal.}
+  \label{fig:crowded_fields_matched_sources}
+\end{figure*}
+
 
 \subsection{PSF accuracy}
 
@@ -112,6 +142,55 @@ The biggest failure modes are resolved grand-design spirals, which are shredded 
 The deblender's primary limitation is its memory usage, which in crowded fields can become large, and for DP2 forced us to skip deblending near the Galactic plane and a few other dense regions.
 We are currently working on algorithms to allow us to process crowded fields and expect most fields to be successfully processed in future releases.
 For users wanting a clean sample of objects that are not blended in the partially deconvolved image, meaning objects that are either fully isolated or that overlap neighbors only in the observed image, we recommend selecting objects with \texttt{deblend\_blendNChild} equal to zero or with \texttt{detect\_isIsolated} set.
+
+\begin{figure*}[htb!]
+\plotone{dp2_stellar_loci}
+\caption{Stellar loci measured on the Deep Coadds using PSF magnitudes from the \gls{DP2} Object catalog.
+From left to right, the $gri$, $riz$, and $ugr$ loci are shown for random subsets of bright ($i$-band SNR~$>200$; $grzy < 22.5$~mag), isolated, unresolved objects at Galactic latitude $|b|>20^\circ$, the latter to limit the effects of dust reddening; the $ugr$ panel additionally requires $u$-band SNR~$>50$.
+The first two panels each contain 253,926 objects, and the third contains 41,968.
+The color scale is logarithmic, with lighter colors indicating a higher density of objects, and is set independently for each panel; bins containing fewer than twenty objects are shown as individual points.}
+\label{fig:dp2_stellar_loci}
+\end{figure*}
+
+\subsection{Crowded Fields}
+Crowded fields represent a key challenge for the LSST Science Pipelines, pushing the current limits of source detection, deblending, and photometry.
+They are defined as regions in which the stellar source density exceeds the resolving capability of current algorithms.
+In such regions, the pipeline produces large, contiguous detection footprints encompassing multiple astrophysical sources rather than assigning distinct footprints to individual objects; the corresponding pixels are flagged as \texttt{NOT\_DEBLENDED}.
+We therefore use the proportion of pixels flagged as \texttt{NOT\_DEBLENDED} as a proxy for the area of the survey that is associated with crowded fields.
+
+Overall, out of the 2.2 trillion pixels comprising the total DP2 sky area, 12.9\% are associated with crowded fields via the aforementioned definition.
+This fraction, however, obscures the highly localized nature of crowded fields within the survey.
+Specifically, 1,750 of 2,174 total tracts (i.e., 80.5\%) have less than 1\% of their pixels flagged as \texttt{NOT\_DEBLENDED}.
+Of the remaining 424 (i.e., 19.5\%) tracts , 90\% are found within 14.5 degrees of the Galactic plane where the stellar densities are the highest.
+The concentration of processing failures in these regions is further illustrated by the fraction of reference sources successfully matched to LSST detections within each tract and patch.
+\figref{fig:crowded_fields_matched_sources} shows this match ratio across the survey footprint.
+The lowest match ratios, including tracts and patches with no successful matches, occur almost entirely along the Galactic plane, indicating that these unmatched sources are associated with failures of the standard LSST processing in these densely populated fields.
+Away from the Galactic plane, match ratios remain uniformly high.
+Thus, although crowded fields constitute a substantial fraction of the total flagged pixels, the associated processing challenges are concentrated predominantly within $\sim$\,15\degr\ of the Galactic plane.
+
+As the survey continues, crowded fields will comprise an increasingly large fraction of the observed sky.
+Robust processing of these fields is therefore essential to fully realizing the scientific goals of LSST.
+To address this challenge, a dedicated crowded-field processing pipeline is currently under development.
+Early results are promising: regions that appear as merged detections in the standard pipeline can instead be successfully deblended into their constituent sources, enabling individual detection and measurement.
+The pipeline is currently undergoing testing, with integration into the LSST Science Pipelines for general use targeted within the next year.
+
+\subsection{Stellar Photometry}
+Comparison with an external photometric catalog is a key test of photometric quality, particularly of the absolute flux scale.
+Such a comparison is, however, far from straightforward, not least because any external catalog will also have its own calibration systematics.
+Further, outside the deep fields, any comparison would be restricted to relatively bright stars and would therefore not be representative of the full DP2 depth.
+A proper treatment of these limitations is beyond the scope of this paper, and is left to a dedicated future paper on photometric performance.
+Instead, we assess the internal consistency of the DP2 photometry using the repeatability of per-visit measurements and the stellar loci measured on the Deep Coadds.
+Both are differential measures (i.e., between visits or between bands), so they test the relative photometric calibration but are insensitive to any error in the absolute flux scale.
+
+Since most of the DP2 footprint was observed multiple times, the repeatability of photometric measurements of the same star across visits provides a test of the consistency, and hence reliability, of the per-visit photometric calibration.
+We measure this repeatability using the PSF photometry of bright (SNR~$>200$), isolated, unresolved objects, the vast majority of which are stars.
+To keep the calculation computationally feasible, it is performed per tract: for each star with at least three measurements from the visits covering a given tract, we calculate the standard deviation of those measurements, and then take the median over all stars in the tract.
+This corresponds to the PA1 metric defined in the LSST Science Requirements Document \citep[][]{LPM-17}.
+Following recalibration using the \gls{FGCM} fits, the median PA1 values across all tracts with coverage are 9.1, 7.1, 6.8, 5.9, 5.8, and 6.2~mmag in the $ugrizy$ bands, respectively, meeting the minimum specifications of the Science Requirements Document.
+\todo{The FGCM zero point errors will be added to give context to how much they are contributing to these PA1 values.}
+
+\figref{fig:dp2_stellar_loci} shows the $ugriz$ stellar loci of unresolved objects in the Deep Coadds, selected using the Object table's \texttt{extendedness} parameter (\secref{sec:drp-multivisit-detection}).
+The tightness of these loci indicates the good quality of the band-to-band relative photometry in the Deep Coadds.
 
 \subsection{Coadd Depth, Completeness and Purity}
 
@@ -160,7 +239,6 @@ One of the main improvements in DP2 galaxy measurements is the use of an exponen
 While there are still some overly large galaxy outliers, the proportion is fairly small.
 The 99.5th percentile size increases slightly from 18th to 22nd magnitude, where the outliers are most problematic, but falls for fainter objects.
 This is likely partly due to improved deblending as well; the Gaussian model in \gls{ShearObject}, which does limited masking of neighbors rather than multi-object modeling, has a considerably larger fraction of ``superspreaders''.
-\todo{Not sure if we want to be more quantitative about this; I can produce figures but it may be TMI.}
 
 \begin{figure}[tpb]
 \includegraphics[width=\linewidth]{figures/dp2_ecdfs_sersic_size_ratio_euclid}
@@ -185,18 +263,65 @@ COSMOS2025 sizes, on the other hand, are measured on the JWST NIRCAM filters (F1
 Note that DP2 effective radii have been multiplied by a factor of $2\ln(2)$ or about 0.142 dex, due to a documented bug in the recording of the Gaussian mixture weights for the multiband S\'ersic and exponential models.
 There is no evidence yet of any similar multiplicative offset in the COSMOS2025 or Euclid Q1 sizes, nor would it likely be the same factor since neither survey uses Gaussian mixture approximations to S\'ersic profiles.
 
-\begin{figure*}[tpb]
-  \centering
-  \includegraphics[width=\linewidth]{figures/dp2_crowdedFields_matchedSourcesToRefCat.png}
-  \caption{Reference-source match ratio across the DP2 survey footprint. For each tract/patch, the color scale denotes the fraction of reference sources successfully matched to LSST detections. Regions with no matched sources are shown in black, and the Galactic plane is indicated by the solid black curve. Low match ratios are concentrated along the Galactic plane. \textbf{Note:} There is a known bug that leads to the empty tracts in this figure; this will be addressed prior to submission to the journal.}
-  \label{fig:crowded_fields_matched_sources}
-\end{figure*}
+\subsection{Shear Object catalog}
+As described in \secref{sssec:objectshear} and \secref{sec:drp-multivisit-shearobject}, the \gls{ShearObject} catalog is produced by running the metadetection algorithm on the coadded images.
+It contains the lensing shear measured as ellipticity on the no-shear counterfactual, plus four subcatalogs from the counterfactuals in which a linear shear has been artificially applied; the latter are used to compute the shear response and selection biases.
+A full validation of the Shear Object catalog is beyond the scope of this paper and will be the focus of follow-up studies.
+Nevertheless, a basic check is possible by exploiting the expectation that over large areas such as those covered by DP2, the mean shear of the no-shear counterfactual should be zero.
+We therefore measure the mean \texttt{gauss\_g1} of detections in the no-shear counterfactual, after excluding any with a flag set or with \texttt{is\_primary=False}.
+In doing so, we obtain a mean \texttt{gauss\_g1} value that, while small, is significantly nonzero.
+This offset persists when we restrict to the best detections (\texttt{mfrac<0.1} and \texttt{gauss\_snr>10}) and when we apply inverse-variance weights to downweight fainter detections.
+Following further investigation, we attribute this offset to objects in the tails of the \texttt{gauss\_g1} distribution, which, from visual inspection, are typically bright stars and nearby galaxies.
+Additional masking of nearby objects may need to be performed prior to any shear analysis.
 
-\subsection{Isolated Star Stellar Motions}
-Due to the short time span of the DP2 observations, the precision of the proper motion and parallax measurements is highly driven by the external reference catalog, Gaia DR3, which is included in the stellar motions calculation where possible.
-The majority of isolated stars with magnitudes below about $21$ are in the Gaia catalog: for these objects, the proper motion uncertainty is on the scale of a few mas.
-For fainter objects for which Gaia is not available, on the other hand, even well-sampled objects have proper motion uncertainties on the order of $10-20$~mas, going higher as signal to noise, sampling frequency, and the time span sampled go down.
-Regardless, for the majority of tracts, the time spanned between the first and last visits included in DP2 is less than $100$~days, meaning that proper motion and parallax measurements should be treated as a guideline for what will be available in future Data Releases, rather than a starting point for serious analyses.
+\begin{figure}[tpb]
+\plotone{dp2_object_shear_mean}
+\caption{Distribution of \texttt{gauss\_g1} (blue shaded histogram) and \texttt{gauss\_g2} (orange shaded histogram) values for the \gls{ShearObject} catalog's no-shear subcatalog; overlapping histograms appear as gray shading.
+The mean values of \texttt{gauss\_g1} and \texttt{gauss\_g2} are marked as colored vertical dashed lines (see legend); the black dotted line indicates zero.
+Over large areas such as those covered by DP2, the mean shear should be zero.
+While small, the mean shears are significantly nonzero.
+We currently attribute this offset to objects in the tails of the distribution, which are typically associated with bright stars and nearby galaxies.
+}
+\label{fig:dp2_object_shear_mean}
+\end{figure}
+
+Further validation of the Shear Object catalog can be performed by matching the no-shear catalog to the \gls{Object} catalog.
+We stress that this is suitable for validation only; matching reintroduces the selection biases that metadetection is designed to remove, so the Shear Object subcatalogs must not be matched to one another or to the Object catalog in any shear analysis.
+For this check, we compare the \texttt{pgauss} $g-i$ color of the no-shear catalog to the \gls{GAaP} $g-i$ colors in the \gls{Object} catalog.
+As these are designed to measure comparable quantities, we expect the two to largely agree, so any major disagreement would point to a problem with one of the two measurements.
+This comparison, shown in \figref{fig:dp2_shear_pgauss_gaap}, reveals good agreement for $r \lesssim 23$, with a median offset (GAaP $-$ \texttt{pgauss}) of $\sim -20$~mmag; at fainter magnitudes, both the offset and the scatter increase.
+
+\subsection{Difference Imaging}
+DP2 includes over 12,000 visits with \texttt{DIASources}.
+As discussed in \secref{sssec:DIASource}, deblending is not yet implemented.
+Per \secref{sec:drp-variabletransient-artifact}, reliability scores are calculated for each of these, but no cuts are applied.
+As a result, the majority of \texttt{DIASources} have low reliability scores ($< 0.5$) and are not astrophysical in origin.
+Common causes of low-reliability \texttt{DIASources} include low-quality Template Coadds (e.g., single visit self-subtractions) and poorly constrained background sky levels due to scattered light or crowded fields.
+
+\begin{figure}[tpb]
+\plotone{dp2_cosmos_r_minus_i_gaap_pgauss}
+\caption{Comparison of $r-i$ colors measured with the \texttt{pgauss} algorithm in the no-shear \gls{ShearObject} catalog and with 1\farcs0 \gls{GAaP} photometry in the matched \gls{Object} catalog, as a function of $r$-band \texttt{pgauss} magnitude.
+The main panel shows the color difference (GAaP $-$ \texttt{pgauss}) in mmag, with the density of objects shown as shaded hexagonal bins and individual objects shown as points in sparsely populated regions.
+The solid black line shows the running median and the dashed lines show the running $\sigma_{\rm MAD}$; the dotted line marks zero difference.
+The top and right panels show the distributions of $r$-band magnitude and color difference, respectively. \label{fig:dp2_shear_pgauss_gaap}}
+\end{figure}
+
+In some circumstances, spurious \texttt{DIASources} can appear in a grid pattern reminiscent of the gaps between detectors on the focal plane.
+This can occur when Template Coadds have a sudden change in PSF size.
+This discontinuity cannot be well represented with a smooth matching kernel during difference imaging source measurement, and a too-large PSF can produce spurious positive flux \texttt{DIASources} in the narrow grid strips where the PSF is small.
+There is presently no flag or column to identify these, but we expect it to be less prevalent for Template Coadds that are deeper (i.e., those with larger numbers of overlapping input visits).
+
+Most of the visits with \texttt{DIASources} in DP2 have fewer than 2000 \texttt{DIASources} with reliability > 0.5.
+The outliers with excess ``reliable'' \texttt{DIASources} include: (1) a handful of visits listed in the Release Documentation Known Issues when the telescope was moving while the shutter was open, (2) visits affected by the template PSF discontinuity problem described above, and (3) visits in crowded and/or nebulous fields where it is challenging to robustly measure the background flux level.
+
+\subsubsection{DIA Source detection completeness}
+Following the approach in DP1~\citep[][]{rtn-095}, we assess the performance of difference imaging by injecting synthetic sources into a subset of DP2 science images, carrying out difference imaging, and measuring properties of the recovered detected synthetic sources.
+We consider a selection of $i$-band images from the deep ECDFS field for this investigation.
+We inject both ``hosted'' and ``hostless'' synthetic sources, i.e., point sources embedded in a host galaxy and isolated point sources, each with randomly sampled size and brightness.
+The hosted sources additionally have randomly selected positions within their host galaxy and position angles.
+
+%\todo{Bruno and Meredith are working on this fake injection campaign and will write up results soon.
+%We should be able to generate 2--3 figures similar to DP1~\citep[][]{rtn-095} Figures 37, 38, and 39.}
 
 \subsection{Solar System}\label{sec:drp-variabletransient-solar-association}
 There are 299,343 solar system Objects (i.e., objects measured at least once by Rubin) in DP2, representing almost 20\% of the known solar system.
@@ -216,130 +341,3 @@ There is a persistent $\sim30$~mas bias between DP2 astrometric measurements and
 When Rubin astrometry was compared instead to orbits fit only to Gaia astrometry, the $\sim30$~mas bias disappeared.
 After substantial investigation and discussion with both the MPC and JPL, we concluded that the bias is \textbf{not} in Rubin astrometry (to $\le$~1~mas), but in the orbit catalog.
 While $30$~mas is small, the median astrometric uncertainty on a DP2 DIA Source associated with a solar system Source is just 56~mas, making $30$~mas a substantial offset in the context of Rubin precision, thus highlighting the extent to which Rubin astrometry can improve asteroid orbits over time.
-
-\begin{figure}[tpb]
-\plotone{dp2_object_shear_mean}
-\caption{Distribution of \texttt{gauss\_g1} (blue shaded histogram) and \texttt{gauss\_g2} (orange shaded histogram) values for the \gls{ShearObject} catalog's no-shear subcatalog; overlapping histograms appear as gray shading.
-The mean values of \texttt{gauss\_g1} and \texttt{gauss\_g2} are marked as colored vertical dashed lines (see legend); the black dotted line indicates zero.
-Over large areas such as those covered by DP2, the mean shear should be zero.
-While small, the mean shears are significantly nonzero.
-We currently attribute this offset to objects in the tails of the distribution, which are typically associated with bright stars and nearby galaxies.
-}
-\label{fig:dp2_object_shear_mean}
-\end{figure}
-
-\subsection{Crowded Fields}
-Crowded fields represent a key challenge for the LSST Science Pipelines, pushing the current limits of source detection, deblending, and photometry.
-They are defined as regions in which the stellar source density exceeds the resolving capability of current algorithms.
-In such regions, the pipeline produces large, contiguous detection footprints encompassing multiple astrophysical sources rather than assigning distinct footprints to individual objects; the corresponding pixels are flagged as \texttt{NOT\_DEBLENDED}.
-We therefore use the proportion of pixels flagged as \texttt{NOT\_DEBLENDED} as a proxy for the area of the survey that is associated with crowded fields.
-
-Overall, out of the 2.2 trillion pixels comprising the total DP2 sky area, 12.9\% are associated with crowded fields via the aforementioned definition.
-This fraction, however, obscures the highly localized nature of crowded fields within the survey.
-Specifically, 1,750 of 2,174 total tracts (i.e., 80.5\%) have less than 1\% of their pixels flagged as \texttt{NOT\_DEBLENDED}.
-Of the remaining 424 (i.e., 19.5\%) tracts , 90\% are found within 14.5 degrees of the Galactic plane where the stellar densities are the highest.
-The concentration of processing failures in these regions is further illustrated by the fraction of reference sources successfully matched to LSST detections within each tract and patch.
-\figref{fig:crowded_fields_matched_sources} shows this match ratio across the survey footprint.
-The lowest match ratios, including tracts and patches with no successful matches, occur almost entirely along the Galactic plane, indicating that these unmatched sources are associated with failures of the standard LSST processing in these densely populated fields.
-Away from the Galactic plane, match ratios remain uniformly high.
-Thus, although crowded fields constitute a substantial fraction of the total flagged pixels, the associated processing challenges are concentrated predominantly within $\sim$\,15\degr\ of the Galactic plane.
-
-\begin{figure}[htbp]
-\plotone{dp2_cosmos_r_minus_i_gaap_pgauss}
-\caption{Comparison of $r-i$ colors measured with the \texttt{pgauss} algorithm in the no-shear \gls{ShearObject} catalog and with 1\farcs0 \gls{GAaP} photometry in the matched \gls{Object} catalog, as a function of $r$-band \texttt{pgauss} magnitude.
-The main panel shows the color difference (GAaP $-$ \texttt{pgauss}) in mmag, with the density of objects shown as shaded hexagonal bins and individual objects shown as points in sparsely populated regions.
-The solid black line shows the running median and the dashed lines show the running $\sigma_{\rm MAD}$; the dotted line marks zero difference.
-The top and right panels show the distributions of $r$-band magnitude and color difference, respectively. \label{fig:dp2_shear_pgauss_gaap}}
-\end{figure}
-
-As the survey continues, crowded fields will comprise an increasingly large fraction of the observed sky.
-Robust processing of these fields is therefore essential to fully realizing the scientific goals of LSST.
-To address this challenge, a dedicated crowded-field processing pipeline is currently under development.
-Early results are promising: regions that appear as merged detections in the standard pipeline can instead be successfully deblended into their constituent sources, enabling individual detection and measurement.
-The pipeline is currently undergoing testing, with integration into the LSST Science Pipelines for general use targeted within the next year.
-
-\subsection{Shear Object catalog}
-As described in \secref{sssec:objectshear} and \secref{sec:drp-multivisit-shearobject}, the \gls{ShearObject} catalog is produced by running the metadetection algorithm on the coadded images.
-It contains the lensing shear measured as ellipticity on the no-shear counterfactual, plus four subcatalogs from the counterfactuals in which a linear shear has been artificially applied; the latter are used to compute the shear response and selection biases.
-A full validation of the Shear Object catalog is beyond the scope of this paper and will be the focus of follow-up studies.
-Nevertheless, a basic check is possible by exploiting the expectation that over large areas such as those covered by DP2, the mean shear of the no-shear counterfactual should be zero.
-We therefore measure the mean \texttt{gauss\_g1} of detections in the no-shear counterfactual, after excluding any with a flag set or with \texttt{is\_primary=False}.
-In doing so, we obtain a mean \texttt{gauss\_g1} value that, while small, is significantly nonzero.
-This offset persists when we restrict to the best detections (\texttt{mfrac<0.1} and \texttt{gauss\_snr>10}) and when we apply inverse-variance weights to downweight fainter detections.
-Following further investigation, we attribute this offset to objects in the tails of the \texttt{gauss\_g1} distribution, which, from visual inspection, are typically bright stars and nearby galaxies.
-Additional masking of nearby objects may need to be performed prior to any shear analysis.
-
-Further validation of the Shear Object catalog can be performed by matching the no-shear catalog to the \gls{Object} catalog.
-We stress that this is suitable for validation only; matching reintroduces the selection biases that metadetection is designed to remove, so the Shear Object subcatalogs must not be matched to one another or to the Object catalog in any shear analysis.
-For this check, we compare the \texttt{pgauss} $g-i$ color of the no-shear catalog to the \gls{GAaP} $g-i$ colors in the \gls{Object} catalog.
-As these are designed to measure comparable quantities, we expect the two to largely agree, so any major disagreement would point to a problem with one of the two measurements.
-This comparison, shown in \figref{fig:dp2_shear_pgauss_gaap}, reveals good agreement for $r \lesssim 23$, with a median offset (GAaP $-$ \texttt{pgauss}) of $\sim -20$~mmag; at fainter magnitudes, both the offset and the scatter increase.
-
-
-\subsection{Difference Imaging}
-DP2 includes over 12,000 visits with \texttt{DIASources}.
-As discussed in \secref{sssec:DIASource}, deblending is not yet implemented.
-Per \secref{sec:drp-variabletransient-artifact}, reliability scores are calculated for each of these, but no cuts are applied.
-As a result, the majority of \texttt{DIASources} have low reliability scores ($< 0.5$) and are not astrophysical in origin.
-Common causes of low-reliability \texttt{DIASources} include low-quality Template Coadds (e.g., single visit self-subtractions) and poorly constrained background sky levels due to scattered light or crowded fields.
-
-In some circumstances, spurious \texttt{DIASources} can appear in a grid pattern reminiscent of the gaps between detectors on the focal plane.
-This can occur when Template Coadds have a sudden change in PSF size.
-This discontinuity cannot be well represented with a smooth matching kernel during difference imaging source measurement, and a too-large PSF can produce spurious positive flux \texttt{DIASources} in the narrow grid strips where the PSF is small.
-There is presently no flag or column to identify these, but we expect it to be less prevalent for Template Coadds that are deeper (i.e., those with larger numbers of overlapping input visits).
-
-Most of the visits with \texttt{DIASources} in DP2 have fewer than 2000 \texttt{DIASources} with reliability > 0.5.
-The outliers with excess ``reliable'' \texttt{DIASources} include: (1) a handful of visits listed in the Release Documentation Known Issues when the telescope was moving while the shutter was open, (2) visits affected by the template PSF discontinuity problem described above, and (3) visits in crowded and/or nebulous fields where it is challenging to robustly measure the background flux level.
-
-\subsubsection{DIA Source detection completeness}
-Following the approach in DP1~\citep[][]{rtn-095}, we assess the performance of difference imaging by injecting synthetic sources into a subset of DP2 science images, carrying out difference imaging, and measuring properties of the recovered detected synthetic sources.
-We consider a selection of $i$-band images from the deep ECDFS field for this investigation.
-We inject both ``hosted'' and ``hostless'' synthetic sources, i.e., point sources embedded in a host galaxy and isolated point sources, each with randomly sampled size and brightness.
-The hosted sources additionally have randomly selected positions within their host galaxy and position angles.
-
-\todo{Bruno and Meredith are working on this fake injection campaign and will write up results soon.
-We should be able to generate 2--3 figures similar to DP1~\citep[][]{rtn-095} Figures 37, 38, and 39.}
-
-\subsection{Sensor Anomalies}
-
-Some features in LSSTCam images are not yet fully corrected by the instrument signature removal (ISR) pipeline.
-We describe these artifacts and how we mitigate them.
-Where no mitigation exists yet, we document the artifact here so that users can recognize it in the data.
-
-The standard ``hot'' and ``cold'' pixels seen in other detectors are found on LSSTCam.
-These are single-pixel or few-pixel groups where either the dark current is elevated (resulting in hot pixels) or the quantum efficiency is lower (resulting in cold pixels).
-These pixels are identified by searching the combined dark calibration for bright pixels to find the hot pixels, and searching the combined flat calibration for dark pixels to find the cold pixels.
-In addition, we flag any column that has more than 1000 defect pixels within the amplifier segment as entirely bad.
-These bad columns usually appear as a hot pixel with a trail extending in the vertical direction, as that bad pixel impacts that column as the amplifier is read out.
-The edges of the detectors often have a large number of cold pixels, likely due to edge effects in the electric fields.
-Because automatic detection flags these edge pixels inconsistently, we mask a fixed border 7 pixels wide on the top and bottom edges of each detector, and 8 pixels wide on the left and right edges.
-
-As discovered as part of commissioning with \gls{LSSTComCam} for \gls{DP1}, there are also features we've classified as ``vampire'' pixels.
-These appear as a very bright hot pixel surrounded by a mostly circular region of low flux, such that it appears that the hot pixel is draining the charge from this region.
-Although the mechanism of these pixels is not fully understood, the regions appear to conserve charge, so the simple model of the charge being pulled into the central pixel seems reasonable.
-We do not currently have a correction for these features, and so have manually masked them with square defect masks.
-The current set of manual defects is likely an underestimate, so there may be unmasked vampire pixels in \gls{DP2}.
-A more complete scan will be done prior to the next Data Release.
-
-Very bright sources can create ``edge bleeds'', where a saturated column exhibits odd behavior as it approaches the edge of the detector where the readout is done.
-On the ITL detectors, this takes the form of a ``trumpet'' where the saturated column spreads out along the x-direction as it approaches the edge, creating a much wider saturated region.
-We have code to detect and mask these trumpet shaped edge bleeds, but from analysis of the DP2 data, it is clear that this code needs further improvement to ensure that all such bleeds get masked.
-The E2V detectors show a different kind of edge bleed, in which the saturated columns impact the readout for up to the first 350 rows of the image.
-In these rows, pixels read out before the saturated column (in serial readout order) are depressed relative to the rest of the detector, whereas pixels read out after it show CTI-like charge smearing.
-
-The ITL detectors also show another feature related to saturation: a saturated source that does not extend all the way to the edge can create ``dark dips'' along the saturation trail, where the columns have a lower flux compared to the rest of the detector.
-We have measured scale parameters relating the size of the saturated region to the width of the dip, and use that to construct an appropriately sized mask.
-Lab studies have suggested that these dips are related to the voltage the detectors receive, and so there may be hardware parameters that can be tuned to reduce or eliminate these features.
-
-In addition to these features that we mask, there are some others that do not yet have a mask or correction.
-The E2V midline can glow on some images, but we do not yet mask this.
-There are low-level ``tree rings'' that are related to how the silicon was sliced during the detector manufacturing process.
-These have the effect of slightly changing the effective pixel area, resulting in small scale photmetric and astrometric distortions.
-We would like to fully characterize these tree rings so we can properly correct for them as part of the flat-fielding step.
-Although not formally a ``sensor anomaly,'' there is evidence that the ``comb pattern'' of bright glints at the edge of the detectors is a result of light entering the detector from the side due to small height differences in the installed detectors.
-This feature is observed most often in $y$, or in images with higher background levels.
-This may not be easily corrected, and so an additional detection and edge masking process needs to be created to remove affected areas.
-
-Finally, we identified an unexpected fringing signal in the $z$ and $y$ filters, where the flat correction imprinted a fringe pattern onto the science image.
-This indicates that the calibration system creates images that have a fringe signal, but that the on-sky observations do not.
-Generating a fringe correction to remove this feature will be done prior to the next Data Release.
