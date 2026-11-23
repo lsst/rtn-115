@@ -1,13 +1,13 @@
 \section{Performance Characterization and Known Issues}
 \label{sec:performance}
 
-In this section, we present a characterization of the performance of the \gls{DP2} data products and, where relevant, highlight known issues.
-The analyses presented here provide an overview of the data quality rather than a comprehensive validation; where appropriate, more detailed analyses are deferred to dedicated future papers.
+In this section, we present a characterization of the performance of the \gls{DP2} data products and highlight known issues.
+The analyses presented here provide an overview of the data quality rather than a comprehensive validation.
 Further information on the performance and known issues of \gls{DP2} can be found in the Data Quality, Image Artifacts, and Known Issues sections of the Release Documentation at \url{https://dp2.lsst.io}, which will continue to be updated as our understanding of the data and its nuances improves.
 
 \begin{figure}
 \includegraphics[width=\columnwidth]{figures/dp2_am1_am3.png}
-\caption{Whole sky plots showing the per-healpix median of the standard deviation in the separation across all $i$-band visits between objects at a given distance from each other, which are called the ``AMx'' metrics.  Lower values indicate a high degree of astrometric consistency between visits. The top panel shows the values for objects separated by $5$~arcmin, while the bottom shows the values for objects at $200$~arcmin, demonstrating that in many areas of the sky we are achieving the $10$~mas design goal for AM1 and the $10$~mas \textit{stretch} goal for AM3. The difference in sky coverage is due to the fact that some regions of the sky do not have a sufficient number of objects separated by $200$~arcmin.}
+\caption{Whole sky maps of the  $i$-band ``AMx'' metrics; the per-healpix median, over object pairs at a given separation, of the standard deviation of each pair's separation across all visits. Lower values indicate a high degree of astrometric consistency between visits. The top panel shows the values for objects separated by $5$~arcmin, while the bottom shows the values for objects at $200$~arcmin, demonstrating that in many areas of the sky we are achieving the $10$~mas design goal for AM1 and the $10$~mas \textit{stretch} goal for AM3. The difference in sky coverage is due to the fact that some regions of the sky do not have a sufficient number of objects separated by $200$~arcmin.}
 \label{fig: amx}
 \end{figure}
 
