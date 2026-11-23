@@ -5,13 +5,15 @@ The science program observations that form the basis of \gls{DP2} were acquired 
 The first phase comprised small-field observations taken shortly after the \gls{LSSTCam} First Photon milestone to support the Rubin First Look event (\secref{ssec:small_fields}).
 The second phase comprised the commissioning-era \gls{SV} survey campaigns, which ran from \svcampaignstartdate to \svcampaignenddate (\secref{ssec:sv_surveys}).
 A four-week engineering downtime followed the \gls{SV} campaigns, after which the observatory was formally handed over from the Construction project to Rubin Operations on \startoperations.
-The third phase comprised pre-\gls{LSST} Early Operations observations from that handover date through the \gls{DP2} cutoff date of \dptwoenddate (\secref{ssec:early_ops}).
+The subsequent third and final phase comprised pre-\gls{LSST} Early Operations observations through the \gls{DP2} cutoff date of \dptwoenddate (\secref{ssec:early_ops}).
+
 All science program observations were scheduled by the \gls{FBS}, which selects visits adaptively to balance sky coverage, filter distribution, airmass, and lunar phase constraints \citep[][]{2026SPIE14151E..0XJ}.
 Because the system was still being commissioned and optimized, engineering and commissioning priorities rather than a scientifically optimized observing strategy drove visit acquisition.
 Engineering observations are not scientifically useful and are not included in \gls{DP2}.
 
 \figref{fig:dp2_sky} shows the sky distribution of \gls{DP2} visits, the successive \gls{SV} Wide Survey footprints, the coadded tract coverage, and the locations of the small fields and \glspl{DDF}.
-Coadded images cover an estimated \coaddedarea, concentrated in the \gls{SV} Wide footprint along the ecliptic, the small fields, and the \glspl{DDF}.
+Coadded images cover approximately \coaddedarea, concentrated in the \gls{SV} Wide footprint along the ecliptic, the small fields, and the \glspl{DDF}.
+%
 \begin{figure*}[hbt!]
 \plotone{dp2_coverage_map}
 \caption{Sky distribution of \gls{DP2} visits from the three phases of the observing program: small-field observations, \gls{SV} surveys, and pre-\gls{LSST} Early Operations observations.
@@ -23,17 +25,19 @@ Pre-\gls{LSST} Early Operations observations lie mostly in the sparsely covered 
 \label{fig:dp2_sky}
 \end{figure*}
 
-\figref{fig:dp2_mjd_cumulative} shows the cumulative distribution of visit MJD for all \gls{DP2} visits, combined across all filters.
-Notable dates are indicated: the \gls{DP2} start date, \dptwostartdate; the end of the \gls{DP2} data collection window, \dptwoenddate; a phase of rapid data acquisition (2025-07-01 to 2025-07-25); and the end of the engineering shutdown, when observations resumed at the start of Operations, \startoperations.
+\figref{fig:dp2_mjd_cumulative} shows the cumulative distribution of visit observation dates for all \gls{DP2} visits, combined across all filters.
+Notable dates are indicated: the \gls{DP2} start date, \dptwostartdate; the end of the \gls{DP2} data collection window, \dptwoenddate; a phase of rapid data acquisition from 2025-07-01 through 2025-07-25; and the end of the engineering shutdown, when observations resumed at the start of Operations, \startoperations.
+%
 \begin{figure}[hbt!]
 \includegraphics[width=\columnwidth]{dp2_visit_mjd_cumulative}
 \caption{Cumulative distribution of visit MJD for all \gls{DP2} visits, combined across all filters. Vertical dotted lines mark the \gls{DP2} start date,\dptwostartdate; a phase of rapid data acquisition, 2025-07-01 to 2025-07-25; the end of the engineering shutdown, when observations resumed on \startoperations; and the end of the \gls{DP2} observing window, \dptwoenddate.}
 \label{fig:dp2_mjd_cumulative}
 \end{figure}
 
-Early Operations observations continued for approximately six months after the \gls{DP2} cutoff, until the start of the \gls{LSST} on \lsststartdate.
-These data will be processed and made available to \gls{LSST} data rights holders through the same \gls{RSP} services.
-The format and timing of that release are still to be determined; planning will begin once \gls{DP2} has been delivered \citep[][]{RTN-011}
+The following sections describe the small fields, the wide-area \gls{SV} survey, and the Deep Drilling Fields.
+For each field we report the sky coverage  and temporal distribution of the visits, and the depth of the deep coadds.
+We express depth as $m_5$, the $5\sigma$ limiting magnitude for point-like sources \citep[][]{SMTN-002, DMTN-296}, taken from the survey property map (\secref{sssec:propertymaps}) of the PSF magnitude limit.
+For each field and band we report the median of $m_5$ over the map pixels within the field.
 
 % Small fields
 \subsection{Small-Field Observations}
@@ -42,8 +46,7 @@ The format and timing of that release are still to be determined; planning will 
 Several small fields were observed between 2025-04-2525 and 2025-07-29, prior to and during the early part of the \gls{SV} survey period; none were observed during the Early Operations phase.
 All small-field observations, including those from the First Look campaign, are included in \gls{DP2}.
 Observations were typically acquired in sequences of at least 10 visits per bandpass, cycling through the available filters, with field selection guided by commissioning priorities and community input.
-Several of these fields, including \gls{COSMOS}, M49, and the Prawn Nebula region, received substantial numbers of visits and are among the most deeply observed regions in \gls{DP2}.
-The \gls{COSMOS} field was first observed as part of the small-field campaign but was not accessible during the main \gls{SV} survey period; additional observations were later acquired during the Early Operations phase.
+Several of these fields, including  M49, and the Prawn Nebula region, received substantial numbers of visits and are among the most deeply observed regions in \gls{DP2}.
 \tabref{tab:dp2_sf_visits} lists the central coordinates, per-band visit counts, number of distinct observing nights, and temporal baseline for each small field.
 The field center is the mid-range of the boresight R.A.\ and decl.\ across all associated \gls{DP2} visits, as identified by the scheduler.
 
@@ -69,13 +72,8 @@ The figure indicates the dates on which each field was observed in a given band 
 \label{fig:dp2_sf_temporal_distribution}
 \end{figure}
 %
-
-\leanne{Add in depths}
-%\tabref{tab:dp2_sf_m5_depths} reports the 5$\sigma$ depths for point-like sources in coadded images per field and per band, where coverage in a band is nonzero.
-% together with the expected 10 yr LSST depths derived from the baseline simulated survey \citep[][]{2022ApJS..258....1B}.
-
-% provides the estimated $m_5$ (5$\sigma$ point-source limiting magnitude; ()\citealt[][]{SMTN-002, DMTN-296}) coadded depths within each of the subsets of the wide SV area.
-%\input{tables/dp2_sf_m5_depths}
+\tabref{tab:dp2_sf_m5_depths} gives the per-band median coadd $5\sigma$ limiting magnitude for point-like sources in the deep coadds, $m_5$ for each small field.
+\input{tables/dp2_sf_m5_depths}
 
 %%%%%  SV commissioning surveys
 \subsection{Science Validation Surveys}
@@ -93,16 +91,17 @@ As a result, median visit counts and coadded depth increase substantially toward
 
 \input{tables/dp2_sv_wide_footprints}
 
-\leanne{Add in depth calculations}
-%\tabref{tab:dp2_sv_wide_m5_depths} provides the estimated $m_5$ (5$\sigma$ point-source limiting magnitude; ()\citealt[][]{SMTN-002, DMTN-296}) coadded depths within each of the subsets of the wide SV area.
-%
-%\input{tables/dp2_sv_wide_m5_depths}
+\tabref{tab:dp2_sv_wide_m5_depths} gives the per-band median coadd $5\sigma$ limiting magnitude for point-like sources within
+the three nested footprints defined in \tabref{tab:dp2_sv_wide_footprints}.
+
+\input{tables/dp2_sv_wide_m5_depths}
 
 %%%% Deep survey
 \subsubsection{The Deep Survey}
 During the \gls{SV} campaign, the Deep Survey targeted ELAIS-S1, \gls{ECDFS}, and \gls{EDFS} (fields A and B).
 The XMM-LSS was observed in $u$ band only.
-\gls{COSMOS} was not accessible during the \gls{SV} period, as described above, but had been observed as a Small Field before the \gls{SV} campaign and received additional visits during Early Operations.
+\gls{COSMOS} was not accessible during the \gls{SV} period, but had been observed during the Small Field campaign before the \gls{SV} campaign and later received additional visits during Early Operations.
+
 The \gls{FBS} interleaved \gls{DDF} sequences with the wide survey.
 ELAIS-S1 received the largest number of visits and is the only \gls{DDF} observed in all six $ugrizy$ bands.
 The remaining \glspl{DDF} were observed primarily in $griz$; following the hardware fault with the filter exchanger on 2025-07-24, $u$- and $y$-band observations were reduced, with the last \gls{DDF} $u$-band visits on 2025-08-10.
@@ -129,9 +128,10 @@ The upper panel shows the fraction of the Moon illuminated on each night.}
 \label{fig:dp2_ddf_temporal_distribution}
 \end{figure}
 
-\leanne{Add in depth calculations}
-%\tabref{tab:dp2_ddf_m5_depths} reports the 5$\sigma$ depths for point-like sources in coadded images per field and per band, where coverage in a band is nonzero.
-% \input{tables/dp2_ddf_m5_depths}
+\tabref{tab:dp2_sf_m5_depths} gives the per-band median coadd $5\sigma$ limiting magnitude for point-like sources in the deep coadds, $m_5$ for each small field.
+XMM\_LSS has visits but lies outside the DP2 deep coadd area, so it has no entries.
+
+\input{tables/dp2_ddf_m5_depths}
 
 % Early ops
 % TODO Say something about the non-coadded area -- e.g median five sigma depth
