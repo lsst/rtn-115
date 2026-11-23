@@ -292,11 +292,10 @@ As these are designed to measure comparable quantities, we expect the two to lar
 This comparison, shown in \figref{fig:dp2_shear_pgauss_gaap}, reveals good agreement for $r \lesssim 23$, with a median offset (GAaP $-$ \texttt{pgauss}) of $\sim -20$~mmag; at fainter magnitudes, both the offset and the scatter increase.
 
 \subsection{Difference Imaging}
-DP2 includes over 12,000 visits with \texttt{DIASources}.
-As discussed in \secref{sssec:DIASource}, deblending is not yet implemented.
-Per \secref{sec:drp-variabletransient-artifact}, reliability scores are calculated for each of these, but no cuts are applied.
-As a result, the majority of \texttt{DIASources} have low reliability scores ($< 0.5$) and are not astrophysical in origin.
-Common causes of low-reliability \texttt{DIASources} include low-quality Template Coadds (e.g., single visit self-subtractions) and poorly constrained background sky levels due to scattered light or crowded fields.
+DP2 includes over 12,000 visits with \gls{DIA} Sources.
+Per \secref{sec:drp-variabletransient-artifact}, reliability scores are calculated for each \gls{DIA} Source, but no cuts are applied.
+As a result, the majority of \gls{DIA} Sources have low reliability scores ($< 0.5$) and are not astrophysical in origin.
+Common causes of low-reliability \gls{DIA} Sources include low-quality Template Coadds (e.g., single visit self-subtractions) and poorly constrained background sky levels due to scattered light or crowded fields.
 
 \begin{figure}[tpb]
 \plotone{dp2_cosmos_r_minus_i_gaap_pgauss}
@@ -306,22 +305,70 @@ The solid black line shows the running median and the dashed lines show the runn
 The top and right panels show the distributions of $r$-band magnitude and color difference, respectively. \label{fig:dp2_shear_pgauss_gaap}}
 \end{figure}
 
-In some circumstances, spurious \texttt{DIASources} can appear in a grid pattern reminiscent of the gaps between detectors on the focal plane.
+In some circumstances, spurious \gls{DIA} Sources can appear in a grid pattern reminiscent of the gaps between detectors on the focal plane.
 This can occur when Template Coadds have a sudden change in PSF size.
-This discontinuity cannot be well represented with a smooth matching kernel during difference imaging source measurement, and a too-large PSF can produce spurious positive flux \texttt{DIASources} in the narrow grid strips where the PSF is small.
+This discontinuity cannot be well represented with a smooth matching kernel during difference imaging source measurement, and a too-large PSF can produce spurious positive flux \gls{DIA} Sources in the narrow grid strips where the PSF is small.
 There is presently no flag or column to identify these, but we expect it to be less prevalent for Template Coadds that are deeper (i.e., those with larger numbers of overlapping input visits).
 
-Most of the visits with \texttt{DIASources} in DP2 have fewer than 2000 \texttt{DIASources} with reliability > 0.5.
-The outliers with excess ``reliable'' \texttt{DIASources} include: (1) a handful of visits listed in the Release Documentation Known Issues when the telescope was moving while the shutter was open, (2) visits affected by the template PSF discontinuity problem described above, and (3) visits in crowded and/or nebulous fields where it is challenging to robustly measure the background flux level.
+Most of the visits with \gls{DIA} Sources in DP2 have fewer than 2000 \gls{DIA} Sources with reliability $>0.5$.
+The outliers with excess ``reliable'' \gls{DIA} Sources include: (1) a handful of visits listed in the Release Documentation Known Issues when the telescope was moving while the shutter was open, (2) visits affected by the template PSF discontinuity problem described above, and (3) visits in crowded and/or nebulous fields where it is challenging to robustly measure the background flux level.
 
 \subsubsection{DIA Source detection completeness}
-Following the approach in DP1~\citep[][]{rtn-095}, we assess the performance of difference imaging by injecting synthetic sources into a subset of DP2 science images, carrying out difference imaging, and measuring properties of the recovered detected synthetic sources.
-We consider a selection of $i$-band images from the deep ECDFS field for this investigation.
-We inject both ``hosted'' and ``hostless'' synthetic sources, i.e., point sources embedded in a host galaxy and isolated point sources, each with randomly sampled size and brightness.
-The hosted sources additionally have randomly selected positions within their host galaxy and position angles.
+Following and extending the approach in DP1~\citep[][]{rtn-095}, we assess the performance of difference imaging by injecting synthetic sources into a subset of DP2 science images, carrying out difference imaging, and measuring properties of the recovered detected synthetic sources.
+We consider a subset of visits across the entire DP2 sky in all six filter bands for this investigation.
+We first create a catalog of synthetic sources, which we then inject into the science images and process through the difference imaging pipeline.
+%
+In this sample we include sources that are both ``hosted'' and ``hostless'' synthetic sources, i.e., point sources embedded in a host galaxy and isolated point sources, each with randomly sampled location and brightness.
+%
+The hosted sources additionally have randomly selected positions within their host galaxy and position angles, as well as brightnesses that are randomly selected relative to the host galaxy brightness.
+%
+A fraction of these sources are ``template'' injections, meaning they are injected into the template coadd image and thus when obtaining the difference image they appear with negative flux.
+%
+There is also a fraction of ``variable source'' injections, meaning they are injected into both the template and visit images, but with different random brightnesses, so that they can appear with both negative and positive fluxes in the difference image.
+%
+Overall, we inject approximately 300,000 synthetic sources into 1990 DP2 visits, and calculate recovery statistics.
+%
+After injection we run a forced photometry stage on the locations of our synthetic sources, in order to obtain an empirical estimate of the \gls{SNR} of each injected source, and also to clean the sample of synthetic sources of those that had flags like \texttt{BAD}, \texttt{SATURATED}, or \texttt{SPIKE} set in the pixels of the injected source.
+This is the ``nominal'' sample of injected synthetic sources.
+%
+We perform a double mutual match of the injected synthetic sources to the detected \gls{DIA} Sources, and determine which injected sources were successfully recovered, using a $0\farcs5$ matching radius.
 
-%\todo{Bruno and Meredith are working on this fake injection campaign and will write up results soon.
-%We should be able to generate 2--3 figures similar to DP1~\citep[][]{rtn-095} Figures 37, 38, and 39.}
+Our initial completeness analysis showed that many high-SNR synthetic sources were not recovered.
+We examined numerous individual unrecovered \gls{DIA} Sources to determine common underlying causes, and found two prominent ones.
+First, in situations where a synthetic source was injected into a template image relatively close to where an unrelated synthetic source was injected into a visit image, the resulting difference image creates a blended footprint that can appear as one extended source or like a lopsided dipole.
+One of the two injected synthetic sources is not recovered in this scenario, likely because deblending is not yet implemented in difference imaging (see \secref{sssec:DIASource}).
+Second, in situations where a synthetic source was injected close to an image region with certain pixel flags (e.g., \texttt{SATURATED}, \texttt{SPIKE}), they are not recovered.
+This is intentional because many sources close to such masked regions are bogus detections originating from subtraction artifacts.
+To identify affected sources, we define a seven-arcsecond wide region around all injected synthetic \gls{DIA} Sources, and note whether any of the pixels in the region had any pixel flags set.
+If any of the pixels in this buffer region have one or more of \texttt{INTERPOLATED}, \texttt{SATURATED}, \texttt{BAD}, \texttt{SATURATED\_TEMPLATE}, or \texttt{SPIKE} set, we exclude the injected synthetic source from the recovery analysis.
+
+To characterize the completeness, we fit a logistic function to the fraction of recovered synthetic sources as a function of injected \gls{SNR}.
+%
+We do this separately for each filter and for each type of injection (visit, template, and variable), both for the nominal sample and for a mask-filtered sample from which sources affected by blending overlaps or pixel flag adjacency have been removed.
+%
+For the nominal sample, the fitted asymptotic completeness ranges from 93\% to 97\% across filters and injection types, with variable-source injections the least complete in every filter.
+%
+Removing the two known causes of failed recovery raises the asymptotic completeness to 96--99\%.
+%
+In all cases, 50\% completeness is reached at an injected SNR of 4.8--5.0, consistent with the $5\sigma$ detection threshold applied to the difference images (\secref{sec:drp-variabletransient-dia}).
+
+We assess the photometric accuracy of the recovered synthetic sources by comparing the measured fluxes to the injected fluxes.
+\figref{fig:dp2_dia_fakes_photometry} shows the magnitude differences recovered for all sources in the mask-filtered sample, as a function of injected magnitude true values.
+%
+We also report the pull distribution, which is the difference between the measured and injected fluxes divided by the measured flux uncertainty, and provide its mean and standard deviation as a function of injected magnitude as well.
+%
+\begin{figure}[htbp]
+\plotone{dp2_dia_fakes_photometry}
+\caption{Photometric accuracy of recovered synthetic sources injected into DP2 images. The top panel shows the distribution of the injected magnitudes of our mask-filtered sample.
+%
+Overlaid there are the obtained completeness curves for each filter, as a function of injected magnitude.
+%
+The center panel shows the difference between the measured and injected magnitudes as a function of injected magnitude.
+The bottom panels show the pull distribution, which is the difference between the measured and injected fluxes divided by the measured flux uncertainty, as a function of injected magnitude.
+The mean and standard deviation of the pull distribution are shown as solid and dashed lines, respectively.
+}
+\label{fig:dp2_dia_fakes_photometry}
+\end{figure}
 
 \subsection{Solar System}\label{sec:drp-variabletransient-solar-association}
 There are 299,343 solar system Objects (i.e., objects measured at least once by Rubin) in DP2, representing almost 20\% of the known solar system.
