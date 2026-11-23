@@ -293,7 +293,6 @@ This comparison, shown in \figref{fig:dp2_shear_pgauss_gaap}, reveals good agree
 
 \subsection{Difference Imaging}
 DP2 includes over 12,000 visits with \gls{DIA} Sources.
-As discussed in \secref{sssec:DIASource}, deblending is not yet implemented.
 Per \secref{sec:drp-variabletransient-artifact}, reliability scores are calculated for each \gls{DIA} Source, but no cuts are applied.
 As a result, the majority of \gls{DIA} Sources have low reliability scores ($< 0.5$) and are not astrophysical in origin.
 Common causes of low-reliability \gls{DIA} Sources include low-quality Template Coadds (e.g., single visit self-subtractions) and poorly constrained background sky levels due to scattered light or crowded fields.
@@ -337,10 +336,10 @@ We perform a double mutual match of the injected synthetic sources to the detect
 Our initial completeness analysis showed that many high-SNR synthetic sources were not recovered.
 We examined numerous individual unrecovered \gls{DIA} Sources to determine common underlying causes, and found two prominent ones.
 First, in situations where a synthetic source was injected into a template image relatively close to where an unrelated synthetic source was injected into a visit image, the resulting difference image creates a blended footprint that can appear as one extended source or like a lopsided dipole.
-Because deblending is not yet implemented in difference imaging (see \secref{sssec:DIASource}), one of the two injected synthetic sources is not recovered in this scenario.
+One of the two injected synthetic sources is not recovered in this scenario, likely because deblending is not yet implemented in difference imaging (see \secref{sssec:DIASource}).
 Second, in situations where a synthetic source was injected close to an image region with certain pixel flags (e.g., \texttt{SATURATED}, \texttt{SPIKE}), they are not recovered.
 This is intentional because many sources close to such masked regions are bogus detections originating from subtraction artifacts.
-To identify affected sources, we define a seven-arcsecond wide region around all injected synthetic \texttt{DIASources}, and note whether any of the pixels in the region had any pixel flags set.
+To identify affected sources, we define a seven-arcsecond wide region around all injected synthetic \gls{DIA} Sources, and note whether any of the pixels in the region had any pixel flags set.
 If any of the pixels in this buffer region have one or more of \texttt{INTERPOLATED}, \texttt{SATURATED}, \texttt{BAD}, \texttt{SATURATED\_TEMPLATE}, or \texttt{SPIKE} set, we exclude the injected synthetic source from the recovery analysis.
 
 To characterize the completeness, we fit a logistic function to the fraction of recovered synthetic sources as a function of injected \gls{SNR}.
