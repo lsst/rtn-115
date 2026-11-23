@@ -48,10 +48,10 @@ class TablesTestCase(unittest.TestCase):
 
     OUTPUT_DIR = Path("tests/outputs")
     PER_BAND_CAPTION_BASE = (
-        "DP1 Median image quality per field and per band quantified "
+        "DP2 Median image quality per field and per band quantified "
         "as the PSF at FWHM in arcseconds. "
     )
-    PER_BAND_LABEL = "tab:DP2_per_band_summary"
+    PER_BAND_LABEL = "tab:dp2_per_band_summary"
 
     @classmethod
     def setUpClass(cls):
@@ -160,6 +160,35 @@ class TablesTestCase(unittest.TestCase):
         )
         self.write_latex_to_file(latex_str)
 
+    def test_simple_table_units_row(self):
+        """Units go on a second header row; no units keeps one row."""
+        df = pd.DataFrame(
+            {"Field": ["a_b"], "R.A.": ["1.0"], "Nights": ["3"], "Baseline": ["5"]}
+        )
+        df.attrs["label"] = "simple_units"
+
+        latex_str = make_simple_table(
+            df, caption="Units caption", units={"R.A.": "deg", "Baseline": "days"}
+        )
+        self.assertIn(
+            "\\tablehead{\n"
+            "  \\colhead{\\textbf{Field}} & \\colhead{\\textbf{R.A.}} & "
+            "\\colhead{\\textbf{Nights}} & \\colhead{\\textbf{Baseline}}\\\\\n"
+            "   & \\colhead{(deg)} &  & \\colhead{(days)}\n}",
+            latex_str,
+        )
+        self.assertIn(r"a\_b & 1.0 & 3 & 5 \\", latex_str)
+        self.write_latex_to_file(latex_str)
+
+        single = make_simple_table(df, caption="No units")
+        self.assertNotIn("(deg)", single)
+        self.assertIn(
+            r"\colhead{\textbf{Baseline}}\\" + "\n}", single
+        )
+
+        with self.assertRaises(ValueError):
+            make_simple_table(df, caption="Bad", units={"Dec": "deg"})
+
     def test_per_band_summary_variants(self):
         """Generate the IQ table across the supported aggregation modes."""
         cases = [
@@ -167,39 +196,168 @@ class TablesTestCase(unittest.TestCase):
                 "with_aggregation",
                 "with aggregate across and aggregate All row",
                 {},
+                True,
+                True,
             ),
             (
                 "no_aggregation",
                 "",
                 {"include_all_col": False, "include_all_row": False},
+                False,
+                False,
             ),
             (
                 "row_aggregation",
                 "with aggregate All row",
                 {"include_all_col": False, "include_all_row": True},
+                False,
+                True,
             ),
             (
                 "col_aggregation",
                 "with aggregate per row",
                 {"include_all_col": True, "include_all_row": False},
+                True,
+                False,
             ),
         ]
 
-        for name, caption_suffix, kwargs in cases:
+        for name, caption_suffix, kwargs, has_all_col, has_all_row in cases:
             with self.subTest(name=name):
                 caption = self.PER_BAND_CAPTION_BASE + caption_suffix
                 latex_str = make_per_band_summary_table(
                     self.per_band_summary,
                     caption=caption,
-                    label="tab:iq_band_field",
                     **kwargs,
                 )
-                self.assertIsNotNone(latex_str)
                 self.assertIn(r"\begin{deluxetable}", latex_str)
-                self.assertIn(self.PER_BAND_LABEL, latex_str)
-                self.assertIn(caption, latex_str)
+                # AASTeX deluxetables need the label inside the caption block.
+                self.assertIn(
+                    rf"\tablecaption{{{caption}\label{{{self.PER_BAND_LABEL}}}}}",
+                    latex_str,
+                )
+                self.assertIn(r"\multicolumn{6}{c}{\textbf{Band}}", latex_str)
+                self.assertIn(r"\cline{2-7}", latex_str)
+                self.assertEqual(
+                    r"\colhead{\textbf{All}}" in latex_str, has_all_col
+                )
+                self.assertEqual(r"\textbf{All} &" in latex_str, has_all_row)
+                self.assertEqual(r"\hline" in latex_str, has_all_row)
+                n_cols = 1 + 6 + int(has_all_col)
+                self.assertIn(
+                    rf"\begin{{deluxetable}}{{l{'c' * (n_cols - 1)}}}", latex_str
+                )
                 self.write_latex_to_file(latex_str)
 
+    def test_per_band_summary_values(self):
+        """Missing values, default formatting and row-name escaping."""
+        latex_str = make_per_band_summary_table(
+            self.per_band_summary, caption="Values", include_all_col=False
+        )
+        rows = _data_rows(latex_str)
+        # 47_Tuc: u missing, g = 3.42.
+        self.assertEqual(
+            rows[0],
+            r"47\_Tuc & \nodata & 3.42 & 3.33 & 2.61 & \nodata & 3.77 \\",
+        )
+        # Missing values in the summary row are blank, not \nodata.
+        df = self.per_band_summary.copy()
+        df.loc["All", "u"] = np.nan
+        latex_str = make_per_band_summary_table(df, caption="Values")
+        self.assertTrue(_data_rows(latex_str)[-1].startswith(r"\textbf{All} &  &"))
+
+    def test_per_band_summary_leading_trailing_columns(self):
+        """Single columns before and after the band group, with units."""
+        df = _visits_dataframe()
+        latex_str = make_per_band_summary_table(
+            df,
+            caption="Visits",
+            bands=BANDS,
+            units={"R.A.": "deg", "Decl.": "deg", "Baseline": "days"},
+            formats={"R.A.": "{:.1f}", "Decl.": "{:.1f}", "Baseline": "{:.0f}"},
+            total_row="Total",
+            expand_across_columns=True,
+        )
+        self.assertIn(r"\begin{deluxetable*}{l" + "c" * 10 + "}", latex_str)
+        self.assertIn(r"\label{tab:dp2_visits}", latex_str)
+        self.assertIn(
+            r"\colhead{\textbf{Decl.}} & \multicolumn{6}{c}{\textbf{Band}} "
+            r"& \colhead{\textbf{Total}}",
+            latex_str,
+        )
+        # Band group occupies LaTeX columns 4-9 (index, R.A., Decl. first).
+        self.assertIn(r"\cline{4-9}", latex_str)
+        self.assertIn(
+            r" & \colhead{(deg)} & \colhead{(deg)} & $u$ & $g$ & $r$ & $i$ "
+            r"& $z$ & $y$ &  & \colhead{(days)}",
+            latex_str,
+        )
+        rows = _data_rows(latex_str)
+        self.assertEqual(
+            rows[0],
+            r"M49 & 186.3 & 6.9 & 234 & 280 & \nodata & \nodata & \nodata "
+            r"& \nodata & 514 & 10 \\",
+        )
+        self.assertEqual(rows[-2], r"\hline")
+        self.assertEqual(
+            rows[-1],
+            r"\textbf{Total} &  &  & 241 & 280 & 5 & 0 & 0 & 0 & 526 &  \\",
+        )
+        self.write_latex_to_file(latex_str)
+
+    def test_per_band_summary_no_total_row(self):
+        """total_row=None writes every row as data."""
+        df = _visits_dataframe()
+        latex_str = make_per_band_summary_table(
+            df, caption="Visits", bands=BANDS, total_row=None
+        )
+        self.assertNotIn(r"\hline", latex_str)
+        self.assertIn(r"Total & \nodata & \nodata & 241", latex_str)
+
+    def test_per_band_summary_column_spec(self):
+        latex_str = make_per_band_summary_table(
+            self.per_band_summary, caption="Spec", column_spec="lrrrrrrr"
+        )
+        self.assertIn(r"\begin{deluxetable}{lrrrrrrr}", latex_str)
+
+    def test_per_band_summary_index_header(self):
+        latex_str = make_per_band_summary_table(
+            self.per_band_summary, caption="Header", index_header="Field"
+        )
+        self.assertIn(r"\multicolumn{1}{l}{\textbf{Field}}", latex_str)
+
+    def test_per_band_summary_band_errors(self):
+        df = _visits_dataframe()
+        with self.assertRaisesRegex(ValueError, "not in DataFrame"):
+            make_per_band_summary_table(df, caption="x", bands=["u", "w"])
+        with self.assertRaisesRegex(ValueError, "adjacent"):
+            make_per_band_summary_table(df, caption="x", bands=["u", "r"])
+        with self.assertRaisesRegex(ValueError, "adjacent"):
+            make_per_band_summary_table(df, caption="x", bands=["g", "u"])
+
+
+BANDS = ["u", "g", "r", "i", "z", "y"]
+
+
+def _visits_dataframe():
+    """Visit counts with leading, band and trailing columns and a total row."""
+    columns = ["R.A.", "Decl.", *BANDS, "Total", "Baseline"]
+    rows = {
+        "M49": [186.3, 6.9, 234, 280, None, None, None, None, 514, 10.2],
+        "Abell_2764": [5.5, -49.0, 7, None, None, None, None, None, 7, 1.0],
+        "Trifid-Lagoon": [271.7, -23.9, None, None, 5, None, None, None, 5, np.nan],
+        "Total": [np.nan, np.nan, 241, 280, 5, 0, 0, 0, 526, np.nan],
+    }
+    df = pd.DataFrame.from_dict(rows, orient="index", columns=columns)
+    df[BANDS + ["Total"]] = df[BANDS + ["Total"]].astype("Int64")
+    df.attrs["label"] = "visits"
+    return df
+
+
+def _data_rows(latex_str):
+    """Lines between \\startdata and \\enddata."""
+    lines = latex_str.splitlines()
+    return lines[lines.index(r"\startdata") + 1 : lines.index(r"\enddata")]
 
 if __name__ == "__main__":
     unittest.main()
