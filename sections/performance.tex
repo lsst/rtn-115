@@ -334,18 +334,7 @@ This is the ``nominal'' sample of injected synthetic sources.
 %
 We perform a double mutual match of the injected synthetic sources to the detected \texttt{DIASources}, and determine which injected sources were successfully recovered, using a $0\farcs5$ matching radius.
 
-\figref{fig:dp2_completeness_by_source_type} shows completeness curves for the full injected and recovered samples, categorized by whether the synthetic source was injected into just the template, just the visit, or was a variable source injected into multiple visits.
-%
-\begin{figure*}[htbp]
-\centering
-\includegraphics[width=0.9\linewidth]{figures/dp2_dia_fakes_completeness.pdf}
-\caption{Completeness curves for synthetic sources injected into DP2 images, categorized by whether the synthetic source was injected into just the template, just the visit, or was a variable source injected into multiple visits. The curves show the fraction of injected synthetic sources that were recovered as a function of injected SNR. The dashed lines show the completeness curves after removing two known and understood causes of failed recovery: blending overlaps and pixel flag adjacency.}
-\label{fig:dp2_completeness_by_source_type}
-\end{figure*}
-
-All panels in \figref{fig:dp2_completeness_by_source_type} show two completeness curves: one with the nominal sample of injected synthetic sources, and one with two known sources of problems removed, which we describe below.
-%
-Our initial completeness analysis showed there were many high-SNR synthetic sources that were not recovered.
+Our initial completeness analysis showed that many high-SNR synthetic sources were not recovered.
 We examined numerous individual unrecovered \texttt{DIASources} to determine common underlying causes, and found two prominent ones.
 First, in situations where a synthetic source was injected into a template image relatively close to where an unrelated synthetic source was injected into a visit image, the resulting difference image creates a blended footprint that can appear as one extended source or like a lopsided dipole.
 Because deblending is not yet implemented in difference imaging (see \secref{sssec:DIASource}), one of the two injected synthetic sources is not recovered in this scenario.
@@ -353,14 +342,16 @@ Second, in situations where a synthetic source was injected close to an image re
 This is intentional, because many sources close to such masked regions are bogus detections originating from subtraction artifacts.
 To identify affected sources, we define a seven-arcsecond wide region around all injected synthetic \texttt{DIASources}, and note whether any of the pixels in the region had any pixel flags set.
 If any of the pixels in this buffer region have one or more of \texttt{INTERPOLATED}, \texttt{SATURATED}, \texttt{BAD}, \texttt{SATURATED\_TEMPLATE}, or \texttt{SPIKE} set, we exclude the injected synthetic source from the recovery analysis.
-%
-When both of these causes of failed injected synthetic source recovery ---blending overlaps and pixel flag adjacency--- are accounted for, the completeness curves improve dramatically, which can be seen in the dashed lines in \figref{fig:dp2_completeness_by_source_type}.
 
-To characterize the completeness curves, we fit a logistic function to the completeness as a function of injected SNR, and report the fitted asymptotic completeness $C_{\mathrm{asymptotic}}$, the SNR at 50\% absolute completeness $\mathrm{SNR}_{50}$, and the fitted midpoint at half of $C_{\mathrm{asymptotic}}$, $\mathrm{SNR}_{1/2}$.
+To characterize the completeness, we fit a logistic function to the fraction of recovered synthetic sources as a function of injected SNR.
 %
-We perform this analysis for each filter, for each source type, and for both the nominal and mask-filtered samples, and report these metrics in \tabref{tab:fake-completeness}.
-
-\input{tables/dia_fakes_completeness}
+We do this separately for each filter and for each type of injection (visit, template, and variable), both for the nominal sample and for a mask-filtered sample from which sources affected by blending overlaps or pixel flag adjacency have been removed.
+%
+For the nominal sample, the fitted asymptotic completeness ranges from 93\% to 97\% across filters and injection types, with variable-source injections the least complete in every filter.
+%
+Removing the two known causes of failed recovery raises the asymptotic completeness to 96--99\%.
+%
+In all cases, 50\% completeness is reached at an injected SNR of 4.8--5.0, consistent with the $5\sigma$ detection threshold applied to the difference images (\secref{sec:drp-variabletransient-dia}).
 
 We assess the photometric accuracy of the recovered synthetic sources by comparing the measured fluxes to the injected fluxes.
 \figref{fig:dp2_dia_fakes_photometry} shows the magnitude differences recovered for all sources in the mask-filtered sample, as a function of injected magnitude true values.
