@@ -1,22 +1,24 @@
 %%%%% This table is auto generated from data, DO NOT EDIT
 \setlength{\tabcolsep}{3pt}
-\begin{deluxetable}{lccccccc}
+\begin{deluxetable}{lccccc}
 \tablewidth{0pt}
-\caption{Number of visits per Deep Drilling Field and per band in the DP2 dataset. The All column gives the total visits across all bands; the All row gives the total visits across all DDFs.}
-\label{tab:dp2_ddf_visits}
+\tablecaption{Field centres and observing nights for each \gls{DP2} \gls{DDF}.
+Coordinates are J2000 ICRS; the centre is the mean of the boresight
+coordinates of the visits tagged with the field. Field visits are those
+with boresights within 1\degr\ of the centre (1.5\degr\ for EDFS). Visits (N) is the total number of visits.
+Nights (N) is the number of distinct nights with at least one visit; Baseline is the total time, in days, over which the observations
+were taken (first to last observing night, inclusive).
+\label{tab:dp2_ddf_visits}}
 \tablehead{
-  \multicolumn{1}{l}{\textbf{Field}} & \multicolumn{6}{c}{\textbf{Band}} & \textbf{All}\\
-  \cline{2-7}
-   & $u$ & $g$ & $r$ & $i$ & $z$ & $y$ & 
+  \colhead{\textbf{Field Code}} & \colhead{\textbf{R.A.}} & \colhead{\textbf{Decl.}} & \colhead{\textbf{Visits}} & \colhead{\textbf{Nights}} & \colhead{\textbf{Baseline}}\\
+   & \colhead{(deg)} & \colhead{(deg)} & \colhead{(N)} & \colhead{(N)} & \colhead{(days)}
 }
 \startdata
-DDF\_ELAIS\_S1 & 57 & 153 & 128 & 232 & 141 & 59 & 770 \\
-DDF\_XMM\_LSS & 42 & 15 & 8 & 47 & 10 & 10 & 132 \\
-DDF\_ECDFS & 10 & 61 & 50 & 96 & 61 & 11 & 289 \\
-DDF\_EDFS\_a & 7 & 31 & 33 & 59 & 33 & 7 & 170 \\
-DDF\_EDFS\_b & 5 & 37 & 33 & 57 & 33 & 7 & 172 \\
-DDF\_COSMOS & 105 & 87 & 173 & 162 & 110 & 77 & 714 \\
-\hline
-\textbf{All} & 226 & 384 & 425 & 653 & 388 & 171 & 2247 \\
+DDF\_ELAIS\_S1 & 9.5 & -44.0 & 799 & 62 & 192 \\
+DDF\_XMM\_LSS & 35.6 & -4.8 & 132 & 23 & 172 \\
+DDF\_ECDFS & 53.0 & -28.1 & 289 & 37 & 179 \\
+DDF\_EDFS\_a & 59.2 & -49.2 & 173 & 51 & 179 \\
+DDF\_EDFS\_b & 63.2 & -47.8 & 178 & 50 & 179 \\
+DDF\_COSMOS & 150.1 & 2.2 & 714 & 19 & 233 \\
 \enddata
 \end{deluxetable}
