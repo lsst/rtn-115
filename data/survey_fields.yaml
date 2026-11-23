@@ -1,4 +1,4 @@
-git add da  # Central sky coordinates of DP2 survey fields.
+# Central sky coordinates of DP2 survey fields.
 # Small-field coordinates are mean RA and Dec across all visits for each field,
 # computed from the Butler visit database.
 # DDF coordinates are nominal field centers.
