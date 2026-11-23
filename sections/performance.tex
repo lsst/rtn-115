@@ -292,11 +292,11 @@ As these are designed to measure comparable quantities, we expect the two to lar
 This comparison, shown in \figref{fig:dp2_shear_pgauss_gaap}, reveals good agreement for $r \lesssim 23$, with a median offset (GAaP $-$ \texttt{pgauss}) of $\sim -20$~mmag; at fainter magnitudes, both the offset and the scatter increase.
 
 \subsection{Difference Imaging}
-DP2 includes over 12,000 visits with \texttt{DIASources}.
+DP2 includes over 12,000 visits with \gls{DIA} Sources.
 As discussed in \secref{sssec:DIASource}, deblending is not yet implemented.
-Per \secref{sec:drp-variabletransient-artifact}, reliability scores are calculated for each of these, but no cuts are applied.
-As a result, the majority of \texttt{DIASources} have low reliability scores ($< 0.5$) and are not astrophysical in origin.
-Common causes of low-reliability \texttt{DIASources} include low-quality Template Coadds (e.g., single visit self-subtractions) and poorly constrained background sky levels due to scattered light or crowded fields.
+Per \secref{sec:drp-variabletransient-artifact}, reliability scores are calculated for each \gls{DIA} Source, but no cuts are applied.
+As a result, the majority of \gls{DIA} Sources have low reliability scores ($< 0.5$) and are not astrophysical in origin.
+Common causes of low-reliability \gls{DIA} Sources include low-quality Template Coadds (e.g., single visit self-subtractions) and poorly constrained background sky levels due to scattered light or crowded fields.
 
 \begin{figure}[tpb]
 \plotone{dp2_cosmos_r_minus_i_gaap_pgauss}
@@ -306,13 +306,13 @@ The solid black line shows the running median and the dashed lines show the runn
 The top and right panels show the distributions of $r$-band magnitude and color difference, respectively. \label{fig:dp2_shear_pgauss_gaap}}
 \end{figure}
 
-In some circumstances, spurious \texttt{DIASources} can appear in a grid pattern reminiscent of the gaps between detectors on the focal plane.
+In some circumstances, spurious \gls{DIA} Sources can appear in a grid pattern reminiscent of the gaps between detectors on the focal plane.
 This can occur when Template Coadds have a sudden change in PSF size.
-This discontinuity cannot be well represented with a smooth matching kernel during difference imaging source measurement, and a too-large PSF can produce spurious positive flux \texttt{DIASources} in the narrow grid strips where the PSF is small.
+This discontinuity cannot be well represented with a smooth matching kernel during difference imaging source measurement, and a too-large PSF can produce spurious positive flux \gls{DIA} Sources in the narrow grid strips where the PSF is small.
 There is presently no flag or column to identify these, but we expect it to be less prevalent for Template Coadds that are deeper (i.e., those with larger numbers of overlapping input visits).
 
-Most of the visits with \texttt{DIASources} in DP2 have fewer than 2000 \texttt{DIASources} with reliability $>0.5$.
-The outliers with excess ``reliable'' \texttt{DIASources} include: (1) a handful of visits listed in the Release Documentation Known Issues when the telescope was moving while the shutter was open, (2) visits affected by the template PSF discontinuity problem described above, and (3) visits in crowded and/or nebulous fields where it is challenging to robustly measure the background flux level.
+Most of the visits with \gls{DIA} Sources in DP2 have fewer than 2000 \gls{DIA} Sources with reliability $>0.5$.
+The outliers with excess ``reliable'' \gls{DIA} Sources include: (1) a handful of visits listed in the Release Documentation Known Issues when the telescope was moving while the shutter was open, (2) visits affected by the template PSF discontinuity problem described above, and (3) visits in crowded and/or nebulous fields where it is challenging to robustly measure the background flux level.
 
 \subsubsection{DIA Source detection completeness}
 Following and extending the approach in DP1~\citep[][]{rtn-095}, we assess the performance of difference imaging by injecting synthetic sources into a subset of DP2 science images, carrying out difference imaging, and measuring properties of the recovered detected synthetic sources.
@@ -325,25 +325,25 @@ The hosted sources additionally have randomly selected positions within their ho
 %
 A fraction of these sources are ``template'' injections, meaning they are injected into the template coadd image and thus when obtaining the difference image they appear with negative flux.
 %
-There is also a fraction of ``variable source'' injections, meaning they are injected both into the template and visit images, but with different random brightnesses, so that they can appear both with negative flux and with positive flux in the difference image.
+There is also a fraction of ``variable source'' injections, meaning they are injected into both the template and visit images, but with different random brightnesses, so that they can appear with both negative and positive fluxes in the difference image.
 %
 Overall, we inject approximately 300,000 synthetic sources into 1990 DP2 visits, and calculate recovery statistics.
 %
-After injection we run a forced photometry stage on the locations of our synthetic sources, in order to obtain an empirical estimate of the SNR of each injected source, and also to clean the sample of synthetic sources of those that had flags like \texttt{BAD}, \texttt{SATURATED}, or \texttt{SPIKE} set in the pixels of the injected source.
+After injection we run a forced photometry stage on the locations of our synthetic sources, in order to obtain an empirical estimate of the \gls{SNR} of each injected source, and also to clean the sample of synthetic sources of those that had flags like \texttt{BAD}, \texttt{SATURATED}, or \texttt{SPIKE} set in the pixels of the injected source.
 This is the ``nominal'' sample of injected synthetic sources.
 %
-We perform a double mutual match of the injected synthetic sources to the detected \texttt{DIASources}, and determine which injected sources were successfully recovered, using a $0\farcs5$ matching radius.
+We perform a double mutual match of the injected synthetic sources to the detected \gls{DIA} Sources, and determine which injected sources were successfully recovered, using a $0\farcs5$ matching radius.
 
 Our initial completeness analysis showed that many high-SNR synthetic sources were not recovered.
-We examined numerous individual unrecovered \texttt{DIASources} to determine common underlying causes, and found two prominent ones.
+We examined numerous individual unrecovered \gls{DIA} Sources to determine common underlying causes, and found two prominent ones.
 First, in situations where a synthetic source was injected into a template image relatively close to where an unrelated synthetic source was injected into a visit image, the resulting difference image creates a blended footprint that can appear as one extended source or like a lopsided dipole.
 Because deblending is not yet implemented in difference imaging (see \secref{sssec:DIASource}), one of the two injected synthetic sources is not recovered in this scenario.
 Second, in situations where a synthetic source was injected close to an image region with certain pixel flags (e.g., \texttt{SATURATED}, \texttt{SPIKE}), they are not recovered.
-This is intentional, because many sources close to such masked regions are bogus detections originating from subtraction artifacts.
+This is intentional because many sources close to such masked regions are bogus detections originating from subtraction artifacts.
 To identify affected sources, we define a seven-arcsecond wide region around all injected synthetic \texttt{DIASources}, and note whether any of the pixels in the region had any pixel flags set.
 If any of the pixels in this buffer region have one or more of \texttt{INTERPOLATED}, \texttt{SATURATED}, \texttt{BAD}, \texttt{SATURATED\_TEMPLATE}, or \texttt{SPIKE} set, we exclude the injected synthetic source from the recovery analysis.
 
-To characterize the completeness, we fit a logistic function to the fraction of recovered synthetic sources as a function of injected SNR.
+To characterize the completeness, we fit a logistic function to the fraction of recovered synthetic sources as a function of injected \gls{SNR}.
 %
 We do this separately for each filter and for each type of injection (visit, template, and variable), both for the nominal sample and for a mask-filtered sample from which sources affected by blending overlaps or pixel flag adjacency have been removed.
 %
