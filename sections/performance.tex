@@ -311,7 +311,7 @@ This can occur when Template Coadds have a sudden change in PSF size.
 This discontinuity cannot be well represented with a smooth matching kernel during difference imaging source measurement, and a too-large PSF can produce spurious positive flux \texttt{DIASources} in the narrow grid strips where the PSF is small.
 There is presently no flag or column to identify these, but we expect it to be less prevalent for Template Coadds that are deeper (i.e., those with larger numbers of overlapping input visits).
 
-Most of the visits with \texttt{DIASources} in DP2 have fewer than 2000 \texttt{DIASources} with reliability > 0.5.
+Most of the visits with \texttt{DIASources} in DP2 have fewer than 2000 \texttt{DIASources} with reliability $>0.5$.
 The outliers with excess ``reliable'' \texttt{DIASources} include: (1) a handful of visits listed in the Release Documentation Known Issues when the telescope was moving while the shutter was open, (2) visits affected by the template PSF discontinuity problem described above, and (3) visits in crowded and/or nebulous fields where it is challenging to robustly measure the background flux level.
 
 \subsubsection{DIA Source detection completeness}
@@ -323,17 +323,18 @@ In this sample we include sources that are both ``hosted'' and ``hostless'' synt
 %
 The hosted sources additionally have randomly selected positions within their host galaxy and position angles, as well as brightnesses that are randomly selected relative to the host galaxy brightness.
 %
-A fraction of these sources are "template" injections, meaning they are injected into the template coadd image and thus when obtaining the difference image they appear with negative flux.
+A fraction of these sources are ``template'' injections, meaning they are injected into the template coadd image and thus when obtaining the difference image they appear with negative flux.
 %
-There is also a fraction of "variable source" injections, meaning they are injected both into the template and visit images, but with different random brightnesses, so that they can appear both with negative flux and with positive flux in the difference image.
+There is also a fraction of ``variable source'' injections, meaning they are injected both into the template and visit images, but with different random brightnesses, so that they can appear both with negative flux and with positive flux in the difference image.
 %
 Overall, we inject approximately 300,000 synthetic sources into 1990 DP2 visits, and calculate recovery statistics.
 %
-After injection we run a forced phtoometry stage on the locations of our synthetic sources, in order to obtain an empirical estimate of the SNR of each injected source, and also to clean the sample of synthetic sources of those that had flags like \texttt{BAD}, \texttt{SATURATED}, or \texttt{SPIKE} set in the pixels of the injected source. This is the "nominal" sample of injected synthetic sources.
+After injection we run a forced photometry stage on the locations of our synthetic sources, in order to obtain an empirical estimate of the SNR of each injected source, and also to clean the sample of synthetic sources of those that had flags like \texttt{BAD}, \texttt{SATURATED}, or \texttt{SPIKE} set in the pixels of the injected source.
+This is the ``nominal'' sample of injected synthetic sources.
 %
 We perform a double mutual match of the injected synthetic sources to the detected \texttt{DIASources}, and determine which injected sources were successfully recovered, using a $0\farcs5$ matching radius.
 
-Figure \ref{fig:dp2_completeness_by_source_type} shows completeness curves for the full injected and recovered samples, categorized by whether the synthetic source was injected into just the template, just the visit, or was a variable source injected into multiple visits.
+\figref{fig:dp2_completeness_by_source_type} shows completeness curves for the full injected and recovered samples, categorized by whether the synthetic source was injected into just the template, just the visit, or was a variable source injected into multiple visits.
 %
 \begin{figure*}[htbp]
 \centering
@@ -342,41 +343,42 @@ Figure \ref{fig:dp2_completeness_by_source_type} shows completeness curves for t
 \label{fig:dp2_completeness_by_source_type}
 \end{figure*}
 
-All panels in Fig. \ref{fig:dp2_completeness_by_source_type} show two completeness curves: one with the nominal sample of injected synthetic sources, and one with two known sources of problems removed, which we describe below.
+All panels in \figref{fig:dp2_completeness_by_source_type} show two completeness curves: one with the nominal sample of injected synthetic sources, and one with two known sources of problems removed, which we describe below.
 %
 Our initial completeness analysis showed there were many high-SNR synthetic sources that were not recovered.
-We examined numerous indiviual unrecovered DiaSources to determine common underlying causes, and found two prominent ones.
+We examined numerous individual unrecovered \texttt{DIASources} to determine common underlying causes, and found two prominent ones.
 First, in situations where a synthetic source was injected into a template image relatively close to where an unrelated synthetic source was injected into a visit image, the resulting difference image creates a blended footprint that can appear as one extended source or like a lopsided dipole.
-Because deblending is not yet implemented in difference imaging (see \ref{sssec:DIASource}), one of the two injected synthetic sources is not recovered in this scenario.
+Because deblending is not yet implemented in difference imaging (see \secref{sssec:DIASource}), one of the two injected synthetic sources is not recovered in this scenario.
 Second, in situations where a synthetic source was injected close to an image region with certain pixel flags (e.g., \texttt{SATURATED}, \texttt{SPIKE}), they are not recovered.
 This is intentional, because many sources close to such masked regions are bogus detections originating from subtraction artifacts.
-To identify affected sources, we define a seven-arcsecond wide region around all injected synthetic DiaSources, and note whether any of the pixels in the region had any pixel flags set.
+To identify affected sources, we define a seven-arcsecond wide region around all injected synthetic \texttt{DIASources}, and note whether any of the pixels in the region had any pixel flags set.
 If any of the pixels in this buffer region have one or more of \texttt{INTERPOLATED}, \texttt{SATURATED}, \texttt{BAD}, \texttt{SATURATED\_TEMPLATE}, or \texttt{SPIKE} set, we exclude the injected synthetic source from the recovery analysis.
 %
-When both of these causes of failed injected synthetic source recovery --blending overlaps and pixel flag adjacency-- are accounted for, the completeness curves improve dramatically, which can be seen in the dashed lines in Fig. \ref{fig:dp2_completeness_by_source_type}.
+When both of these causes of failed injected synthetic source recovery ---blending overlaps and pixel flag adjacency--- are accounted for, the completeness curves improve dramatically, which can be seen in the dashed lines in \figref{fig:dp2_completeness_by_source_type}.
 
-To charcterize the completeness curves, we fit a logistic function to the completeness as a function of injected SNR, and report the fitted asymptotic completeness $C_{\mathrm{asymptotic}}$, the SNR at 50\% absolute completeness $\mathrm{SNR}_{50}$, and the fitted midpoint at half of $C_{\mathrm{asymptotic}}$ $\mathrm{SNR}_{1/2}$.
+To characterize the completeness curves, we fit a logistic function to the completeness as a function of injected SNR, and report the fitted asymptotic completeness $C_{\mathrm{asymptotic}}$, the SNR at 50\% absolute completeness $\mathrm{SNR}_{50}$, and the fitted midpoint at half of $C_{\mathrm{asymptotic}}$, $\mathrm{SNR}_{1/2}$.
 %
-We perform this analysis for each filter, for each source type, and for both the nominal and mask-filtered samples, and report these metrics in Table \ref{tab:fake-completeness}.
-%
+We perform this analysis for each filter, for each source type, and for both the nominal and mask-filtered samples, and report these metrics in \tabref{tab:fake-completeness}.
+
 \input{tables/dia_fakes_completeness}
 
 We assess the photometric accuracy of the recovered synthetic sources by comparing the measured fluxes to the injected fluxes.
-Figure \ref{fig:dp2_dia_fakes_photometry} shows the magnitude differences recovered for all sources in the mask-filtered sample, as a function of injected magnitude true values.
+\figref{fig:dp2_dia_fakes_photometry} shows the magnitude differences recovered for all sources in the mask-filtered sample, as a function of injected magnitude true values.
 %
-We also report the pull distribution, which is the difference between the measured and injected fluxes divided by the measured flux uncertainty, and provide its mean and standard deviation as function of injected magnitude as well.
+We also report the pull distribution, which is the difference between the measured and injected fluxes divided by the measured flux uncertainty, and provide its mean and standard deviation as a function of injected magnitude as well.
 %
 \begin{figure}[htbp]
 \plotone{dp2_dia_fakes_photometry}
-\caption{Photometric accuracy of recovered synthetic sources injected into DP2 images. The top panel shows the distribution of the injected magnitudes of our  mask-filtered sample.
+\caption{Photometric accuracy of recovered synthetic sources injected into DP2 images. The top panel shows the distribution of the injected magnitudes of our mask-filtered sample.
 %
 Overlaid there are the obtained completeness curves for each filter, as a function of injected magnitude.
 %
-The center panel show the difference between the measured and injected magnitudes as a function of injected magnitude. The bottom panels show the pull distribution, which is the difference between the measured and injected fluxes divided by the measured flux uncertainty, as a function of injected magnitude.
+The center panel shows the difference between the measured and injected magnitudes as a function of injected magnitude.
+The bottom panels show the pull distribution, which is the difference between the measured and injected fluxes divided by the measured flux uncertainty, as a function of injected magnitude.
 The mean and standard deviation of the pull distribution are shown as solid and dashed lines, respectively.
 }
 \label{fig:dp2_dia_fakes_photometry}
-\end{figure*}
+\end{figure}
 
 \subsection{Solar System}\label{sec:drp-variabletransient-solar-association}
 There are 299,343 solar system Objects (i.e., objects measured at least once by Rubin) in DP2, representing almost 20\% of the known solar system.
@@ -395,5 +397,4 @@ There are 8.1 million DIA Sources associated with solar system objects in DP2, r
 There is a persistent $\sim30$~mas bias between DP2 astrometric measurements and ephemeris positions of MPC orbits.
 When Rubin astrometry was compared instead to orbits fit only to Gaia astrometry, the $\sim30$~mas bias disappeared.
 After substantial investigation and discussion with both the MPC and JPL, we concluded that the bias is \textbf{not} in Rubin astrometry (to $\le$~1~mas), but in the orbit catalog.
-While $30$~mas is small, the median astrometric uncertainty on a DP2 DIA Source associated with a solar system Source is just 56~mas, making $30$~mas a substantial offset in the context of Rubin precision, thus highlighting the extent to which Rubin astrometry can improve asteroid orbits over time.\end{figure}
-
+While $30$~mas is small, the median astrometric uncertainty on a DP2 DIA Source associated with a solar system Source is just 56~mas, making $30$~mas a substantial offset in the context of Rubin precision, thus highlighting the extent to which Rubin astrometry can improve asteroid orbits over time.
