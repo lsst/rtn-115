@@ -202,7 +202,7 @@ There are 299,343 solar system Objects (i.e., objects measured at least once by 
 Although 136,608 objects are observed at least once in each $griz$ band, detailed analysis of asteroid colors would be premature with DP2.
 Observations with different filters are not simultaneous, meaning the objects' rotational flux variations add scatter to the measurement of their colors.
 Given sufficient data, this can be overcome by fitting a rotational light curve for each individual object.
-However, most objects in DP2 have far too few measurements for a light-curve fit.
+However, most objects in DP2 have too few measurements for a light-curve fit.
 Hence, individual colors and H magnitudes are uncertain at the level of rotational flux variations, which are typically much larger than the nominal uncertainty \texttt{HErr}, since the latter accounts only for the errors on instantaneous flux measurements.
 
 The ensemble colors of the solar system Objects are broadly plausible for an asteroid sample: median $g-r \sim 0.58$, $r-i \sim 0.18$, and $i-z \sim -0.01$~mag.
@@ -301,19 +301,20 @@ We should be able to generate 2--3 figures similar to DP1~\citep[][]{rtn-095} Fi
 
 \subsection{Sensor Anomalies}
 
-Although LSSTCam is constructed with some of the best CCD detectors ever made, there are still some features on the images that are not corrected as well as we would like.
+Some features in LSSTCam images are not yet fully corrected by the instrument signature removal (ISR) pipeline. We describe these features and how we mitigate them. Where no mitigation exists yet, we document the feature here so that users can recognize it in the data.
+
 The standard ``hot'' and ``cold'' pixels seen in other detectors are found on LSSTCam.
 These are single-pixel or few-pixel groups where either the dark current is elevated (resulting in hot pixels) or the quantum efficiency is lower (resulting in cold pixels).
 These pixels are identified by searching the combined dark calibration for bright pixels to find the hot pixels, and searching the combined flat calibration for dark pixels to find the cold pixels.
 In addition, we flag any column that has more than 1000 defect pixels within the amplifier segment as entirely bad.
 These bad columns usually appear as a hot pixel with a trail extending in the vertical direction, as that bad pixel impacts that column as the amplifier is read out.
 The edges of the detectors often have a large number of cold pixels, likely due to edge effects in the electric fields.
-To reduce the randomness of which of these edge pixels get flagged by the automatic detection and which do not, we impose a fixed border 7 pixels wide on the top and bottom edges of the detectors, and 8 pixels wide on the left and right edges.
+Because automatic detection flags these edge pixels inconsistently, we mask a fixed border 7 pixels wide on the top and bottom edges of each detector, and 8 pixels wide on the left and right edges.
 
 As discovered as part of commissioning with \gls{LSSTComCam} for \gls{DP1}, there are also features we've classified as ``vampire'' pixels.
 These appear as a very bright hot pixel surrounded by a mostly circular region of low flux, such that it appears that the hot pixel is draining the charge from this region.
 Although the mechanism of these pixels is not fully understood, the regions appear to conserve charge, so the simple model of the charge being pulled into the central pixel seems reasonable.
-We do not currently have a correction for these features, and so have manually masked these with square defect masks.
+We do not currently have a correction for these features, and so have manually masked them with square defect masks.
 The current set of manual defects is likely an underestimate, so there may be unmasked vampire pixels in \gls{DP2}.
 A more complete scan will be done prior to the next Data Release.
 
@@ -321,7 +322,7 @@ Very bright sources can create ``edge bleeds'', where a saturated column exhibit
 On the ITL detectors, this takes the form of a ``trumpet'' where the saturated column spreads out along the x-direction as it approaches the edge, creating a much wider saturated region.
 We have code to detect and mask these trumpet shaped edge bleeds, but from analysis of the DP2 data, it is clear that this code needs further improvement to ensure that all such bleeds get masked.
 The E2V detectors show a different kind of edge bleed, in which the saturated columns impact the readout for up to the first 350 rows of the image.
-The result of this is that pixels read before the saturated columns are depressed relative to the rest of the detector, and those read after the saturated columns show CTI like smearing of the charge.
+In these rows, pixels read out before the saturated column (in serial readout order) are depressed relative to the rest of the detector, whereas pixels read out after it show CTI-like charge smearing.
 
 The ITL detectors also show another feature related to saturation: a saturated source that does not extend all the way to the edge can create ``dark dips'' along the saturation trail, where the columns have a lower flux compared to the rest of the detector.
 We have measured scale parameters relating the size of the saturated region to the width of the dip, and use that to construct an appropriately sized mask.
@@ -336,6 +337,6 @@ Although not formally a ``sensor anomaly,'' there is evidence that the ``comb pa
 This feature is observed most often in $y$, or in images with higher background levels.
 This may not be easily corrected, and so an additional detection and edge masking process needs to be created to remove affected areas.
 
-Finally, we have recently identified an unexpected fringing signal in the $z$ and $y$ filters, where the flat correction my imprint a fringe pattern onto the science image.
+Finally, we identified an unexpected fringing signal in the $z$ and $y$ filters, where the flat correction imprinted a fringe pattern onto the science image.
 This indicates that the calibration system creates images that have a fringe signal, but that the on-sky observations do not.
 Generating a fringe correction to remove this feature will be done prior to the next Data Release.
