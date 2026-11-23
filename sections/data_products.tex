@@ -55,7 +55,7 @@ Most science analyses will start from the Deep Coadd images and the single-epoch
 While it is possible for users to recreate their own \glspl{Visit Image} from the raw and calibration data, we do not expect anyone will need to do so.
 One important difference between DP1 and DP2 is the format of the Science Images \citep[][]{DMTN-339}.
 In the case of \gls{DP2}, the format of the datasets are such that they are more compatible with external packages, in particular Astropy.
-It is, however, straightforward to convert back to ``legacy'' \gls{DP1}-style datasets for backwards-compatability.
+It is, however, straightforward to convert back to ``legacy'' \gls{DP1}-style datasets for backwards-compatibility.
 
 \subsubsection{Raw Images}
 \label{sssec:rawimages}
@@ -97,7 +97,7 @@ There are a total of \nvisitimages Visit Images in DP2.
 Visit Images covering the same \gls{patch} of sky (as defined by the skymap) in the same band are combined to form coadd images.
 Two different types of coadd images are included in DP2: Deep Coadds and Template Coadds,
 Each type of coadd image is produced via the same general process (\secref{sec:drp-multivisit-coaddition}):  Visit Images are selected by \gls{patch}, band, and image quality, warped onto a common pixel grid, and combined as a weighted mean with inverse-variance weights (\secref{sec:drp-multivisit-coaddition}).
-The main differences that distinguish each type of coadd are the selection of the \glspl{Visit Image}, and that Deep Coadds are cell-based in DP2 (see the introduction of this this section), whereas Template Coadds are not.
+The main differences that distinguish each type of coadd are the selection of the \glspl{Visit Image}, and that Deep Coadds are cell-based in DP2 (see the introduction of this section), whereas Template Coadds are not.
 As a result, the structure of the datasets is the same for each type: each coadd contains three planes corresponding to the science image plane (i.e., the coadd image), the variance plane, and the mask plane, with all three containing the same number of pixels in each dimension.
 The pixel values of the science image and variance planes are reported in units of nJy and nJy$^2$, respectively.
 Up to two different \gls{background} models are included in the coadd datasets: the \gls{background} that was subtracted to create the final coadd and, in the case of the $gri$ band Deep Coadds, a \gls{background} that can be added-back to create ``Visualization Coadds'' which, while not recommended for science, can be useful for visualization.
@@ -153,7 +153,7 @@ Difference Images are created by subtracting a warped, scaled and PSF-matched Te
 Because a Visit Image may cover more than one patch or even tract, multiple Template Coadds may also have to be stitched together prior to being subtracted from the Visit Image.
 The concept behind Difference Imaging is that, following subtraction, only those sources that have either moved or whose flux has changed relative to the template should remain.
 In practice, however, many spurious sources remain due to unavoidably imprecise template matching.
-A detection algorithm is used to identify sources in Difference Images and a real/bogus classifier attempts to distinguigh real from spurious sources \citep[][]{DMTN-337}.
+A detection algorithm is used to identify sources in Difference Images and a real/bogus classifier attempts to distinguish real from spurious sources \citep[][]{DMTN-337}.
 The outcome of the real/bogus classifier is included in the DIA Source catalog (\secref{sssec:DIASource}).
 
 Like Visit Images, Difference Images also consist of three image planes: a science image plane, a variance plane, and a mask plane (see \secref{sssec:visitimages} for a description of each plane).
@@ -169,7 +169,7 @@ There are a total of \ndifferenceimages Difference Images in DP2, one for each V
 \label{ssec:catalogs}
 Catalogs contain data for detections in the images described in \secref{ssec:scienceimages}, except the Calibration catalog, which contains reference data obtained from previous surveys.
 Observatory-produced \gls{metadata} tables are described in \secref{ssec:metadata}.
-Rubin adopts a naming convention in which  the term ``object" refers to an astrophysical object, whereas the term ``source" refers to a single-\gls{epoch} detection of that object.
+Rubin adopts a naming convention in which  the term ``object'' refers to an astrophysical object, whereas the term ``source'' refers to a single-\gls{epoch} detection of that object.
 As such, sources are associated with detections in single-epoch \glspl{Visit Image} and Difference Images, whereas objects are associated with detections in multiepoch coadds.
 To avoid duplication in overlap regions (see the introduction to this section), only objects whose centroids are within the inner (i.e., non-overlapping) region of the patch in which it was measured, and which the skymap assigns to that patch's tract (in the case of overlapping tracts) are retained in the user-facing catalogs.
 Photometric quantities in catalogs are stored as fluxes rather than magnitudes, with fluxes measured in nanojanskies (1\xspace nJy = $10^{-35}\xspace$ W$\xspace$m$^{-2}$Hz$^{-1}$).
@@ -277,7 +277,7 @@ Should the average position of a candidate have no other candidate within 2\arcs
 The Isolated Star Stellar Motions catalog provides a best-fit position (\texttt{ra, dec}), proper motion in $\rm mas\,yr^{-1}$ (\texttt{raPM, decPM}), and parallax in mas at a reference \gls{epoch}; the \texttt{raPM} parameter already includes the $\cos(\rm decl.)$ factor.
 The reference epoch in \gls{MJD} is included as a column (\texttt{epoch}) in the catalog.
 An isolated star's proper motion and parallax are calculated by fitting its position across all per-visit detections, plus any detection in our \gls{calibration} reference catalog (\secref{sssec:referencecatalog}) that is matched to within 0\farcs1 of the star's average position.
-The catalog also contains $1\sigma$ uncertainties for each each of the five aforementioned positional parameters (five columns: \texttt{raErr, decErr, raPMErr, decPMErr, parallaxErr}), plus a further ten columns containing off-diagonal covariance parameters (\texttt{$\ast\_\ast\_$Cov}, e.g, \texttt{ra\_raPM\_Cov}, \texttt{raPM\_parallax\_Cov}).
+The catalog also contains $1\sigma$ uncertainties for each of the five aforementioned positional parameters (five columns: \texttt{raErr, decErr, raPMErr, decPMErr, parallaxErr}), plus a further ten columns containing off-diagonal covariance parameters (\texttt{$\ast\_\ast\_$Cov}, e.g, \texttt{ra\_raPM\_Cov}, \texttt{raPM\_parallax\_Cov}).
 
 All isolated stars have an entry in the Isolated Star Stellar Motion catalog, although no attempt is made to fit the time-varying positions of stars that are detected in fewer than 3 epochs and which do not have a matched counterpart in the reference catalog.
 In such cases the positional information, including uncertainties, are reported as \texttt{NaN}.
@@ -344,7 +344,7 @@ Because the predictions used for association were generated from that snapshot, 
 In the Solar System Source, Solar System Object, and \gls{MPC} Orbits catalogs, \texttt{designation} denotes the unpacked primary provisional designation of the object.
 This was added to the delivered \gls{MPS} Orbits copy as an end-user convenience; there it is identical, row by row, to \texttt{unpacked\_primary\_provisional\_designation}.
 It therefore provides a readable and direct join key among the Solar System Source, Solar System Object, \gls{MPC} Orbits catalogs, without requiring users to unpack \gls{MPC} designations.
-For query performance, users should nevertheless prever to use integer identifiers such as \texttt{ssObjectId} to link catalogs wherever those identifiers are available, and use \texttt{designation} for readability or when an appropriate integer identifier is unavailable.
+For query performance, users should nevertheless prefer to use integer identifiers such as \texttt{ssObjectId} to link catalogs wherever those identifiers are available, and use \texttt{designation} for readability or when an appropriate integer identifier is unavailable.
 
 The MPC Orbit, Current Identifications and Numbered Identifications catalogs contain \nmpcorbits, \ncurrentidentifications and \nnumberedidentifications entries, respectively.
 
@@ -353,7 +353,7 @@ The MPC Orbit, Current Identifications and Numbered Identifications catalogs con
 The Calibration Reference Catalog is used to perform astrometric and photometric \gls{calibration}.
 It is a whole-sky catalog built specifically for \gls{LSST} by combining data from multiple prior reference catalogs, since no single existing catalog had both the depth and coverage needed to calibrate \gls{LSST} data.
 It contains only stellar sources.
-Full details on how the Calibration Reference Catalog was built are provided in \citet[][]{DMTN-277}.\footnote{In \citet[][]{DMTN-277}, the calibration reference catalog is referred to as ``The Monster".}
+Full details on how the Calibration Reference Catalog was built are provided in \citet[][]{DMTN-277}.\footnote{In \citet[][]{DMTN-277}, the calibration reference catalog is referred to as ``The Monster''.}
 The same reference catalog was used for calibrating DP2 as for \gls{DP1}, but we prefer to include the same summary here over only providing a reference to that previous data preview.
 
 For the \textit{grizy} bands, the input catalogs were (in order of decreasing priority): \gls{DES} Year 6 Calibration Stars \citep[][]{2023arXiv230501695R}; synthetic magnitudes generated from Gaia spectrophotometry (Gaia \glsunset{XP}\gls{XP}) \citep[][]{2023A&A...674A..33G}; the \gls{Pan-STARRS} 3PI survey \citep[][]{2016arXiv161205560C}; Data Release 2 of the Skymapper survey \citep[][]{2019PASA...36...33O}; and Data Release 4 of the \gls{VST} \gls{ATLAS} survey \citep[][]{2015MNRAS.451.4238S}.
@@ -450,7 +450,7 @@ Object Scarlet Models are only available via the Data \gls{Butler} (\secref{ssse
 The Deep Coadd Input Summary table contains the visit and detector IDs of all the \gls{Visit} Images that were selected and coadded to produce each Deep Coadd image.
 Also included in the table is the relative weight of each Visit Image, inversely proportional to its variance, and the number of pixels it contributed to a Deep Coadd, since a given Visit Image may only partially cover a \gls{patch}.
 There is a single Deep Coadd Input Summary table for the whole of \gls{DP2}.
-It contains \ndeepcoaddinputsummaryrows entries, corresonding to one entry per contributing Visit Image per \gls{patch} (i.e., one entry per unique combination of \gls{tract}, \gls{patch}, visit, and detector).
+It contains \ndeepcoaddinputsummaryrows entries, corresponding to one entry per contributing Visit Image per \gls{patch} (i.e., one entry per unique combination of \gls{tract}, \gls{patch}, visit, and detector).
 It is only available via the Data \gls{Butler} (\secref{sssec:data_butler}).
 
 \subsubsection{Compare Warp Artifact Mask}

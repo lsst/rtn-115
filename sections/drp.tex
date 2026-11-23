@@ -130,7 +130,7 @@ As described in \citet[][]{10.71929/rubin/2570308}, a joint calibration is perfo
 By associating all the isolated point sources shared among the overlapping visits, we can refine the astrometric solution beyond the level achieved in single-frame processing using only a reference catalog \citep[][]{DMTN-266}.
 The full details of the method are described in \citet[][]{DMTN-266}.
 
-Unlike in \gls{DP1}, the area we use for individual fits of the astrometric solution is an order-3 \gls{HEALPix} pixel ($N_{\rm side} = 8$; $\sim$54\,deg$^2$), instead of a tract.
+Unlike in \gls{DP1}, the area we use for individual fits of the astrometric solution is an order-3 \gls{HEALPix} pixel ($N_{\rm side} = 8$; $\sim$\,54\,deg$^2$), instead of a tract.
 This is done to reduce repetitive calculations, since the small size of tracts compared to the LSSTCam field of view means that neighboring tracts often share identical overlapping visits, which would lead to doing many identical fits of the astrometric calibration.
 
 As in DP1, the astrometric model consists of a static map from pixel space to an intermediate frame, which is followed by a per-visit map from the intermediate frame to the plane tangent to the telescope boresight, and finally a deterministic mapping from the tangent plane to the sky.
@@ -157,7 +157,7 @@ These catalogs only include isolated point sources, but future Data Releases wil
 Photometric calibration of the DP2 dataset is based on the \gls{FGCM}~\citep[][]{2018AJ....155...41B} adapted for the LSST Science Pipelines~\citep[][]{2022PASJ...74..247A, sitcomtn-086}.
 We used the FGCM to calibrate the full DP2 dataset with a forward model that uses a parameterized model of the atmosphere as a function of \gls{airmass} along with a model of the instrument throughput as a function of wavelength.
 The FGCM process typically begins with measurements of the instrumental throughput, including the mirrors, filters, and detectors.
-For the \gls{LSSTCam} filter throughputs, we start with the filter scans provided by the manufacturer, Matereon.
+For the \gls{LSSTCam} filter throughputs, we start with the filter scans provided by the manufacturer, Materion.
 These were taken in a grid with 159 positions, at 5 incidence angles from 13.8 to 23 degrees, at a wavelength resolution of 1 nm.
 We performed an averaging procedure to get the approximate appropriate throughput for the \gls{LSSTCam} beam as it intersects the filter at the central location of each detector.
 For the \gls{LSSTCam} detector \gls{QE} curves, we start with per-raft measurements of the QE performed at \gls{BNL} and \gls{SLAC} at 10 to 25 wavelength steps.
@@ -185,7 +185,8 @@ We apply the artifact rejection procedure described in \cite[][]{DMTN-080}, whic
 It operates on a time series of PSF-matched images resampled onto a coadd pixel grid (``warps'') and leverages their temporal behavior to distinguish persistent astrophysical sources from \gls{transient} artifacts.
 Artifact rejection uses both direct (where no PSF matching is performed) and PSF-matched warps, homogenized to a standard PSF of 1\farcs8 \gls{FWHM}, broadly consistent with the 1\farcs7 \gls{FWHM} seeing threshold used in data screening.
 A sigma-clipped mean of the \gls{PSF}-matched warps serves as a static sky model, against which individual warps are differenced to identify significant positive and negative residuals.
-Candidate artifact regions are classified as \gls{transient} if they appear in fewer than a small percentage of the total number of exposures, with the threshold based on the number of visits. Adequate artifact rejection requires a minimum of three overlapping images.
+Candidate artifact regions are classified as \gls{transient} if they appear in fewer than a small percentage of the total number of exposures, with the threshold based on the number of visits.
+Adequate artifact rejection requires a minimum of three overlapping images.
 % These masks are also saved as the \texttt{compare\_warp\_artifact\_mask} dataset.
 % Note: note released as data product in DP2
 
@@ -303,7 +304,7 @@ No cuts were applied on reliability for the \gls{DP2} \texttt{DIASource} catalog
 Light curves are compiled from multiepoch forced photometry performed on both the \glspl{Visit Image} and the difference images.
 The \gls{forced photometry} performed on the difference-images (the \texttt{psfDiffFlux} column of the ForcedSource table) measures only the time-variable component of the flux without contamination from static nearby sources.
 Forced photometry carried out directly on the \glspl{Visit Image} can pick up flux from blended or nearby static objects, and the severity of this contamination depends on the seeing.
-The centroids of objects with multi-epoch \gls{forced photometry} are drawn either from coadd-based object positions or from the DIAObjects, which are constructed from the DIASources associated from detections in the difference images.
+The centroids of objects with multiepoch \gls{forced photometry} are drawn either from coadd-based object positions or from the DIAObjects, which are constructed from the DIASources associated from detections in the difference images.
 
 \subsection{Solar System}
 \subsubsection{Source Association}

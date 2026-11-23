@@ -39,7 +39,7 @@ Lab studies have suggested that these dips are related to the voltage the detect
 In addition to these features that we mask, there are some others that do not yet have a mask or correction.
 The E2V midline can glow on some images, but we do not yet mask this.
 There are low-level ``tree rings'' that are related to how the silicon was sliced during the detector manufacturing process.
-These have the effect of slightly changing the effective pixel area, resulting in small scale photmetric and astrometric distortions.
+These have the effect of slightly changing the effective pixel area, resulting in small scale photometric and astrometric distortions.
 We would like to fully characterize these tree rings so we can properly correct for them as part of the flat-fielding step.
 Although not formally a ``sensor anomaly,'' there is evidence that the ``comb pattern'' of bright glints at the edge of the detectors is a result of light entering the detector from the side due to small height differences in the installed detectors.
 This feature is observed most often in $y$, or in images with higher background levels.
@@ -60,13 +60,13 @@ Astrometric performance is characterized by measuring internal consistency as we
 Per-band metrics are calculated using isolated stars with magnitudes  between 17 and 21.5 in that band.\footnote{While object position does not change with band, object selection is band-specific.}
 For this set of objects, we find that the median offset from Gaia is within $2$~mas in about $85\%$ of tracts and within $5$~mas for about $99\%$ of tracts.
 Note that this calculation is not an independent estimate, since the Gaia stars are also used to compute the WCS.
-Given that the number of stars used verify the astrometric solution far exceed the number that were used to derive it, we do not expect this to have a major effect on our results; an independent calculation is planned for future analyses
+Given that the number of stars used to verify the astrometric solution far exceeds the number that were used to derive it, we do not expect this to have a major effect on our results; an independent calculation is planned for future analyses.
 Any offset within the aforementioned numerical margins is believed to be caused by color-dependent selection effects in our metric calculation, and is expected to be lower once differential chromatic refraction is included in the astrometric model.
 
 Internal consistency was improved significantly relative to DP1 by including the Gaussian processes turbulence correction.
-The degree of internal consistency can be seen by looking at the ``AMx" metrics, which show the median over a field of the standard deviation in the separation across all visits between objects at a given distance.
+The degree of internal consistency can be seen by looking at the ``AMx'' metrics, which show the median over a field of the standard deviation in the separation across all visits between objects at a given distance.
 Figure~\ref{fig: amx} shows this metric for objects at $5$~arcmin separations and at $200$~arcmin separations.
-The top panel show that DP2 is reaching the design goal of repeatability below $10$~mas in many regions of the sky.
+The top panel shows that DP2 is reaching the design goal of repeatability below $10$~mas in many regions of the sky.
 Furthermore, we are achieving almost the same repeatability at $200$~arcmin separations, for which $10$~mas is actually the stretch goal.
 
 \subsection{Isolated Star Stellar Motions}
@@ -99,7 +99,7 @@ Here, we characterize the effect in LSSTCam data using two representative sky re
 For each region, we consider all Deep Coadd images from tracts within 5 degrees of the field center.
 
 The extent of any displacement due to DCR is dependent on airmass, meaning that for a patch it changes at the per-visit level.
-For each visit, we calculate the angular displacement of sources relative to their positions their positions in the matched reference catalog and projected onto the directions parallel and perpendicular to the parallactic angle.
+For each visit, we calculate the angular displacement of sources relative to their positions in the matched reference catalog and projected onto the directions parallel and perpendicular to the parallactic angle.
 We examine both components as a function of source $g-i$ color; the perpendicular component serves as a control for effects not aligned with the expected DCR direction.
 
 When displaying the resulting DCR effect, the coadd with the highest DCR metric is selected for each field.
@@ -161,7 +161,7 @@ We therefore use the proportion of pixels flagged as \texttt{NOT\_DEBLENDED} as 
 Overall, out of the 2.2 trillion pixels comprising the total DP2 sky area, 12.9\% are associated with crowded fields via the aforementioned definition.
 This fraction, however, obscures the highly localized nature of crowded fields within the survey.
 Specifically, 1,750 of 2,174 total tracts (i.e., 80.5\%) have less than 1\% of their pixels flagged as \texttt{NOT\_DEBLENDED}.
-Of the remaining 424 (i.e., 19.5\%) tracts , 90\% are found within 14.5 degrees of the Galactic plane where the stellar densities are the highest.
+Of the remaining 424 (i.e., 19.5\%) tracts, 90\% are found within 14.5 degrees of the Galactic plane where the stellar densities are the highest.
 The concentration of processing failures in these regions is further illustrated by the fraction of reference sources successfully matched to LSST detections within each tract and patch.
 \figref{fig:crowded_fields_matched_sources} shows this match ratio across the survey footprint.
 The lowest match ratios, including tracts and patches with no successful matches, occur almost entirely along the Galactic plane, indicating that these unmatched sources are associated with failures of the standard LSST processing in these densely populated fields.
