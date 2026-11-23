@@ -69,7 +69,7 @@ Each exposure therefore results in up to \nactivedetectors Raw Images (where the
 % A breakdown of the number of raw images per field and per band is given in table \tabref{tab:rawbreakdown}.
 
 All \gls{LSSTCam} detectors have 16 amplifier segments, arranged in two rows of eight, each reading out its own $\sim1$ megapixel region in parallel to enable the fast ($\sim3$ second) full focal-plane readout (\secref{ssec:lsstcam}).
-These sections are evident in the Raw Images.
+These segments are evident in the Raw Images.
 Raw Image pixel values are integer \gls{ADU} counts.
 All Raw Images, from both \gls{E2V} and \gls{ITL} sensors, have the same dimensions: \nrawpixx $\times$ \nrawpixy pixels.
 However, the two types have slightly different numbers of overscan and pre-scan pixels, so the number of exposed pixels also differs.
@@ -88,7 +88,7 @@ As such, there are up to \nactivedetectors \glspl{Visit Image} for each of the e
 During \gls{ISR}, the science processing \gls{pipeline} removes the overscan regions from the input raw images.
 The \glspl{Visit Image} therefore only contain the pixels that were exposed during the observation: \nitlpixx $\times$ \nitlpixy pixels in the case of the \gls{ITL} detectors, and \netvpixx $\times$ \netvpixy pixels in the case of the \gls{E2V} detectors.
 Unlike raw images, \glspl{Visit Image} consist of three image planes: a science image plane, a variance plane, and a mask plane.
-The science image plane is the processed exposed image, whereas the variance plane persists the uncertainty associated with the value of the corresponding pixel in the science image plane; the pixel values of both planes are reported in units of nJy.
+The science image plane contains the processed pixel values and the variance plane contains the variance of each corresponding pixel;  values are reported in units of nJy and nJy$^2$ respectively.
 The mask image indicates pixels that are flagged for various different reasons, such as saturated pixels, pixels associated with detected sources, bad pixels, etc.
 All three image planes contain the same number of pixels in each dimension.
 
@@ -101,7 +101,7 @@ Two different types of coadd images are included in DP2: Deep Coadds and Templat
 Each type of coadd image is produced via the same general process (\secref{sec:drp-multivisit-coaddition}):  Visit Images are selected by \gls{patch}, band, and image quality, warped onto a common pixel grid, and combined as a weighted mean with inverse-variance weights (\secref{sec:drp-multivisit-coaddition}).
 The main differences that distinguish each type of coadd are the selection of the \glspl{Visit Image}, and that Deep Coadds are cell-based in DP2 (see the introduction of this this section), whereas Template Coadds are not.
 As a result, the structure of the datasets is the same for each type: each coadd contains three planes corresponding to the science image plane (i.e., the coadd image), the variance plane, and the mask plane, with all three containing the same number of pixels in each dimension.
-The pixel values of the science image and variance planes are reported in units of nJy.
+The pixel values of the science image and variance planes are reported in units of nJy and nJy$^2$, respectively.
 Up to two different \gls{background} models are included in the coadd datasets: the \gls{background} that was subtracted to create the final coadd and, in the case of the $gri$ band Deep Coadds, a \gls{background} that can be added-back to create ``Visualization Coadds'' which, while not recommended for science, can be useful for visualization.
 Each coadd also contains a position-dependent \gls{PSF} model, WCS information, plus various other metadata.
 
@@ -159,7 +159,7 @@ A detection algorithm is used to identify sources in Difference Images and a rea
 The outcome of the real/bogus classifier is included in the DIA Source catalog (\secref{sssec:DIASource}).
 
 Like Visit Images, Difference Images also consist of three image planes: a science image plane, a variance plane, and a mask plane (see \secref{sssec:visitimages} for a description of each plane).
-The pixel values of the science image and variance planes are reported in units of nJy.
+The pixel values of the science image and variance planes are reported in units of nJy and nJy$^2$, respectively.
 
 There are a total of \ndifferenceimages Difference Images in DP2, one for each Visit Image.
 
@@ -364,7 +364,7 @@ For the \textit{u} band, the input catalogs were (in order of decreasing priorit
 These \gls{SLR} estimates were used to boost the number of $u$-band reference sources, as otherwise the source density from the $u$-band input catalogs is too low to be useful for the \gls{LSST}.
 
 Throughout, the Calibration Reference Catalog uses the \gls{DES} bandpasses for the \textit{grizy} bands and the \gls{SDSS} bandpass for the \textit{u}-band; color transformations derived from high-quality sources were used to convert fluxes from the various input catalogs (some of which did not use the \gls{DES} or SDSS bandpasses) to the respective bandpasses.
-All sources from the input catalogs are matched to \gls{Gaia} \gls{DR3} sources for robust astrometric information (including parallax and proper motions) selecting only isolated sources (i.e., no neighbors within 1\arcsec).
+All input sources were matched to \gls{Gaia} \gls{DR3} to obtain astrometry, including parallaxes and proper motions, and only isolated sources (no neighbors within 1\arcsec) were retained.
 
 After collating the input catalogs and transforming the fluxes to the standard DES and \gls{SDSS} bandpasses, the catalog was used to identify sources within a specific region of the sky.
 This process generated a set of standard columns containing positional and \gls{flux} information, along with their associated uncertainties.

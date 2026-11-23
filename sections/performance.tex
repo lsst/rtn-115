@@ -16,10 +16,10 @@ Further information on the performance and known issues of \gls{DP2} can be foun
 
 \subsection{Astrometry}
 Astrometric performance is characterized by measuring internal consistency as well as accuracy with respect to an external reference, in this case the Gaia DR3 catalog.
-Per-band metrics are calculated using isolated stars with magnitude between $17$ and $21.5$ in each band.\footnote{While object position does not change with band, object selection is band-specific.}
+Per-band metrics are calculated using isolated stars with magnitudes  between 17 and 21.5 in that band.\footnote{While object position does not change with band, object selection is band-specific.}
 For this set of objects, we find that the median offset from Gaia is within $2$~mas in about $85\%$ of tracts and within $5$~mas for about $99\%$ of tracts.
 Note that this calculation is not an independent estimate, since the Gaia stars are also used to compute the WCS.
-Given that the number of stars used verify the astrometric solution far exceed the number that were used to derive it, we do not expect this to have a major effect on our results; a completely independent calculation is planned for future analyses
+Given that the number of stars used verify the astrometric solution far exceed the number that were used to derive it, we do not expect this to have a major effect on our results; an independent calculation is planned for future analyses
 Any offset within the aforementioned numerical margins is believed to be caused by color-dependent selection effects in our metric calculation, and is expected to be lower once differential chromatic refraction is included in the astrometric model.
 
 Internal consistency was improved significantly relative to DP1 by including the Gaussian processes turbulence correction.
