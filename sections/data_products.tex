@@ -227,7 +227,7 @@ The objects reported in the \gls{Object} catalog have also undergone deblending;
 As with the \gls{Source} catalog, the criterion for inclusion in the \gls{Object} catalog is a $>5\sigma$ detection in one of the Deep Coadds prior to deblending, yet the positions and fluxes of objects are reported postdeblending.
 Hence, it is possible for the \gls{Object} catalog to contain objects whose \gls{flux}-to-error ratios are less than five in all bands.
 
-In addition to the general information mentioned above (i.e., IDs, positions, fluxes, and flags), the \gls{Object} catalog also includes basic \gls{shape} and extendedness information.
+In addition to the general information mentioned above (i.e., IDs, positions, fluxes, and flags), the \gls{Object} catalog also includes basic shape and extendedness information.
 While they may be included in future Data Releases, no photometric redshifts, Petrosian magnitudes \citep[][]{1976ApJ...209L...1P}, proper motions or periodicity information are included in the DP2 object catalogs.
 
 The \gls{Object} catalog contains data for \nobjects objects in \gls{DP2}.
@@ -287,7 +287,7 @@ The Isolated Star Stellar Motions catalog contains \nisolatedstars entries.
 
 \subsubsection{Shear Object}
 \label{sssec:objectshear}
-The Shear \gls{Object} catalog contains object \gls{shape} measurements in five different shear steps or ``counterfactual'' images: one in which no shear (\texttt{ns}) has been applied, and four in which an artificial linear shear has been introduced to the image (\texttt{1p, 1m, 2p, 2m}).
+The Shear \gls{Object} catalog contains object shape measurements in five different shear steps or ``counterfactual'' images: one in which no shear (\texttt{ns}) has been applied, and four in which an artificial linear shear has been introduced to the image (\texttt{1p, 1m, 2p, 2m}).
 The artificial shears are in four different directions: 1p is along the image x-direction, 1m is along the y-direction, 2p is along the 45 degree diagonal, 2m is along the 135 degree diagonal.
 
 Two measurement algorithms (\textit{gauss} and \textit{pgauss}) are run on each of the five different counterfactuals, one for measuring shapes and the other for fluxes.
@@ -296,7 +296,7 @@ The second approach measures \gls{2D} Gaussian-weighted moments in the $g$, $r$,
 Like the \gls{GAaP} fluxes in the \gls{Object} catalog, these are designed to provide consistent colors across bands rather than total fluxes; the second approach does not provide ellipticity measurements.
 There is one entry per object detected in each counterfactual, meaning a given object could result in up to five entries, depending on how many of the counterfactuals it is detected in at a significance of $>5\sigma$.\footnote{It is feasible for a marginal $5\sigma$ object in one counterfactual to be just below the $5\sigma$ detection threshold in another counterfactual.}
 
-In addition to the Gaussian \gls{shape} measurements and their covariances, the Shear Object table also contains object positional information, fluxes measured from both the Gaussian fits and the Gaussian moments ($g$, $r$, $i$ and $z$ bands), \gls{PSF} shapes reported in the same x-y and diagonal directions as objects, a range of different flags.
+In addition to the Gaussian shape measurements and their covariances, the Shear Object table also contains object positional information, fluxes measured from both the Gaussian fits and the Gaussian moments ($g$, $r$, $i$ and $z$ bands), \gls{PSF} shapes reported in the same x-y and diagonal directions as objects, a range of different flags.
 Each entry in the Shear Object catalog also has a unique identification number (\texttt{shearObjectId}), that uniquely identifies a given detection in a given counterfactual.
 
 The Shear \gls{Object} catalog contains \nshearobjects entries.
@@ -395,7 +395,7 @@ Maps displaying different summary statistics, such as minimum, maximum, mean, st
 Each sky position corresponds to a spatial pixel in the \gls{HEALPix}\citep[][]{2005ApJ...622..759G} grid.
 
 There are \nsurveypropertymaps Survey Property maps in \gls{DP2}.
-Among the quantities mapped are the total exposure time; three observation-epoch maps (earliest, mean, and latest \gls{epoch}); the \gls{PSF} size and \gls{shape}, the latter given as separate $e^1$ and $e^2$ components; the PSF magnitude limit; sky \gls{background} and noise; astrometric offsets in R.A. and decl.; and, for the wavelength-dependent atmospheric \gls{DCR} effect, PSF distortion again split into $e^1$ and $e^2$ components.
+Among the quantities mapped are the total exposure time; three observation-epoch maps (earliest, mean, and latest \gls{epoch}); the \gls{PSF} size and shape the latter given as separate $e^1$ and $e^2$ components; the PSF magnitude limit; sky \gls{background} and noise; astrometric offsets in R.A. and decl.; and, for the wavelength-dependent atmospheric \gls{DCR} effect, PSF distortion again split into $e^1$ and $e^2$ components.
 
 The names of the maps follow the pattern \texttt{deepCoadd\_<PROPERTY>\_consolidated\_map\_<STATISTIC>}—so \texttt{deepCoadd\_exposure\_time\_consolidated\_map\_sum}, for instance, gives the summed exposure time, in seconds, at each sky position.
 The maps themselves are stored in \texttt{HealSparse}\footnote{A sparse \gls{HEALPix} representation that efficiently encodes data values on the celestial sphere. \nolinkurl{https://healsparse.readthedocs.io}} format, and Survey Property maps are only accessible through the Data \gls{Butler} (\secref{sssec:data_butler}).
