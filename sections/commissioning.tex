@@ -3,7 +3,7 @@
 
 This section describes the components of the Rubin Observatory system and their integration status during the period in which the \gls{DP2} data were acquired.
 Throughout this period the observatory remained under construction: several key components were incomplete, and the performance of the system as a whole was still being characterized and optimized.
-The state of the Simonyi Survey Telescope, \gls{LSSTCam} and its filter complement, and the calibration system is described first, followed by the data acquisition and processing infrastructure and the delivered image quality.
+The state of the Simonyi Survey Telescope, \gls{LSSTCam} and its filter complement, and the \gls{calibration} system is described first, followed by the data acquisition and processing infrastructure and the delivered image quality.
 Dedicated engineering campaigns were carried out to test individual system components and to verify their integration into the full system.
 These campaigns continued as needed throughout the dedicated \gls{SV} campaign period described in \S\ref{sec:science_program}.
 
@@ -17,16 +17,16 @@ To achieve the scientific goals of the 10-yr \gls{LSST}, the observatory must ma
 This is accomplished through the \gls{AOS} \citep[][]{2015ApOpt..54.9045X, 2024ApJ...974..108M}, which corrects, between successive exposures, wavefront distortions caused by optical misalignments and mirror surface deformations, primarily driven by gravitational and thermal loads.
 
 The \gls{AOS} comprises open-loop and closed-loop components.
-The open-loop component corrects for predictable distortions using look-up tables as a function of telescope elevation and \gls{camera} rotator angle.
+The open-loop component corrects for predictable distortions using look-up tables as a function of telescope elevation and camera rotator angle.
 The closed-loop component addresses unpredictable or slowly varying aberrations using curvature wavefront sensing \citep[][]{2023aoel.confE..67T} on the eight corner wavefront sensors of the \gls{LSSTCam} focal plane, which acquire pairs of intra- and extra-focal ``donut'' images to measure wavefront errors.
-Corrections are applied to the M2 and \gls{camera} hexapods and to the shape of \gls{M1M3} via its 156-actuator support system, driving the system towards the target optical state within two visits of each measurement.
+Corrections are applied to the M2 and camera hexapods and to the shape of \gls{M1M3} via its 156-actuator support system, driving the system towards the target optical state within two visits of each measurement.
 This represents a significant operational advance over the \gls{LSSTComCam} campaign, during which dedicated wavefront sensors were unavailable and wavefront errors were instead estimated by defocusing the telescope $\pm$1.5\,mm on either side of focus \citep[][]{10.71929/rubin/2570308}.
 
 During the \gls{LSSTCam} commissioning campaign, \gls{AOS} operations were interspersed with dedicated engineering periods focused on wavefront sensing and optical state characterization, enabling iterative improvements across all components of the system throughout the campaign \citep[][]{SITCOMTN-170}.
 The bulk of the \gls{DP2} observations were acquired during the commissioning-era \gls{SV} surveys, a period during which the \gls{AOS} was undergoing intensive characterization and iterative improvement.
 During this time the system contribution to the delivered \gls{PSF} \gls{FWHM} still exceeded the design specification \citep[][]{LSE-29, RTN-122, SOTN-004}.
 As a consequence, the majority of \gls{DP2} observations were taken with a larger system contribution to the \gls{PSF} size budget than the system is capable of delivering under comparable atmospheric conditions, producing larger \gls{PSF} \glspl{FWHM} and shallower point-source depths.
-The residual optical aberrations also manifest as spatially coherent structure in \gls{PSF} \gls{shape} residuals across the focal plane, with implications for weak lensing analyses and \gls{PSF} model validation.
+The residual optical aberrations also manifest as spatially coherent structure in \gls{PSF} shape residuals across the focal plane, with implications for weak lensing analyses and \gls{PSF} model validation.
 The quantitative impact on delivered image quality is characterized in \S\ref{ssec:image_quality}, and the \gls{AOS} improvement program and current performance are described in \citet[][]{RTN-122} and \citet[][]{SOTN-004}.
 
 \subsection{LSSTCam}
@@ -82,7 +82,7 @@ The full-system throughput of the six \gls{LSSTCam} filters is shown in \figref{
 \begin{figure}[htb!]
 \includegraphics[width=\columnwidth]{dp2_lsstcam_std_bandpasses}
 \caption{\gls{LSSTCam} standard bandpasses, illustrating full-system throughput.
-The bandpasses include a standard atmosphere at an airmass of 1.2, telescope optics, \gls{camera} surfaces, and mean \gls{ITL} and \gls{E2V} detector quantum efficiency.
+The bandpasses include a standard atmosphere at an \gls{airmass} of 1.2, telescope optics, camera surfaces, and mean \gls{ITL} and \gls{E2V} detector quantum efficiency.
 The corresponding transmission curves are provided as a \gls{DP2} data product.}
 \label{fig:lsstcam_standard_bandpasses}
 \end{figure}
@@ -100,14 +100,14 @@ The corresponding transmission curves are provided as a \gls{DP2} data product.}
 Unlike the \gls{LSSTComCam} campaign, during which the Rubin calibration system had not yet been installed and flat fielding relied entirely on twilight flats \citep[][]{rtn-095}, the \gls{LSSTCam} commissioning campaign had access to the Rubin flat field illumination system \citep[][]{sitcomtn-086}.
 The baseline calibration plan for the as-built system is described in \citet[][]{sitcomtn-086}; a full description of \gls{ISR} procedures and calibration data products is given in \citet[][]{2025JATIS..11a1209P}.
 
-The calibration system comprises a dome flat field screen, a \gls{CBP}, a \gls{NIST}-traceable silicon photodiode electrometer, and the \gls{AuxTel} for atmospheric monitoring.
+The calibration system comprises a dome flat field screen, a \gls{CBP}, a \gls{NIST}-traceable silicon photodiode electrometer, and the \gls{AuxTel} for atmospheric \gls{monitoring}.
 During the commissioning campaign, the \gls{CBP} was deployed at scale on \gls{LSSTCam} for the first time, providing in-situ measurements of the transmission profiles of five of the six \gls{LSST} broadband filters, $ugrizy$, across multiple primary mirror pupil positions, and characterizing the angle-of-incidence-dependent blue-shift of the filter bandpass edges across the focal plane \citep[][]{2026arXiv260631822A}.
 Achieving absolute throughput calibration at the millimagnitude level  required by the \gls{LSST} requires a more precise characterization of the \gls{CBP} transmission and a partial-pupil vignetting model; both are the subject of ongoing work \citep[][]{2026arXiv260631822A}.
 
 Calibration products generated for \gls{DP2} processing include bias frames, dark frames, dome flat fields, \glspl{PTC}, cross talk matrices, brighter-fatter distortion matrices, linearity corrections, and \gls{CTI} models \citep[][]{2025JATIS..11a1209P}.
 Dome flat fields were used as the primary flat field source, supplemented by a star-flat-based illumination correction and, where dome illumination was unavailable, twilight flats \citep[][]{2025JATIS..11a1209P}.
-Certified calibration products are versioned in the \gls{USDF} archive and transferred to the summit as needed.
-The full suite of calibration and throughput data products included in \gls{DP2} is described in \secref{sec:data_products}.
+Certified \gls{calibration} products are versioned in the \gls{USDF} archive and transferred to the summit as needed.
+The full suite of \gls{calibration} and throughput data products included in \gls{DP2} is described in \secref{sec:data_products}.
 
 %%%%%% Data Management System (not just pipelines, rapid analysis, data transfer
 \subsection{Data Management System}
@@ -123,9 +123,9 @@ During the \gls{LSSTCam} commissioning campaign, the \gls{DMS} was operated at f
 \subsubsection{Data Acquisition, Transfer and Archive}
 \label{ssec:dataacq}
 Following each exposure, the \gls{DAQ} at the summit stores the raw image data as a set of 205 files per exposure: 189 science sensors, 8 wavefront sensors, and 8 guiding sensors on the \gls{LSSTCam} focal plane.
-Uncompressed, a full science exposure totals $\sim$\,8.2\,GB, which is reduced to $\sim$\,4\,GB after compression.
+Uncompressed, a full science exposure totals $\sim$\,8.2\,\gls{GB}, which is reduced to $\sim$\,4\,\gls{GB} after compression.
 
-At the summit, each exposure is processed in near real time by the Rapid Analysis pipeline, performing \gls{ISR} (\secref{sec:drp-singlevisit-calibrationisr}) and source detection (\secref{sec:drp-singlevisit}) on a 30--60\,s timescale to provide quick-look image diagnostics and support real-time \gls{AOS} assessment.
+At the summit, each exposure is processed in near real time by the Rapid Analysis \gls{pipeline}, performing \gls{ISR} (\secref{sec:drp-singlevisit-calibrationisr}) and source detection (\secref{sec:drp-singlevisit}) on a 30--60\,s timescale to provide quick-look image diagnostics and support real-time \gls{AOS} assessment.
 The resulting per-visit quality metrics formed the basis of the visit quality characterizations used to define the \gls{DP2} coadd inputs.
 Summary visit and detector-level metadata are available to users as \gls{DP2} data products (\secref{ssec:metadata}) and are also available in an opsim-format SQLite database (\secref{sssec:opsim}).
 
@@ -134,9 +134,9 @@ Summary visit and detector-level metadata are available to users as \gls{DP2} da
 %
 The \gls{DP2} science-ready data products are the result of dedicated \gls{DRP} campaigns executed at the \gls{USDF} at \gls{SLAC}.
 \gls{DP2} processing was done using version \sciencepipelinesversion of the LSST Science Pipelines \citep[][]{PSTN-019} and follows a four-stage structure.
-Stage~1 performs single-visit processing, including \gls{ISR}, source detection, astrometric and photometric calibration, and \gls{PSF} characterization.
+Stage~1 performs single-visit processing, including \gls{ISR}, source detection, astrometric and photometric \gls{calibration}, and \gls{PSF} characterization.
 Stage~2 performs global recalibration, Gaussian-process modeling of atmospheric turbulence, proper motion and parallax fitting, and \gls{PSF} re-estimation using a standard star set.
-Stage~3 performs coaddition and measurement on coadded images, including the generation of the Object catalog.
-Stage~4 performs \gls{DIA} and  solar system object processing, and the generation of light curves via forced photometry.
-Each stage underwent continuous data quality monitoring and a formal verification and validation review before processing advanced to the subsequent stage.
-A full description of the processing pipelines, algorithms, and configuration used to produce \gls{DP2} is given in \secref{sec:drp}.
+Stage~3 performs coaddition and measurement on coadded images, including the generation of the \gls{Object} catalog.
+Stage~4 performs \gls{DIA} and  solar system object processing, and the generation of light curves via \gls{forced photometry}.
+Each stage underwent continuous data quality \gls{monitoring} and a formal verification and validation review before processing advanced to the subsequent stage.
+A full description of the processing pipelines, algorithms, and \gls{configuration} used to produce \gls{DP2} is given in \secref{sec:drp}.
