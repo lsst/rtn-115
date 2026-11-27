@@ -528,21 +528,25 @@ They are used to measure the gain of each amplifier, which is used during \gls{I
 \label{ssec:metadata}
 \subsubsection{Visit catalog}
 \label{sssec:visitcatalog}
-The Visit catalog contains technical data for each visit collected at the time of observation, such as telescope pointing, \gls{camera} rotation, airmass, exposure start and end time, and total exposure time.
+The Visit catalog contains technical data for each visit, collected at the time of observation, such as telescope pointing, \gls{camera} rotation, airmass, exposure start and end time, and total exposure time.
 Some of the information contained within the Visit catalog is also contained in the Visit Detector catalog described below (e.g., exposure time), although the latter also includes information produced by the processing pipelines at the per-detector level, such as the \gls{PSF} size and limiting magnitudes of a given Visit Image.
 
-The Visit catalog contains \nvisitrows entries.
+The Visit catalog only contains entries for visits that have both a final \gls{FGCM} photometric calibration (\secref{sec:drp-calibration-photometry}) and a final astrometric solution (the \texttt{gbdes} fit, including turbulence correction; \secref{sec:drp-calibration-astrometry}).
+It therefore contains \nvisitrows entries, which is fewer than the \nvisits visits made during the campaign.
 
 \subsubsection{Visit Detector catalog}
 \label{sssec:visitdetector}
-The Visit Detector catalog contains summary information for all Visit Images in DP2.
-In addition to technical information, such as the on-sky coordinates of the central pixel and measured pixel scale, the Visit Detector catalog contains a range of data quality measurements, such as whole-image summary statistics for the \gls{PSF} size, zero-point and 5$\sigma$ depth, sky background, sky noise, and the quality of astrometric solution.
+The Visit Detector catalog contains summary information for the detectors of each visit in the Visit catalog, including all Visit Images in DP2.
+In addition to technical information, such as the on-sky coordinates of the central pixel and measured pixel scale, the Visit Detector catalog contains a range of data quality measurements, such as whole-image summary statistics for the \gls{PSF} size, zero-point and 5$\sigma$ depth, sky background, sky noise, and the quality of the astrometric solution.
 It provides an efficient method to access the properties of a Visit Image without needing to access the image data.
-When combined with the data contained in the Visit table described above, it provides a full picture of the telescope pointing and sky conditions at the time of observation.
-
-The Visit Detector catalog contains \nvisitdetectorrows entries.
+When combined with the data contained in the Visit catalog described above, it provides a full picture of the telescope pointing and sky conditions at the time of observation.
+Like the Visit catalog, it only contains entries for visits that have both a final photometric and a final astrometric solution (\secref{sssec:visitcatalog}).
+Within those visits, there is an entry for every detector that produced an image in single-frame processing (all but 664), even if that image's own final PSF, photometric or astrometric calibration failed, and thus did not produce a Visit Image ($\sim160{,}000$ cases).
+This is why the number of entries in the Visit Detector catalog (\nvisitdetectorrows) differs from both the number of Raws and the number of Visit Images.
 
 \subsubsection{Visit Summary}
 \label{sssec:visitsummary}
 The Visit Summary table contains the same information as the Visit Detector catalog, but only for a single visit.
-There is one Visit Summary table per visit (meaning the Visit Detector table is the collation of all the Visit Summary tables), and they are only available via the Data Butler.
+There are \nvisitsummaries Visit Summaries, one for each entry in the Visit catalog (\secref{sssec:visitcatalog}).
+The Visit Detector catalog is therefore the collation of all the Visit Summary tables.
+Visit Summary tables are only available via the Data Butler.
